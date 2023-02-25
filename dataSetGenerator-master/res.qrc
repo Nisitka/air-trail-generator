@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resurs/earchIcon.png</file>
+        <file>resurs/imgIcon.png</file>
+        <file>resurs/mapIcon.png</file>
+        <file>resurs/netIcon.png</file>
+        <file>resurs/qFunIcon.png</file>
+        <file>resurs/rlsIcon.png</file>
+    </qresource>
+</RCC>
