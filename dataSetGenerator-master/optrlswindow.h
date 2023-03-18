@@ -5,6 +5,7 @@
 
 #include "map.h"
 #include "qcustomplot.h"
+#include "paintermapimage.h"
 
 namespace Ui {
 class optRLSwindow;
@@ -22,6 +23,9 @@ signals:
 
     // обновить пар-ры ЗО в вертикальной плоскости
     void updateOptZDvert(int Rmax); // в метрах
+
+    //
+    void getColorHeight(QColor* color, int height);
 
 public slots:
     // перерисовать график ДН
@@ -42,6 +46,9 @@ public slots:
     //
     void readyOptZDvert();
 
+    // обновить все, что зависит от пар-ов карты
+    void updateInfoMap();
+
 public:
     explicit optRLSwindow(Map* map_, QWidget *parent = 0);
     ~optRLSwindow();
@@ -55,7 +62,13 @@ private slots:
     void setOptZDvert();
 
 private:
+    QCursor cursor;
+
+    void updateColorH();
+
     Map* map;
+
+    QColor* colorH;
 
     QCustomPlot* cPlot;
 

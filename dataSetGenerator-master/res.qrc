@@ -6,5 +6,21 @@
         <file>resurs/netIcon.png</file>
         <file>resurs/qFunIcon.png</file>
         <file>resurs/rlsIcon.png</file>
+        <file>resurs/copy.png</file>
+        <file>resurs/new.png</file>
+        <file>resurs/save.png</file>
+        <file>resurs/genFiles.png</file>
+        <file>resurs/hand.png</file>
+        <file>resurs/radarBlue.png</file>
+        <file>resurs/radarGreen.png</file>
+        <file>resurs/zoom.png</file>
+        <file>resurs/zoom2.png</file>
+        <file>resurs/drone1.png</file>
+        <file>resurs/handDrone.png</file>
+        <file>resurs/plane.png</file>
+        <file>resurs/trail1.png</file>
+        <file>resurs/trail2.png</file>
+        <file>resurs/droneFinish.png</file>
+        <file>resurs/droneStart.png</file>
     </qresource>
 </RCC>

@@ -9,15 +9,18 @@ class painterMapImage : public painterImage
 public slots:
     void run();
 
+    // узнать цвет по индексу высоты (и записать его в отправленную ячейку)
+    void heightToColor(QColor* setColor, int numLayer);
+
 public:
     painterMapImage(Map*);
 
 private:
     // вычислить цвет по высоте (т.е. номеру слоя)
-    QColor colorHeight(int value);
+    QColor colorHeight(int numLayer);
 
     int dHeight;
-    QVector <QColor> colors =
+    const QVector <QColor> colors =
     {
         QColor(129, 203, 140), QColor(174, 225, 150), QColor(224, 245, 180),
         QColor(249, 244, 180), QColor(251, 228, 148), QColor(250, 216, 118),

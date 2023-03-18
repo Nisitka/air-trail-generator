@@ -12,7 +12,7 @@ class optQFunWindow : public QWidget
     Q_OBJECT
 
 signals:
-    void runCalcQFun(double angleE); // азимут кон. точки
+    void runCalcQFun(); // начать обсчет Q функции
 
 public slots:
     // начало генерации изображения

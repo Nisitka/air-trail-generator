@@ -3,6 +3,9 @@
 
 #include "painterimage.h"
 
+#include <QFile>
+#include <QTextStream>
+
 class calcQFunction : public painterImage
 {
     Q_OBJECT
@@ -14,10 +17,16 @@ signals:
 public slots:
     void run();
 
-    void calculate(double angleE);
+    void calculate(); // только изменяем изображение
+    void calculate(const QString& dir, int numFile);// и сохраняем значения в txt файл
+
+    // установка области расчета ЦФ
+    void setRect(int idXo, int idYo); // левый верхний угол области
 
 public:
-    calcQFunction(Map*);
+    calcQFunction(Map*, double* E);
+
+    double static m(double v);
 
 private:
     // точка стояния БПЛА
@@ -34,15 +43,35 @@ private:
     // в зависимости от отчков получаем цвет
     QColor scoreToColor(int score);
 
-    //
-    double kD = 0.3;
-    double kZD = 1.3;
-    double kH = 0.13;
+    // амплетуды составляющих ЦФ
+    int maxD = 600;
+    int maxZD = 580;
+    int maxH = 200;
+    int maxScore;
 
     int zX;
     int zY;
 
-    double angleE;
+    double* angleE;
+
+    QFile* file;
+    QTextStream* outData;
+
+    // левый верхний угол области расчета
+    int idXo, idYo;
+
+    //
+    double F_D(int D, double dE);
+    double kG1 = 0.99;
+    double kG2 = 0.2;
+    double kpD1 = 0.4;
+    double kpD2 = 0.8;
+
+    //
+    double F_ZD(double mZD);
+
+    //
+    double F_H(int mH); // сред. высота (в дискретах)
 };
 
 

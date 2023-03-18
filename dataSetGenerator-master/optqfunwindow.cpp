@@ -1,6 +1,8 @@
 #include "optqfunwindow.h"
 #include "ui_optqfunwindow.h"
 
+#include "designer.h"
+
 optQFunWindow::optQFunWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::optQFunWindow)
@@ -10,19 +12,24 @@ optQFunWindow::optQFunWindow(QWidget *parent) :
     // запуск обсчета и генерации изображения ЦФ
     connect(ui->calcQFunButton, SIGNAL(clicked()),
             this,               SLOT(emitSignalRunGenImage()));
+    Designer::setButton(ui->calcQFunButton);
 
     ui->calcQFunProgressBar->setValue(0);
+    // настройка визуала полоски прогресса
+    Designer::setProgressBar(ui->calcQFunProgressBar);
+    ui->calcQFunProgressBar->hide();
 }
 
 void optQFunWindow::emitSignalRunGenImage()
 {
-    runCalcQFun(ui->angleESpinBox->value());
+    runCalcQFun();
 }
 
 void optQFunWindow::startGenImage(int countSigment)
 {
     ui->calcQFunProgressBar->setMaximum(countSigment);
     ui->calcQFunProgressBar->setValue(0);
+    ui->calcQFunProgressBar->show();
 }
 
 void optQFunWindow::updateProgressGenImage(int currentSigment)
@@ -33,6 +40,7 @@ void optQFunWindow::updateProgressGenImage(int currentSigment)
 void optQFunWindow::finishGenImage()
 {
     ui->calcQFunProgressBar->setValue(0);
+    ui->calcQFunProgressBar->hide();
 }
 
 optQFunWindow::~optQFunWindow()

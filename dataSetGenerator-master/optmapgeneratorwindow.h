@@ -15,6 +15,8 @@ signals:
                         int W, int L, int H,
                         double lenBlock);
 
+    void openMap_signal(const QString& dirFile);
+
 public slots:
     // обновить полоску загрузки
     void updateProgressBar(int value);
@@ -22,13 +24,17 @@ public slots:
     // конец генерации рельефа
     void finishGenerateMap();
 
+    // генериовать карту по установленным пар-м
+    void startGenerateMap();
+
 public:
     explicit optMapGeneratorWindow(QWidget *parent = 0);
     ~optMapGeneratorWindow();
 
 private slots:
-    void startGenerateMap();
     void setProgressBar(int countLayers);
+
+    void openMap();
 
 private:
     Ui::optMapGeneratorWindow *ui;

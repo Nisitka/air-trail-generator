@@ -18,6 +18,12 @@
 #include "optdatanetwindow.h"
 #include "painterdatanetimage.h"
 #include "optbuilddatasetwindow.h"
+#include "builderdataset.h"
+#include "buildertraildrones.h"
+#include "neuronnetworkwindow.h"
+#include "optdronewindow.h"
+#include "drone.h"
+#include "trainernetwork.h"
 
 class GUI
 {
@@ -42,11 +48,24 @@ public:
     //
     void connectPainterDataNet(painterDataNetImage*);
 
+    //
+    void connectBuilderDS(builderDataSet*);
+
+    //
+    void connectBuilderTrail(builderTrailDrones*);
+
+    //
+    void connectDrone(Drone*);
+
+    //
+    void connectTrainerNet(trainerNetwork*);
+
     void showMainWin();
 
 private:
     //
     Map* map;
+
     // основное окно приложения
     mainWindow* mainWin;
     //
@@ -61,6 +80,10 @@ private:
     optDataNetWindow* optDNWin;
     //
     optBuildDataSetWindow* optBuildDSWin;
+    //
+    neuronNetworkWindow* netWin;
+    //
+    optDroneWindow* droneWin;
 };
 
 #endif // GUI_H

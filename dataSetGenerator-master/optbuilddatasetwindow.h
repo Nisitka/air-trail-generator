@@ -12,11 +12,18 @@ class optBuildDataSetWindow : public QWidget
 {
     Q_OBJECT
 signals:
-    void startGenerateDataSet();
+    void startGenerateDataSet(int countData,
+                              const QString& dirNetImages,
+                              const QString& dirQFunData,
+                              int countRect);
 
 public:
     explicit optBuildDataSetWindow(QWidget *parent = 0);
     ~optBuildDataSetWindow();
+
+public slots:
+    // готовность одной пары X-Y
+    void readyPart();
 
 private slots:
     // установка директорий для сохранения
@@ -25,8 +32,11 @@ private slots:
 
     void generateDataSet();
 
+    void updateSizeDS();
+
 private:
     int sizeDataSet;
+    int currentData;
 
     // директории для сохранения
     QString dirNetImages;

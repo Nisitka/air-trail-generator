@@ -13,6 +13,11 @@
 #include "calcqfunction.h"
 #include "rls.h"
 #include "painterdatanetimage.h"
+#include "builderdataset.h"
+#include "trackparametras.h"
+#include "buildertraildrones.h"
+#include "drone.h"
+#include "trainernetwork.h"
 
 // ядро приложения
 class Core : public QObject
@@ -45,6 +50,18 @@ private:
 
     //
     painterDataNetImage* painterNetData;
+
+    //
+    builderDataSet* builderDS;
+
+    //
+    builderTrailDrones* trailBuilder;
+
+    // ПБЛА
+    Drone* drone;
+
+    //
+    trainerNetwork* neuroTrainer;
 };
 
 #endif // CORE_H

@@ -7,12 +7,26 @@
 
 #include "geoblock.h"
 
+#include <QTextStream>
+
+#include <QFile>
+
 class Map : public QObject
 {
     Q_OBJECT
+signals:
+    // обновить отоброжение карты
+    void updateVisual();
+
 public slots:
     // очистить карту (вернуть в исход. состояние)
     void clear();
+
+    // сохранить карту
+    void save(const QString& dirFile);
+
+    // открыть карту
+    void open(const QString& dirFile);
 
 public:
     Map();
@@ -52,6 +66,8 @@ private:
 
     // размеры куба в метрах
     double lenBlock;
+
+    QFile* file;
 };
 
 #endif // MAP_H

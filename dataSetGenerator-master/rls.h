@@ -49,7 +49,7 @@ public:
 
     // Дискретность ЗО
     // по вертикали
-    static const int count_PointsDV = 274;
+    static const int count_PointsDV = 275;
     // по горизонали
     static const int COUNT_VECTORS_vert = 2000;
 

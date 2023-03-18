@@ -43,7 +43,15 @@ SOURCES += main.cpp\
     painterdatanetimage.cpp \
     optdatanetwindow.cpp \
     qcustomplot.cpp \
-    optbuilddatasetwindow.cpp
+    optbuilddatasetwindow.cpp \
+    builderdataset.cpp \
+    designer.cpp \
+    trackparametras.cpp \
+    buildertraildrones.cpp \
+    neuronnetworkwindow.cpp \
+    optdronewindow.cpp \
+    drone.cpp \
+    trainernetwork.cpp
 
 HEADERS  += \
     core.h \
@@ -65,7 +73,15 @@ HEADERS  += \
     painterdatanetimage.h \
     optdatanetwindow.h \
     qcustomplot.h \
-    optbuilddatasetwindow.h
+    optbuilddatasetwindow.h \
+    builderdataset.h \
+    designer.h \
+    trackparametras.h \
+    buildertraildrones.h \
+    neuronnetworkwindow.h \
+    optdronewindow.h \
+    drone.h \
+    trainernetwork.h
 
 FORMS    += mainwindow.ui \
     visualinfowidget.ui \
@@ -73,7 +89,9 @@ FORMS    += mainwindow.ui \
     optqfunwindow.ui \
     optrlswindow.ui \
     optdatanetwindow.ui \
-    optbuilddatasetwindow.ui
+    optbuilddatasetwindow.ui \
+    neuronnetworkwindow.ui \
+    optdronewindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \
