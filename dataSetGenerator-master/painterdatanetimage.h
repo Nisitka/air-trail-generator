@@ -7,6 +7,12 @@ class painterDataNetImage : public painterImage
 {
     Q_OBJECT
 signals:
+    // начало генерации образа
+    void startGenerateImg(int sizeP);
+
+    // информируем об текущей строке в генерации
+    void readyStringDataNet(int numString);
+
     void readyInputData();
 
     // информируем о том, что квадрат установлен

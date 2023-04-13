@@ -32,11 +32,15 @@ public:
     ~optMapGeneratorWindow();
 
 private slots:
+    void setDirNameMap();
+
     void setProgressBar(int countLayers);
 
     void openMap();
 
 private:
+    void setDesine();
+
     Ui::optMapGeneratorWindow *ui;
 };
 

@@ -22,5 +22,8 @@
         <file>resurs/trail2.png</file>
         <file>resurs/droneFinish.png</file>
         <file>resurs/droneStart.png</file>
+        <file>resurs/RLS.png</file>
+        <file>resurs/offRLS.png</file>
+        <file>resurs/onRLS.png</file>
     </qresource>
 </RCC>

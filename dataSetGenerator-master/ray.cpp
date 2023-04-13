@@ -26,20 +26,21 @@ void Ray::toEmit() // в градусах
     while (currentL < D)
     {
         coord = new int[3];
-        Way.append(coord);
 
         dLxy = currentL * cos(angleB);
         coord[X] =   dLxy * sin(angleE) / mSIZE;
         coord[Y] = -(dLxy * cos(angleE) / mSIZE);
         coord[Z] =   currentL * sin(angleB) / mH;
 
-        currentL += deltaL;
+        Way.append(coord);
+
+        currentL += deltaL; // текущая длина луча
     }
 }
 
-QVector <int*>* Ray::getWay()
+const QVector <int*>& Ray::getWay()
 {
-    return &Way;
+    return Way;
 }
 
 double Ray::toGrad(double angleRad)

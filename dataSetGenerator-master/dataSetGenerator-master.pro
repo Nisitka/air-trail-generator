@@ -51,7 +51,8 @@ SOURCES += main.cpp\
     neuronnetworkwindow.cpp \
     optdronewindow.cpp \
     drone.cpp \
-    trainernetwork.cpp
+    trainernetwork.cpp \
+    managerrls.cpp
 
 HEADERS  += \
     core.h \
@@ -81,7 +82,8 @@ HEADERS  += \
     neuronnetworkwindow.h \
     optdronewindow.h \
     drone.h \
-    trainernetwork.h
+    trainernetwork.h \
+    managerrls.h
 
 FORMS    += mainwindow.ui \
     visualinfowidget.ui \

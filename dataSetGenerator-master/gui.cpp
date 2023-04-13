@@ -57,7 +57,7 @@ GUI::GUI(QImage* geoMap,
                      "Нейронная сеть", "Нейронная сеть", mainWindow::usedNet);
     QObject::connect(visInfoWin, SIGNAL(setPointsTrail(QPoint,QPoint)),
                      netWin,     SLOT(setPointsPredictTrail(QPoint,QPoint)));
-    QObject::connect(netWin,     SIGNAL(predictTrail(int,int,int,int)),
+    QObject::connect(netWin,     SIGNAL(predictTrail(QString,int,int,int,int)),
                      visInfoWin, SLOT(startPredictTrail()));
     //
     droneWin = new optDroneWindow;
@@ -75,27 +75,30 @@ void GUI::connectDrone(Drone* drone)
 void GUI::connectTrainerNet(trainerNetwork *trainer)
 {
     //
-    QObject::connect(netWin,  SIGNAL(trainNet(QString,QString,QString,int,QString)),
-                     trainer, SLOT(run(QString,QString,QString,int,QString)));
+    QObject::connect(netWin,  SIGNAL(trainNet(QString,QString,int,QString)),
+                     trainer, SLOT(run(QString,QString,int,QString)));
+    //
+    QObject::connect(trainer, SIGNAL(updateListModels()),
+                     netWin,  SLOT(updateModelsList()));
 }
 
 void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
 {
     //
-    QObject::connect(netWin,       SIGNAL(predictToRect()),
-                     builderTrail, SLOT(predictToRect()));
+    QObject::connect(netWin,       SIGNAL(predictToRect(QString)),
+                     builderTrail, SLOT(predictToRect(QString)));
     //
     QObject::connect(builderTrail, SIGNAL(resultPredictRect(int,int)),
                      netWin,       SLOT(finishRectPredict(int,int)));
     //
-    QObject::connect(builderTrail, SIGNAL(setRect(int,int)),
-                     visInfoWin,   SLOT(setIdCoordsRectPredict(int,int)));
+    QObject::connect(builderTrail, SIGNAL(setRect(int,int,int)),
+                     visInfoWin,   SLOT(setIdCoordsRectPredict(int,int,int)));
     //
     QObject::connect(builderTrail, SIGNAL(resultPredictRect(int,int)),
                      visInfoWin,   SLOT(setResultPredictRect(int,int)));
     //
-    QObject::connect(netWin, SIGNAL(predictTrail(int,int,int,int)),
-                     builderTrail, SLOT(startPredictTrail(int,int,int,int)));
+    QObject::connect(netWin, SIGNAL(predictTrail(QString,int,int,int,int)),
+                     builderTrail, SLOT(startPredictTrail(QString,int,int,int,int)));
     //
     QObject::connect(builderTrail, SIGNAL(finishPredictTrail()),
                      visInfoWin,   SLOT(readyPredictTrail()));
@@ -142,33 +145,72 @@ void GUI::connectCalcQFun(calcQFunction* calcQFun)
                      calcQFun,   SLOT(setRect(int,int)));
 }
 
-void GUI::connectRLS(RLS* rls)
+void GUI::connectMRLS(managerRLS* mRLS)
 {
     //
-    QObject::connect(optRLSWin, SIGNAL(signalRunRLS(int,int,int)),
-                     rls,       SLOT(run(int,int,int)));
+    QObject::connect(mRLS,      SIGNAL(createReadyRLS()),
+                     optRLSWin, SLOT(buildNewRLSready()));
     //
-    QObject::connect(rls,       SIGNAL(startGenerateZD(int)),
-                     optRLSWin, SLOT(startGenerateZD(int)));
+    QObject::connect(optRLSWin, SIGNAL(signalOffRLS()),
+                     mRLS,      SLOT(offRLS()));
     //
-    QObject::connect(rls,       SIGNAL(readyVector(int)),
-                     optRLSWin, SLOT(readyVector(int)));
+    QObject::connect(optRLSWin, SIGNAL(setPositionRLS(int,int)),
+                     mRLS,      SLOT(setPositionRLS(int,int)));
     //
-    QObject::connect(rls,       SIGNAL(finishGenerateZD()),
-                     optRLSWin, SLOT(finishGenerateZD()));
-    // обмен данными для отрисовки графика ДН
-    QObject::connect(optRLSWin, SIGNAL(getDataGraphic()),
-                     rls,       SLOT(getDataGraphic()));
-    QObject::connect(rls,       SIGNAL(exportGraphicData(double*, double*, int)),
-                     optRLSWin, SLOT(repaintGraphic(double*, double*, int)));
-    optRLSWin->getDataGraphic(); // сразу же отображаем ДН
+    QObject::connect(mRLS,      SIGNAL(updateOptGui(int,int,int,int,bool)),
+                     optRLSWin, SLOT(setOptRLS(int,int,int,int,bool)));
+
+    // добавление/удаление РЛС
+    QObject::connect(optRLSWin,  SIGNAL(createRLS(QPoint*)),
+                     visInfoWin, SLOT(addRLS(QPoint*)));
+    QObject::connect(optRLSWin,  SIGNAL(delRLS(int)),
+                     visInfoWin, SLOT(delRLS(int)));
 
     //
-    QObject::connect(optRLSWin, SIGNAL(updateOptZDvert(int)),
-                     rls,       SLOT(setOptZDvert(int)));
+    QObject::connect(optRLSWin, SIGNAL(createRLS(QPoint*)),
+                     mRLS,      SLOT(addRLS(QPoint*)));
     //
-    QObject::connect(rls,       SIGNAL(readyOptZDvert()),
-                     optRLSWin, SLOT(readyOptZDvert()));
+    QObject::connect(optRLSWin, SIGNAL(delRLS(int)),
+                     mRLS,      SLOT(delRLS(int)));
+
+    // установка выбранной РЛС
+    QObject::connect(optRLSWin, SIGNAL(setRLS(int)),
+                     mRLS,      SLOT(setRLS(int)));
+    QObject::connect(optRLSWin,  SIGNAL(setRLS(int)),
+                     visInfoWin, SLOT(setCurRLS(int)));
+
+    //
+    QObject::connect(optRLSWin,  SIGNAL(signalRunRLS(int)),
+                     mRLS,       SLOT(runRLS(int)));
+    //
+    QObject::connect(mRLS,       SIGNAL(startGenerateZD(int)),
+                     optRLSWin,  SLOT(startGenerateZD(int)));
+    //
+    QObject::connect(mRLS,       SIGNAL(readyVector(int)),
+                     optRLSWin,  SLOT(readyVector(int)));
+    //
+    QObject::connect(mRLS,       SIGNAL(finishGenerateZD()),
+                     optRLSWin,  SLOT(finishGenerateZD()));
+    // обмен данными для отрисовки графика ДН
+    QObject::connect(optRLSWin,  SIGNAL(getDataGraphic()),
+                     mRLS,       SLOT(getDataGraphic()));
+    QObject::connect(mRLS,       SIGNAL(exportGraphicData(double*, double*, int)),
+                     optRLSWin,  SLOT(repaintGraphic(double*, double*, int)));
+    //optRLSWin->getDataGraphic(); // сразу же отображаем ДН
+
+    // установка пар-ов сигнала и его моделирования в пространстве
+    QObject::connect(optRLSWin,  SIGNAL(updateOptZDvert(int,int,int)),
+                     mRLS,       SLOT(setOptZDvert(int,int,int)));
+    //
+    QObject::connect(mRLS,       SIGNAL(readyOptZDvert()),
+                     optRLSWin,  SLOT(readyOptZDvert()));
+
+    //
+    QObject::connect(mRLS,       SIGNAL(startSetOpt(int)),
+                     optRLSWin,  SLOT(startSetOptRLS(int)));
+    //
+    QObject::connect(mRLS,       SIGNAL(readySetRay(int)),
+                     optRLSWin,  SLOT(updateProgressSetOptRLS(int)));
 }
 
 void GUI::connectMapPainter(painterMapImage* painterMap)
@@ -194,6 +236,14 @@ void GUI::connectPainterDataNet(painterDataNetImage* pDN)
     //
     QObject::connect(visInfoWin, SIGNAL(setRectPredict(int,int)),
                      pDN,        SLOT(setRect(int,int)));
+
+    // полоска прогресса
+    QObject::connect(pDN,      SIGNAL(startGenerateImg(int)),
+                     optDNWin, SLOT(startGenerateImg(int)));
+    QObject::connect(pDN,      SIGNAL(readyStringDataNet(int)),
+                     optDNWin, SLOT(updateProgressGenDN(int)));
+    QObject::connect(pDN,      SIGNAL(finish()),
+                     optDNWin, SLOT(finishGenerateImg()));
 }
 
 void GUI::connectBuilderDS(builderDataSet* builder)
@@ -208,8 +258,8 @@ void GUI::connectBuilderDS(builderDataSet* builder)
     QObject::connect(builder,       SIGNAL(readyData()),
                      optBuildDSWin, SLOT(readyPart()));
     // установка случайного квадрата прогноза
-    QObject::connect(builder,    SIGNAL(setCoordRect(int,int)),
-                     visInfoWin, SLOT(setIdCoordsRectPredict(int,int)));
+    QObject::connect(builder,    SIGNAL(setCoordRect(int,int,int)),
+                     visInfoWin, SLOT(setIdCoordsRectPredict(int,int,int)));
 }
 
 void GUI::showMainWin()

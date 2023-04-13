@@ -28,7 +28,8 @@ public:
                  const QPixmap& pix,
                  const QString& nameButton,
                  const QString& nameWindow,
-                 typeTask = dataSet);
+                 typeTask = dataSet,
+                 Qt::DockWidgetArea showPosition = Qt::TopDockWidgetArea);
 
     ~mainWindow();
 

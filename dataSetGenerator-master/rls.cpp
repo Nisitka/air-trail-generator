@@ -6,85 +6,142 @@
 
 #include <cmath>
 
-RLS::RLS(Map* map_, QObject *parent) : QObject(parent), map(map_)
+RLS::RLS(Map* map_, QPoint* position_, const QString& nameRLS, QObject *parent) : QObject(parent), map(map_)
 {
+    name = nameRLS;
+
+    position = position_;
+
+    mE = new double [2];
+
     set_lDV();
     buildZD();
+
+    maxHzd = 20;
+
+    D = 2000;
+
+    working = false;
 }
 
-void RLS::setPosition(double X, double Y)
+bool RLS::isWorking()
 {
-    position.setX(X);
-    position.setY(Y);
+    return working;
+}
+
+int RLS::getCountHorVectors()
+{
+    return COUNT_VECTORS_vert;
+}
+
+void RLS::on()
+{
+    working = true;
+}
+
+void RLS::off()
+{
+    working = false;
+
+    clearZD();
+}
+
+void RLS::getOpt(int &Rmax, int &Xpos, int &Ypos, int &Hzd, bool &working_)
+{
+    Rmax = D;
+    Xpos = position->x();
+    Ypos = position->y();
+    Hzd = maxHzd * map->getLenBlock();
+    working_ = working;
+}
+
+void RLS::setPosition(int X, int Y)
+{
+    position->setX(X);
+    position->setY(Y);
 
     // сразу считаем высоту, на которую ставим РЛС в этой позиции
-    Hpos = (double) map->getHeight(position.x(), position.y()) * Ray::mH + hSender;
+    Hpos = (double) map->getHeight(position->x(), position->y()) * Ray::mH + hSender;
 }
 
-void RLS::setOptZDvert(int Rmax)
+void RLS::removeZD()
 {
-    D = Rmax;
-    updateDV();
-    getDataGraphic();
-
-    for (int i=0; i<ZD.size(); i++)
+    for (int i=0; i<sizeZD; i++)
     {
         QVector <Ray*>* rays = ZD[i];
         for (int j=0; j<rays->size(); j++)
         {
             delete rays->at(j);
         }
+        delete rays;
+        readySetRay(i);
     }
-
     ZD.clear();
-    buildZD();
 }
 
-void RLS::run(int xPos, int yPos, int srez_H)
+void RLS::setOptZDvert(int Rmax,
+                       int countVertVectors, int countPointsDV)
 {
-    setPosition(xPos, yPos);
+    count_PointsDV = countPointsDV;
+    COUNT_VECTORS_vert = countVertVectors;
+    D = Rmax;
+
+    sizeZD = ZD.size();
+    // сообщаем GUI об начале применнения настроек
+    startSetOpt(sizeZD + COUNT_VECTORS_vert);
+
+    // построение ЗО в верт. плоскости
+    set_lDV();  // диаграмма направленности
+    updateDV(); // ЗО
+
+    // построение всей ЗО (по кругу)
+    removeZD();
+    buildZD();
+
+    readyOptZDvert();
+    getDataGraphic();
+}
+
+void RLS::emitSignal()
+{
+    // если РЛС не включена, то ничего не делаем
+    if (!working) return;
+
+    // кол-во вертикальных сегментов
+    int countS_ZD = ZD.size();
 
     int Wmap = map->getWidth();
     int Lmap = map->getLength();
     int Hmap = map->getCountLayers();
 
-    // кол-во вертикальных сегментов
-    int countS_ZD = ZD.size();
-
-    startGenerateZD(countS_ZD);
-
-    // очистка всех блоков от сигнала
-    for (int x=0; x<Wmap; x++)
-    {
-        for (int y=0; y<Lmap; y++)
-        {
-            for (int h=0; h<Hmap; h++)
-            {
-                map->getBlock(x, y, h)->removeZD();
-            }
-        }
-    }
+    int xRLS = position->x();
+    int yRLS = position->y();
 
     int num_Hmin = Hpos / Ray::mH; // индекс слоя мин-ой высоты
-
-    // полет лучей сигнала
 
     // по вертикальным сегментам
     for (int i=0; i<countS_ZD; i++)
     {   // по лучам в сегменте
-        for (int j=0; j<ZD.at(i)->size(); j++)
+        int countLZD = ZD.at(i)->size();
+        for (int j=0; j<countLZD; j++)
         {
-            QVector <int*>* way = ZD[i]->at(j)->getWay();
+            QVector <int*> way = ZD[i]->at(j)->getWay();
             int idX;
             int idY;
             int idH;
 
             // полет луча
-            for (int k=1; k<way->size(); k++)
+            int countDelta = way.size(); // кол-во дискрет одного луча
+            for (int k=1; k<countDelta; k++)
             {   // в пути луча содержатся относительные индексы
-                idX = position.x() + way->at(k)[Ray::X];
-                idY = position.y() + way->at(k)[Ray::Y];
-                idH = 1 + num_Hmin + way->at(k)[Ray::Z];
+                int* l = way[k];
+
+                idX = xRLS + l[Ray::X];
+                idY = yRLS + l[Ray::Y];
+                idH = 1 + num_Hmin + l[Ray::Z];
+
+                // если выше среза ЗО
+                if (idH > maxHzd) break;
 
                 // если луч вышел за карту
                 if (idY >= Lmap) break;
@@ -96,25 +153,46 @@ void RLS::run(int xPos, int yPos, int srez_H)
                 if (idH >= Hmap) break;
                 if (idH < 0) break;
 
-                //
-                if (idH > srez_H) break;
-
+                geoBlock* block = map->getBlock(idX, idY, idH);
                 // если блок на пути, является землей, то
-                if (map->getBlock(idX, idY, idH)->isEarth())
+                if (block->isEarth())
                 {
-                    //qDebug() << "луч столкнулся с рельефом";
+                    // луч столкнулся с рельефом
                     break;
                 }
                 else
                 {
-                    map->getBlock(idX, idY, idH)->toZD();
+                    if (!block->isZD())
+                    {
+                        block->toZD();
+                        blocksZD.append(block);
+                    }
                 }
             }
         }
         readyVector(i);
     }
-
     finishGenerateZD();
+}
+
+void RLS::emitSignal(int srez_H)
+{
+    this->on();
+
+    // установка среза высоты
+    maxHzd = srez_H;
+
+    // очистка карты от сигнала данной РЛС
+    clearZD();
+
+    emitSignal();
+}
+
+void RLS::clearZD()
+{
+    for (int i=0; i<blocksZD.size(); i++)
+        blocksZD[i]->removeZD();
+    blocksZD.clear();
 }
 
 void RLS::buildZD()
@@ -134,9 +212,8 @@ void RLS::buildZD()
 
             ZD.last()->append(new Ray(d, angleB, angleE));
         }
-    }
-
-    readyOptZDvert();
+        readySetRay(sizeZD + i);
+    }   
 }
 
 double RLS::functionDV(double e)
@@ -150,6 +227,16 @@ double RLS::functionDV(double e)
 
 void RLS::set_lDV()
 {
+    // Очищаем память от предыдущей lDV
+    for (int i=0; i<l_DV.size(); i++)
+    {
+        delete [] l_DV[i];
+    }
+    l_DV.clear();
+    // очищаем память от дискретных значений угла
+    delete [] mE;
+
+    // Создание массива дискретных значений угла
     mE = new double[count_PointsDV]; // дискретные значения угла места
     double dE = (double)Pi * 0.49 / count_PointsDV;
     for (int i=1; i<=count_PointsDV; i++)
@@ -170,6 +257,13 @@ void RLS::set_lDV()
 
 void RLS::buildDV()
 {
+    // очищаем память от предыдущей ДН
+    for (int i=0; i<DV.size(); i++)
+    {
+        delete [] DV[i];
+    }
+    DV.clear();
+
     int count_PointsDV = l_DV.size();
 
     // расчет проекций лучей в ДН
@@ -205,4 +299,46 @@ void RLS::getDataGraphic()
     }
 
     exportGraphicData(x, y, countPoint);
+}
+
+void RLS::getRectPosition(int &idX, int &idY, int &W, int &H)
+{
+    int w = D / map->getLenBlock();
+
+    idX = position->x() - w;
+    idY = position->y() - w;
+
+    W = w * 2;
+    H = W;
+}
+
+RLS::~RLS()
+{
+    // очистка блоков от сигнала данной РЛС
+    for (int i=0; i<blocksZD.size(); i++)
+    {
+        blocksZD[i]->removeZD();
+    }
+
+    sizeZD = ZD.size();
+    for (int i=0; i<sizeZD; i++)
+    {
+        QVector <Ray*>* rays = ZD[i];
+        for (int j=0; j<rays->size(); j++)
+        {
+            delete rays->at(j);
+        }
+        delete rays;
+    }
+
+    // Очищаем память от предыдущей lDV
+    for (int i=0; i<l_DV.size(); i++)
+    {
+        delete [] l_DV[i];
+    }
+    // очищаем память от дискретных значений угла
+    delete [] mE;
+
+    //
+    delete position;
 }

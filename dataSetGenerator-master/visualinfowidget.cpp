@@ -7,6 +7,8 @@
 
 #include "designer.h"
 
+#include "buildertraildrones.h"
+
 visualInfoWidget::visualInfoWidget(QImage* geoMap,
                                    QImage* dataNet,
                                    QImage* QFun,
@@ -28,8 +30,8 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
     connect(drawArea, SIGNAL(setCoordRLS(int,int)),
             this,     SIGNAL(updateCoordRLS(int,int)));
     //
-    connect(drawArea, SIGNAL(predictMoveDroneRect(int,int)),
-            this,     SLOT(setIdCoordsRectPredict(int,int)));
+    connect(drawArea, SIGNAL(predictMoveDroneRect(int,int,int)),
+            this,     SLOT(setIdCoordsRectPredict(int,int,int)));
     //
     connect(drawArea, SIGNAL(setPointsTrail(QPoint,QPoint)),
             this,     SIGNAL(setPointsTrail(QPoint,QPoint)));
@@ -42,21 +44,11 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
     connect(ui->objectVisualComboBox, SIGNAL(currentIndexChanged(int)),
             this,                     SLOT(switchVisual(int)));
 
-
-    //
-    connect(ui->setDirSaveImgButton, SIGNAL(clicked()),
-            this,                    SLOT(setDirImg()));
-
-    //
-    connect(ui->saveImgButton, SIGNAL(clicked()),
-            this,              SLOT(saveImage()));
-
     //
     connect(ui->setSizeAreaButton, SIGNAL(clicked()),
             this,                  SLOT(updateSizeDrawArea()));
-    Designer::setButton(ui->setSizeAreaButton);
 
-    ui->saveImgButton->setIcon(QIcon(":/resurs/save"));
+    //
     ui->typeSaveImglComboBox->addItems(typeSaveImg);
 
     // выбор инструмента по нажатию на кнопку
@@ -70,27 +62,19 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
             this,                      SLOT(setToolPredictRect()));
     connect(ui->predictTrailToolButton, SIGNAL(clicked()),
             this,                       SLOT(setToolPredictTrail()));
-    ui->setRLStoolButton->setIcon(QIcon(":/resurs/radarBlue"));
-    ui->moveMapToolButton->setIcon(QIcon(":/resurs/hand"));
-    ui->zoomMapToolButton->setIcon(QIcon(":/resurs/zoom"));
-    ui->predictRectToolButton->setIcon(QIcon(":/resurs/handDrone"));
-    ui->predictTrailToolButton->setIcon(QIcon(":/resurs/trail2"));
 
-    Designer::setButton(ui->setRLStoolButton, Designer::toolOFF);
-    Designer::setButton(ui->zoomMapToolButton, Designer::toolOFF);
-    Designer::setButton(ui->moveMapToolButton, Designer::toolOFF);
-    Designer::setButton(ui->predictRectToolButton, Designer::toolOFF);
-    Designer::setButton(ui->predictTrailToolButton, Designer::toolOFF);
+    // настройка визула
+    setDesine();
 
-    // настройка визуала GroupBox-ов
-    Designer::setGroupBox(ui->groupBox);
-    Designer::setGroupBox(ui->groupBox_2);
-    Designer::setGroupBox(ui->groupBox_3);
+    // сохранение изображения
+    connect(ui->setDirSaveImgButton, SIGNAL(clicked()),
+            this,                    SLOT(setDirNameImg()));
+    connect(ui->saveImgButton, SIGNAL(clicked()),
+            this,              SLOT(saveImage()));
 
-    // изначально выбираем постановку РЛС
-    lastButtonTool = ui->predictRectToolButton;
-    setToolRLS();
-
+    // сохранение рельефа (карты)
+    connect(ui->setDirSaveMapButton, SIGNAL(clicked()),
+            this,                    SLOT(setDirNameMap()));
     connect(ui->saveMapButton, SIGNAL(clicked()),
             this,              SLOT(saveMap()));
 
@@ -100,12 +84,41 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
     this->setMouseTracking(true);
 }
 
+void visualInfoWidget::setCurRLS(int idRLS)
+{
+    drawArea->setCurRLS(idRLS);
+}
+
+void visualInfoWidget::addRLS(QPoint* posRLS)
+{
+    drawArea->addRLS(posRLS);
+}
+
+void visualInfoWidget::delRLS(int indexRLS)
+{
+    drawArea->delRLS(indexRLS);
+}
+
+void visualInfoWidget::setDirNameMap()
+{
+    // путь и имя сохраняемого файла
+    QString file = QFileDialog::getSaveFileName(0,
+                                           tr("Сохранить рельеф"),
+                                           "Рельеф",
+                                           "*.txt ;;",
+                                           &mapFormat);
+    ui->dirSaveMapLineEdit->setText(file);
+
+    // и сразу сохраняем
+    saveMap();
+}
+
 void visualInfoWidget::setResultPredictRect(int idX, int idY)
 {
     drawArea->drawResultPredictRect(idX, idY);
 }
 
-void visualInfoWidget::setIdCoordsRectPredict(int idX, int idY)
+void visualInfoWidget::setIdCoordsRectPredict(int idX, int idY, int typeP)
 {
     int Wmap = map->getWidth();
     int Lmap = map->getLength();
@@ -119,7 +132,17 @@ void visualInfoWidget::setIdCoordsRectPredict(int idX, int idY)
     setRectPredict(idX - 100, idY - 100);
 
     // если прогнозируем траекторию, то добавить точку для её отрисовки
-    if (isPredictTrail) drawArea->addPointTrail(idX, idY);
+    if (isPredictTrail)
+    {
+        switch (typeP) {
+        case builderTrailDrones::mainP:
+            drawArea->addPointTrail(idX, idY);
+            break;
+        case builderTrailDrones::midP:
+
+            break;
+        }
+    }
 
     drawArea->setPredictRect(idX - 100, idY - 100);
     drawArea->repaint();
@@ -159,7 +182,7 @@ void visualInfoWidget::saveImage()
     drawArea->saveImage(ui->dirSaveImgLineEdit->text(), format, tSave);
 }
 
-void visualInfoWidget::setDirImg()
+void visualInfoWidget::setDirNameImg()
 {
     // путь и имя сохраняемого файла
     QString file = QFileDialog::getSaveFileName(0,
@@ -185,6 +208,7 @@ void visualInfoWidget::readyPredictTrail()
 void visualInfoWidget::startPredictTrail()
 {
     isPredictTrail = true;
+    numCurPoint = 0;
 
     // блокируем некоторые инструменты
 
@@ -210,50 +234,74 @@ void visualInfoWidget::switchVisual(int idType)
 
 void visualInfoWidget::setToolMoveImg()
 {
-    drawArea->setTool(areaDrawWidget::moveImg);
-
     Designer::setButton(ui->moveMapToolButton, Designer::toolON);
-    Designer::setButton(lastButtonTool, Designer::toolOFF);
+    if (drawArea->curTool() != areaDrawWidget::def)
+        Designer::setButton(lastButtonTool, Designer::toolOFF);
+
+    if (drawArea->curTool() == areaDrawWidget::moveImg)
+        drawArea->setTool(areaDrawWidget::def);
+    else
+        drawArea->setTool(areaDrawWidget::moveImg);
 
     lastButtonTool = ui->moveMapToolButton;
 }
 
 void visualInfoWidget::setToolRLS()
 {
-    drawArea->setTool(areaDrawWidget::setRLS);
-
     Designer::setButton(ui->setRLStoolButton, Designer::toolON);
-    Designer::setButton(lastButtonTool, Designer::toolOFF);
+    if (drawArea->curTool() != areaDrawWidget::def)
+        Designer::setButton(lastButtonTool, Designer::toolOFF);
+
+    if (drawArea->curTool() == areaDrawWidget::setRLS)
+        drawArea->setTool(areaDrawWidget::def);
+    else
+        drawArea->setTool(areaDrawWidget::setRLS);
 
     lastButtonTool = ui->setRLStoolButton;
 }
 
 void visualInfoWidget::setToolZoom()
 {
-    drawArea->setTool(areaDrawWidget::zoomImg);
-
     Designer::setButton(ui->zoomMapToolButton, Designer::toolON);
-    Designer::setButton(lastButtonTool, Designer::toolOFF);
+    if (drawArea->curTool() != areaDrawWidget::def)
+        Designer::setButton(lastButtonTool, Designer::toolOFF);
+
+    if (drawArea->curTool() == areaDrawWidget::zoomImg)
+        drawArea->setTool(areaDrawWidget::def);
+    else
+        drawArea->setTool(areaDrawWidget::zoomImg);
 
     lastButtonTool = ui->zoomMapToolButton;
 }
 
 void visualInfoWidget::setToolPredictRect()
 {
-    drawArea->setTool(areaDrawWidget::predictRect);
-
     Designer::setButton(ui->predictRectToolButton, Designer::toolON);
-    Designer::setButton(lastButtonTool, Designer::toolOFF);
+    if (drawArea->curTool() != areaDrawWidget::def)
+        Designer::setButton(lastButtonTool, Designer::toolOFF);
+
+    if (drawArea->curTool() == areaDrawWidget::predictRect)
+    {
+        drawArea->setTool(areaDrawWidget::def);
+    }
+    else
+    {
+        drawArea->setTool(areaDrawWidget::predictRect);
+    }
 
     lastButtonTool = ui->predictRectToolButton;
 }
 
 void visualInfoWidget::setToolPredictTrail()
 {
-    drawArea->setTool(areaDrawWidget::predictTrail);
-
     Designer::setButton(ui->predictTrailToolButton, Designer::toolON);
-    Designer::setButton(lastButtonTool, Designer::toolOFF);
+    if (drawArea->curTool() != areaDrawWidget::def)
+        Designer::setButton(lastButtonTool, Designer::toolOFF);
+
+    if (drawArea->curTool() == areaDrawWidget::predictTrail)
+        drawArea->setTool(areaDrawWidget::def);
+    else
+        drawArea->setTool(areaDrawWidget::predictTrail);
 
     lastButtonTool = ui->predictTrailToolButton;
 }
@@ -276,6 +324,46 @@ void visualInfoWidget::updateSizeDrawArea()
 void visualInfoWidget::updateImage()
 {
     drawArea->repaint();
+}
+
+void visualInfoWidget::setDesine()
+{
+    // иконки кнопок-инструментов
+    ui->setRLStoolButton->setIcon(QIcon(":/resurs/radarBlue"));
+    ui->moveMapToolButton->setIcon(QIcon(":/resurs/hand"));
+    ui->zoomMapToolButton->setIcon(QIcon(":/resurs/zoom"));
+    ui->predictRectToolButton->setIcon(QIcon(":/resurs/handDrone"));
+    ui->predictTrailToolButton->setIcon(QIcon(":/resurs/trail2"));
+
+    Designer::setButton(ui->setRLStoolButton, Designer::toolOFF);
+    Designer::setButton(ui->zoomMapToolButton, Designer::toolOFF);
+    Designer::setButton(ui->moveMapToolButton, Designer::toolOFF);
+    Designer::setButton(ui->predictRectToolButton, Designer::toolOFF);
+    Designer::setButton(ui->predictTrailToolButton, Designer::toolOFF);
+
+    //
+    Designer::setButton(ui->setDirSaveImgButton, Designer::white);
+    Designer::setButton(ui->setDirSaveMapButton, Designer::white);
+    //
+    Designer::setButton(ui->setSizeAreaButton);
+
+    //
+    Designer::setButton(ui->saveImgButton);
+    Designer::setButton(ui->saveMapButton);
+
+    // настройка визуала GroupBox-ов
+    Designer::setGroupBox(ui->typeVisObjGroupBox);
+    Designer::setGroupBox(ui->saveDataGroupBox);
+    Designer::setGroupBox(ui->sizeWinGroupBox);
+    Designer::setGroupBox(ui->toolsGroupBox);
+
+    Designer::setGroupBox(ui->mainGroupBox, Designer::lightBlue);
+
+    // настройка визула TabWidget-ов
+    Designer::setTabWidget(ui->tabWidget);
+
+    // настройка визула ComboBox-ов
+    //Designer::setComboBox(ui->typeSaveImglComboBox);
 }
 
 visualInfoWidget::~visualInfoWidget()

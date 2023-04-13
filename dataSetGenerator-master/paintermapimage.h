@@ -7,7 +7,15 @@ class painterMapImage : public painterImage
 {
     Q_OBJECT
 public slots:
+    // расчет цвета пикселя всего изображения
     void run();
+
+    // расчет выбранной области
+    void runToRect(int idX, int idY, int w, int h);
+    void runToRect(const QRect& rect);
+
+    // расчет выбранных областей
+    void runToRects(QRect* rects, int count);
 
     // узнать цвет по индексу высоты (и записать его в отправленную ячейку)
     void heightToColor(QColor* setColor, int numLayer);

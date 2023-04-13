@@ -64,7 +64,7 @@ private:
     double F_D(int D, double dE);
     double kG1 = 0.99;
     double kG2 = 0.2;
-    double kpD1 = 0.4;
+    double kpD1 = 0.45;
     double kpD2 = 0.8;
 
     //

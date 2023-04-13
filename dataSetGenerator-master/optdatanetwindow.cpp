@@ -15,9 +15,6 @@ optDataNetWindow::optDataNetWindow(QWidget *parent) :
             this,                 SIGNAL(generateImage()));
     connect(ui->setDefaultKrgbButton, SIGNAL(clicked()),
             this,                     SLOT(setDefaultK()));
-    // настройка визуала кнопок
-    Designer::setButton(ui->genDataNetButton);
-    Designer::setButton(ui->setDefaultKrgbButton, Designer::red);
 
     // движение ползунка сразу же обновляет коофициенты
     connect(ui->kG1Slider, SIGNAL(sliderReleased()),
@@ -28,6 +25,25 @@ optDataNetWindow::optDataNetWindow(QWidget *parent) :
             this,          SLOT(setKrgb()));
     connect(ui->kG4Slider, SIGNAL(sliderReleased()),
             this,          SLOT(setKrgb()));
+
+    setDesine();
+}
+
+void optDataNetWindow::startGenerateImg(int sizeP)
+{
+    ui->genDNProgressBar->setValue(0);
+    ui->genDNProgressBar->setMaximum(sizeP);
+    ui->genDNProgressBar->show();
+}
+
+void optDataNetWindow::updateProgressGenDN(int id)
+{
+    ui->genDNProgressBar->setValue(id);
+}
+
+void optDataNetWindow::finishGenerateImg()
+{
+    ui->genDNProgressBar->hide();
 }
 
 void optDataNetWindow::setDefaultK()
@@ -52,6 +68,25 @@ void optDataNetWindow::setKrgb()
     updateKrgb(gK1, gK2, gK3, gK4, 0.02);
 
     generateImage();
+}
+
+void optDataNetWindow::setDesine()
+{
+    // настройка визуала кнопок
+    Designer::setButton(ui->genDataNetButton);
+    Designer::setButton(ui->setDefaultKrgbButton, Designer::red);
+
+    // настройка визула TabWidget-ов
+    Designer::setTabWidget(ui->tabWidget);
+
+    // настройка визуала GroupBox-ов
+    Designer::setGroupBox(ui->rgbGroupBox);
+    Designer::setGroupBox(ui->buildDataGroupBox);
+
+    Designer::setGroupBox(ui->mainGroupBox, Designer::lightBlue);
+
+    Designer::setProgressBar(ui->genDNProgressBar);
+    ui->genDNProgressBar->hide();
 }
 
 optDataNetWindow::~optDataNetWindow()

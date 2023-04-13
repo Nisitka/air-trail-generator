@@ -21,6 +21,8 @@ public:
 private:
     bool earth;
     bool inZD;
+
+    int countZD;
 };
 
 #endif // GEOBLOCK_H

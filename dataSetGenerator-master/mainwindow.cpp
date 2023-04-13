@@ -13,14 +13,22 @@ mainWindow::mainWindow(QWidget *parent) :
     this->setWindowTitle("");
 
     // настройка визуала
-    //this->setStyleSheet("background-color: rgb(81,83,85);");
+    this->setStyleSheet("QMainWindow{"
+                        "   background-color: rgb(201,214,234);"
+                        "   border: 2px solid rgb(84,123,177);}");
 
     toolBarBuildDS = new QToolBar("Панель инструментов");
-    toolBarBuildDS->setStyleSheet("background-color: rgb(240,240,240);");
+    toolBarBuildDS->setStyleSheet("QToolBar {"
+                                  "    border: 2px solid rgb(84,123,177);"
+                                  "    background-color: rgb(255,255,255);"
+                                  "};");
     addToolBar(Qt::TopToolBarArea, toolBarBuildDS); // добавляем в панель инструментов
 
     toolBarUsedNet = new QToolBar("Панель инструментов");
-    toolBarUsedNet->setStyleSheet("background-color: rgb(240,240,240);");
+    toolBarUsedNet->setStyleSheet("QToolBar {"
+                                  "    border: 2px solid rgb(84,123,177);"
+                                  "    background-color: rgb(255,255,255);"
+                                  "};");
     addToolBar(Qt::TopToolBarArea, toolBarUsedNet);
 }
 
@@ -28,12 +36,16 @@ void mainWindow::addTask(QWidget *widget,
                          const QPixmap& pix,
                          const QString& nameButton,
                          const QString& nameWindow,
-                         typeTask type)
+                         typeTask type,
+                         Qt::DockWidgetArea showPosition)
 {
     // вставка виджета в интерфейс
     QDockWidget* dock = new QDockWidget(nameWindow, this);
+    dock->setStyleSheet("QDockWidget{"
+                        "   background-color: rgb(201,214,234);"
+                        "}");
     dock->setWidget(widget);
-    addDockWidget(Qt::RightDockWidgetArea, dock);
+    addDockWidget(showPosition, dock);
 
     // создаем кнопку для вызова задачи
     switch (type) {

@@ -16,7 +16,7 @@ signals:
     void setAngleE(double E); // градусы
 
     // установить коодинаты квадрата прогноза
-    void setCoordRect(int idX, int idY);
+    void setCoordRect(int idX, int idY, int typeP = -1);
 
     // смоделировать работу РЛС
     void generateZD(int Xpos, int Ypos, int Hsrez);

@@ -11,7 +11,8 @@
 #include "geogenerator.h"
 #include "paintermapimage.h"
 #include "calcqfunction.h"
-#include "rls.h"
+//#include "rls.h"
+#include "managerrls.h"
 #include "painterdatanetimage.h"
 #include "builderdataset.h"
 #include "trackparametras.h"
@@ -29,6 +30,8 @@ public:
 
     void run();
 
+    static void moveNewThread(QObject*);
+
 private:
     // интерфейс приложения
     GUI* gui;
@@ -45,8 +48,8 @@ private:
     //
     calcQFunction* calcQFun;
 
-    // РЛС
-    RLS* rls;
+    // менеджер РЛС
+    managerRLS* mRLS;
 
     //
     painterDataNetImage* painterNetData;

@@ -27,12 +27,14 @@ Core::Core()
     calcQFun = new calcQFunction(map, tracker->getE());
     objects.append(calcQFun);
 
-    // инициализация РЛС
-    rls = new RLS(map);
-    // при завершении обсчета ЗО - отрисовать изменения
-    QObject::connect(rls,        SIGNAL(finishGenerateZD()),
-                     mapPainter, SLOT(run()));
-    objects.append(rls);
+    // инициализация менеджера РЛС
+    mRLS = new managerRLS(map);
+    // отрисовка
+    QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(int,int,int,int)),
+                     mapPainter, SLOT(runToRect(int,int,int,int)));
+    QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(QRect*, int)),
+                     mapPainter, SLOT(runToRects(QRect*, int)));
+    objects.append(mRLS);
 
     //
     painterNetData = new painterDataNetImage(map, tracker->getE());
@@ -56,10 +58,10 @@ Core::Core()
     QObject::connect(builderDS, SIGNAL(setAngleE(double)),
                      tracker,   SLOT(setE(double)));
 
-    QObject::connect(builderDS, SIGNAL(generateZD(int,int,int)),
-                     rls,       SLOT(run(int,int,int)));
-    QObject::connect(rls,       SIGNAL(finishGenerateZD()),
-                     builderDS, SLOT(readyZD()));
+    QObject::connect(builderDS,  SIGNAL(generateZD(int,int,int)),
+                     mRLS,       SLOT(runRLS(int,int,int)));
+    QObject::connect(mRLS,       SIGNAL(finishGenerateZD()),
+                     builderDS,  SLOT(readyZD()));
 
     QObject::connect(builderDS,      SIGNAL(generateNetImage()),
                      painterNetData, SLOT(run()));
@@ -89,7 +91,7 @@ Core::Core()
     //
     gui->connectCalcQFun(calcQFun);
     //
-    gui->connectRLS(rls);
+    gui->connectMRLS(mRLS);
     //
     gui->connectPainterDataNet(painterNetData);
     //
@@ -104,10 +106,15 @@ Core::Core()
     // помещаем все объекты в разные потоки
     for (int i=0; i<objects.size(); i++)
     {
-        QThread* thread = new QThread;
-        objects[i]->moveToThread(thread);
-        thread->start();
+        moveNewThread(objects[i]);
     }
+}
+
+void Core::moveNewThread(QObject *obj)
+{
+    QThread* thread = new QThread;
+    obj->moveToThread(thread);
+    thread->start();
 }
 
 void Core::run()

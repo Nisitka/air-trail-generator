@@ -6,7 +6,6 @@
 
 #include "geogenerator.h"
 #include "calcqfunction.h"
-#include "rls.h"
 
 #include "mainwindow.h"
 
@@ -24,6 +23,7 @@
 #include "optdronewindow.h"
 #include "drone.h"
 #include "trainernetwork.h"
+#include "managerrls.h"
 
 class GUI
 {
@@ -43,7 +43,7 @@ public:
     void connectCalcQFun(calcQFunction*);
 
     // присоединить к интерфейсу РЛС
-    void connectRLS(RLS*);
+    void connectMRLS(managerRLS*);
 
     //
     void connectPainterDataNet(painterDataNetImage*);

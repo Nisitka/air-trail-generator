@@ -15,19 +15,47 @@ class optRLSwindow : public QWidget
 {
     Q_OBJECT
 signals:
+    // создать новую РЛС
+    void createRLS(QPoint* posRLS);
+
+    // удалить РЛС
+    void delRLS(int id);
+
+    // выбрать РЛС
+    void setRLS(int id);
+
+    // установить новую позицию РЛС
+    void setPositionRLS(int idX, int idY);
+
     // запуск моделирования РЛС
-    void signalRunRLS(int x, int y, int H); // позиция и срез высот
+    void signalRunRLS(int H); // срез высот
+
+    // выключить РЛС(т.е. очистить от РЛ поля)
+    void signalOffRLS();
 
     // запросить данные для графика ДН антены
     void getDataGraphic();
 
     // обновить пар-ры ЗО в вертикальной плоскости
-    void updateOptZDvert(int Rmax); // в метрах
+    void updateOptZDvert(int Rmax, // в метрах
+                         int countVertVectors, int countPointsDV); // кол-водискрет
 
     //
     void getColorHeight(QColor* color, int height);
 
 public slots:
+    // инициализация новой РЛС завершина
+    void buildNewRLSready();
+
+    // установить параметры РЛС
+    void setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working);
+
+    // начало изменения настроек прогресса
+    void startSetOptRLS(int sizeP); // кол-во дискрет прогресса
+
+    // обновить полоску прогресса установки настроек РЛС
+    void updateProgressSetOptRLS(int id); // номер текущей дискреты
+
     // перерисовать график ДН
     void repaintGraphic(double* x, double* y, int count);
 
@@ -54,15 +82,28 @@ public:
     ~optRLSwindow();
 
 private slots:
-    void runRLS();
+    // изменить точку постановки выбранной РЛС
+    void setNewPosRLS();
+
+    void enablingRLS();
 
     void updateHZD(int);
 
     // уcтановить пар-ры ЗО в вертикальной плоскости
     void setOptZDvert();
 
+    void addRLS();
+
+    void removeRLS();
+
 private:
-    QCursor cursor;
+
+    // работает ли выбранная РЛС
+    bool workingCurRLS;
+
+    void setDesine();
+
+    QStringList namesRLS;
 
     void updateColorH();
 
@@ -72,11 +113,12 @@ private:
 
     QCustomPlot* cPlot;
 
-    // в индексах блоков карты
-    int xRLS;
+    // координаты РЛС
+    int xRLS; // в индексах блоков карты
     int yRLS;
     int hRLS;
 
+    // срез высоты ЗО
     int hZD;
 
     Ui::optRLSwindow *ui;

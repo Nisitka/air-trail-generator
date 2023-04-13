@@ -18,6 +18,8 @@ optQFunWindow::optQFunWindow(QWidget *parent) :
     // настройка визуала полоски прогресса
     Designer::setProgressBar(ui->calcQFunProgressBar);
     ui->calcQFunProgressBar->hide();
+
+    Designer::setGroupBox(ui->mainGroupBox, Designer::lightBlue);
 }
 
 void optQFunWindow::emitSignalRunGenImage()

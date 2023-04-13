@@ -11,9 +11,8 @@ public:
     Ray(double D, double angleB, double angleE); // м, град, град
 
     enum coords_{X, Y, Z};
-    // испустить луч сигнала
-    void toEmit();
-    QVector <int*>* getWay();
+
+    const QVector <int*>& getWay();
 
     // множетель масштаба
     static const int mSIZE = 20; // в одной клетке mSIZE метров
@@ -25,6 +24,9 @@ public:
     ~Ray();
 
 private:
+    // испустить луч сигнала
+    void toEmit();
+
     // частота дискритезации распрастронения
     double deltaL; // (метры)
 

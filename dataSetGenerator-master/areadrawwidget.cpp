@@ -16,6 +16,9 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg,
 {
     this->setFixedSize(width, length);
 
+    // отправляем данные об координатах курсора
+    isExportCoord = true;
+
     // инициализация контейнера для изображений
     images = QVector <QImage*> (3);
 
@@ -51,7 +54,29 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg,
     pixBeginDrone = new QPixmap(":/resurs/droneStart");
     pixFinishDrone = new QPixmap(":/resurs/droneFinish");
 
+    pixRLS = new QPixmap(":/resurs/offRLS");
+    pixCurRLS = new QPixmap(":/resurs/onRLS");
+
     isPredictTrail = false;
+
+    drawSFPointsTrail = false;
+
+    setTool(def);
+}
+
+void areaDrawWidget::addRLS(QPoint *posRLS)
+{
+    coordsRLS.append(posRLS);
+
+    qDebug() << "add RLS";
+}
+
+void areaDrawWidget::delRLS(int indexRLS)
+{
+    coordsRLS.removeAt(indexRLS);
+
+    repaint();
+    qDebug() << "delete RLS";
 }
 
 void areaDrawWidget::clearTrail()
@@ -61,6 +86,12 @@ void areaDrawWidget::clearTrail()
         delete trail[i];
     }
     trail.clear();
+}
+
+void areaDrawWidget::setCurRLS(int idRLS)
+{
+    idCurRLS = idRLS;
+    repaint();
 }
 
 void areaDrawWidget::drawResultPredictRect(int idXres, int idYres)
@@ -199,9 +230,11 @@ void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
         painter.drawLine(trail[i]->x() * k  + Xo, trail[i]->y() * k  + Yo,
                          trail[i+1]->x() * k  + Xo, trail[i+1]->y() * k  + Yo);
     }
+    if (trail.size() > 0) // отрисовываем последнию точку
+        painter.drawEllipse(QPoint(trail.last()->x() * k  + Xo, trail.last()->y() * k  + Yo), 2, 2);
 
-    // если !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if (true)
+    // отрисовывать начальную и конечные точкитраектории
+    if (drawSFPointsTrail)
     {
         painter.setPen(QPen(QColor(51,255,240), 1));
 
@@ -213,8 +246,8 @@ void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
 
         if (curOptRepaint == geoMap)
         {
-            painter.drawImage(bX-16, bY-32, pixBeginDrone->scaled(32,32).toImage());
-            painter.drawImage(fX-16, fY-34, pixFinishDrone->scaled(32,32).toImage());
+            painter.drawPixmap(bX-16, bY-32, pixBeginDrone->scaled(32,32));
+            painter.drawPixmap(fX-16, fY-34, pixFinishDrone->scaled(32,32));
         }
 
         painter.drawEllipse(QPoint(fX, fY), 2, 2);
@@ -225,6 +258,23 @@ void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
         {
             painter.setPen(QPen(QColor(255,0,128), 1, Qt::DashLine));
             painter.drawLine(bX, bY, fX, fY);
+        }
+    }
+
+    // отрисовка станций (только на физ. карте)
+    if (curOptRepaint == geoMap)
+    {
+        int rectX;
+        int rectY;
+        for (int i=0; i<coordsRLS.size(); i++)
+        {
+            rectX = coordsRLS[i]->x() * k  + Xo;
+            rectY = coordsRLS[i]->y() * k  + Yo;
+
+            if (i == idCurRLS)
+                painter.drawPixmap(rectX-16, rectY-18, pixCurRLS->scaled(36, 36));
+            else
+                painter.drawPixmap(rectX-16, rectY-18, pixRLS->scaled(36, 36));
         }
     }
 
@@ -258,6 +308,11 @@ void areaDrawWidget::setTool(tools tool_)
     repaint();
 }
 
+int areaDrawWidget::curTool()
+{
+    return tool;
+}
+
 void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
 {
     xMouse = mouseEvent->x();
@@ -271,9 +326,16 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
     {
         idX = (double)dX / k;
         idY = (double)dY / k;
-        updateCoord(idX, idY);
+
+        if (isExportCoord) updateCoord(idX, idY);
     }
+
+    // в зависимости от выбранного инструмента меняем курсор и т.д.
     switch (tool) {
+    case def:
+        this->setCursor(Qt::ArrowCursor);
+        break;
+
     case zoomImg:
         this->setCursor(zoomCursor);
         break;
@@ -358,6 +420,8 @@ void areaDrawWidget::mousePressEvent(QMouseEvent *mouseEvent)
             break;
 
         case predictTrail:
+            drawSFPointsTrail = true;
+
             idX = (double)dX / k;
             idY = (double)dY / k;
 
@@ -409,6 +473,7 @@ void areaDrawWidget::mousePressEvent(QMouseEvent *mouseEvent)
             break;
         case moveImg:
             this->setCursor(moveCloseCursor);
+            isExportCoord = false;
             break;
         }
     }
@@ -416,13 +481,19 @@ void areaDrawWidget::mousePressEvent(QMouseEvent *mouseEvent)
 
 void areaDrawWidget::startPredictTrail()
 {
+    // очищаем траекторию с предыдущего прогноза
     clearTrail();
+
     isPredictTrail = true;
+
+    // не рисуем прогноз в области
+    paintPredictRect = false;
 }
 
 void areaDrawWidget::finishPredictTrail()
 {
     isPredictTrail = false;
+
 }
 
 void areaDrawWidget::mouseReleaseEvent(QMouseEvent* mouseEvent)
@@ -441,6 +512,7 @@ void areaDrawWidget::mouseReleaseEvent(QMouseEvent* mouseEvent)
         break;
     case moveImg:
         this->setCursor(moveOpenCursor);
+        isExportCoord = true;
 
         break;
     }

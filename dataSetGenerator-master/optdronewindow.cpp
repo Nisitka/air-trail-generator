@@ -3,6 +3,8 @@
 
 #include <QDebug>
 
+#include "designer.h"
+
 optDroneWindow::optDroneWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::optDroneWindow)
@@ -11,6 +13,10 @@ optDroneWindow::optDroneWindow(QWidget *parent) :
 
     connect(ui->setTrakButton, SIGNAL(clicked()),
             this,              SLOT(setTrackOptions()));
+
+    Designer::setGroupBox(ui->mainGroupBox, Designer::lightBlue);
+    Designer::setGroupBox(ui->trailGroupBox);
+    Designer::setButton(ui->setTrakButton);
 }
 
 void optDroneWindow::setTrackOptions()

@@ -18,6 +18,15 @@ signals:
                     double kB1);
 
 public slots:
+    // начало генерации образа
+    void startGenerateImg(int sizeP);
+
+    //
+    void updateProgressGenDN(int id);
+
+    // конец обсчета образа
+    void finishGenerateImg();
+
     // установить коофициенты по умолчанию
     void setDefaultK();
 
@@ -31,6 +40,8 @@ private slots:
     void setKrgb();
 
 private:
+    void setDesine();
+
     const int MAX_VAL_SLI = 1000;
 
     // зеленый

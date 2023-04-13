@@ -7,12 +7,15 @@ class trainerNetwork: public QObject
 {
     Q_OBJECT
 
+signals:
+    // обновить список моделей
+    void updateListModels();
+
 public slots:
-    void run(const QString& dirApp,
-             const QString& dirImgs,
+    void run(const QString& dirImgs,
              const QString& dirRewards,
              int coutEpoch,
-             const QString& dirNameNet);
+             const QString& nameNet);
 
 public:
     trainerNetwork();

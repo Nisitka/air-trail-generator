@@ -9,8 +9,6 @@ Map::Map()
     file = new QFile;
 
     this->build(900, 900, 200);
-    //save("C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\saveMap");
-    //this->open("C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\map.txt");
 
     // длина ребра блока по умолчанию
     lenBlock = 20;
@@ -46,48 +44,49 @@ void Map::save(const QString& dirFile)
     }
     else
     {
-        qDebug() << "ошибка создания/открытия файла";
+        qDebug() << "ошибка создания файла";
     }
 }
 
 void Map::open(const QString &dirFile)
 {
-    //qDebug() << dirFile;
-
     delete file;
 
     file = new QFile(dirFile);
-    if (!file->open(QIODevice::ReadOnly)) qDebug() << "ошибка открытия файла";
-
-    QByteArray data;
-    data = file->readAll();
-
-    //qDebug() << QString(data);
-
-    QStringList lines = QString(data).split("\n", QString::SkipEmptyParts);
-
-    int W = lines[3].split(" ", QString::SkipEmptyParts).size() - 1;
-    int L = lines.size() - 3;
-    int H = 200; // пока что так!!!
-    qDebug() << W << L;
-    // изменяем конфигурацию карты
-    resize(W, L, H);
-
-    int h;
-    for (int y=0; y<L; y++)
+    if (file->open(QIODevice::ReadOnly))
     {
-        QStringList strValues = lines[y + 3].split(" ", QString::SkipEmptyParts);
-        for (int x=0; x<W; x++)
+        QByteArray data;
+        data = file->readAll();
+
+        QStringList lines = QString(data).split("\n", QString::SkipEmptyParts);
+
+        int W = lines[3].split(" ", QString::SkipEmptyParts).size() - 1;
+        int L = lines.size() - 3;
+        int H = 200; // пока что так!!!
+        qDebug() << W << L;
+        // изменяем конфигурацию карты
+        resize(W, L, H);
+
+        int h;
+        for (int y=0; y<L; y++)
         {
-            h = strValues[x].toInt(); // макс. высота в этой координате
-            for (int i=0; i<h; i++)
+            QStringList strValues = lines[y + 3].split(" ", QString::SkipEmptyParts);
+            for (int x=0; x<W; x++)
             {
-                this->getBlock(x, y, i)->toEarth(); // засыпаем землей
+                h = strValues[x].toInt(); // макс. высота в этой координате
+                for (int i=0; i<h; i++)
+                {
+                    this->getBlock(x, y, i)->toEarth(); // засыпаем землей
+                }
             }
         }
-    }
 
-    updateVisual();
+        updateVisual();
+    }
+    else
+    {
+        qDebug() << "ошибка открытия файла";
+    }
 }
 
 void Map::setLenBlock(double len)

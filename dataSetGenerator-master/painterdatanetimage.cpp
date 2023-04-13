@@ -129,8 +129,12 @@ int painterDataNetImage::matchGreen(int x, int y)
 
 void painterDataNetImage::run()
 {
+    //
     int w = map->getWidth();
     int l = map->getLength();
+
+    // информируем GUI об начале генерации образа
+    startGenerateImg(w);
 
     *img = img->scaled(w, l);
 
@@ -150,6 +154,7 @@ void painterDataNetImage::run()
 
             img->setPixelColor(x, y, QColor(r, g, b));
         }
+        readyStringDataNet(x);
     }
 
     finish();

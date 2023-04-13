@@ -15,7 +15,7 @@ class visualInfoWidget;
 class visualInfoWidget : public QWidget
 {
     Q_OBJECT
-signals:
+signals:  
     void updateCoordRLS(int x, int y);
 
     void saveMap_signal(const QString& dirFile);
@@ -25,6 +25,16 @@ signals:
     void setPointsTrail(QPoint begin, QPoint last);
 
 public slots:
+    // установить выбранную РЛС
+    void setCurRLS(int idRLS);
+
+    // добавить РЛС для отрисовки на карте
+    void addRLS(QPoint* posRLS);
+
+    // удалить РЛС с отрисовки
+    void delRLS(int indexRLS);
+
+    //
     void updateImage();
 
     //
@@ -35,7 +45,7 @@ public slots:
 
     // вычисляем координаты левего верхнего угла квадрата для прогнозирования
     // и информируем об этом объекты (которым эта инфо. нужна)
-    void setIdCoordsRectPredict(int idX, int idY);
+    void setIdCoordsRectPredict(int idX, int idY, int typePoint = -1);
 
     // начать прогноз траектории
     void startPredictTrail();
@@ -57,13 +67,14 @@ protected:
 
 private slots:
     void saveMap();
+    void setDirNameMap();
 
     void showInfoCoord(double x, double y);
     void switchVisual(int idType);
 
     void saveImage();
 
-    void setDirImg();
+    void setDirNameImg();
 
     // установка инструментов
     void setToolRLS();
@@ -73,8 +84,14 @@ private slots:
     void setToolPredictTrail();
 
 private:
-    //
+    // настройка визуала
+    void setDesine();
+
+    // прогнозируется ли сейчас траектория
     bool isPredictTrail;
+    //
+    int sizeFilter = 2;
+    int numCurPoint;
 
     // опции сохранения изображения
     enum optSaveImg{screen, full, curRect}; // скирншот, всю карту, выделенную область
@@ -88,6 +105,7 @@ private:
 
     // карта (рельеф)
     Map* map;
+    QString mapFormat = ".txt";
 
     // виджет, на котором будет происходить отрисовка изоб.
     areaDrawWidget* drawArea;

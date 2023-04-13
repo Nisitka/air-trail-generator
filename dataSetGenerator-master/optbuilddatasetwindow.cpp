@@ -12,8 +12,6 @@ optBuildDataSetWindow::optBuildDataSetWindow(QWidget *parent) :
     ui->setupUi(this);
 
     ui->buildDSProgressBar->setValue(0);
-    // настройка визуала полоски прогресса
-    Designer::setProgressBar(ui->buildDSProgressBar);
     ui->buildDSProgressBar->hide();
 
     //
@@ -26,7 +24,7 @@ optBuildDataSetWindow::optBuildDataSetWindow(QWidget *parent) :
     // запуск генерации обучающей выборки
     connect(ui->buildDataSetButton, SIGNAL(clicked()),
             this,                   SLOT(generateDataSet()));
-    Designer::setButton(ui->buildDataSetButton);
+
 
     // обновляем значения размера ОВ после каждого изменения знач.
     connect(ui->countMapSpinBox, SIGNAL(valueChanged(int)),
@@ -34,6 +32,27 @@ optBuildDataSetWindow::optBuildDataSetWindow(QWidget *parent) :
     connect(ui->countRectSpinBox, SIGNAL(valueChanged(int)),
             this,                 SLOT(updateSizeDS()));
     updateSizeDS();
+
+    setDesine();
+}
+
+void optBuildDataSetWindow::setDesine()
+{
+    /* Настройка визуала */
+
+    // полоски прогресса
+    Designer::setProgressBar(ui->buildDSProgressBar);
+
+    // кнопок
+    Designer::setButton(ui->buildDataSetButton);
+    Designer::setButton(ui->setDirNetImgButton, Designer::white);
+    Designer::setButton(ui->setDirQFunButton, Designer::white);
+
+    // GroupBox-ов
+    Designer::setGroupBox(ui->sizeDSGroupBox);
+    Designer::setGroupBox(ui->dirsDataSetGroupBox);
+
+    Designer::setGroupBox(ui->mainGroupBox, Designer::lightBlue);
 }
 
 void optBuildDataSetWindow::readyPart()

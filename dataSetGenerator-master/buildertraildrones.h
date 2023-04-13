@@ -24,21 +24,22 @@ signals:
     void resultPredictRect(int idX, int idY); // индексы дискреты
 
     // установить квадрат обзора
-    void setRect(int idX, int idY);
+    void setRect(int idX, int idY, int typePoint); // id дискрет, тип точки
 
     // завершение прогноза траектории
     void finishPredictTrail();
 
 public slots:
     // начать прогноз траектории от точки до точки
-    void startPredictTrail(int idXa, int idYa,
+    void startPredictTrail(const QString& nameModel,
+                           int idXa, int idYa,
                            int idXb, int idYb);
 
     // область прогноза установлена
     void readySetRect(int idXo, int idYo);
 
     // начать прогноз в прямоугольнике
-    void predictToRect();
+    void predictToRect(const QString &nameNet);
 
     // запустить сеть
     void usedNet();
@@ -46,12 +47,24 @@ public slots:
 public:
     builderTrailDrones(double* angleEDrone);
 
+    // типы точек траектории
+    enum typePoint{mainP, midP}; // опорные, промежуточные
+
 private slots:
     void netFinish();
 
     void failedProcess(QProcess::ProcessError error);
 
 private:
+    //
+    void predictNextPoint();
+
+    // начать прогноз в прямоугольнике
+    void predictToRect();
+
+    // выбрать модель
+    void setNameModel(const QString& nameModel);
+
     // азимут БПЛА
     double* aEDrone;
 
@@ -61,6 +74,12 @@ private:
 
     // совокупность точек - траектория
     QVector <QPoint*> points;
+
+    // номер текущей точки
+    int numCurPoint;
+
+    // размер фильтра траектории
+    int sizeFilter = 2;
 
     // текущие координаты БПЛА
     int curIdX;
@@ -76,14 +95,16 @@ private:
     double matchD(int idXa, int idYa,  // нач. точка
                   int idXb, int idYb); // кон. точка)
 
-    void openOutFile();
+    void setOutFile();
     void readOutData(int& x, int& y);
     enum coordsId{X, Y};
 
     // путь к exe использования сети
     QString dirProgram;
-    // путь к файлу модели
-    QString dirNet;
+    // путь к папке с моделями
+    QString dirNets;
+    //
+    QString nameModel;
 
     // путь к файлу образа (входной инф.)g
     QString dirInputData;
@@ -98,6 +119,9 @@ private:
 
     // левый верхний угол обл. прогнозирования
     int idXo, idYo;
+
+    // расстояние, при котором летим сразу по прямой
+    int const minD = 90;
 };
 
 #endif // BUILDERTRAILDRONES_H

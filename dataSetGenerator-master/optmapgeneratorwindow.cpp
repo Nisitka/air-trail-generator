@@ -4,6 +4,8 @@
 #include "ray.h"
 #include "designer.h"
 
+#include <QFileDialog>
+
 optMapGeneratorWindow::optMapGeneratorWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::optMapGeneratorWindow)
@@ -13,14 +15,8 @@ optMapGeneratorWindow::optMapGeneratorWindow(QWidget *parent) :
     // запуск генерации карты по нажатию кнопки
     connect(ui->generateNewGbutton, SIGNAL(clicked()),
             this,                   SLOT(startGenerateMap()));
-    // настройка визуала кнопки
-    Designer::setButton(ui->generateNewGbutton);
 
     ui->buildProgressBar->setValue(0);
-
-    // настройка визуала полоски прогресса
-    Designer::setProgressBar(ui->buildProgressBar);
-    ui->buildProgressBar->hide();
 
     // значение длины ребра блока по умолчанию
     ui->lenBlockSpinBox->setValue(20);
@@ -30,6 +26,40 @@ optMapGeneratorWindow::optMapGeneratorWindow(QWidget *parent) :
 
     connect(ui->openMapButton, SIGNAL(clicked()),
             this,              SLOT(openMap()));
+    connect(ui->setDirNameMapButton, SIGNAL(clicked()),
+            this,                    SLOT(setDirNameMap()));
+
+    setDesine();
+}
+
+void optMapGeneratorWindow::setDirNameMap()
+{
+    QString dirNameFile = QFileDialog::getOpenFileName();
+    ui->dirMapLineEdit->setText(dirNameFile);
+
+    openMap();
+}
+
+void optMapGeneratorWindow::setDesine()
+{
+    // настройка визула TabWidget-ов
+    Designer::setTabWidget(ui->optTabWidget);
+
+    // настройка визуала GroupBox-ов
+    Designer::setGroupBox(ui->geoGroupBox);
+    Designer::setGroupBox(ui->optBlocksGroupBox);
+    Designer::setGroupBox(ui->dirOpenMapGroupBox);
+
+    // настройка визуала кнопок
+    Designer::setButton(ui->generateNewGbutton);
+    Designer::setButton(ui->openMapButton);
+    Designer::setButton(ui->setDirNameMapButton, Designer::white);
+
+    // настройка визуала полоски прогресса
+    Designer::setProgressBar(ui->buildProgressBar);
+    ui->buildProgressBar->hide();
+
+    Designer::setGroupBox(ui->mainGroupBox, Designer::lightBlue);
 }
 
 void optMapGeneratorWindow::openMap()

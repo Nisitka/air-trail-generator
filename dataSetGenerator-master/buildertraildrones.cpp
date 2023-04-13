@@ -11,30 +11,30 @@ builderTrailDrones::builderTrailDrones(double* angleEDrone)
 { 
     aEDrone = angleEDrone;
 
-    dirInputData = QApplication::applicationDirPath() + "/inputData.jpg";
+    QString dirApp = QApplication::applicationDirPath();
 
-    dirProgram = "C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\buildsEXE\\dist\\cApp\\model.exe";
-    dirOutData = "C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\outDataNet.txt";
-    dirNet = "C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\Models\\model3\\model3.meta";
+    dirInputData = dirApp + "\\inputData.jpg";
 
-    outFile = new QFile;
-    openOutFile();
+    dirProgram = dirApp + "\\model.exe";
+    dirOutData = dirApp + "\\outDataNet.txt";
+    dirNets = dirApp + "\\Models\\";
+
+    // создание/открытие файла выходной информации
+    outFile = NULL;
+    setOutFile();
 
     processNet = new QProcess(this);
     connect(processNet, SIGNAL(finished(int)),
             this,       SLOT(netFinish()));
     connect(processNet, SIGNAL(error(QProcess::ProcessError)),
             this,       SLOT(failedProcess(QProcess::ProcessError)));
-
-    /*
-    qDebug() << matchE(100, 100, 0, 0);
-    qDebug() << matchE(100, 100, 18, 123);
-    qDebug() << matchE(100, 100, 167, 192);
-    qDebug() << matchE(100, 100, 189, 92);
-    qDebug() << matchE(100, 100, 110, 100);
-    */
 }
 
+void builderTrailDrones::predictToRect(const QString &nameNet)
+{
+    setNameModel(nameNet);
+    buildInputData(dirInputData);
+}
 void builderTrailDrones::predictToRect()
 {
     buildInputData(dirInputData);
@@ -54,26 +54,15 @@ void builderTrailDrones::netFinish()
         resultPredictRect(curIdX, curIdY); // уже в обсолютных id
     }
     else
-    {
+    {// иначе записывем точку и прогназируем следующую
         points.append(new QPoint(curIdX, curIdY));
-        if (matchD(curIdX, curIdY, idXb, idYb) > 50)
-        {
-            // устанавливаем облать прогноза
-            setRect(curIdX, curIdY);
-
-            // устанавливаем азимут конечной точки
-            *aEDrone = matchE(curIdX, curIdY, idXb, idYb);
-        }
-        else
-        {
-            qDebug() << "finish predict trail!";
-            points.append(new QPoint(idXb, idYb));
-            setRect(idXb, idYb);
-            typeP = rect;
-
-            finishPredictTrail();
-        }
+        predictNextPoint();
     }
+}
+
+void builderTrailDrones::setNameModel(const QString &nameModel_)
+{
+    nameModel = nameModel_;
 }
 
 void builderTrailDrones::readySetRect(int idXo_, int idYo_)
@@ -97,18 +86,20 @@ void builderTrailDrones::usedNet()
     processNet->start(dirProgram, argv, QProcess::ReadOnly);
     */
 
-    //QString strC = "C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\buildsEXE\\dist\\cApp\\model.exe C:\\Users\\20-konkova.a.n\\Desktop\\trainImages\\netImg_0.jpg C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\outDataNet.txt C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\Models\\testModel3\\testModel3.meta";
     QString strC = dirProgram   + " " +
                    dirInputData + " " +
                    dirOutData   + " " +
-                   dirNet;
+                   dirNets + "\\" + nameModel + "\\" + nameModel + ".meta";
 
     system(strC.toStdString().data());
     netFinish();
 }
 
-void builderTrailDrones::startPredictTrail(int idXa, int idYa, int idXb_, int idYb_)
+void builderTrailDrones::startPredictTrail(const QString& nameModel,
+                                           int idXa, int idYa, int idXb_, int idYb_)
 {
+    setNameModel(nameModel);
+
     curIdX = idXa;
     curIdY = idYa;
 
@@ -125,11 +116,25 @@ void builderTrailDrones::startPredictTrail(int idXa, int idYa, int idXb_, int id
     }
     // очищаем вектор от старых точек
     points.clear();
+    numCurPoint = 0;
 
     points.append(new QPoint(curIdX, curIdY));
-    if (matchD(curIdX, curIdY, idXb, idYb) > 50)
-    {
-        setRect(curIdX, curIdY);
+    predictNextPoint();
+}
+
+void builderTrailDrones::predictNextPoint()
+{
+    if (matchD(curIdX, curIdY, idXb, idYb) > minD)
+    {   // устанавливаем область прогноза и прогназируем
+        if (numCurPoint%sizeFilter == 0)
+        {
+            setRect(curIdX, curIdY, mainP);
+        }
+        else
+        {
+            setRect(curIdX, curIdY, midP);
+        }
+        numCurPoint++;
 
         // устанавливаем азимут конечной точки
         *aEDrone = matchE(curIdX, curIdY, idXb, idYb);
@@ -138,7 +143,7 @@ void builderTrailDrones::startPredictTrail(int idXa, int idYa, int idXb_, int id
     {
         qDebug() << "finish predict trail!";
         points.append(new QPoint(idXb, idYb));
-        setRect(idXb, idYb);
+        setRect(idXb, idYb, mainP);
         typeP = rect;
 
         finishPredictTrail();
@@ -188,12 +193,18 @@ void builderTrailDrones::failedProcess(QProcess::ProcessError error)
     qDebug() << "failedProcess"; //.arguments();
 }
 
-void builderTrailDrones::openOutFile()
+void builderTrailDrones::setOutFile()
 {
     delete outFile;
     outFile = new QFile(dirOutData);
 
-    if (!outFile->open(QIODevice::ReadOnly)) qDebug() << "ошибка открытия файла";
+    // если файла нет, то создаем его
+    if (!outFile->open(QIODevice::ReadOnly))
+    {
+        //
+        outFile->open(QIODevice::ReadWrite);
+    }
+    outFile->close();
 }
 
 void builderTrailDrones::readOutData(int &x, int &y)

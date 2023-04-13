@@ -198,7 +198,8 @@ int calcQFunction::Q(int idX, int idY, double E)
 
 double calcQFunction::F_D(int D, double dE)
 {
-    double pD = (double) D * exp(-pow(dE, kpD1) * kpD2);
+    double kD = ((double) 1 / (1 + exp((double)-D/40)) - 0.5) * 2;
+    double pD = (double) D * kD * exp(-pow(dE + 3, kpD1) * kpD2);
 
     return (1 - exp(-pow(pD, kG1) * kG2));
 }
@@ -219,8 +220,6 @@ QColor calcQFunction::scoreToColor(int score)
 
     double e = exp(-((double)score * 12 / maxScore - 5));
     double k = (double) 1 / (1 + e);
-
-    //double k = 1 - exp(-score * 0.001);
 
     int r, g, b;
     r = colorMin->red();

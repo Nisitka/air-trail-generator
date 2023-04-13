@@ -22,17 +22,27 @@ signals:
     void setCoordRLS(int x, int y);
 
     // предсказать полет БпЛА в квадрате
-    void predictMoveDroneRect(int idX, int idY);
+    void predictMoveDroneRect(int idX, int idY, int typeP = -1);
 
     //
     void setPointsTrail(const QPoint& begin, const QPoint& last);
 
 public slots:
+    // добавить РЛС для отрисовки
+    void addRLS(QPoint* posRLS);
+
+    // удалить РЛС с отрисовки
+    void delRLS(int indexRLS);
 
 public:
     areaDrawWidget(QImage* mapImg,
                    QImage* netDataImg,
                    QImage* QFunImg);
+
+    // установить выбранную РЛС
+    void setCurRLS(int idRLS);
+
+    int curTool();
 
     void startPredictTrail();
     void finishPredictTrail();
@@ -61,7 +71,7 @@ public:
     enum showImages{geoMap, netData, QFunction};
 
     // инструменты
-    enum tools{setRLS, moveImg, zoomImg, predictRect, predictTrail};
+    enum tools{setRLS, moveImg, zoomImg, predictRect, predictTrail, def};
     void setTool(tools);
 
     // добавить точку траектории
@@ -116,8 +126,14 @@ private:
     int xPosRLS;
     int yPosRLS;
 
+    // координаты поставленных РЛС
+    QList <QPoint*> coordsRLS;
+
     // координаты мыши в дискретах карты
     int idX, idY;
+
+    // отправлять ли данные об координатах
+    bool isExportCoord;
 
     // отрисовывать ли точку для постановки РЛС
     bool isDrawPositionRLS;
@@ -172,9 +188,18 @@ private:
     QPoint lastPoint;  // в индексах карты
     QPoint beginPoint; // в индексах карты
 
-    // эконки оконечных точек
+    // иконки оконечных точек
     QPixmap* pixBeginDrone;  // начала
     QPixmap* pixFinishDrone; // конца
+
+    // иконки РЛС
+    QPixmap* pixRLS;
+    QPixmap* pixCurRLS;
+    // выбранная РЛС
+    int idCurRLS; // индекс выбранной РЛС
+
+    // рисовать ли оконечные точки маршрута
+    bool drawSFPointsTrail;
 
     // начался ли прогноз траектории
     bool isPredictTrail;

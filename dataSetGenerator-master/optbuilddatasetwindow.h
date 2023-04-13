@@ -35,6 +35,8 @@ private slots:
     void updateSizeDS();
 
 private:
+    void setDesine();
+
     int sizeDataSet;
     int currentData;
 
