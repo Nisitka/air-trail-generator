@@ -97,6 +97,12 @@ void optRLSwindow::removeRLS()
 
 void optRLSwindow::addRLS()
 {   
+
+    // значения с интерфейса
+    xRLS = ui->xRLSspinBox->value();
+    yRLS = ui->yRLSspinBox->value();
+
+    // создаем объект и передаем его в менеджер РЛС
     createRLS(new QPoint(xRLS, yRLS)); //ui->nameNewRLSLineEdit->text()
 
     ui->listRLSComboBox->addItem(ui->nameNewRLSLineEdit->text());
