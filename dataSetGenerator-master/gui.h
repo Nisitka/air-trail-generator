@@ -24,6 +24,7 @@
 #include "drone.h"
 #include "trainernetwork.h"
 #include "managerrls.h"
+#include "map3dwindow.h"
 
 class GUI
 {
@@ -84,6 +85,8 @@ private:
     neuronNetworkWindow* netWin;
     //
     optDroneWindow* droneWin;
+    // окно для 3D отображения рельефа
+    map3DWindow* map3DWin;
 };
 
 #endif // GUI_H

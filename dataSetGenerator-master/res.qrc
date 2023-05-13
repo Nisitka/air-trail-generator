@@ -25,5 +25,18 @@
         <file>resurs/RLS.png</file>
         <file>resurs/offRLS.png</file>
         <file>resurs/onRLS.png</file>
+        <file>resurs/icon3D.png</file>
+        <file>resurs/hand3D.png</file>
+        <file>resurs/zoomTool.png</file>
+        <file>resurs/editEarthTool.png</file>
+        <file>resurs/startWindow.png</file>
+        <file>resurs/machinery.png</file>
+        <file>resurs/upVector.png</file>
+        <file>resurs/downVector.png</file>
+        <file>resurs/leftVector.png</file>
+        <file>resurs/rightVector.png</file>
+        <file>resurs/toolEarthDown.png</file>
+        <file>resurs/toolEarthMove.png</file>
+        <file>resurs/toolEarthUp.png</file>
     </qresource>
 </RCC>

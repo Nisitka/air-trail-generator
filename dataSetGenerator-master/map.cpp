@@ -8,10 +8,87 @@ Map::Map()
 {
     file = new QFile;
 
-    this->build(900, 900, 200);
+    this->build(200, 200, 200);
 
     // длина ребра блока по умолчанию
     lenBlock = 20;
+}
+
+void Map::upEarth(int idXo, int idYo, int R)
+{
+    int Xo = idXo - (R / 2);
+    int Yo = idYo - (R / 2);
+
+    int idX;
+    int idY;
+    for (int x=0; x<R; x++)
+    {
+        for (int y=0; y<R; y++)
+        {
+            idX = Xo+x;
+            idY = Yo+y;
+
+            //
+            if (idX >= 0 && idX < Width &&
+                idY >= 0 && idY < Length)
+            {
+                dropEarth(idX, idY, 1);
+            }
+        }
+    }
+}
+
+void Map::downEarth(int idXo, int idYo, int R)
+{
+    int Xo = idXo - (R / 2);
+    int Yo = idYo - (R / 2);
+
+    int idX;
+    int idY;
+    for (int x=0; x<R; x++)
+    {
+        for (int y=0; y<R; y++)
+        {
+            idX = Xo+x;
+            idY = Yo+y;
+
+            //
+            if (idX >= 0 && idX < Width &&
+                idY >= 0 && idY < Length)
+            {
+                removeEarth(idX, idY, 1);
+            }
+        }
+    }
+}
+
+void Map::dropEarth(int idX, int idY, int countLayer)
+{
+    int idH = getHeight(idX, idY);
+
+    int maxH = layers.size();
+
+    int id;
+    for (int h = 1; h <= countLayer; h++)
+    {
+        id = idH + h;
+        if (id < maxH) getBlock(idX, idY, id)->toEarth();
+        else break;
+    }
+}
+
+void Map::removeEarth(int idX, int idY, int countLayer)
+{
+    int idH = getHeight(idX, idY);
+
+    int id;
+    for (int h = 0; h < countLayer; h++)
+    {
+        id = idH - h;
+
+        if (id > 0) getBlock(idX, idY, id)->remove();
+        else break;
+    }
 }
 
 void Map::save(const QString& dirFile)
@@ -48,6 +125,11 @@ void Map::save(const QString& dirFile)
     }
 }
 
+float Map::getMaxH()
+{
+    return getCountLayers() * lenBlock;
+}
+
 void Map::open(const QString &dirFile)
 {
     delete file;
@@ -80,6 +162,8 @@ void Map::open(const QString &dirFile)
                 }
             }
         }
+
+        qDebug() << "Map ready!";
 
         updateVisual();
     }
@@ -178,21 +262,35 @@ double Map::getLenBlock()
     return lenBlock;
 }
 
-int Map::getWidth()
+int Map::getWidth(int type)
 {
-    return Width;
+    switch (type)
+    {
+        case id: return Width;
+        case m: return Width * lenBlock;
+    }
 }
 
-int Map::getLength()
+int Map::getLength(int type)
 {
-    return Length;
+    switch (type)
+    {
+        case id: return Length;
+        case m: return Length * lenBlock;
+    }
 }
 
-int Map::getHeight(int X, int Y)
+int Map::getHeight(int X, int Y, int type)
 {
     int h = Height - 1;
     // спускаемся сверху пока не встретим землю
     while (!getBlock(X, Y, h)->isEarth()) h--;
 
-    return h;
+    switch (type) {
+    case m:
+        return h * lenBlock;
+
+    case id:
+        return h;
+    }
 }

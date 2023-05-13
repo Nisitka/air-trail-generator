@@ -97,10 +97,9 @@ void optRLSwindow::removeRLS()
 
 void optRLSwindow::addRLS()
 {   
-
     // значения с интерфейса
-    xRLS = ui->xRLSspinBox->value();
-    yRLS = ui->yRLSspinBox->value();
+    xRLS = ui->xRLSspinBox->value() / map->getLenBlock();
+    yRLS = ui->yRLSspinBox->value() / map->getLenBlock();
 
     // создаем объект и передаем его в менеджер РЛС
     createRLS(new QPoint(xRLS, yRLS)); //ui->nameNewRLSLineEdit->text()
@@ -202,6 +201,10 @@ void optRLSwindow::enablingRLS()
 
 void optRLSwindow::setNewPosRLS()
 {
+    // значения с интерфейса
+    xRLS = ui->xRLSspinBox->value() / map->getLenBlock();
+    yRLS = ui->yRLSspinBox->value() / map->getLenBlock();
+
     setPositionRLS(xRLS, yRLS);
 }
 

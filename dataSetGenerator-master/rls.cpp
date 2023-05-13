@@ -11,6 +11,7 @@ RLS::RLS(Map* map_, QPoint* position_, const QString& nameRLS, QObject *parent) 
     name = nameRLS;
 
     position = position_;
+    Hpos = (double) map->getHeight(position->x(), position->y(), Map::m) + hSender;
 
     mE = new double [2];
 
@@ -22,6 +23,116 @@ RLS::RLS(Map* map_, QPoint* position_, const QString& nameRLS, QObject *parent) 
     D = 2000;
 
     working = false;
+}
+
+int RLS::getCountMaxBlocksZD()
+{
+    int maxCountBlocks = 0;
+
+    // кол-во вертикальных сегментов
+    int countS_ZD = ZD.size();
+
+    // по вертикальным сегментам
+    for (int i=0; i<countS_ZD; i++)
+    {
+        // по лучам в сегменте
+        int countLZD = ZD.at(i)->size(); // кол-во лучей
+        for (int j=0; j<countLZD; j++)
+        {
+            QVector <int*> way = ZD[i]->at(j)->getWay();
+
+            // полет луча
+            int idX, idY, idH;
+            int countDelta = way.size(); // кол-во дискрет одного луча
+            for (int k=1; k<countDelta; k++)
+            {   // в пути луча содержатся относительные индексы
+                int* l = way[k];
+
+                // если индексы пренадлежат отличному от предыдущего блока
+                if (idX!=l[Ray::X] || idY!=l[Ray::Y] || idH!=l[Ray::Z])
+                {
+                    idX = l[Ray::X];
+                    idY = l[Ray::Y];
+                    idH = l[Ray::Z];
+
+                    maxCountBlocks++;
+                }
+            }
+        }
+    }
+
+    return maxCountBlocks;
+}
+
+int RLS::getCurrentBlocksZD(int idX, int idY, int idMaxH)
+{
+    int countBlocksZD = 0;
+
+    // кол-во вертикальных сегментов
+    int countS_ZD = ZD.size();
+
+    int Wmap = map->getWidth();
+    int Lmap = map->getLength();
+    int Hmap = map->getCountLayers();
+
+    int xRLS = idX;
+    int yRLS = idY;
+
+    int num_Hmin = map->getHeight(xRLS, yRLS); // индекс слоя мин-ой высоты
+
+    // по вертикальным сегментам
+    for (int i=0; i<countS_ZD; i++)
+    {   // по лучам в сегменте
+        int countLZD = ZD.at(i)->size();
+        for (int j=0; j<countLZD; j++)
+        {
+            QVector <int*> way = ZD[i]->at(j)->getWay();
+            int idX;
+            int idY;
+            int idH;
+
+            // полет луча
+            int countDelta = way.size(); // кол-во дискрет одного луча
+            for (int k=1; k<countDelta; k++)
+            {   // в пути луча содержатся относительные индексы
+                int* l = way[k];
+
+                idX = xRLS + l[Ray::X];
+                idY = yRLS + l[Ray::Y];
+                idH = 1 + num_Hmin + l[Ray::Z];
+
+                // если выше среза ЗО
+                if (idH > idMaxH) break;
+
+                // если луч вышел за карту
+                if (idY >= Lmap) break;
+                if (idY < 0) break;
+
+                if (idX >= Wmap) break;
+                if (idX < 0) break;
+
+                if (idH >= Hmap) break;
+                if (idH < 0) break;
+
+                geoBlock* block = map->getBlock(idX, idY, idH);
+                // если блок на пути, является землей, то
+                if (block->isEarth())
+                {
+                    // луч столкнулся с рельефом
+                    break;
+                }
+                else
+                {
+                    if (!block->isZD())
+                    {
+                        countBlocksZD++;
+                    }
+                }
+            }
+        }
+    }
+
+    return countBlocksZD;
 }
 
 bool RLS::isWorking()
@@ -61,7 +172,8 @@ void RLS::setPosition(int X, int Y)
     position->setY(Y);
 
     // сразу считаем высоту, на которую ставим РЛС в этой позиции
-    Hpos = (double) map->getHeight(position->x(), position->y()) * Ray::mH + hSender;
+    //Hpos = (double) map->getHeight(position->x(), position->y()) * Ray::mH + hSender;
+    Hpos = (double) map->getHeight(X, Y, Map::m) + hSender;
 }
 
 void RLS::removeZD()
@@ -117,7 +229,7 @@ void RLS::emitSignal()
     int xRLS = position->x();
     int yRLS = position->y();
 
-    int num_Hmin = Hpos / Ray::mH; // индекс слоя мин-ой высоты
+    int num_Hmin = Hpos / map->getLenBlock(); // индекс слоя мин-ой высоты
 
     // по вертикальным сегментам
     for (int i=0; i<countS_ZD; i++)
@@ -190,9 +302,12 @@ void RLS::emitSignal(int srez_H)
 
 void RLS::clearZD()
 {
-    for (int i=0; i<blocksZD.size(); i++)
-        blocksZD[i]->removeZD();
-    blocksZD.clear();
+    if (blocksZD.size() > 0)
+    {
+        for (int i=0; i<blocksZD.size(); i++)
+            blocksZD[i]->removeZD();
+        blocksZD.clear();
+    }
 }
 
 void RLS::buildZD()

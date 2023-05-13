@@ -2,12 +2,38 @@
 
 #include <QDebug>
 
+#include <QApplication>
+
+#include <QMatrix>
+
 painterMapImage::painterMapImage(Map* map) :
     painterImage(map)
 {
     connect(map,  SIGNAL(updateVisual()),
             this, SLOT(run()));
     run(); // чтобы отобразить карту в исходном состоянии
+
+    // по умолчанию на всю карту
+    idXo = 0;
+    idYo = 0;
+    numW = map->getWidth();
+    numL = map->getLength();
+}
+
+void painterMapImage::upEarth(int idX, int idY, int R)
+{
+    map->upEarth(idX, idY, R);
+    runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
+
+    readyEditEarth();
+}
+
+void painterMapImage::downEarth(int idX, int idY, int R)
+{
+    map->downEarth(idX, idY, R);
+    runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
+
+    readyEditEarth();
 }
 
 void painterMapImage::runToRects(QRect* rects, int count)
@@ -15,13 +41,77 @@ void painterMapImage::runToRects(QRect* rects, int count)
     for (int i=0; i<count; i++)
     {
         runToRect(rects[i]);
-        delete (rects + i);  // сразу же очищаем память от QRect
+
     }
+
+    delete [] rects;  // сразу же очищаем память от QRect
 }
 
 void painterMapImage::runToRect(const QRect &rect)
 {
     runToRect(rect.x(), rect.y(), rect.width(), rect.height());
+}
+
+void painterMapImage::setRectTexture(int idXo_, int idYo_, int numW_, int numL_)
+{
+    idXo = idXo_;
+    idYo = idYo_;
+    numW = numW_;
+    numL = numL_;
+}
+
+void painterMapImage::buildTexture()
+{
+    /*
+    // вырезаем нужный нам кусок
+    size_t offset = idXo * img->depth() / 8
+                  + idYo * img->bytesPerLine();
+    QImage texture = QImage(img->bits() + offset, numW, numL,
+                     img->bytesPerLine(),  img->format());
+                     */
+
+    QImage* texture = buildImageEarth(QRect(idXo, idYo, numW, numL));
+
+    // поворачиваем
+    QMatrix mat;
+    mat.rotate(270);
+    //*texture = texture->transformed(mat);
+
+    // сохраняем
+    texture->transformed(mat).save(QApplication::applicationDirPath() +
+                                   "\\texture.jpg",
+                                   "JPG",
+                                   100);
+
+    // сообщаем об готовности
+    readyTexture(idXo, idYo, numW, numL);
+
+    // очищаем память от ненужного QImage
+    delete texture;
+}
+
+QImage* painterMapImage::buildImageEarth(const QRect &rect)
+{
+    // инициализация изображения текстуры
+    int W = rect.width();
+    int L = rect.height();
+
+    QImage* texture = new QImage(W, L, img->format());
+
+    qDebug() << texture->size();
+    QColor color;
+    for (int x=0; x<W; x++)
+    {
+        for (int y=0; y<L; y++)
+        {
+            // вычисляется цвет по данным
+            color = colorHeight(map->getHeight(idXo + x, idYo + y));
+
+            texture->setPixelColor(x, y, color);
+        }
+    }
+
+    return texture;
 }
 
 void painterMapImage::runToRect(int idX, int idY, int w, int h)

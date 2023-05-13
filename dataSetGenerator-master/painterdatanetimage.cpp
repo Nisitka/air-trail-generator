@@ -2,7 +2,11 @@
 
 #include "rls.h"
 
+#include <QApplication>
+
 #include <QDebug>
+
+#include <cmath>
 
 double m(double v)
 {
@@ -59,6 +63,28 @@ void painterDataNetImage::setRect(int idXo_, int idYo_)
     idYo = idYo_;
 
     readyRect(idXo, idYo);
+}
+
+void painterDataNetImage::generateMapImg()
+{
+    //
+    int w = map->getWidth();
+    int l = map->getLength();
+
+    *img = img->scaled(w, l);
+
+    for (int x=0; x<w; x++)
+    {
+        for (int y=0; y<l; y++)
+        {
+            // красный
+            int r = 255 * ( (double) map->getHeight(x, y)/ map->getCountLayers());
+
+            img->setPixelColor(x, y, QColor(r, 0, 0));
+        }
+    }
+
+    img->save(QApplication::applicationDirPath() + "\\mapImg.png", "PNG", 100);
 }
 
 int painterDataNetImage::matchGreen(int x, int y)

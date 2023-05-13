@@ -10,7 +10,7 @@ Ray::Ray(double D_, double angleB_, double angleE_)
     angleB = angleB_; //toRad(angleB_);
     angleE = angleE_; //toRad(angleE_);
 
-    deltaL = mSIZE * 1.0;
+    deltaL = mSIZE * 0.9;
 
     // сразу считаем дискретные значения полета луча
     toEmit();

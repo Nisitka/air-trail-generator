@@ -2,11 +2,18 @@
 
 Core::Core()
 {
+
+}
+
+void Core::init_map()
+{
+    readyRunProgress(3);
     map = new Map;
+    readyRunProgress(12);
+}
 
-    // временно запишим объекты приложения
-    QVector <QObject*> objects;
-
+void Core::init_allObj()
+{
     // БПЛА
     drone = new Drone;
 
@@ -22,6 +29,8 @@ Core::Core()
     QObject::connect(mapGenerator, SIGNAL(readyLayer(int)),
                      mapPainter,   SLOT(run()));
     objects.append(mapPainter);
+
+    readyRunProgress(19);
 
     // калькулятор Q функции
     calcQFun = new calcQFunction(map, tracker->getE());
@@ -40,6 +49,8 @@ Core::Core()
     painterNetData = new painterDataNetImage(map, tracker->getE());
     objects.append(painterNetData);
 
+    readyRunProgress(27);
+
     //
     trailBuilder = new builderTrailDrones(tracker->getE());
     QObject::connect(trailBuilder,   SIGNAL(buildInputData(QString)),
@@ -49,6 +60,8 @@ Core::Core()
     QObject::connect(painterNetData, SIGNAL(readyRect(int, int)),
                      trailBuilder,   SLOT(readySetRect(int, int)));
     objects.append(trailBuilder);
+
+    readyRunProgress(36);
 
     //
     builderDS = new builderDataSet(map);
@@ -62,6 +75,8 @@ Core::Core()
                      mRLS,       SLOT(runRLS(int,int,int)));
     QObject::connect(mRLS,       SIGNAL(finishGenerateZD()),
                      builderDS,  SLOT(readyZD()));
+
+    readyRunProgress(46);
 
     QObject::connect(builderDS,      SIGNAL(generateNetImage()),
                      painterNetData, SLOT(run()));
@@ -78,24 +93,40 @@ Core::Core()
     neuroTrainer = new trainerNetwork;
     objects.append(neuroTrainer);
 
+    readyRunProgress(54);
+
     //
     gui = new GUI(mapPainter->getImage(),
                   painterNetData->getImage(),
                   calcQFun->getImage(),
                   map);
 
+    readyRunProgress(65);
+}
+
+void Core::init_GUI()
+{
     // присоеденяем функционад генератора к GUI
     gui->connectMapGenerator(mapGenerator);
     //
     gui->connectMapPainter(mapPainter);
-    //
-    gui->connectCalcQFun(calcQFun);
-    //
-    gui->connectMRLS(mRLS);
+
+    readyRunProgress(72);
+
     //
     gui->connectPainterDataNet(painterNetData);
     //
+    gui->connectCalcQFun(calcQFun);
+
+    readyRunProgress(79);
+
+    //
+    gui->connectMRLS(mRLS);
+    //
     gui->connectBuilderDS(builderDS);
+
+    readyRunProgress(83);
+
     //
     gui->connectBuilderTrail(trailBuilder);
     //
@@ -103,10 +134,19 @@ Core::Core()
     //
     gui->connectTrainerNet(neuroTrainer);
 
+    readyRunProgress(90);
+}
+
+void Core::init_buildThreads()
+{
+    int dP = (100 - 90) / objects.size();
+
     // помещаем все объекты в разные потоки
     for (int i=0; i<objects.size(); i++)
     {
         moveNewThread(objects[i]);
+
+        readyRunProgress((dP+1)*i + 90);
     }
 }
 
@@ -119,6 +159,16 @@ void Core::moveNewThread(QObject *obj)
 
 void Core::run()
 {
+    init_map();
+
+    init_allObj();
+
+    init_GUI();
+
+    init_buildThreads();
+
     // открываем главное окно
     gui->showMainWin();
+
+    ready();
 }

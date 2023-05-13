@@ -15,6 +15,16 @@ class areaDrawWidget : public QWidget
 {
     Q_OBJECT
 signals:
+
+    // поднять землю в указанной области
+    void upEarth(int idX, int idY, int R);
+
+    // опустить землю в указанной области
+    void downEarth(int idX, int idY, int R);
+
+    // обновить данные об области 3D визуализации
+    void updateRect3D(int idXo, int idYo, int numW, int numL);
+
     // обновить инфу об координатах курсора
     void updateCoord(double x, double y);
 
@@ -28,6 +38,9 @@ signals:
     void setPointsTrail(const QPoint& begin, const QPoint& last);
 
 public slots:
+    // земля отредактирована
+    void readyEditEarth();
+
     // добавить РЛС для отрисовки
     void addRLS(QPoint* posRLS);
 
@@ -64,18 +77,18 @@ public:
     void drawDataNet();
     void drawQFunction();
 
-    //
-    void updateSizeWidget(int w, int h);
-
     // изображения для отображения
     enum showImages{geoMap, netData, QFunction};
 
     // инструменты
-    enum tools{setRLS, moveImg, zoomImg, predictRect, predictTrail, def};
+    enum tools{moveImg, setRLS, zoomImg, predictRect, predictTrail, mapVis, editEarth, def};
     void setTool(tools);
 
     // добавить точку траектории
     void addPointTrail(int idXpt, int idYpt);
+
+    // установить размер кисти
+    void setRangeToolEditEarth(int R); // длина квадрата в пикселях
 
 protected:
     void paintEvent(QPaintEvent* pEvent);
@@ -86,8 +99,23 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent* mouseEvent);
 
 private:
+    // размер кисти редактора рельефа
+    int toolEarthR;
+
+    // точки области детального отображения рельефа
+    QPoint a3D;
+    QPoint b3D;
+
+    int angX3D, angY3D;
+    int numW, numL;
+
+    // рисовать ли область детального отображения
+    bool isDrawRect3D;
+
+
     enum keyMouse{left, right, mid};
     enum statusMouse{press, release};
+    int lastKeyMouse;
     int statMouse;
 
     // текущий инструмент
@@ -152,10 +180,13 @@ private:
     QPixmap iconZoom;
     QCursor zoomCursor;
 
+    QCursor editEarthCursor;
+
     QCursor moveCloseCursor = Qt::ClosedHandCursor;
     QCursor moveOpenCursor = Qt::OpenHandCursor;
     QCursor rlsCursor = Qt::CrossCursor;
     QCursor predictNetCursor = Qt::CrossCursor;
+    QCursor rect3DCursor = Qt::PointingHandCursor;
 
     // передвижение изображения двигая мышку
     void matchTranslateMove();

@@ -62,6 +62,12 @@ public slots:
 public:
     explicit RLS(Map* map, QPoint* position, const QString& nameRLS = NULL, QObject *parent = 0);
 
+    // узнать максимальное кол-во дискрет ЗО, которое может дать эта РЛС
+    int getCountMaxBlocksZD();
+
+    //
+    int getCurrentBlocksZD(int idX, int idY, int idMaxH);
+
     // узнать, работает ли РЛС
     bool isWorking();
 
@@ -99,7 +105,7 @@ private:
 
     // точка стояния РЛС
     QPoint* position;
-    double Hpos; // высота(координата Z)
+    double Hpos; // высота(координата Z) метры
 
     const double hSender = 3.1; // высота антены
 

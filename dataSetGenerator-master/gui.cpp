@@ -63,6 +63,11 @@ GUI::GUI(QImage* geoMap,
     droneWin = new optDroneWindow;
     mainWin->addTask(droneWin, QPixmap(":/resurs/plane"),
                      "БПЛА", "Беспилотный летательный аппарат", mainWindow::usedNet);
+
+    //
+    map3DWin = new map3DWindow(map);
+    mainWin->addTask(map3DWin, QPixmap(":/resurs/icon3D"),
+                     "3D", "Детальная визуализация рельефа");
 }
 
 void GUI::connectDrone(Drone* drone)
@@ -112,9 +117,6 @@ void GUI::connectMapGenerator(geoGenerator* mapBuilder)
     //
     QObject::connect(mapBuilder,   SIGNAL(buildStart(int)),
                      optGenMapWin, SLOT(setProgressBar(int)));
-    //
-    QObject::connect(mapBuilder,   SIGNAL(buildStart(int)),
-                     visInfoWin,   SLOT(updateSizeDrawArea()));
     //
     QObject::connect(mapBuilder,   SIGNAL(readyLayer(int)),
                      optGenMapWin, SLOT(updateProgressBar(int)));
@@ -215,6 +217,21 @@ void GUI::connectMRLS(managerRLS* mRLS)
 
 void GUI::connectMapPainter(painterMapImage* painterMap)
 {
+    QObject::connect(visInfoWin->getDrawArea(), SIGNAL(upEarth(int,int,int)),
+                     painterMap,                SLOT(upEarth(int,int,int)));
+    QObject::connect(visInfoWin->getDrawArea(), SIGNAL(downEarth(int,int,int)),
+                     painterMap,                SLOT(downEarth(int,int,int)));
+    QObject::connect(painterMap,                SIGNAL(readyEditEarth()),
+                     visInfoWin->getDrawArea(), SLOT(readyEditEarth()));
+
+    QObject::connect(map3DWin,   SIGNAL(generateMap3D()),
+                     painterMap, SLOT(buildTexture()));
+    QObject::connect(visInfoWin->getDrawArea(), SIGNAL(updateRect3D(int,int,int,int)),
+                     painterMap,                SLOT(setRectTexture(int,int,int,int)));
+    QObject::connect(painterMap, SIGNAL(readyTexture(int,int,int,int)),
+                     map3DWin,   SLOT(finishBuildMap(int,int,int,int)));
+    map3DWin->generateMap3D(); // сразу же отображаем то что есть
+
     QObject::connect(painterMap, SIGNAL(finish()),
                      visInfoWin, SLOT(updateImage()));
     QObject::connect(optRLSWin,  SIGNAL(getColorHeight(QColor*,int)),

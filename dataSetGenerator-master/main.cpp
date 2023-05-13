@@ -1,14 +1,25 @@
 #include <QApplication>
 #include "core.h"
 
-#include <QStyle>
+#include "runwindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    Core* dataGenMaster = new Core;
-    dataGenMaster->run();
+    runWindow startWin(&a, ":/resurs/startWindow");
+
+    Core* luckyWay = new Core;
+
+    QObject::connect(luckyWay,  SIGNAL(readyRunProgress(int)),
+                     &startWin, SLOT(updateProgress(int)));
+
+    QObject::connect(luckyWay,  SIGNAL(ready()),
+                     &startWin, SLOT(close()));
+
+    luckyWay->run();
 
     return a.exec();
 }
+
+

@@ -14,7 +14,9 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg,
                                QImage* netDataImg,
                                QImage* QFunImg)
 {
-    this->setFixedSize(width, length);
+    this->setMinimumSize(100, 100);
+    this->setMaximumSize(2000, 1080);
+    this->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
     // отправляем данные об координатах курсора
     isExportCoord = true;
@@ -38,9 +40,12 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg,
     this->setMouseTracking(true);
 
     // иконка для курсора во время приблтижения
-    iconZoom = QPixmap(":/resurs/zoom2");
+    iconZoom = QPixmap(":/resurs/zoomTool");
     iconZoom = iconZoom.scaled(25, 25);
     zoomCursor = QCursor(iconZoom);
+
+    //editEarthCursor = QCursor(QPixmap(":/resurs/editEarthTool").scaled(23,23));
+
     k = 1;
 
     drawRectPredict = false;
@@ -62,6 +67,30 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg,
     drawSFPointsTrail = false;
 
     setTool(def);
+
+    isDrawRect3D = false;
+
+    setRangeToolEditEarth(9);
+
+    this->setCursor(Qt::ArrowCursor);
+}
+
+void areaDrawWidget::readyEditEarth()
+{
+    if (tool == editEarth)
+    {
+        if (statMouse == press)
+        {
+            switch (lastKeyMouse) {
+            case left:
+                upEarth(idX, idY, toolEarthR);
+                break;
+            case right:
+                downEarth(idX, idY, toolEarthR);
+                break;
+            }
+        }
+    }
 }
 
 void areaDrawWidget::addRLS(QPoint *posRLS)
@@ -157,9 +186,10 @@ void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
     QPainter painter;
     painter.begin(this);
 
-    painter.setPen(QPen(Qt::black, 2, Qt::SolidLine));
-    painter.setBrush(QBrush(Qt::white));
-    painter.drawRect(0, 0, width, length);
+    // отрисовка подложки
+    painter.setPen(QPen(Qt::white, 2, Qt::SolidLine));
+    painter.setBrush(QBrush(Qt::black, Qt::Dense7Pattern));
+    painter.drawRect(0, 0, this->geometry().width(), this->geometry().height());
 
     // какое изображение отрисовать
     switch (curOptRepaint)
@@ -183,6 +213,15 @@ void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
     // чтобы цвет закраски был просзрачным
     QBrush b;
     painter.setBrush(b);
+
+    // отрисовка области 3D визуализации
+    if (isDrawRect3D)
+    {
+        painter.setPen(QPen(QColor(0,0,213), 1, Qt::DashLine));
+
+        painter.drawRect(QRect(QPoint(a3D.x()* k + Xo, a3D.y()* k + Yo),
+                               QPoint(b3D.x()* k + Xo, b3D.y()* k + Yo)));
+    }
 
     // отрисовка эелементов поставленного БПЛА
     if (drawRectPredict)
@@ -280,7 +319,7 @@ void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
 
     // отрисовка черной рамки окна визуализации
     painter.setPen(Qt::black);
-    painter.drawRect(0, 0, width - 1, length - 1);
+    painter.drawRect(0, 0, this->geometry().width() - 1, this->geometry().height() - 1);
 
     if (isDrawPositionRLS)
     {
@@ -303,7 +342,46 @@ void areaDrawWidget::setTool(tools tool_)
     statMouse = release;
 
     tool = tool_;
-    if (tool == predictRect) drawRectPredict = true;
+    isDrawRect3D = false;
+
+    int r; // размер курсора кисти
+    switch (tool) {
+    case def:
+        this->setCursor(Qt::ArrowCursor);
+        break;
+
+    case editEarth:
+        r = toolEarthR*k;
+        if (r < 13) r = 13;
+
+        this->setCursor(QCursor(QPixmap(":/resurs/toolEarthMove").scaled(r,r)));
+        break;
+
+    case mapVis:
+        isDrawRect3D = true;
+        this->setCursor(rect3DCursor);
+        break;
+
+    case zoomImg:
+        this->setCursor(zoomCursor);
+        break;
+
+    case setRLS:
+        this->setCursor(rlsCursor);
+        break;
+
+    case predictTrail:
+        drawRectPredict = true;
+        this->setCursor(predictNetCursor);
+
+    case predictRect:
+        this->setCursor(predictNetCursor);
+        break;
+
+    case moveImg:
+
+        break;
+    }
 
     repaint();
 }
@@ -333,22 +411,35 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
     // в зависимости от выбранного инструмента меняем курсор и т.д.
     switch (tool) {
     case def:
-        this->setCursor(Qt::ArrowCursor);
+
+        break;
+
+    case editEarth:
+
+        break;
+
+    case mapVis:
+        if (statMouse == press)
+        {
+            b3D.setX(idX);
+            b3D.setY(idY);
+        }
+        repaint();
         break;
 
     case zoomImg:
-        this->setCursor(zoomCursor);
+
         break;
 
     case setRLS:
-        this->setCursor(rlsCursor);
+
         break;
 
     case predictTrail:
-        this->setCursor(predictNetCursor);
+
+        break;
 
     case predictRect:
-        this->setCursor(predictNetCursor);
         if (dX < wightPixMap && dY < heightPixMap &&
             dX > 0 && dY > 0)
         {
@@ -389,6 +480,16 @@ void areaDrawWidget::setPredictRect(int idXo, int idYo)
     idYoPredict = idYo;
 }
 
+void areaDrawWidget::setRangeToolEditEarth(int R)
+{
+    toolEarthR = R;
+
+    int r = toolEarthR*k;
+    if (r < 13) r = 13;
+
+    this->setCursor(QCursor(QPixmap(":/resurs/toolEarthMove").scaled(r,r)));
+}
+
 void areaDrawWidget::mousePressEvent(QMouseEvent *mouseEvent)
 {
     statMouse = press;
@@ -406,6 +507,46 @@ void areaDrawWidget::mousePressEvent(QMouseEvent *mouseEvent)
         pYo = Yo;
 
         switch (tool) {
+        case editEarth:
+            idX = (double)dX / k;
+            idY = (double)dY / k;
+
+            int r; // размер курсора инструмента
+            switch (mouseEvent->button() - 1) {
+            case left:
+                lastKeyMouse = left;
+
+                r = toolEarthR*k;
+                if (r < 13) r = 13;
+                this->setCursor(QCursor(QPixmap(":/resurs/toolEarthUp").scaled(r,r)));
+
+                upEarth(idX, idY, toolEarthR);
+                break;
+            case right:
+                lastKeyMouse = right;
+
+                r = toolEarthR*k;
+                if (r < 13) r = 13;
+                this->setCursor(QCursor(QPixmap(":/resurs/toolEarthDown").scaled(r,r)));
+
+                downEarth(idX, idY, toolEarthR);
+                break;
+            }
+            break;
+
+        case mapVis:
+            idX = (double)dX / k;
+            idY = (double)dY / k;
+
+            a3D.setX(idX);
+            a3D.setY(idY);
+
+            b3D.setX(idX);
+            b3D.setY(idY);
+
+            repaint();
+            break;
+
         case predictRect:
             idX = (double)dX / k;
             idY = (double)dY / k;
@@ -442,10 +583,10 @@ void areaDrawWidget::mousePressEvent(QMouseEvent *mouseEvent)
 
         case zoomImg:
             Xo -= xPressMouse;
-            Xo += (width / 2);
+            Xo += (this->geometry().width() / 2);
 
             Yo -= yPressMouse;
-            Yo += (length / 2);
+            Yo += (this->geometry().height() / 2);
 
             switch (mouseEvent->button() - 1) {
             case left:
@@ -503,7 +644,42 @@ void areaDrawWidget::mouseReleaseEvent(QMouseEvent* mouseEvent)
     pXo = Xo;
     pYo = Yo;
 
+    int r; // размер курсора инструмента редактора рельефа
     switch (tool) {
+    case editEarth:
+        r = toolEarthR*k;
+        if (r < 13) r = 13;
+        this->setCursor(QCursor(QPixmap(":/resurs/toolEarthMove").scaled(r,r)));
+        break;
+
+    case mapVis:
+        int dX, dY;
+        dX = mouseEvent->x() - Xo;
+        dY = mouseEvent->y() - Yo;
+
+        b3D.setX((double)dX / k);
+        b3D.setY((double)dY / k);
+
+        int idXo, idYo;
+        if (a3D.x() > b3D.x()) idXo = b3D.x();
+        else idXo = a3D.x();
+        if (a3D.y() > b3D.y()) idYo = b3D.y();
+        else idYo = a3D.y();
+
+        angX3D = idXo;
+        angY3D = idYo;
+
+        numW = abs(a3D.x() - b3D.x());
+        numL = abs(a3D.y() - b3D.y());
+
+        if (numW < 2) numW = 2;
+        if (numL < 2) numL = 2;
+
+        updateRect3D(angX3D, angY3D,
+                     numW, numL);
+
+        break;
+
     case zoomImg:
 
         break;
@@ -516,14 +692,6 @@ void areaDrawWidget::mouseReleaseEvent(QMouseEvent* mouseEvent)
 
         break;
     }
-}
-
-void areaDrawWidget::updateSizeWidget(int w, int h)
-{
-    length = h;
-    width = w;
-
-    setFixedSize(width, length);
 }
 
 void areaDrawWidget::drawGeoMap()

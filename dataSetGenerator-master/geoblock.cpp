@@ -1,10 +1,10 @@
 #include "geoblock.h"
 
+#include <QDebug>
+
 geoBlock::geoBlock()
 {
     remove();
-
-    inZD = false;
 }
 
 void geoBlock::removeZD()
@@ -16,14 +16,11 @@ void geoBlock::remove()
 {
     earth = false;
     inZD = false;
-    countZD = 0;
 }
 
 void geoBlock::toZD()
 {
-    //countZD++;
     inZD = true;
-    //qDebug() << countZD;
 }
 
 void geoBlock::toEarth()

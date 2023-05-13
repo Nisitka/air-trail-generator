@@ -23,6 +23,14 @@
 // ядро приложения
 class Core : public QObject
 {
+    Q_OBJECT
+signals:
+    // готовность приложения к работе с пользователем
+    void readyRunProgress(int p); // проценты
+
+    // готово к работе
+    void ready();
+
 public slots:
 
 public:
@@ -33,6 +41,17 @@ public:
     static void moveNewThread(QObject*);
 
 private:
+    void init_map();
+
+    void init_allObj();
+
+    void init_GUI();
+
+    void init_buildThreads();
+
+    // объекты приложения
+    QVector <QObject*> objects;
+
     // интерфейс приложения
     GUI* gui;
 

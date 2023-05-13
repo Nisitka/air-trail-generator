@@ -6,7 +6,21 @@
 class painterMapImage : public painterImage
 {
     Q_OBJECT
+
+signals:
+    // земля отредактирована
+    void readyEditEarth();
+
+    // информируем об завершении создании текстуры для 3D рельефа
+    void readyTexture(int idXo, int idYo, int numW, int numL);
+
 public slots:
+    // поднять землю
+    void upEarth(int idX, int idY, int R);
+
+    // опустить землю
+    void downEarth(int idX, int idY, int R);
+
     // расчет цвета пикселя всего изображения
     void run();
 
@@ -20,10 +34,25 @@ public slots:
     // узнать цвет по индексу высоты (и записать его в отправленную ячейку)
     void heightToColor(QColor* setColor, int numLayer);
 
+    // создать текстуру для 3D карты
+    void buildTexture();
+
+    // установить область создания текстуры
+    void setRectTexture(int idXo, int idYo, int numW, int numL);
+
 public:
+    // сформировать текстуру высоты рельефа в области
+    QImage* buildImageEarth(const QRect& rect);
+
     painterMapImage(Map*);
 
 private:
+    // область для создания текстуры 3D рельефа
+    int idXo;
+    int idYo;
+    int numW;
+    int numL;
+
     // вычислить цвет по высоте (т.е. номеру слоя)
     QColor colorHeight(int numLayer);
 

@@ -21,6 +21,9 @@ signals:
 public slots:
     void run();
 
+    // сгенерировать образ рельефа
+    void generateMapImg();
+
     // сохранить изображение
     void saveImage(const QString& dirName);
 

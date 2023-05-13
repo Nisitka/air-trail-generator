@@ -40,9 +40,6 @@ public slots:
     //
     void setResultPredictRect(int idX, int idY);
 
-    // обновить размеры окна для отрисовки
-    void updateSizeDrawArea();
-
     // вычисляем координаты левего верхнего угла квадрата для прогнозирования
     // и информируем об этом объекты (которым эта инфо. нужна)
     void setIdCoordsRectPredict(int idX, int idY, int typePoint = -1);
@@ -60,12 +57,18 @@ public:
                               Map* map,
                               QWidget *parent = 0);
 
+    areaDrawWidget* getDrawArea();
+
     ~visualInfoWidget();
 
 protected:
     virtual void mouseMoveEvent(QMouseEvent* mouseEvent);
 
 private slots:
+    void moveSliderSizeToolEarth(int v);
+
+    void hideShowOptTools();
+
     void saveMap();
     void setDirNameMap();
 
@@ -82,8 +85,13 @@ private slots:
     void setToolZoom();
     void setToolPredictRect();
     void setToolPredictTrail();
+    void setTool3D();
+    void setToolEditEarth();
 
 private:
+    // статус панели опций инструментов
+    bool isShowOptTools; // true - открыто
+
     // настройка визуала
     void setDesine();
 

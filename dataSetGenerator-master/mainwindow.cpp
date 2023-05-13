@@ -10,7 +10,7 @@ mainWindow::mainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //
-    this->setWindowTitle("");
+    this->setWindowTitle("Система прогнозирования маршрутов скрытного пролета БПЛА");
 
     // настройка визуала
     this->setStyleSheet("QMainWindow{"

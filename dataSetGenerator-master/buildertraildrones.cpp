@@ -17,7 +17,7 @@ builderTrailDrones::builderTrailDrones(double* angleEDrone)
 
     dirProgram = dirApp + "\\model.exe";
     dirOutData = dirApp + "\\outDataNet.txt";
-    dirNets = dirApp + "\\Models\\";
+    dirNets = dirApp + "\\Models";
 
     // создание/открытие файла выходной информации
     outFile = NULL;
@@ -91,6 +91,8 @@ void builderTrailDrones::usedNet()
                    dirOutData   + " " +
                    dirNets + "\\" + nameModel + "\\" + nameModel + ".meta";
 
+    strC = strC.replace("/", "\\");
+    qDebug() << strC;
     system(strC.toStdString().data());
     netFinish();
 }

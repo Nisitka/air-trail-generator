@@ -36,6 +36,37 @@ void managerRLS::addRLS(QPoint* posRLS)
     qDebug() << "create RLS!";
 }
 
+void managerRLS::searchBestPosRLS(int idXo, int idYo, int W, int L, int idMaxH)
+{
+    startSearchBestPos(W, L, W*L);
+
+    int countMaxZD = listRLS.at(idCurRLS)->getCountMaxBlocksZD();
+    int countCurZD;
+    double* pK = new double[W*L];
+    double maxK = 0.0f;
+    double k;
+    int bestX, bestY;
+    for (int x=0; x<W; x++)
+    {
+        for (int y=0; y<L; y++)
+        {
+            countCurZD = listRLS.at(idCurRLS)->getCurrentBlocksZD(idXo + x, idYo + y,
+                                                                  idMaxH);
+            k = (double) countCurZD / countMaxZD;
+            pK[x*L + y] = k;
+
+            if (k > maxK)
+            {
+                maxK = k;
+                bestX = idXo + x;
+                bestY = idYo + y;
+            }
+        }
+    }
+
+    readySearchBestPos(bestX, bestY, pK);
+}
+
 void managerRLS::updateVisInfoRLS()
 {
     /*

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui printsupport
+QT       += core gui printsupport datavisualization
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -52,7 +52,15 @@ SOURCES += main.cpp\
     optdronewindow.cpp \
     drone.cpp \
     trainernetwork.cpp \
-    managerrls.cpp
+    managerrls.cpp \
+    map3dwindow.cpp \
+    visualmap3d.cpp \
+    surfacegraph.cpp \
+    custominputhandler.cpp \
+    highlightseries.cpp \
+    topographicseries.cpp \
+    runwindow.cpp \
+    volumetric.cpp
 
 HEADERS  += \
     core.h \
@@ -83,7 +91,15 @@ HEADERS  += \
     optdronewindow.h \
     drone.h \
     trainernetwork.h \
-    managerrls.h
+    managerrls.h \
+    map3dwindow.h \
+    visualmap3d.h \
+    surfacegraph.h \
+    custominputhandler.h \
+    highlightseries.h \
+    topographicseries.h \
+    runwindow.h \
+    volumetric.h
 
 FORMS    += mainwindow.ui \
     visualinfowidget.ui \
@@ -93,7 +109,8 @@ FORMS    += mainwindow.ui \
     optdatanetwindow.ui \
     optbuilddatasetwindow.ui \
     neuronnetworkwindow.ui \
-    optdronewindow.ui
+    optdronewindow.ui \
+    map3dwindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \
