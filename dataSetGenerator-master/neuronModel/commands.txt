@@ -1,0 +1,34 @@
+_____________________________________________	Запуск скрипта	____________________________________________________________
+
+>>>>> Прогноза моделью
+
+python C:\Users\20-konkova.a.n\PycharmProjects\untitled2\model.py C:\Users\20-konkova.a.n\Desktop\trainImages\netImg_0.jpg C:\Users\20-konkova.a.n\PycharmProjects\untitled2\outDataNet.txt C:\Users\20-konkova.a.n\PycharmProjects\untitled2\model1.meta
+
+
+C:\Users\20-konkova.a.n\PycharmProjects\untitled2\buildsEXE\dist\cApp\model.exe C:\Users\20-konkova.a.n\Desktop\trainImages\netImg_0.jpg C:\Users\20-konkova.a.n\PycharmProjects\untitled2\outDataNet.txt C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\Models\\testModel3\\testModel3.meta 
+
+
+C:\Users\belou\Documents\Programming\Projects\reposDiplom\pythonProjects\untitled2\buildsEXE\dist\consoleApp\model.exe C:\\Users\\belou\\Documents\\Programming\\Projects\\reposDiplom\\pythonProjects\\untitled2\\release\\inputData.jpg C:\\Users\\belou\\Documents\\Programming\\Projects\\reposDiplom\\pythonProjects\\untitled2\\release\\outDataNet.txt C:\\Users\\belou\\Documents\\Programming\\Projects\\reposDiplom\\pythonProjects\\untitled2\\release\\Models\\model3\\model3.meta	 	
+
+>>>>> Обучения модели
+
+python C:\Users\20-konkova.a.n\PycharmProjects\untitled2\buildTrain.py C:\\Users\\20-konkova.a.n\\Desktop\\trainImages C:\\Users\\20-konkova.a.n\\Desktop\\rewardValues C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\Models\\testModel 1
+
+
+C:\Users\20-konkova.a.n\PycharmProjects\untitled2\buildsEXE\dist\cApp\buildTrain.exe C:\\Users\\20-konkova.a.n\\Desktop\\trainImages C:\\Users\\20-konkova.a.n\\Desktop\\rewardValues C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\Models\\model3 5
+
+C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\buildsEXE\\dist\\cApp\\buildTrain.exe C:\\Users\\20-konkova.a.n\\Desktop\\trainImages C:\\Users\\20-konkova.a.n\\Desktop\\rewardValues C:\\Users\\20-konkova.a.n\\PycharmProjects\\untitled2\\Models\\testModel5 3
+
+__________________	Создание EXE	  _______________________________________________
+
+pyinstaller --onefile model.py
+
+pyinstaller -F --collect-all charset_normalizer model.py
+
+pyinstaller -D --hidden-import "tensorflow" C:\Users\20-konkova.a.n\PycharmProjects\untitled2\model.py
+
+pyinstaller -D C:\Users\20-konkova.a.n\PycharmProjects\untitled2\buildTrain.py
+
+pyinstaller -D --hidden-import "tensorflow" C:\Users\20-konkova.a.n\PycharmProjects\untitled2\buildTrain.py
+
+

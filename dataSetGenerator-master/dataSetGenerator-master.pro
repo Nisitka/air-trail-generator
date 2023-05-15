@@ -118,7 +118,15 @@ DISTFILES += \
     resurs/mapIcon.png \
     resurs/netIcon.png \
     resurs/qFunIcon.png \
-    resurs/rlsIcon.png
+    resurs/rlsIcon.png \
+    neuronModel/commands.txt \
+    neuronModel/READ ME.txt \
+    neuronModel/buildTrain.py \
+    neuronModel/cnn.py \
+    neuronModel/model.py \
+    neuronModel/t.py \
+    neuronModel/testARGV.py \
+    neuronModel/usedNet.py
 
 RESOURCES += \
     res.qrc
