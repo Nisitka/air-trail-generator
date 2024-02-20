@@ -312,6 +312,8 @@ void mapOpenGLWidget::updateVertBoards()
 
 void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL)
 {
+    qDebug() << "initTer";
+
     //
     idXo = idXo_;
     idYo = idYo_;
@@ -512,19 +514,19 @@ void mapOpenGLWidget::paintGL()
         {
             h = heights[idX][idY];
             colorHeight(h, r, g, b);
-            glColor3f(r, g, b); addVertex(idX, idY, h);
+            glColor3f(r, g, b); addVertex(idXo + idX, idYo + idY, h);
 
             h = heights[idX][idY+1];
             colorHeight(h, r, g, b);
-            glColor3f(r, g, b); addVertex(idX, idY+1, h);
+            glColor3f(r, g, b); addVertex(idXo + idX, idYo + idY + 1, h);
 
             h = heights[idX+1][idY];
             colorHeight(h, r, g, b);
-            glColor3f(r, g, b); addVertex(idX+1, idY, h);
+            glColor3f(r, g, b); addVertex(idXo + idX+1, idYo + idY, h);
 
             h = heights[idX+1][idY+1];
             colorHeight(h, r, g, b);
-            glColor3f(r, g, b); addVertex(idX+1, idY+1, h);
+            glColor3f(r, g, b); addVertex(idXo + idX+1, idYo + idY + 1, h);
         }
         glEnd();
     }
@@ -621,10 +623,12 @@ void mapOpenGLWidget::paintGL()
                 for (int t = 0; t < countV; t++)
                 {
                     p = pZDinBorder[idRLS][t].last();
-                    glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
+                    //glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
+                    addVertex(p.x(), p.y(), p.z());
 
                     p = posRLS->at(idRLS); // точка стояния РЛС
-                    glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
+                    //glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
+                    addVertex(p.x(), p.y(), p.z());
 
                 }
                 glEnd();
