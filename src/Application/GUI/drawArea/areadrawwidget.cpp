@@ -72,6 +72,40 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg,
     setRangeToolEditEarth(9);
 
     this->setCursor(Qt::ArrowCursor);
+
+    // !!!!!!!!!!!!
+    Tools[def]    = new toolDefault(this);
+    Tools[setRLS] = new ToolSetRLS(this);
+}
+
+
+void areaDrawWidget::setMarkCoordRLS(int xMark, int yMark)
+{
+    xPosRLS = xMark;
+    yPosRLS = yMark;
+
+    // Отправляем координаты потонциальной РЛС
+    setCoordRLS(xPosRLS, yPosRLS);
+
+    //
+    if (isDrawPositionRLS) repaint();
+}
+
+void areaDrawWidget::getCoordDrawArea(int &Xo_, int &Yo_)
+{
+    Xo_ = Xo;
+    Yo_ = Yo;
+}
+
+void areaDrawWidget::getSizePixMap(int &W, int &H)
+{
+    W = wightPixMap;
+    H = heightPixMap;
+}
+
+double areaDrawWidget::getValZoom()
+{
+    return k;
 }
 
 void areaDrawWidget::readyEditEarth()
@@ -354,11 +388,11 @@ void areaDrawWidget::addPointTrail(int idXpt, int idYpt)
     trail.append(new QPoint(idXpt, idYpt));
 }
 
-void areaDrawWidget::setTool(tools tool_)
+void areaDrawWidget::setTool(tools key)
 {
     statMouse = release;
 
-    tool = tool_;
+    tool = key;
     isDrawRect3D = false;
 
     int r; // размер курсора кисти
@@ -399,6 +433,10 @@ void areaDrawWidget::setTool(tools tool_)
 
         break;
     }
+
+    // Изменяем текущий инструмент
+    //Tool = Tools[key];
+    //Tool->init(); // подготавливаем его к работе
 
     repaint();
 }
@@ -622,12 +660,13 @@ void areaDrawWidget::mousePressEvent(QMouseEvent *mouseEvent)
             repaint();
             break;
         case setRLS:
-            xPosRLS = (xPressMouse - Xo) / k;
-            yPosRLS = (yPressMouse - Yo) / k;
+//            xPosRLS = (xPressMouse - Xo) / k;
+//            yPosRLS = (yPressMouse - Yo) / k;
 
-            setCoordRLS(xPosRLS, yPosRLS);
+//            setCoordRLS(xPosRLS, yPosRLS);
 
-            if (isDrawPositionRLS) repaint();
+//            if (isDrawPositionRLS) repaint();
+            Tools[setRLS]->mousePress(mouseEvent);
             break;
         case moveImg:
             this->setCursor(moveCloseCursor);

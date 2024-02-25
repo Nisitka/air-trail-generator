@@ -11,6 +11,9 @@
 
 #include <QVector>
 
+#include "toolsetrls.h"
+#include "tooldefault.h"
+
 class areaDrawWidget : public QWidget
 {
     Q_OBJECT
@@ -53,6 +56,18 @@ public:
     areaDrawWidget(QImage* mapImg,
                    QImage* netDataImg,
                    QImage* QFunImg);
+
+    // узнать левый верхний угол карты относительно виджета
+    void getCoordDrawArea(int& Xo, int& Yo);
+
+    // узнать размеры карты
+    void getSizePixMap(int& W, int& H); // в пикселях
+
+    //
+    double getValZoom();
+
+    // изменить точку постановки РЛС
+    void setMarkCoordRLS(int x, int y);
 
     // установить выбранную РЛС
     void setCurRLS(int idRLS);
@@ -101,6 +116,13 @@ protected:
     virtual void mouseReleaseEvent(QMouseEvent* mouseEvent);
 
 private:
+
+    // Все инструменты
+    QMap <tools, drawAreaTool*> Tools;
+
+    // Текущий инструмент
+    drawAreaTool* Tool;
+
     // размер кисти редактора рельефа
     int toolEarthR;
 
@@ -176,7 +198,7 @@ private:
     int Xo = 0;
     int Yo = 0;
 
-    // точка захвата картинки
+    // точка
     int pXo, pYo;
 
     // приближение (отдаление) на дискрету

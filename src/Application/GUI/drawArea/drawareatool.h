@@ -2,11 +2,14 @@
 #define DRAWAREATOOL_H
 
 #include <QMouseEvent>
+#include <QCursor>
+
+class areaDrawWidget;
 
 class drawAreaTool
 {
 public:
-    drawAreaTool();
+    drawAreaTool(areaDrawWidget*);
 
     enum keyMouse{left, right, mid};
     enum statusMouse{press, release};
@@ -15,7 +18,9 @@ public:
     virtual void mouseRelease(QMouseEvent* mouse) = 0;
     virtual void mouseMove(QMouseEvent* mouse) = 0;
 
-private:
+    virtual void init();
+
+protected:
     // кнопки
     static int lastKeyMouse;
     static int statMouse;
@@ -25,6 +30,17 @@ private:
     static int yPressMouse;
     static int xMouse;      // последние координаты
     static int yMouse;
+    static int pXo;         // левый верх-й угол карты при нажатии/отпускании мыши
+    static int pYo;
+
+    // к чему принадлежат инструменты
+    areaDrawWidget* drawArea;
+
+    //
+    QCursor cursor;
+
+private:
+
 };
 
 #endif // DRAWAREATOOL_H
