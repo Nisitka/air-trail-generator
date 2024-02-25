@@ -40,7 +40,6 @@ SOURCES += main.cpp\
     backend/rls.cpp \
     backend/trackparametras.cpp \
     backend/trainernetwork.cpp \
-    GUI/areadrawwidget.cpp \
     GUI/designer.cpp \
     GUI/gui.cpp \
     GUI/mainwindow.cpp \
@@ -57,7 +56,11 @@ SOURCES += main.cpp\
     GUI/qcustomplot.cpp \
     GUI/runwindow.cpp \
     GUI/visualinfowidget.cpp \
-    GUI/visualmap3d.cpp
+    GUI/visualmap3d.cpp \
+    GUI/drawArea/areadrawwidget.cpp \
+    GUI/drawArea/drawareatool.cpp \
+    GUI/drawArea/toolsetrls.cpp \
+    GUI/drawArea/tooldefault.cpp
 
 HEADERS  += \
     core.h \
@@ -75,7 +78,6 @@ HEADERS  += \
     backend/rls.h \
     backend/trackparametras.h \
     backend/trainernetwork.h \
-    GUI/areadrawwidget.h \
     GUI/designer.h \
     GUI/gui.h \
     GUI/mainwindow.h \
@@ -92,7 +94,11 @@ HEADERS  += \
     GUI/qcustomplot.h \
     GUI/runwindow.h \
     GUI/visualinfowidget.h \
-    GUI/visualmap3d.h
+    GUI/visualmap3d.h \
+    GUI/drawArea/areadrawwidget.h \
+    GUI/drawArea/drawareatool.h \
+    GUI/drawArea/toolsetrls.h \
+    GUI/drawArea/tooldefault.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \

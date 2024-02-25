@@ -5,7 +5,7 @@
 
 #include <QPushButton>
 
-#include "areadrawwidget.h"
+#include "drawArea/areadrawwidget.h"
 #include "backend/map.h"
 
 namespace Ui {
