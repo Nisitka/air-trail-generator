@@ -19,6 +19,12 @@ public:
     virtual void mouseMove(QMouseEvent* mouse) = 0;
 
     virtual void init();
+    virtual void end() = 0;
+
+    void getCoordMouse(int& idX, int& idY);
+
+    int getStatMouse();
+    int getLastKeyMouse();
 
 protected:
     // кнопки

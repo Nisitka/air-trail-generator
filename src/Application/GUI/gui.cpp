@@ -233,8 +233,6 @@ void GUI::connectMapPainter(painterMapImage* painterMap)
                      painterMap,                SLOT(upEarth(int,int,int)));
     QObject::connect(visInfoWin->getDrawArea(), SIGNAL(downEarth(int,int,int)),
                      painterMap,                SLOT(downEarth(int,int,int)));
-    QObject::connect(painterMap,                SIGNAL(readyEditEarth(int,int,int)),
-                     visInfoWin->getDrawArea(), SLOT(readyEditEarth()));
 
     QObject::connect(painterMap, SIGNAL(readyEditEarth(int,int,int)),
                      map3DWin,   SLOT(updateMap3D(int,int,int)));

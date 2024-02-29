@@ -391,7 +391,7 @@ void visualInfoWidget::showInfoCoord(double x, double y)
 
     ui->xValueLabel->setText(QString::number(x * l) + "м");
     ui->yValueLabel->setText(QString::number(y * l) + "м ");
-    ui->hValueLabel->setText(QString::number(map->getHeight(x, y) * l) + "m");
+    ui->hValueLabel->setText(QString::number(map->getHeight(x, y) * l) + "м");
 }
 
 void visualInfoWidget::updateImage()

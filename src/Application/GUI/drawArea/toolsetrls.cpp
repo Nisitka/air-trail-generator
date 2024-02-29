@@ -4,15 +4,18 @@
 
 ToolSetRLS::ToolSetRLS(areaDrawWidget* area): drawAreaTool(area)
 {
+    cursor = Qt::CrossCursor;
+}
 
+void ToolSetRLS::init()
+{
+    drawArea->setCursor(cursor);
+    drawArea->appendDrawTask(areaDrawWidget::toolRLS);
 }
 
 void ToolSetRLS::mousePress(QMouseEvent *mouse)
 {
     statMouse = press;
-
-    xPressMouse = mouse->x();
-    yPressMouse = mouse->y();
 
     // Координаты левого вернего угла карты отн-но виджета
     int Xo, Yo;
@@ -22,37 +25,41 @@ void ToolSetRLS::mousePress(QMouseEvent *mouse)
     int Wpm, Hpm;
     drawArea->getSizePixMap(Wpm, Hpm);
 
-    // Координаты относительно карты, а не виджета
+    // Пиксели клика на виджете
+    xPressMouse = mouse->x();
+    yPressMouse = mouse->y();
+
+    // Пиксели относительно карты, а не виджета
     int dX, dY;
     dX = xPressMouse - Xo;
     dY = yPressMouse - Yo;
 
-    // Только если клик входит в зону карты
-    if (dX < Wpm && dY < Hpm &&
-        dX > 0 && dY > 0){
+    pXo = Xo;
+    pYo = Yo;
 
-        pXo = Xo;
-        pYo = Yo;
+    int xMark, yMark;
+    double k = drawArea->getValZoom();
 
-        int xMark, yMark;
-        double k = drawArea->getValZoom();
+    // Пиксели в индексы клеток карты
+    xMark = dX / k;
+    yMark = dY / k;
 
-        xMark = (xPressMouse - Xo) / k;
-        yMark = (yPressMouse - Yo) / k;
-
-        drawArea->setMarkCoordRLS(xMark, yMark);
-    }
-    else {
-        return;
-    }
+    drawArea->setMarkCoordRLS(xMark, yMark);
 }
 
 void ToolSetRLS::mouseRelease(QMouseEvent *mouse)
 {
-
+    /* ... */
 }
 
 void ToolSetRLS::mouseMove(QMouseEvent *mouse)
 {
+    // Текущие координаты
+    xMouse = mouse->x();
+    yMouse = mouse->y();
+}
 
+void ToolSetRLS::end()
+{
+    drawArea->delDrawTask(areaDrawWidget::toolRLS);
 }

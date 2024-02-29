@@ -8,7 +8,7 @@ Map::Map()
 {
     file = new QFile;
 
-    this->build(200, 200, 200);
+    this->build(400, 400, 200);
 
     // длина ребра блока по умолчанию
     lenBlock = 20;

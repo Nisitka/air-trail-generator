@@ -1,18 +1,23 @@
-#ifndef TOOLDEFAULT_H
-#define TOOLDEFAULT_H
+#ifndef TOOLZOOMMAP_H
+#define TOOLZOOMMAP_H
 
 #include "GUI/drawArea/drawareatool.h"
 
-class toolDefault: public drawAreaTool
+class ToolZoomMap: public drawAreaTool
 {
 public:
-    toolDefault(areaDrawWidget*);
+    ToolZoomMap(areaDrawWidget*);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;
     void mouseMove(QMouseEvent* mouse) override;
 
+    void init() override;
     void end() override;
+
+private:
+    //
+    const double dK = 0.2;
 };
 
-#endif // TOOLDEFAULT_H
+#endif // TOOLZOOMMAP_H

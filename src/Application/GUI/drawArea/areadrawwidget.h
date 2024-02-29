@@ -11,8 +11,14 @@
 
 #include <QVector>
 
-#include "toolsetrls.h"
 #include "tooldefault.h"
+#include "tooleditmap.h"
+#include "toolmovemap.h"
+#include "toolpredrect.h"
+#include "toolpredtrail.h"
+#include "toolsetrls.h"
+#include "toolvismap.h"
+#include "toolzoommap.h"
 
 class areaDrawWidget : public QWidget
 {
@@ -43,9 +49,6 @@ signals:
     void setPointsTrail(const QPoint& begin, const QPoint& last);
 
 public slots:
-    // земля отредактирована
-    void readyEditEarth();
-
     // добавить РЛС для отрисовки
     void addRLS(QPoint* posRLS, const QString& nameNewRLS);
 
@@ -57,8 +60,14 @@ public:
                    QImage* netDataImg,
                    QImage* QFunImg);
 
+    //
+    void setRectVis(int idXa, int idYa, int idXb, int idYb);
+
     // узнать левый верхний угол карты относительно виджета
     void getCoordDrawArea(int& Xo, int& Yo);
+
+    // установить левый верхний угол карты относительно виджета
+    void setCoordDrawArea(int Xo, int Yo);
 
     // узнать размеры карты
     void getSizePixMap(int& W, int& H); // в пикселях
@@ -72,7 +81,13 @@ public:
     // установить выбранную РЛС
     void setCurRLS(int idRLS);
 
+    //
     int curTool();
+
+    // начальная и конечная точки маршрута БПЛА
+    void setBeginPointTrail(int idX, int idY);
+    void setLastPointTrail(int idX, int idY);
+    void sendPointsTrail();
 
     void startPredictTrail();
     void finishPredictTrail();
@@ -82,6 +97,9 @@ public:
 
     // установка квадрата прогноза
     void setPredictRect(int idXo, int idYo);
+
+    // изменить коофициент приближения на dK
+    void zoom(double dK);
 
     // форматы изображений для сохр.
     enum formatImg{jpg, png, bmp};
@@ -101,6 +119,31 @@ public:
     enum tools{moveImg, setRLS, zoomImg, predictRect, predictTrail, mapVis, editEarth, def};
     void setTool(tools);
 
+    // задачи отрисовки (В порядке отрисовки)
+    enum drawTasksID{background, terImg,
+                     iconRLS, toolVis, toolPredRect, toolPredTrail, toolRLS};
+    // методы для задач отрисовки
+    void drawBackground(QPainter& painter);
+    void drawMap(QPainter& painter);
+    void drawEleToolRLS(QPainter& painter);
+    void drawEleToolVis(QPainter& painter);
+    void drawEleToolPredRect(QPainter& painter);
+    void drawEleToolPredTrail(QPainter& painter);
+    void drawRLS(QPainter& painter);
+
+    // база задач отрисовки
+    QMap <drawTasksID, void (areaDrawWidget::*)(QPainter&)> drawTasks;
+
+    void (areaDrawWidget::*p)(QPainter&);
+    // текущие задачи
+    QMap <drawTasksID, void (areaDrawWidget::*)(QPainter&)> curDrawTasks;
+
+    // добавить задачу для отрисовки
+    void appendDrawTask(drawTasksID);
+
+    // снять задачу с отрисовки
+    void delDrawTask(drawTasksID);
+
     // добавить точку траектории
     void addPointTrail(int idXpt, int idYpt);
 
@@ -117,6 +160,9 @@ protected:
 
 private:
 
+    //
+    bool mouseFromArea(QMouseEvent *mouseEvent);
+
     // Все инструменты
     QMap <tools, drawAreaTool*> Tools;
 
@@ -130,17 +176,8 @@ private:
     QPoint a3D;
     QPoint b3D;
 
-    int angX3D, angY3D;
-    int numW, numL;
-
     // рисовать ли область детального отображения
     bool isDrawRect3D;
-
-
-    enum keyMouse{left, right, mid};
-    enum statusMouse{press, release};
-    int lastKeyMouse;
-    int statMouse;
 
     // текущий инструмент
     int tool;
@@ -168,12 +205,6 @@ private:
     // что отрисовывать в данный момент
     int curOptRepaint;
 
-    // курсор
-    int xPressMouse; // последние координаты нажатия
-    int yPressMouse;
-    int xMouse;      // последние координаты
-    int yMouse;
-
     // позиция РЛС на окне в базовых пикселях
     int xPosRLS;
     int yPosRLS;
@@ -185,9 +216,6 @@ private:
     //
     QColor curRLScolor;
 
-    // координаты мыши в дискретах карты
-    int idX, idY;
-
     // отправлять ли данные об координатах
     bool isExportCoord;
 
@@ -198,27 +226,9 @@ private:
     int Xo = 0;
     int Yo = 0;
 
-    // точка
-    int pXo, pYo;
-
     // приближение (отдаление) на дискрету
-    void zoom();
+    //void zoom();
     double k; //коофициент приближения
-    const double dk = 0.2; // дискрета приближения
-    QPixmap iconZoom;
-    QCursor zoomCursor;
-
-    QCursor editEarthCursor;
-
-    QCursor moveCloseCursor = Qt::ClosedHandCursor;
-    QCursor moveOpenCursor = Qt::OpenHandCursor;
-    QCursor rlsCursor = Qt::CrossCursor;
-    QCursor predictNetCursor = Qt::CrossCursor;
-    QCursor rect3DCursor = Qt::PointingHandCursor;
-
-    // передвижение изображения двигая мышку
-    void matchTranslateMove();
-    int dXmove, dYmove;
 
     // размеры карты для отрисовки
     int wightPixMap;
@@ -227,11 +237,7 @@ private:
     // изображение которое отрисовывается
     QImage* drawImg;
 
-    // отрисовывать ли выбранный квадрат инструмента
-    bool drawRectInit;
-
-    // отрисовывать ли выбранный квадрат прогноза
-    bool drawRectPredict;
+    //
     int idXoPredict;
     int idYoPredict;
 
@@ -256,9 +262,6 @@ private:
     QPixmap* pixCurRLS;
     // выбранная РЛС
     int idCurRLS; // индекс выбранной РЛС
-
-    // рисовать ли оконечные точки маршрута
-    bool drawSFPointsTrail;
 
     // начался ли прогноз траектории
     bool isPredictTrail;

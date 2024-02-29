@@ -18,6 +18,22 @@ drawAreaTool::drawAreaTool(areaDrawWidget* area): drawArea(area)
     cursor = Qt::ArrowCursor;
 }
 
+void drawAreaTool::getCoordMouse(int &idX, int &idY)
+{
+    idX = xMouse;
+    idY = yMouse;
+}
+
+int drawAreaTool::getStatMouse()
+{
+    return statMouse;
+}
+
+int drawAreaTool::getLastKeyMouse()
+{
+    return lastKeyMouse;
+}
+
 void drawAreaTool::init()
 {
     drawArea->setCursor(cursor);

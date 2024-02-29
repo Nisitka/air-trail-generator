@@ -19,5 +19,12 @@ void toolDefault::mouseRelease(QMouseEvent *mouse)
 
 void toolDefault::mouseMove(QMouseEvent *mouse)
 {
+    // Текущие координаты
+    xMouse = mouse->x();
+    yMouse = mouse->y();
+}
+
+void toolDefault::end()
+{
 
 }

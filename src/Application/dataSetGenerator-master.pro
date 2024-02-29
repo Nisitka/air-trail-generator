@@ -60,7 +60,13 @@ SOURCES += main.cpp\
     GUI/drawArea/areadrawwidget.cpp \
     GUI/drawArea/drawareatool.cpp \
     GUI/drawArea/toolsetrls.cpp \
-    GUI/drawArea/tooldefault.cpp
+    GUI/drawArea/tooldefault.cpp \
+    GUI/drawArea/toolmovemap.cpp \
+    GUI/drawArea/toolzoommap.cpp \
+    GUI/drawArea/toolpredrect.cpp \
+    GUI/drawArea/toolpredtrail.cpp \
+    GUI/drawArea/toolvismap.cpp \
+    GUI/drawArea/tooleditmap.cpp
 
 HEADERS  += \
     core.h \
@@ -98,7 +104,13 @@ HEADERS  += \
     GUI/drawArea/areadrawwidget.h \
     GUI/drawArea/drawareatool.h \
     GUI/drawArea/toolsetrls.h \
-    GUI/drawArea/tooldefault.h
+    GUI/drawArea/tooldefault.h \
+    GUI/drawArea/toolmovemap.h \
+    GUI/drawArea/toolzoommap.h \
+    GUI/drawArea/toolpredrect.h \
+    GUI/drawArea/toolpredtrail.h \
+    GUI/drawArea/toolvismap.h \
+    GUI/drawArea/tooleditmap.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \

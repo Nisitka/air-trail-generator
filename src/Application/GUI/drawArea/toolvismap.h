@@ -1,12 +1,12 @@
-#ifndef TOOLSETRLS_H
-#define TOOLSETRLS_H
+#ifndef TOOLVISMAP_H
+#define TOOLVISMAP_H
 
 #include "GUI/drawArea/drawareatool.h"
 
-class ToolSetRLS: public drawAreaTool
+class ToolVisMap: public drawAreaTool
 {
 public:
-    ToolSetRLS(areaDrawWidget*);
+    ToolVisMap(areaDrawWidget*);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;
@@ -14,6 +14,15 @@ public:
 
     void init() override;
     void end() override;
+
+private:
+
+    //
+    int idXa;
+    int idYa;
+
+    int idXb;
+    int idYb;
 };
 
-#endif // TOOLSETRLS_H
+#endif // TOOLVISMAP_H
