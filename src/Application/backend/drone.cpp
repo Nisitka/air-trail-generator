@@ -1,11 +1,14 @@
 #include "drone.h"
 
-Drone::Drone()
+Drone::Drone(int cHorR, int cVerR, int L):
+    countHorRay(cHorR), countVerRay(cVerR), longRay(L)
 {
-    tracker = new trackParametras;
+
 }
 
-trackParametras* Drone::getTracker()
+void Drone::setOptPredict(int cHorRay, int cVerRay, int L)
 {
-    return tracker;
+    countHorRay = cHorRay;
+    countVerRay = cVerRay;
+    longRay = L;
 }

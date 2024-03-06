@@ -10,9 +10,7 @@
 
 #include <QPixmap>
 
-areaDrawWidget::areaDrawWidget(QImage* mapImg,
-                               QImage* netDataImg,
-                               QImage* QFunImg)
+areaDrawWidget::areaDrawWidget(QImage* mapImg)
 {
     this->setMinimumSize(100, 100);
     this->setMaximumSize(2000, 1080);
@@ -25,8 +23,6 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg,
     images = QVector <QImage*> (3);
 
     images[geoMap] = mapImg;
-    images[netData] = netDataImg;
-    images[QFunction] = QFunImg;
 
     //
     strFormatImg = QVector <const char*> (3);

@@ -26,7 +26,7 @@ void ToolVisMap::mousePress(QMouseEvent *mouse)
     yPressMouse = mouse->y();
 
     double k = drawArea->getValZoom();
-    // Пиксели относительно карты, а не виджета
+    // Дискреты карты
     idXa = double (xPressMouse - Xo) / k;
     idYa = double (yPressMouse - Yo) / k;
 

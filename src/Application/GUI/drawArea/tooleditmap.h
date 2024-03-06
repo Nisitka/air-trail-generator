@@ -16,6 +16,8 @@ public:
     void end() override;
 
 private:
+    //
+    void editEarth();
 
     //
     int r;

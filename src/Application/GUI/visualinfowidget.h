@@ -52,8 +52,6 @@ public slots:
 
 public:
     explicit visualInfoWidget(QImage* geoMap,
-                              QImage* dataNet,
-                              QImage* QFun,
                               Map* map,
                               QWidget *parent = 0);
 

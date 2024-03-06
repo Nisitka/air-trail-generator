@@ -10,8 +10,6 @@
 #include "backend/buildertraildrones.h"
 
 visualInfoWidget::visualInfoWidget(QImage* geoMap,
-                                   QImage* dataNet,
-                                   QImage* QFun,
                                    Map* map_,
                                    QWidget *parent) :
     QWidget(parent),
@@ -23,7 +21,7 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
     map = map_;
 
     // устанавливаем изображения для отрисовки
-    drawArea = new areaDrawWidget(geoMap, dataNet, QFun);
+    drawArea = new areaDrawWidget(geoMap);
     connect(drawArea, SIGNAL(updateCoord(double,double)),
             this,     SLOT(showInfoCoord(double,double)));
     //

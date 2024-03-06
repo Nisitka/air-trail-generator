@@ -3,8 +3,6 @@
 #include <QApplication>
 
 GUI::GUI(QImage* geoMap,
-         QImage* dataNet,
-         QImage* QFun,
          Map* map_)
 {
     mainWin = new mainWindow;
@@ -14,8 +12,6 @@ GUI::GUI(QImage* geoMap,
 
     // Задача для работы с графической информацией
     visInfoWin = new visualInfoWidget(geoMap,
-                                      dataNet,
-                                      QFun,
                                       map_);
     QObject::connect(visInfoWin, SIGNAL(saveMap_signal(QString)),
                      map,        SLOT(save(QString)));
@@ -30,16 +26,6 @@ GUI::GUI(QImage* geoMap,
                      "Карта", "Карта");
 
     //
-    optQFunWin = new optQFunWindow;
-    mainWin->addTask(optQFunWin, QPixmap(":/resurs/qFunIcon.png"),
-                     "Целевая функция", "Целевая функция");
-
-    //
-    optDNWin = new optDataNetWindow;
-    mainWin->addTask(optDNWin, QPixmap(":/resurs/new"),
-                     "Образ нейронной сети", "Генератор образа");
-
-    //
     optRLSWin = new optRLSwindow(map_);
     //
     QObject::connect(visInfoWin, SIGNAL(updateCoordRLS(int,int)),
@@ -47,18 +33,6 @@ GUI::GUI(QImage* geoMap,
     mainWin->addTask(optRLSWin, QPixmap(":/resurs/rlsIcon"),
                      "РЛС", "Радиолокационная станция");
 
-    //
-    optBuildDSWin = new optBuildDataSetWindow;
-    mainWin->addTask(optBuildDSWin, QPixmap(":/resurs/copy"),
-                     "Обучающая выборка", "Генератор обучающей выборки");
-    //
-    netWin = new neuronNetworkWindow;
-    mainWin->addTask(netWin, QPixmap(":/resurs/netIcon"),
-                     "Нейронная сеть", "Нейронная сеть", mainWindow::usedNet);
-    QObject::connect(visInfoWin, SIGNAL(setPointsTrail(QPoint,QPoint)),
-                     netWin,     SLOT(setPointsPredictTrail(QPoint,QPoint)));
-    QObject::connect(netWin,     SIGNAL(predictTrail(QString,int,int,int,int)),
-                     visInfoWin, SLOT(startPredictTrail()));
     //
     droneWin = new optDroneWindow;
     mainWin->addTask(droneWin, QPixmap(":/resurs/plane"),
@@ -70,43 +44,14 @@ GUI::GUI(QImage* geoMap,
                      "3D", "Детальная визуализация рельефа");
 }
 
-void GUI::connectDrone(Drone* drone)
+void GUI::connectMDrones(managerDrones* mDrones)
 {
-    //
-    QObject::connect(droneWin,            SIGNAL(setAngleE(double)),
-                     drone->getTracker(), SLOT(setE(double)));
-}
 
-void GUI::connectTrainerNet(trainerNetwork *trainer)
-{
-    //
-    QObject::connect(netWin,  SIGNAL(trainNet(QString,QString,int,QString)),
-                     trainer, SLOT(run(QString,QString,int,QString)));
-    //
-    QObject::connect(trainer, SIGNAL(updateListModels()),
-                     netWin,  SLOT(updateModelsList()));
 }
 
 void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
 {
-    //
-    QObject::connect(netWin,       SIGNAL(predictToRect(QString)),
-                     builderTrail, SLOT(predictToRect(QString)));
-    //
-    QObject::connect(builderTrail, SIGNAL(resultPredictRect(int,int)),
-                     netWin,       SLOT(finishRectPredict(int,int)));
-    //
-    QObject::connect(builderTrail, SIGNAL(setRect(int,int,int)),
-                     visInfoWin,   SLOT(setIdCoordsRectPredict(int,int,int)));
-    //
-    QObject::connect(builderTrail, SIGNAL(resultPredictRect(int,int)),
-                     visInfoWin,   SLOT(setResultPredictRect(int,int)));
-    //
-    QObject::connect(netWin, SIGNAL(predictTrail(QString,int,int,int,int)),
-                     builderTrail, SLOT(startPredictTrail(QString,int,int,int,int)));
-    //
-    QObject::connect(builderTrail, SIGNAL(finishPredictTrail()),
-                     visInfoWin,   SLOT(readyPredictTrail()));
+
 }
 
 void GUI::connectMapGenerator(geoGenerator* mapBuilder)
@@ -126,28 +71,6 @@ void GUI::connectMapGenerator(geoGenerator* mapBuilder)
 
     QObject::connect(mapBuilder, SIGNAL(readyLayer(int)),
                      map3DWin,   SLOT(updateMap3D()));
-}
-
-void GUI::connectCalcQFun(calcQFunction* calcQFun)
-{
-    //
-    QObject::connect(optQFunWin, SIGNAL(runCalcQFun()),
-                     calcQFun,   SLOT(calculate()));
-    //
-    QObject::connect(calcQFun,   SIGNAL(calcStart(int)),
-                     optQFunWin, SLOT(startGenImage(int)));
-    //
-    QObject::connect(calcQFun,   SIGNAL(readySigment(int)),
-                     optQFunWin, SLOT(updateProgressGenImage(int)));
-    //
-    QObject::connect(calcQFun,   SIGNAL(readySigment(int)),
-                     visInfoWin, SLOT(updateImage()));
-    //
-    QObject::connect(calcQFun,   SIGNAL(finish()),
-                     optQFunWin, SLOT(finishGenImage()));
-    //
-    QObject::connect(visInfoWin, SIGNAL(setRectPredict(int,int)),
-                     calcQFun,   SLOT(setRect(int,int)));
 }
 
 void GUI::connectMRLS(managerRLS* mRLS)
@@ -249,47 +172,6 @@ void GUI::connectMapPainter(painterMapImage* painterMap)
                      visInfoWin, SLOT(updateImage()));
     QObject::connect(optRLSWin,  SIGNAL(getColorHeight(QColor*,int)),
                      painterMap, SLOT(heightToColor(QColor*,int)));
-}
-
-void GUI::connectPainterDataNet(painterDataNetImage* pDN)
-{
-    //
-    QObject::connect(optDNWin, SIGNAL(generateImage()),
-                     pDN,      SLOT(run()));
-    //
-    QObject::connect(pDN,        SIGNAL(finish()),
-                     visInfoWin, SLOT(updateImage()));
-    //
-    QObject::connect(optDNWin, SIGNAL(updateKrgb(double,double,double,double,double)),
-                     pDN,      SLOT(updateKrgb(double,double,double,double,double)));
-    optDNWin->setDefaultK(); // сразу же устанавливаем значения по умолчанию
-    //
-    QObject::connect(visInfoWin, SIGNAL(setRectPredict(int,int)),
-                     pDN,        SLOT(setRect(int,int)));
-
-    // полоска прогресса
-    QObject::connect(pDN,      SIGNAL(startGenerateImg(int)),
-                     optDNWin, SLOT(startGenerateImg(int)));
-    QObject::connect(pDN,      SIGNAL(readyStringDataNet(int)),
-                     optDNWin, SLOT(updateProgressGenDN(int)));
-    QObject::connect(pDN,      SIGNAL(finish()),
-                     optDNWin, SLOT(finishGenerateImg()));
-}
-
-void GUI::connectBuilderDS(builderDataSet* builder)
-{
-    //
-    QObject::connect(optBuildDSWin, SIGNAL(startGenerateDataSet(int,const QString&,const QString&,int)),
-                     builder,       SLOT(run(int,const QString&,const QString&,int)));
-    //
-    QObject::connect(builder,      SIGNAL(buildNewMap()),
-                     optGenMapWin, SLOT(startGenerateMap()));
-    //
-    QObject::connect(builder,       SIGNAL(readyData()),
-                     optBuildDSWin, SLOT(readyPart()));
-    // установка случайного квадрата прогноза
-    QObject::connect(builder,    SIGNAL(setCoordRect(int,int,int)),
-                     visInfoWin, SLOT(setIdCoordsRectPredict(int,int,int)));
 }
 
 void GUI::showMainWin()

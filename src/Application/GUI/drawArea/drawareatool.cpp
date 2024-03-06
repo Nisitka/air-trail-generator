@@ -38,3 +38,8 @@ void drawAreaTool::init()
 {
     drawArea->setCursor(cursor);
 }
+
+void drawAreaTool::getCoordID(int &idX, int &idY)
+{
+    /* ... */
+}

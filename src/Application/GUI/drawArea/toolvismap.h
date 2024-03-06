@@ -16,7 +16,6 @@ public:
     void end() override;
 
 private:
-
     //
     int idXa;
     int idYa;

@@ -56,9 +56,7 @@ public slots:
     void delRLS(int indexRLS);
 
 public:
-    areaDrawWidget(QImage* mapImg,
-                   QImage* netDataImg,
-                   QImage* QFunImg);
+    areaDrawWidget(QImage* mapImg);
 
     //
     void setRectVis(int idXa, int idYa, int idXb, int idYb);

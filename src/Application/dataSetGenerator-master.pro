@@ -26,31 +26,23 @@ LIBS += -lOpengl32 -lglu32
 
 SOURCES += main.cpp\
     core.cpp \
-    backend/builderdataset.cpp \
     backend/buildertraildrones.cpp \
-    backend/calcqfunction.cpp \
     backend/drone.cpp \
     backend/geoblock.cpp \
     backend/geogenerator.cpp \
     backend/managerrls.cpp \
     backend/map.cpp \
-    backend/painterdatanetimage.cpp \
     backend/painterimage.cpp \
     backend/ray.cpp \
     backend/rls.cpp \
-    backend/trackparametras.cpp \
-    backend/trainernetwork.cpp \
     GUI/designer.cpp \
     GUI/gui.cpp \
     GUI/mainwindow.cpp \
     GUI/map3dwindow.cpp \
     GUI/mapopenglwidget.cpp \
     GUI/neuronnetworkwindow.cpp \
-    GUI/optbuilddatasetwindow.cpp \
-    GUI/optdatanetwindow.cpp \
     GUI/optdronewindow.cpp \
     GUI/optmapgeneratorwindow.cpp \
-    GUI/optqfunwindow.cpp \
     GUI/optrlswindow.cpp \
     GUI/paintermapimage.cpp \
     GUI/qcustomplot.cpp \
@@ -66,35 +58,28 @@ SOURCES += main.cpp\
     GUI/drawArea/toolpredrect.cpp \
     GUI/drawArea/toolpredtrail.cpp \
     GUI/drawArea/toolvismap.cpp \
-    GUI/drawArea/tooleditmap.cpp
+    GUI/drawArea/tooleditmap.cpp \
+    backend/managerdrones.cpp
 
 HEADERS  += \
     core.h \
-    backend/builderdataset.h \
     backend/buildertraildrones.h \
-    backend/calcqfunction.h \
     backend/drone.h \
     backend/geoblock.h \
     backend/geogenerator.h \
     backend/managerrls.h \
     backend/map.h \
-    backend/painterdatanetimage.h \
     backend/painterimage.h \
     backend/ray.h \
     backend/rls.h \
-    backend/trackparametras.h \
-    backend/trainernetwork.h \
     GUI/designer.h \
     GUI/gui.h \
     GUI/mainwindow.h \
     GUI/map3dwindow.h \
     GUI/mapopenglwidget.h \
     GUI/neuronnetworkwindow.h \
-    GUI/optbuilddatasetwindow.h \
-    GUI/optdatanetwindow.h \
     GUI/optdronewindow.h \
     GUI/optmapgeneratorwindow.h \
-    GUI/optqfunwindow.h \
     GUI/optrlswindow.h \
     GUI/paintermapimage.h \
     GUI/qcustomplot.h \
@@ -110,7 +95,8 @@ HEADERS  += \
     GUI/drawArea/toolpredrect.h \
     GUI/drawArea/toolpredtrail.h \
     GUI/drawArea/toolvismap.h \
-    GUI/drawArea/tooleditmap.h
+    GUI/drawArea/tooleditmap.h \
+    backend/managerdrones.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \

@@ -27,6 +27,9 @@ public:
     int getLastKeyMouse();
 
 protected:
+    // Получить дискреты карты
+    void getCoordID(int& idX, int& idY);
+
     // кнопки
     static int lastKeyMouse;
     static int statMouse;
@@ -38,6 +41,10 @@ protected:
     static int yMouse;
     static int pXo;         // левый верх-й угол карты при нажатии/отпускании мыши
     static int pYo;
+
+    //
+    int idX, idY;
+    double k;
 
     // к чему принадлежат инструменты
     areaDrawWidget* drawArea;

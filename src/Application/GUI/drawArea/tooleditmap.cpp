@@ -30,26 +30,28 @@ void ToolEditMap::mousePress(QMouseEvent *mouse)
     dX = xPressMouse - Xo;
     dY = yPressMouse - Yo;
 
-    double k = drawArea->getValZoom();
-    int idX = (double)dX / k;
-    int idY = (double)dY / k;
+    k = drawArea->getValZoom();
+    idX = (double)dX / k;
+    idY = (double)dY / k;
 
+    lastKeyMouse = mouse->button() - 1;
+
+    editEarth();
+}
+
+void ToolEditMap::editEarth()
+{
     int R; // размер курсора инструмента
-    switch (mouse->button() - 1) {
-    case left:
-        lastKeyMouse = left;
 
-        R = r*k;
-        if (R < 13) R = 13;
+    R = r*k;
+    if (R < 13) R = 13;
+    switch (lastKeyMouse) {
+    case left:
         drawArea->setCursor(QCursor(QPixmap(":/resurs/toolEarthUp").scaled(R,R)));
 
         drawArea->upEarth(idX, idY, r);
         break;
     case right:
-        lastKeyMouse = right;
-
-        R = r*k;
-        if (R < 13) R = 13;
         drawArea->setCursor(QCursor(QPixmap(":/resurs/toolEarthDown").scaled(R,R)));
 
         drawArea->downEarth(idX, idY, r);

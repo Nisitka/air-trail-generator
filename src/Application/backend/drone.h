@@ -1,21 +1,26 @@
 #ifndef DRONE_H
 #define DRONE_H
 
-#include <QObject>
-
-#include "trackparametras.h"
+#include "ray.h"
 
 // класс БПЛА
 class Drone
 {
 public:
-    Drone();
+    // Установка пар-ов прогноза в области
+    void setOptPredict(int cHorRay, int cVerRay,
+                       int longRay); // Длина лучей
 
-    trackParametras* getTracker();
+    Drone(int countHorRay, int countVerRay, int longRay);
 
 private:
-    // параметры траектории полета
-    trackParametras* tracker;
+
+    // Кол-во лучей
+    int countHorRay; // горизонтали
+    int countVerRay; // вертикали
+
+    // Длина лучей
+    int longRay;
 };
 
 #endif // DRONE_H
