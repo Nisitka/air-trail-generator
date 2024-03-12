@@ -3,13 +3,23 @@
 
 #include <QMouseEvent>
 #include <QCursor>
+#include <QObject>
 
 class areaDrawWidget;
 
-class drawAreaTool
+class drawAreaTool: public QObject
 {
+    Q_OBJECT
+signals:
+    //
+    void pickSignal(int id);
+
+public slots:
+    // Назначить инструмент выбранным
+    void assign();
+
 public:
-    drawAreaTool(areaDrawWidget*);
+    drawAreaTool(areaDrawWidget*, int id);
 
     enum keyMouse{left, right, mid};
     enum statusMouse{press, release};
@@ -17,6 +27,8 @@ public:
     virtual void mousePress(QMouseEvent* mouse) = 0;
     virtual void mouseRelease(QMouseEvent* mouse) = 0;
     virtual void mouseMove(QMouseEvent* mouse) = 0;
+
+    virtual void wheelEvent(QWheelEvent *event);
 
     virtual void init();
     virtual void end() = 0;
@@ -27,6 +39,17 @@ public:
     int getLastKeyMouse();
 
 protected:
+
+    //
+    void addButton(const QPixmap& pixButton, const QString& nameButton);
+
+    //
+//    QPixmap buttonImg;
+//    QString nameButton;
+
+    // ключ  инструмента в drawArea
+    int id;
+
     // Получить дискреты карты
     void getCoordID(int& idX, int& idY);
 

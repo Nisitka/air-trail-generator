@@ -6,7 +6,7 @@
 class ToolMoveMap: public drawAreaTool
 {
 public:
-    ToolMoveMap(areaDrawWidget*);
+    ToolMoveMap(areaDrawWidget*, int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

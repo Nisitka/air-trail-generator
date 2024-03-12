@@ -5,9 +5,9 @@ managerDrones::managerDrones()
 
 }
 
-void managerDrones::createDrone(int cHorRay, int cVerRay, int L)
+void managerDrones::createDrone()
 {
-    drones.append(new Drone(cHorRay, cVerRay, L));
+    drones.append(new Drone);
 }
 
 void managerDrones::removeDrone(int idDrone)

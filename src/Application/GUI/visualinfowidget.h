@@ -63,10 +63,6 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent* mouseEvent);
 
 private slots:
-    void moveSliderSizeToolEarth(int v);
-
-    void hideShowOptTools();
-
     void saveMap();
     void setDirNameMap();
 
@@ -77,19 +73,7 @@ private slots:
 
     void setDirNameImg();
 
-    // установка инструментов
-    void setToolRLS();
-    void setToolMoveImg();
-    void setToolZoom();
-    void setToolPredictRect();
-    void setToolPredictTrail();
-    void setTool3D();
-    void setToolEditEarth();
-
 private:
-    // статус панели опций инструментов
-    bool isShowOptTools; // true - открыто
-
     // настройка визуала
     void setDesine();
 

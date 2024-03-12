@@ -19,10 +19,13 @@ public:
     ~optDroneWindow();
 
 private slots:
-    void setTrackOptions();
+
 
 private:
     Ui::optDroneWindow *ui;
+
+    //
+    void setDesine();
 };
 
 #endif // OPTDRONEWINDOW_H

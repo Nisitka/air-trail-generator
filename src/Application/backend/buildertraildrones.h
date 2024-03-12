@@ -6,7 +6,8 @@
 #include <QPoint>
 #include <QVector>
 
-#include "drone.h"
+#include "ray.h"
+#include "trail.h"
 #include "map.h"
 
 // генерирует скртный маршрут
@@ -22,8 +23,7 @@ signals:
 
 public slots:
     // начать прогноз траектории от точки до точки
-    void startPredictTrail(Drone* drone,
-                           int idXa, int idYa,
+    void startPredictTrail(int idXa, int idYa,
                            int idXb, int idYb);
 
 public:
@@ -39,15 +39,37 @@ private:
     //
     bool estimRay();
 
+    //
+    void predictFromRect();
+
     // Лучи прогноза (по вертикальным долькам)
     QVector <QVector <Ray*>*> ZD; // скелет из лучей
 
+    void buildZD();
+    double Pi = 3.14159265;
+
+    int Wmap;
+    int Lmap;
+    int Hmap;
+
+    int curX;
+    int curY;
+    int curZ;
+
+    int Xb, Yb;
+
+    Trail* trail;
+
+    double getDistance(int Xa, int Ya, int Xb, int Yb);
+
+    // Кол-во
+    int countHorPart; // долек
+    int countVerRay;  // лучей в них
+
+    // Длина лучей
+    double longRay;
     //
     Map* map;
-
-    // БПЛА, для которого осуще-ся прогноз
-    Drone* curDrone;
-
 };
 
 #endif // BUILDERTRAILDRONES_H

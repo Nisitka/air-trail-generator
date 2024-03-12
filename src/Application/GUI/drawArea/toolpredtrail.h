@@ -6,7 +6,7 @@
 class ToolPredTrail: public drawAreaTool
 {
 public:
-    ToolPredTrail(areaDrawWidget*);
+    ToolPredTrail(areaDrawWidget*, int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

@@ -2,9 +2,11 @@
 
 #include "areadrawwidget.h"
 
-ToolSetRLS::ToolSetRLS(areaDrawWidget* area): drawAreaTool(area)
+ToolSetRLS::ToolSetRLS(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
     cursor = Qt::CrossCursor;
+
+    addButton(QPixmap(":/resurs/radarBlue"), "Постановка РЛС");
 }
 
 void ToolSetRLS::init()

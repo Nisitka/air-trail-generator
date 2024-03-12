@@ -44,22 +44,6 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
     //
     ui->typeSaveImglComboBox->addItems(typeSaveImg);
 
-    // выбор инструмента по нажатию на кнопку
-    connect(ui->setRLStoolButton, SIGNAL(clicked()),
-            this,                 SLOT(setToolRLS()));
-    connect(ui->moveMapToolButton, SIGNAL(clicked()),
-            this,                  SLOT(setToolMoveImg()));
-    connect(ui->zoomMapToolButton, SIGNAL(clicked()),
-            this,                  SLOT(setToolZoom()));
-    connect(ui->predictRectToolButton, SIGNAL(clicked()),
-            this,                      SLOT(setToolPredictRect()));
-    connect(ui->predictTrailToolButton, SIGNAL(clicked()),
-            this,                       SLOT(setToolPredictTrail()));
-    connect(ui->map3DToolButton, SIGNAL(clicked()),
-            this,                SLOT(setTool3D()));
-    connect(ui->editEarthToolButton, SIGNAL(clicked()),
-            this,                    SLOT(setToolEditEarth()));
-
     // настройка визула
     setDesine();
 
@@ -79,39 +63,6 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
 
     // чтобы moveEvent работал без нажатия
     this->setMouseTracking(true);
-
-    ui->optToolsGroupBox->hide();
-    ui->optToolsButton->setIcon(QIcon(":/resurs/leftVector"));
-    isShowOptTools = false;
-
-    connect(ui->optToolsButton, SIGNAL(clicked()),
-            this,               SLOT(hideShowOptTools()));
-
-    ui->sizeEditEarthSlider->setMinimum(1);
-    connect(ui->sizeEditEarthSlider, SIGNAL(sliderMoved(int)),
-            this, SLOT(moveSliderSizeToolEarth(int)));
-}
-
-void visualInfoWidget::moveSliderSizeToolEarth(int range)
-{
-    ui->sizeEditEarthSpinBox->setValue(range);
-    drawArea->setRangeToolEditEarth(range);
-}
-
-void visualInfoWidget::hideShowOptTools()
-{
-    if (isShowOptTools)
-    {
-        ui->optToolsGroupBox->hide();
-        ui->optToolsButton->setIcon(QIcon(":/resurs/leftVector"));
-        isShowOptTools = false;
-    }
-    else
-    {
-        ui->optToolsGroupBox->show();
-        ui->optToolsButton->setIcon(QIcon(":/resurs/rightVector"));
-        isShowOptTools = true;
-    }
 }
 
 areaDrawWidget* visualInfoWidget::getDrawArea()
@@ -267,122 +218,6 @@ void visualInfoWidget::switchVisual(int idType)
     }
 }
 
-void visualInfoWidget::setToolMoveImg()
-{
-    ui->optToolsStackedWidget->setCurrentIndex(areaDrawWidget::moveImg);
-
-    Designer::setButton(ui->moveMapToolButton, Designer::toolON);
-    if (drawArea->curTool() != areaDrawWidget::def)
-        Designer::setButton(lastButtonTool, Designer::toolOFF);
-
-    if (drawArea->curTool() == areaDrawWidget::moveImg)
-        drawArea->setTool(areaDrawWidget::def);
-    else
-        drawArea->setTool(areaDrawWidget::moveImg);
-
-    lastButtonTool = ui->moveMapToolButton;
-}
-
-void visualInfoWidget::setToolRLS()
-{
-    ui->optToolsStackedWidget->setCurrentIndex(areaDrawWidget::setRLS);
-
-    Designer::setButton(ui->setRLStoolButton, Designer::toolON);
-    if (drawArea->curTool() != areaDrawWidget::def)
-        Designer::setButton(lastButtonTool, Designer::toolOFF);
-
-    if (drawArea->curTool() == areaDrawWidget::setRLS)
-        drawArea->setTool(areaDrawWidget::def);
-    else
-        drawArea->setTool(areaDrawWidget::setRLS);
-
-    lastButtonTool = ui->setRLStoolButton;
-}
-
-void visualInfoWidget::setToolZoom()
-{
-    ui->optToolsStackedWidget->setCurrentIndex(areaDrawWidget::zoomImg);
-
-    Designer::setButton(ui->zoomMapToolButton, Designer::toolON);
-    if (drawArea->curTool() != areaDrawWidget::def)
-        Designer::setButton(lastButtonTool, Designer::toolOFF);
-
-    if (drawArea->curTool() == areaDrawWidget::zoomImg)
-        drawArea->setTool(areaDrawWidget::def);
-    else
-        drawArea->setTool(areaDrawWidget::zoomImg);
-
-    lastButtonTool = ui->zoomMapToolButton;
-}
-
-void visualInfoWidget::setToolPredictRect()
-{
-    ui->optToolsStackedWidget->setCurrentIndex(areaDrawWidget::predictRect);
-
-    Designer::setButton(ui->predictRectToolButton, Designer::toolON);
-    if (drawArea->curTool() != areaDrawWidget::def)
-        Designer::setButton(lastButtonTool, Designer::toolOFF);
-
-    if (drawArea->curTool() == areaDrawWidget::predictRect)
-    {
-        drawArea->setTool(areaDrawWidget::def);
-    }
-    else
-    {
-        drawArea->setTool(areaDrawWidget::predictRect);
-    }
-
-    lastButtonTool = ui->predictRectToolButton;
-}
-
-void visualInfoWidget::setToolPredictTrail()
-{
-    ui->optToolsStackedWidget->setCurrentIndex(areaDrawWidget::predictTrail);
-
-    Designer::setButton(ui->predictTrailToolButton, Designer::toolON);
-    if (drawArea->curTool() != areaDrawWidget::def)
-        Designer::setButton(lastButtonTool, Designer::toolOFF);
-
-    if (drawArea->curTool() == areaDrawWidget::predictTrail)
-        drawArea->setTool(areaDrawWidget::def);
-    else
-        drawArea->setTool(areaDrawWidget::predictTrail);
-
-    lastButtonTool = ui->predictTrailToolButton;
-}
-
-void visualInfoWidget::setTool3D()
-{
-    ui->optToolsStackedWidget->setCurrentIndex(areaDrawWidget::mapVis);
-
-    Designer::setButton(ui->map3DToolButton, Designer::toolON);
-    if (drawArea->curTool() != areaDrawWidget::def)
-        Designer::setButton(lastButtonTool, Designer::toolOFF);
-
-    if (drawArea->curTool() == areaDrawWidget::mapVis)
-        drawArea->setTool(areaDrawWidget::def);
-    else
-        drawArea->setTool(areaDrawWidget::mapVis);
-
-    lastButtonTool = ui->map3DToolButton;
-}
-
-void visualInfoWidget::setToolEditEarth()
-{
-    ui->optToolsStackedWidget->setCurrentIndex(areaDrawWidget::editEarth);
-
-    Designer::setButton(ui->editEarthToolButton, Designer::toolON);
-    if (drawArea->curTool() != areaDrawWidget::def)
-        Designer::setButton(lastButtonTool, Designer::toolOFF);
-
-    if (drawArea->curTool() == areaDrawWidget::editEarth)
-        drawArea->setTool(areaDrawWidget::def);
-    else
-        drawArea->setTool(areaDrawWidget::editEarth);
-
-    lastButtonTool = ui->editEarthToolButton;
-}
-
 void visualInfoWidget::showInfoCoord(double x, double y)
 {
     int l = map->getLenBlock();
@@ -399,26 +234,6 @@ void visualInfoWidget::updateImage()
 
 void visualInfoWidget::setDesine()
 {
-    // иконки кнопок-инструментов
-    ui->setRLStoolButton->setIcon(QIcon(":/resurs/radarBlue"));
-    ui->moveMapToolButton->setIcon(QIcon(":/resurs/hand"));
-    ui->zoomMapToolButton->setIcon(QIcon(":/resurs/zoom"));
-    ui->predictRectToolButton->setIcon(QIcon(":/resurs/handDrone"));
-    ui->predictTrailToolButton->setIcon(QIcon(":/resurs/trail2"));
-    ui->map3DToolButton->setIcon(QIcon(":/resurs/hand3D"));
-    ui->editEarthToolButton->setIcon(QIcon(":/resurs/machinery"));
-
-    Designer::setButton(ui->setRLStoolButton, Designer::toolOFF);
-    Designer::setButton(ui->zoomMapToolButton, Designer::toolOFF);
-    Designer::setButton(ui->moveMapToolButton, Designer::toolOFF);
-    Designer::setButton(ui->predictRectToolButton, Designer::toolOFF);
-    Designer::setButton(ui->predictTrailToolButton, Designer::toolOFF);
-    Designer::setButton(ui->map3DToolButton, Designer::toolOFF);
-    Designer::setButton(ui->editEarthToolButton, Designer::toolOFF);
-
-    // кнопка открытия / закрытия опций инструментов
-    Designer::setButton(ui->optToolsButton, Designer::white);
-
     //
     Designer::setButton(ui->setDirSaveImgButton, Designer::white);
     Designer::setButton(ui->setDirSaveMapButton, Designer::white);
@@ -430,17 +245,12 @@ void visualInfoWidget::setDesine()
     // настройка визуала GroupBox-ов
     Designer::setGroupBox(ui->typeVisObjGroupBox);
     Designer::setGroupBox(ui->saveDataGroupBox);
-    Designer::setGroupBox(ui->toolsGroupBox);
-    Designer::setGroupBox(ui->optToolsGroupBox);
     Designer::setGroupBox(ui->coordsGroupBox);
 
     Designer::setGroupBox(ui->mainGroupBox, Designer::lightBlue);
 
     // настройка визула TabWidget-ов
     Designer::setTabWidget(ui->saveTabWidget);
-
-    // настройка визула ComboBox-ов
-    //Designer::setComboBox(ui->typeSaveImglComboBox);
 }
 
 visualInfoWidget::~visualInfoWidget()

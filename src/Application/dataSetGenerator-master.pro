@@ -59,7 +59,8 @@ SOURCES += main.cpp\
     GUI/drawArea/toolpredtrail.cpp \
     GUI/drawArea/toolvismap.cpp \
     GUI/drawArea/tooleditmap.cpp \
-    backend/managerdrones.cpp
+    backend/managerdrones.cpp \
+    backend/trail.cpp
 
 HEADERS  += \
     core.h \
@@ -96,13 +97,11 @@ HEADERS  += \
     GUI/drawArea/toolpredtrail.h \
     GUI/drawArea/toolvismap.h \
     GUI/drawArea/tooleditmap.h \
-    backend/managerdrones.h
+    backend/managerdrones.h \
+    backend/trail.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \
-    GUI/UI/neuronnetworkwindow.ui \
-    GUI/UI/optbuilddatasetwindow.ui \
-    GUI/UI/optdatanetwindow.ui \
     GUI/UI/optdronewindow.ui \
     GUI/UI/optmapgeneratorwindow.ui \
     GUI/UI/optqfunwindow.ui \

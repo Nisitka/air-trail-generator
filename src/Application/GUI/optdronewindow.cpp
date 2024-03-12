@@ -11,17 +11,21 @@ optDroneWindow::optDroneWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->setTrakButton, SIGNAL(clicked()),
-            this,              SLOT(setTrackOptions()));
-
-    Designer::setGroupBox(ui->mainGroupBox, Designer::lightBlue);
-    Designer::setGroupBox(ui->trailGroupBox);
-    Designer::setButton(ui->setTrakButton);
+    setDesine();
 }
 
-void optDroneWindow::setTrackOptions()
+void optDroneWindow::setDesine()
 {
-    setAngleE(ui->angleESpinBox->value());
+    //
+    Designer::setGroupBox(ui->groupBox, Designer::lightBlue);
+    Designer::setGroupBox(ui->createDronesGroupBox);
+    Designer::setGroupBox(ui->listDronesGroupBox);
+    Designer::setGroupBox(ui->TrailsGroupBox);
+    Designer::setGroupBox(ui->infoTrailGroupBox);
+
+    //
+    Designer::setTabWidget(ui->addDroneTabWidget);
+    Designer::setTabWidget(ui->curDroneTabWidget);
 }
 
 optDroneWindow::~optDroneWindow()

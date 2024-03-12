@@ -4,9 +4,9 @@
 
 #include <QDebug>
 
-ToolMoveMap::ToolMoveMap(areaDrawWidget* area): drawAreaTool(area)
+ToolMoveMap::ToolMoveMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
-
+    addButton(QPixmap(":/resurs/hand"), "Перемещение на карте");
 }
 
 void ToolMoveMap::init()

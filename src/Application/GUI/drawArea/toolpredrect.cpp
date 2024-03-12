@@ -4,9 +4,11 @@
 
 #include <QDebug>
 
-ToolPredRect::ToolPredRect(areaDrawWidget* area): drawAreaTool(area)
+ToolPredRect::ToolPredRect(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
     cursor = Qt::CrossCursor;
+
+    addButton(QPixmap(":/resurs/handDrone"), "Прогноз в области");
 }
 
 void ToolPredRect::init()

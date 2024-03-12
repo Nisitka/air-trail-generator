@@ -1,15 +1,20 @@
 #ifndef AREADRAWWIDGET_H
 #define AREADRAWWIDGET_H
 
-#include <QWidget>
+#include <QMainWindow>
 
 #include <QImage>
 
 #include <QEvent>
+
+#include <QWheelEvent>
+
 #include <QPaintEvent>
 #include <QPainter>
 
 #include <QVector>
+
+#include <QToolBar>
 
 #include "tooldefault.h"
 #include "tooleditmap.h"
@@ -20,7 +25,7 @@
 #include "toolvismap.h"
 #include "toolzoommap.h"
 
-class areaDrawWidget : public QWidget
+class areaDrawWidget: public QMainWindow
 {
     Q_OBJECT
 signals:
@@ -54,6 +59,14 @@ public slots:
 
     // удалить РЛС с отрисовки
     void delRLS(int indexRLS);
+
+    // Выбрать инструмент
+    void setTool(int id);
+
+protected:
+
+    // Переопределяем метод, чтоб не вылазило меню при нажатии лев.клавиши мыши
+    void contextMenuEvent(QContextMenuEvent* event);
 
 public:
     areaDrawWidget(QImage* mapImg);
@@ -115,7 +128,9 @@ public:
 
     // инструменты
     enum tools{moveImg, setRLS, zoomImg, predictRect, predictTrail, mapVis, editEarth, def};
-    void setTool(tools);
+
+    //
+    QToolBar* getToolBar();
 
     // задачи отрисовки (В порядке отрисовки)
     enum drawTasksID{background, terImg,
@@ -151,18 +166,20 @@ public:
 protected:
     void paintEvent(QPaintEvent* pEvent);
 
-    virtual void mousePressEvent(QMouseEvent* mouseEvent);
-    virtual void mouseMoveEvent(QMouseEvent* mouseEvent);
-
-    virtual void mouseReleaseEvent(QMouseEvent* mouseEvent);
+    virtual void mousePressEvent(QMouseEvent* mouseEvent)   override;
+    virtual void mouseMoveEvent(QMouseEvent* mouseEvent)    override;
+    virtual void mouseReleaseEvent(QMouseEvent* mouseEvent) override;
+    virtual void wheelEvent(QWheelEvent *event)             override;
 
 private:
+    // Панель для инструментов
+    QToolBar* toolBar;
 
     //
     bool mouseFromArea(QMouseEvent *mouseEvent);
 
     // Все инструменты
-    QMap <tools, drawAreaTool*> Tools;
+    QMap <int, drawAreaTool*> Tools;
 
     // Текущий инструмент
     drawAreaTool* Tool;

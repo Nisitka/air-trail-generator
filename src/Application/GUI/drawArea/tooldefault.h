@@ -6,7 +6,7 @@
 class toolDefault: public drawAreaTool
 {
 public:
-    toolDefault(areaDrawWidget*);
+    toolDefault(areaDrawWidget*, int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

@@ -12,7 +12,7 @@ class managerDrones: public QObject
 
 public slots:
     //
-    void createDrone(int cHorRay, int cVerRay, int L);
+    void createDrone();
 
     //
     void removeDrone(int idDrone);

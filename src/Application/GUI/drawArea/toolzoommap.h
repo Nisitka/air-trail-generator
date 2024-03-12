@@ -6,7 +6,7 @@
 class ToolZoomMap: public drawAreaTool
 {
 public:
-    ToolZoomMap(areaDrawWidget*);
+    ToolZoomMap(areaDrawWidget*, int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

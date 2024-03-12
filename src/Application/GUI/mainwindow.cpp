@@ -17,7 +17,7 @@ mainWindow::mainWindow(QWidget *parent) :
                         "   background-color: rgb(201,214,234);"
                         "   border: 2px solid rgb(84,123,177);}");
 
-    toolBarBuildDS = new QToolBar("Панель инструментов");
+    toolBarBuildDS = new QToolBar("Панель задач");
     toolBarBuildDS->setStyleSheet("QToolBar {"
                                   "    border: 2px solid rgb(84,123,177);"
                                   "    background-color: rgb(255,255,255);"

@@ -6,7 +6,7 @@
 class ToolSetRLS: public drawAreaTool
 {
 public:
-    ToolSetRLS(areaDrawWidget*);
+    ToolSetRLS(areaDrawWidget*, int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

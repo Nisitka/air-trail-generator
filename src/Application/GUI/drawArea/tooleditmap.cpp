@@ -2,16 +2,29 @@
 
 #include "areadrawwidget.h"
 
-ToolEditMap::ToolEditMap(areaDrawWidget* area): drawAreaTool(area)
+#include <QDebug>
+
+ToolEditMap::ToolEditMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
     cursor = Qt::CrossCursor;
 
+    upCurPixmap   = QPixmap(":/resurs/toolEarthUp");
+    downCurPixmap = QPixmap(":/resurs/toolEarthDown");
+    moveCurPixmap = QPixmap(":/resurs/toolEarthMove");
+
     r = 20;
+
+    addButton(QPixmap(":/resurs/machinery"), "Редактировать рельеф");
 }
 
 void ToolEditMap::init()
 {
     statMouse = release;
+
+    //
+    k = drawArea->getValZoom();
+    updateSizeCursor();
+    drawArea->setCursor(QCursor(moveCurPixmap.scaled(R,R)));
 }
 
 void ToolEditMap::mousePress(QMouseEvent *mouse)
@@ -41,22 +54,21 @@ void ToolEditMap::mousePress(QMouseEvent *mouse)
 
 void ToolEditMap::editEarth()
 {
-    int R; // размер курсора инструмента
-
-    R = r*k;
-    if (R < 13) R = 13;
+    updateSizeCursor();
     switch (lastKeyMouse) {
     case left:
-        drawArea->setCursor(QCursor(QPixmap(":/resurs/toolEarthUp").scaled(R,R)));
+        cursor = QCursor(upCurPixmap.scaled(R,R));
 
         drawArea->upEarth(idX, idY, r);
         break;
     case right:
-        drawArea->setCursor(QCursor(QPixmap(":/resurs/toolEarthDown").scaled(R,R)));
+        cursor = QCursor(downCurPixmap.scaled(R,R));
 
         drawArea->downEarth(idX, idY, r);
         break;
     }
+
+    drawArea->setCursor(cursor);
 }
 
 void ToolEditMap::mouseRelease(QMouseEvent *mouse)
@@ -72,10 +84,9 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
     xMouse = mouse->x();
     yMouse = mouse->y();
 
-    int R; // размер курсора инструмента
-    double k = drawArea->getValZoom();
-    R = r*k;
-    if (R < 13) R = 13;
+
+    k = drawArea->getValZoom();
+    updateSizeCursor();
     if (statMouse == press)
     {
         // Координаты левого вернего угла карты отн-но виджета
@@ -101,8 +112,29 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
     }
     else
     {
-        drawArea->setCursor(QCursor(QPixmap(":/resurs/toolEarthMove").scaled(R,R)));
+        drawArea->setCursor(QCursor(moveCurPixmap.scaled(R,R)));
     }
+}
+
+void ToolEditMap::updateSizeCursor()
+{
+    R = r*k;
+    if (R < 13) R = 13;
+}
+
+void ToolEditMap::wheelEvent(QWheelEvent *event)
+{
+    if (event->angleDelta().y() > 0)
+    {
+        r++;
+    }
+    else
+    {
+        if (r > minSIZE) r--;
+    }
+
+    updateSizeCursor();
+    drawArea->setCursor(QCursor(moveCurPixmap.scaled(R,R)));
 }
 
 void ToolEditMap::end()

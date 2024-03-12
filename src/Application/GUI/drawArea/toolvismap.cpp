@@ -2,9 +2,11 @@
 
 #include "areadrawwidget.h"
 
-ToolVisMap::ToolVisMap(areaDrawWidget* area): drawAreaTool(area)
+ToolVisMap::ToolVisMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
     cursor = Qt::CrossCursor;
+
+    addButton(QPixmap(":/resurs/hand3D"), "Область 3D визуализации");
 }
 
 void ToolVisMap::init()

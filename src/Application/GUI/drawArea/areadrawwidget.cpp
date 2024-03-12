@@ -13,7 +13,7 @@
 areaDrawWidget::areaDrawWidget(QImage* mapImg)
 {
     this->setMinimumSize(100, 100);
-    this->setMaximumSize(2000, 1080);
+    this->setMaximumSize(10080, 25000);
     this->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
     // отправляем данные об координатах курсора
@@ -57,15 +57,25 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
 
     this->setCursor(Qt::ArrowCursor);
 
+    toolBar = new QToolBar("Панель инструментов");
+    toolBar->setStyleSheet("QToolBar {"
+                           "   border: 2px solid gray;"
+                           "   padding: 2px 0px;"
+                           "   border-radius: 2px;"
+                           "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                           "                                     stop: 0 #E0E0E0, stop: 1 #FFFFFF);"
+                           "};");
+    addToolBar(Qt::TopToolBarArea, toolBar); // добавляем в панель инструментов
+
     //
-    Tools[def]          = new toolDefault(this);
-    Tools[editEarth]    = new ToolEditMap(this);
-    Tools[moveImg]      = new ToolMoveMap(this);
-    Tools[predictRect]  = new ToolPredRect(this);
-    Tools[predictTrail] = new ToolPredTrail(this);
-    Tools[setRLS]       = new ToolSetRLS(this);
-    Tools[mapVis]       = new ToolVisMap(this);
-    Tools[zoomImg]      = new ToolZoomMap(this);
+    Tools[def]          = new toolDefault(this, def);
+    Tools[editEarth]    = new ToolEditMap(this, editEarth);
+    Tools[moveImg]      = new ToolMoveMap(this, moveImg);
+    Tools[predictRect]  = new ToolPredRect(this, predictRect);
+    Tools[predictTrail] = new ToolPredTrail(this, predictTrail);
+    Tools[setRLS]       = new ToolSetRLS(this, setRLS);
+    Tools[mapVis]       = new ToolVisMap(this, mapVis);
+    Tools[zoomImg]      = new ToolZoomMap(this, zoomImg);
 
     tool = def;
     Tool = Tools[def];
@@ -87,7 +97,22 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
     appendDrawTask(iconRLS);
 
     p = &areaDrawWidget::drawBackground;
-    qDebug() << curDrawTasks.size() << "SIZE";
+
+    // Настройка визуала
+    this->setStyleSheet("QMainWindow{"
+                        "   background-color: rgb(255,255,255);"
+                        "   border: 2px solid gray;"
+                        "};");
+}
+
+void areaDrawWidget::contextMenuEvent(QContextMenuEvent *event)
+{
+    /* ... */
+}
+
+QToolBar* areaDrawWidget::getToolBar()
+{
+    return toolBar;
 }
 
 void areaDrawWidget::appendDrawTask(drawTasksID task)
@@ -410,7 +435,7 @@ void areaDrawWidget::addPointTrail(int idXpt, int idYpt)
     trail.append(new QPoint(idXpt, idYpt));
 }
 
-void areaDrawWidget::setTool(tools key)
+void areaDrawWidget::setTool(int key)
 {
     tool = key;
 
@@ -471,6 +496,11 @@ void areaDrawWidget::mousePressEvent(QMouseEvent *mouseEvent)
 
         Tool->mousePress(mouseEvent);
     }
+}
+
+void areaDrawWidget::wheelEvent(QWheelEvent *event)
+{
+    Tool->wheelEvent(event);
 }
 
 void areaDrawWidget::setRectVis(int idXa, int idYa, int idXb, int idYb)

@@ -2,9 +2,11 @@
 
 #include "areadrawwidget.h"
 
-ToolPredTrail::ToolPredTrail(areaDrawWidget* area): drawAreaTool(area)
+ToolPredTrail::ToolPredTrail(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
     cursor = Qt::CrossCursor;
+
+    addButton(QPixmap(":/resurs/trail2"), "Прогноз маршрута");
 }
 
 void ToolPredTrail::init()

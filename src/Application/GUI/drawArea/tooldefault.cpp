@@ -2,7 +2,7 @@
 
 #include "areadrawwidget.h"
 
-toolDefault::toolDefault(areaDrawWidget* area): drawAreaTool(area)
+toolDefault::toolDefault(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
 
 }
