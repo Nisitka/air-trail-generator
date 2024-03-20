@@ -16,6 +16,8 @@ builderTrailDrones::builderTrailDrones(Map* map): map(map)
 
     buildZD();
 
+    trail = nullptr;
+
     startPredictTrail(5, 5, 390, 190);
 }
 
@@ -25,6 +27,8 @@ void builderTrailDrones::startPredictTrail(int idXa, int idYa, int idXb, int idY
     Lmap = map->getLength();
     Hmap = map->getCountLayers();
 
+    //
+    delete trail;
     trail = new Trail;
 
     Xb = idXb;
@@ -34,16 +38,24 @@ void builderTrailDrones::startPredictTrail(int idXa, int idYa, int idXb, int idY
     curY = idYa;
     curZ = map->getHeight(curX, curY) + 1;
     trail->addPoint(curX, curY, curZ);
+    nextPointTrail(curX, curY, curZ);
 
     //double l = map->getLenBlock();
 
     while (getDistance(curX, curY, idXb, idYb) > 10) {
         predictFromRect();
-        qDebug() << curX << curY << curZ;
+        trail->addPoint(curX, curY, curZ);
+
+        //qDebug() << curX << curY << curZ;
+        nextPointTrail(curX, curY, curZ);
     }
 
     // Последняя точка всегда точка задачи
-    trail->addPoint(Xb, Yb, map->getHeight(Xb, Yb));
+    curX = Xb;
+    curY = Yb;
+    curZ = map->getHeight(Xb, Yb);
+    trail->addPoint(curX, curY, curZ);
+    nextPointTrail(curX, curY, curZ);
 }
 
 void builderTrailDrones::predictFromRect()
@@ -140,8 +152,6 @@ void builderTrailDrones::predictFromRect()
         }
     }
 
-    trail->addPoint(Xp, Yp, Zp);
-
     curX = Xp;
     curY = Yp;
     curZ = Zp;
@@ -149,7 +159,7 @@ void builderTrailDrones::predictFromRect()
 
 double builderTrailDrones::getDistance(int Xa, int Ya, int Xb, int Yb)
 {
-    return sqrt(pow(Xa-Xb, 2) + pow(Ya-Yb, 2));
+    return sqrt((double)pow(Xa-Xb, 2) + pow(Ya-Yb, 2));
 }
 
 void builderTrailDrones::buildZD()

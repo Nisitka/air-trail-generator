@@ -37,12 +37,6 @@ optRLSwindow::optRLSwindow(Map* map_, QWidget *parent) :
     ui->on_off_RLS_Button->hide();
     ui->setCoordRLSpushButton->hide();
 
-    cPlot = ui->graphicDVWidget;
-
-    cPlot->addGraph();
-    cPlot->graph(0)->setPen(QPen(Qt::blue));
-    cPlot->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 20)));
-
     //
     connect(ui->setOptZDvertButton, SIGNAL(clicked()),
             this,                   SLOT(setOptZDvert()));
@@ -66,6 +60,9 @@ optRLSwindow::optRLSwindow(Map* map_, QWidget *parent) :
     connect(ui->on_off_RLS_Button, SIGNAL(clicked()),
             this,                  SLOT(enablingRLS()));
 
+    // Виджет для отрисорвки графика ЗО РЛС
+    graphicWidget = new plotWidget;
+    ui->plotZDLayout->addWidget(graphicWidget);
 
     setDesine();
 }
@@ -93,12 +90,11 @@ void optRLSwindow::removeRLS()
 
             ui->on_off_RLS_Button->hide();
             ui->setCoordRLSpushButton->hide();
-
-            QVector <double> null = {0};
-            cPlot->graph(0)->setData(null, null);
-            cPlot->replot();
         }
     }
+
+    // Очищаем виджет от графика удаленной РЛС
+    graphicWidget->clear();
 }
 
 void optRLSwindow::addRLS()
@@ -216,31 +212,16 @@ void optRLSwindow::setNewPosRLS()
 
 void optRLSwindow::repaintGraphic(double* x, double* y, int count)
 {
-    QVector <double> X(count), Y(count);
-    double Xmax = 0;
-    double Ymax = 0;
+    QVector <float> X(count), Y(count);
     for (int i=0; i<count; i++)
     {
         X[i] = x[i];
-        if (Xmax < x[i]) Xmax = x[i];
-
         Y[i] = y[i];
-        if (Ymax < y[i]) Ymax = y[i];
     }
     delete [] x;
     delete [] y;
 
-    //qDebug() << X << Y;
-
-    cPlot->graph(0)->setData(X, Y, true);
-
-    cPlot->xAxis->setRange(0, Xmax + 100);
-    cPlot->xAxis2->setRange(0, Xmax + 100);
-
-    cPlot->yAxis->setRange(0, Ymax + 100);
-    cPlot->yAxis2->setRange(0, Ymax + 100);
-
-    cPlot->replot();
+    graphicWidget->setData(X, Y);
 }
 
 void optRLSwindow::readyOptZDvert()

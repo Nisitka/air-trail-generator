@@ -21,10 +21,13 @@ signals:
     // Начало прогноза в областри
     void startPredictArea(int countIter); // кол-во итераций
 
+    // Уведомление об прогнозе очередной точки
+    void nextPointTrail(int idX, int idY, int idH);
+
 public slots:
     // начать прогноз траектории от точки до точки
-    void startPredictTrail(int idXa, int idYa,
-                           int idXb, int idYb);
+    void startPredictTrail(int idXa, int idYa,  // Нач. точка
+                           int idXb, int idYb); // Кон. точка
 
 public:
     builderTrailDrones(Map* map);

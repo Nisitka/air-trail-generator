@@ -4,8 +4,8 @@
 #include <QWidget>
 
 #include "backend/map.h"
-#include "qcustomplot.h"
 #include "paintermapimage.h"
+#include "plotwidget.h"
 
 namespace Ui {
 class optRLSwindow;
@@ -117,7 +117,7 @@ private:
 
     QColor* colorH;
 
-    QCustomPlot* cPlot;
+    plotWidget* graphicWidget;
 
     // координаты РЛС
     int xRLS; // в индексах блоков карты

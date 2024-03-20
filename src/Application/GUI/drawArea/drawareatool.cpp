@@ -25,10 +25,52 @@ drawAreaTool::drawAreaTool(areaDrawWidget* area, int id): drawArea(area), id(id)
 
 void drawAreaTool::addButton(const QPixmap &pixButton, const QString &nameButton)
 {
-    qDebug() << "ASAS";
-
-    drawArea->getToolBar()->addAction(pixButton, nameButton,
+    QAction* action = drawArea->getToolBar()->addAction(pixButton, nameButton,
                                       this,      SLOT(assign()));
+
+    button = drawArea->getToolBar()->widgetForAction(action);
+    offButton();
+}
+
+void drawAreaTool::onButton()
+{
+    button->setStyleSheet("QToolButton{"
+                          "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
+                          "    border-color: rgb(0,0,0);"
+                          "    border-style: outset;"
+                          "    border-radius: 3px;"
+                          "    border-width: 1px;"
+                          "    border-color: rgb(0,0,0);"
+                          "}"
+                          "QToolButton:hover{"
+                          "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
+                          "    border-color: rgb(0,0,0);"
+                          "    border-radius: 3px;"
+                          "    border-width: 1px;"
+                          "    border-color: rgb(0,0,0);"
+                          "}"
+                          "QToolButton:pressed{"
+                          "    background-color : rgb(143,204,205); color: rgb(0,0,0);;"
+                          "};");
+}
+
+void drawAreaTool::offButton()
+{
+    button->setStyleSheet("QToolButton{"
+                          "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                          "                                     stop: 0 #E0E0E0, stop: 1 #FFFFFF);"
+                          "}"
+                          "QToolButton:hover{"
+                          "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
+                          "    border-color: rgb(0,0,0);"
+                          "    border-style: outset;"
+                          "    border-radius: 3px;"
+                          "    border-width: 1px;"
+                          "    border-color: rgb(0,0,0);"
+                          "}"
+                          "QToolButton:pressed{"
+                          "    background-color : rgb(143,204,205); color: rgb(0,0,0);;"
+                          "};");
 }
 
 void drawAreaTool::assign()

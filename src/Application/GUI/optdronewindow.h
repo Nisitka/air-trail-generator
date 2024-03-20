@@ -12,14 +12,21 @@ class optDroneWindow : public QWidget
     Q_OBJECT
 
 signals:
-    void setAngleE(double E);
+    //
+    void runPredictTrail(int idXa, int idYa,
+                         int idXb, int idYb);
+public slots:
+    //
+    void setPredictPoints(int idXa, int idYa,
+                          int idXb, int idYb);
 
 public:
     explicit optDroneWindow(QWidget *parent = 0);
     ~optDroneWindow();
 
 private slots:
-
+    //
+    void startPredictTrail();
 
 private:
     Ui::optDroneWindow *ui;

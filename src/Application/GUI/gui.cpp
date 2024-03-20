@@ -36,7 +36,12 @@ GUI::GUI(QImage* geoMap,
     //
     droneWin = new optDroneWindow;
     mainWin->addTask(droneWin, QPixmap(":/resurs/plane"),
-                     "БПЛА", "Беспилотный летательный аппарат", mainWindow::usedNet);
+                     "БПЛА", "Беспилотный летательный аппарат");
+    //
+    QObject::connect(visInfoWin->getDrawArea(), SIGNAL(setPointsTrail(int,int,int,int)),
+                     droneWin,                  SLOT(setPredictPoints(int,int,int,int)));
+    QObject::connect(droneWin, SIGNAL(runPredictTrail(int,int,int,int)),
+                     visInfoWin->getDrawArea(), SLOT(startPredictTrail()));
 
     //
     map3DWin = new map3DWindow(map);
@@ -51,7 +56,13 @@ void GUI::connectMDrones(managerDrones* mDrones)
 
 void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
 {
+    //
+    QObject::connect(droneWin,     SIGNAL(runPredictTrail(int,int,int,int)),
+                     builderTrail, SLOT(startPredictTrail(int,int,int,int)));
 
+    //
+    QObject::connect(builderTrail,              SIGNAL(nextPointTrail(int,int,int)),
+                     visInfoWin->getDrawArea(), SLOT(addPointTrail(int,int,int)));
 }
 
 void GUI::connectMapGenerator(geoGenerator* mapBuilder)

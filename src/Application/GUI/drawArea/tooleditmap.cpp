@@ -19,6 +19,8 @@ ToolEditMap::ToolEditMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 
 void ToolEditMap::init()
 {
+    onButton();
+
     statMouse = release;
 
     //
@@ -74,6 +76,7 @@ void ToolEditMap::editEarth()
 void ToolEditMap::mouseRelease(QMouseEvent *mouse)
 {
     statMouse = release;
+    drawArea->setCursor(QCursor(moveCurPixmap.scaled(R,R)));
 
     drawArea->updateSignals();
 }
@@ -139,5 +142,5 @@ void ToolEditMap::wheelEvent(QWheelEvent *event)
 
 void ToolEditMap::end()
 {
-
+    offButton();
 }

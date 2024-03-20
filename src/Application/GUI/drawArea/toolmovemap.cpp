@@ -11,6 +11,8 @@ ToolMoveMap::ToolMoveMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 
 void ToolMoveMap::init()
 {
+    onButton();
+
     drawArea->setCursor(Qt::OpenHandCursor);
     statMouse = release;
 }
@@ -55,7 +57,7 @@ void ToolMoveMap::mouseMove(QMouseEvent *mouse)
 
 void ToolMoveMap::end()
 {
-
+    offButton();
 }
 
 

@@ -122,6 +122,22 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_7">
           <item>
+           <spacer name="verticalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Ignored</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="QGroupBox" name="listRLSGroupBox">
             <property name="maximumSize">
              <size>
@@ -180,22 +196,6 @@
             </layout>
            </widget>
           </item>
-          <item>
-           <spacer name="verticalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Ignored</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
          </layout>
         </item>
        </layout>
@@ -208,7 +208,7 @@
          </font>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_3">
          <attribute name="title">
@@ -234,7 +234,7 @@
                 </font>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <widget class="QWidget" name="tab">
                 <attribute name="title">
@@ -347,7 +347,7 @@
                           <number>900</number>
                          </property>
                          <property name="maximum">
-                          <number>4000</number>
+                          <number>10000</number>
                          </property>
                         </widget>
                        </item>
@@ -390,7 +390,7 @@
                           <number>60</number>
                          </property>
                          <property name="maximum">
-                          <number>600</number>
+                          <number>10000</number>
                          </property>
                         </widget>
                        </item>
@@ -548,14 +548,7 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <item>
-              <widget class="QCustomPlot" name="graphicDVWidget" native="true">
-               <property name="minimumSize">
-                <size>
-                 <width>400</width>
-                 <height>230</height>
-                </size>
-               </property>
-              </widget>
+              <layout class="QHBoxLayout" name="plotZDLayout"/>
              </item>
             </layout>
            </widget>
@@ -952,14 +945,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QCustomPlot</class>
-   <extends>QWidget</extends>
-   <header location="global">qcustomplot.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

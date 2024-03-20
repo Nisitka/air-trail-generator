@@ -11,6 +11,7 @@ ToolVisMap::ToolVisMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 
 void ToolVisMap::init()
 {
+    onButton();
     drawArea->setCursor(cursor);
     drawArea->appendDrawTask(areaDrawWidget::toolVis);
 }
@@ -81,5 +82,6 @@ void ToolVisMap::mouseMove(QMouseEvent *mouse)
 
 void ToolVisMap::end()
 {
+    offButton();
     drawArea->delDrawTask(areaDrawWidget::toolVis);
 }

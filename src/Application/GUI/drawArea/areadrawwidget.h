@@ -51,11 +51,18 @@ signals:
     void predictMoveDroneRect(int idX, int idY, int typeP = -1);
 
     //
-    void setPointsTrail(const QPoint& begin, const QPoint& last);
+    void setPointsTrail(int idXa, int idYa, int idXb, int idYb);
 
 public slots:
-    // добавить РЛС для отрисовки
+    // Добавить РЛС для отрисовки
     void addRLS(QPoint* posRLS, const QString& nameNewRLS);
+
+    //
+    void startPredictTrail();
+    void finishPredictTrail();
+
+    // Добавить точку траектории
+    void addPointTrail(int idXpt, int idYpt, int idZpt);
 
     // удалить РЛС с отрисовки
     void delRLS(int indexRLS);
@@ -99,9 +106,6 @@ public:
     void setBeginPointTrail(int idX, int idY);
     void setLastPointTrail(int idX, int idY);
     void sendPointsTrail();
-
-    void startPredictTrail();
-    void finishPredictTrail();
 
     void drawResultPredictRect(int idX, int idY);
     bool paintPredictRect;
@@ -157,9 +161,6 @@ public:
     // снять задачу с отрисовки
     void delDrawTask(drawTasksID);
 
-    // добавить точку траектории
-    void addPointTrail(int idXpt, int idYpt);
-
     // установить размер кисти
     void setRangeToolEditEarth(int R); // длина квадрата в пикселях
 
@@ -190,9 +191,6 @@ private:
     // точки области детального отображения рельефа
     QPoint a3D;
     QPoint b3D;
-
-    // рисовать ли область детального отображения
-    bool isDrawRect3D;
 
     // текущий инструмент
     int tool;
@@ -233,9 +231,6 @@ private:
 
     // отправлять ли данные об координатах
     bool isExportCoord;
-
-    // отрисовывать ли точку для постановки РЛС
-    bool isDrawPositionRLS;
 
     // точка, относительно которой рисуем изображение
     int Xo = 0;
@@ -278,9 +273,7 @@ private:
     // выбранная РЛС
     int idCurRLS; // индекс выбранной РЛС
 
-    // начался ли прогноз траектории
-    bool isPredictTrail;
-
+    //
     QVector <QPoint*> trail;
     void clearTrail();
 

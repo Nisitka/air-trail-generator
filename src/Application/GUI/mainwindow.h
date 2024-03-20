@@ -23,12 +23,10 @@ signals:
 public:
     explicit mainWindow(QWidget *parent = 0);
 
-    enum typeTask{dataSet, usedNet};
     void addTask(QWidget* widget,
                  const QPixmap& pix,
                  const QString& nameButton,
                  const QString& nameWindow,
-                 typeTask = dataSet,
                  Qt::DockWidgetArea showPosition = Qt::TopDockWidgetArea);
 
     ~mainWindow();
@@ -38,8 +36,7 @@ private slots:
 
 private:
     // панели окон
-    QToolBar* toolBarBuildDS; // для создания обуч. выб.
-    QToolBar* toolBarUsedNet; // проверки сети
+    QToolBar* toolBar; //
 
     // окно визулизатора данных
     QDockWidget* dockVisualInfo;

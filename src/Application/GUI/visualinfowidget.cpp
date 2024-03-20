@@ -99,41 +99,6 @@ void visualInfoWidget::setDirNameMap()
     saveMap();
 }
 
-void visualInfoWidget::setResultPredictRect(int idX, int idY)
-{
-    drawArea->drawResultPredictRect(idX, idY);
-}
-
-void visualInfoWidget::setIdCoordsRectPredict(int idX, int idY, int typeP)
-{
-    int Wmap = map->getWidth();
-    int Lmap = map->getLength();
-
-    if (idX + 100 > Wmap) idX = Wmap - 100;
-    if (idY + 100 > Lmap) idY = Lmap - 100;
-
-    if (idX - 100 < 0) idX = 100;
-    if (idY - 100 < 0) idY = 100;
-
-    setRectPredict(idX - 100, idY - 100);
-
-    // если прогнозируем траекторию, то добавить точку для её отрисовки
-    if (isPredictTrail)
-    {
-        switch (typeP) {
-        case builderTrailDrones::mainP:
-            drawArea->addPointTrail(idX, idY);
-            break;
-        case builderTrailDrones::midP:
-
-            break;
-        }
-    }
-
-    drawArea->setPredictRect(idX - 100, idY - 100);
-    drawArea->repaint();
-}
-
 void visualInfoWidget::saveMap()
 {
     saveMap_signal(ui->dirSaveMapLineEdit->text());
@@ -180,26 +145,6 @@ void visualInfoWidget::setDirNameImg()
 
     // и сразу сохраняем
     saveImage();
-}
-
-void visualInfoWidget::readyPredictTrail()
-{
-    isPredictTrail = false;
-
-    // разблокируем некоторые инструменты
-
-    drawArea->finishPredictTrail();
-}
-
-void visualInfoWidget::startPredictTrail()
-{
-    isPredictTrail = true;
-    numCurPoint = 0;
-
-    // блокируем некоторые инструменты
-
-    // отображаем начало просчета траектории
-    drawArea->startPredictTrail();
 }
 
 void visualInfoWidget::switchVisual(int idType)
@@ -251,6 +196,8 @@ void visualInfoWidget::setDesine()
 
     // настройка визула TabWidget-ов
     Designer::setTabWidget(ui->saveTabWidget);
+
+    Designer::setComboBox(ui->typeSaveImglComboBox);
 }
 
 visualInfoWidget::~visualInfoWidget()

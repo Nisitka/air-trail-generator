@@ -349,8 +349,8 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>163</width>
-                      <height>270</height>
+                      <width>16</width>
+                      <height>16</height>
                      </rect>
                     </property>
                    </widget>
@@ -360,9 +360,6 @@
                </widget>
               </item>
              </layout>
-             <zorder>listWidget</zorder>
-             <zorder>TrailsGroupBox</zorder>
-             <zorder>infoTrailGroupBox</zorder>
             </widget>
             <widget class="QWidget" name="tab_6">
              <attribute name="title">
@@ -380,20 +377,85 @@
                  </attribute>
                  <layout class="QVBoxLayout" name="verticalLayout_8">
                   <item>
-                   <widget class="QScrollArea" name="scrollArea">
-                    <property name="widgetResizable">
-                     <bool>true</bool>
+                   <widget class="QGroupBox" name="TPointAGBox">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
                     </property>
-                    <widget class="QWidget" name="scrollAreaWidgetContents">
-                     <property name="geometry">
-                      <rect>
-                       <x>0</x>
-                       <y>0</y>
-                       <width>441</width>
-                       <height>221</height>
-                      </rect>
-                     </property>
-                    </widget>
+                    <property name="title">
+                     <string>Точка старта</string>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_11">
+                     <item>
+                      <widget class="QSpinBox" name="XaSpinBox">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>25</height>
+                        </size>
+                       </property>
+                       <property name="maximum">
+                        <number>9999999</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSpinBox" name="YaSpinBox">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>25</height>
+                        </size>
+                       </property>
+                       <property name="maximum">
+                        <number>9999999</number>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QGroupBox" name="TPointBGBox">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="title">
+                     <string>Точка финиша</string>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_10">
+                     <item>
+                      <widget class="QSpinBox" name="XbSpinBox">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>25</height>
+                        </size>
+                       </property>
+                       <property name="maximum">
+                        <number>9999999</number>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSpinBox" name="YbSpinBox">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>25</height>
+                        </size>
+                       </property>
+                       <property name="maximum">
+                        <number>9999999</number>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </widget>
                   </item>
                   <item>
@@ -430,6 +492,19 @@
                      </widget>
                     </item>
                    </layout>
+                  </item>
+                  <item>
+                   <spacer name="verticalSpacer">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
                   </item>
                  </layout>
                 </widget>

@@ -43,9 +43,15 @@ protected:
     //
     void addButton(const QPixmap& pixButton, const QString& nameButton);
 
+    void onButton();
+    void offButton();
+
     //
 //    QPixmap buttonImg;
 //    QString nameButton;
+
+    //
+    QWidget* button;
 
     // ключ  инструмента в drawArea
     int id;

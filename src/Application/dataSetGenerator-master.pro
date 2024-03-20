@@ -45,7 +45,6 @@ SOURCES += main.cpp\
     GUI/optmapgeneratorwindow.cpp \
     GUI/optrlswindow.cpp \
     GUI/paintermapimage.cpp \
-    GUI/qcustomplot.cpp \
     GUI/runwindow.cpp \
     GUI/visualinfowidget.cpp \
     GUI/visualmap3d.cpp \
@@ -60,7 +59,8 @@ SOURCES += main.cpp\
     GUI/drawArea/toolvismap.cpp \
     GUI/drawArea/tooleditmap.cpp \
     backend/managerdrones.cpp \
-    backend/trail.cpp
+    backend/trail.cpp \
+    GUI/plotwidget.cpp
 
 HEADERS  += \
     core.h \
@@ -83,7 +83,6 @@ HEADERS  += \
     GUI/optmapgeneratorwindow.h \
     GUI/optrlswindow.h \
     GUI/paintermapimage.h \
-    GUI/qcustomplot.h \
     GUI/runwindow.h \
     GUI/visualinfowidget.h \
     GUI/visualmap3d.h \
@@ -98,7 +97,8 @@ HEADERS  += \
     GUI/drawArea/toolvismap.h \
     GUI/drawArea/tooleditmap.h \
     backend/managerdrones.h \
-    backend/trail.h
+    backend/trail.h \
+    GUI/plotwidget.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \

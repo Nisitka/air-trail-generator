@@ -11,6 +11,8 @@ ToolPredTrail::ToolPredTrail(areaDrawWidget* area, int id): drawAreaTool(area, i
 
 void ToolPredTrail::init()
 {
+    onButton();
+
     drawArea->setCursor(cursor);
 
     drawArea->appendDrawTask(areaDrawWidget::toolPredTrail);
@@ -47,6 +49,7 @@ void ToolPredTrail::mousePress(QMouseEvent *mouse)
         drawArea->setLastPointTrail(idX, idY);
         break;
     }
+    drawArea->sendPointsTrail();
 
     //
     drawArea->sendPointsTrail();
@@ -68,5 +71,6 @@ void ToolPredTrail::mouseMove(QMouseEvent *mouse)
 
 void ToolPredTrail::end()
 {
-    drawArea->delDrawTask(areaDrawWidget::toolPredTrail);
+    offButton();
+    //drawArea->delDrawTask(areaDrawWidget::toolPredTrail);
 }

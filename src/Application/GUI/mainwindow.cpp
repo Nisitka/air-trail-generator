@@ -17,26 +17,32 @@ mainWindow::mainWindow(QWidget *parent) :
                         "   background-color: rgb(201,214,234);"
                         "   border: 2px solid rgb(84,123,177);}");
 
-    toolBarBuildDS = new QToolBar("Панель задач");
-    toolBarBuildDS->setStyleSheet("QToolBar {"
-                                  "    border: 2px solid rgb(84,123,177);"
-                                  "    background-color: rgb(255,255,255);"
-                                  "};");
-    addToolBar(Qt::TopToolBarArea, toolBarBuildDS); // добавляем в панель инструментов
-
-    toolBarUsedNet = new QToolBar("Панель инструментов");
-    toolBarUsedNet->setStyleSheet("QToolBar {"
-                                  "    border: 2px solid rgb(84,123,177);"
-                                  "    background-color: rgb(255,255,255);"
-                                  "};");
-    addToolBar(Qt::TopToolBarArea, toolBarUsedNet);
+    toolBar = new QToolBar("Панель задач");
+    toolBar->setStyleSheet("QToolBar {"
+                           "    border: 2px solid rgb(84,123,177);"
+                           "    background-color: rgb(255,255,255);"
+                           "}"
+                           "QToolButton{"
+                           "   background-color: rgb(255,255,255);"
+                           "}"
+                           "QToolButton:hover{"
+                           "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
+                           "    border-color: rgb(0,0,0);"
+                           "    border-style: outset;"
+                           "    border-radius: 3px;"
+                           "    border-width: 1px;"
+                           "    border-color: rgb(0,0,0);"
+                           "}"
+                           "QToolButton:pressed{"
+                           "    background-color : rgb(143,204,205); color: rgb(0,0,0);;"
+                           "};");
+    addToolBar(Qt::TopToolBarArea, toolBar); // добавляем в панель инструментов
 }
 
 void mainWindow::addTask(QWidget *widget,
                          const QPixmap& pix,
                          const QString& nameButton,
                          const QString& nameWindow,
-                         typeTask type,
                          Qt::DockWidgetArea showPosition)
 {
     // вставка виджета в интерфейс
@@ -48,16 +54,9 @@ void mainWindow::addTask(QWidget *widget,
     addDockWidget(showPosition, dock);
 
     // создаем кнопку для вызова задачи
-    switch (type) {
-    case dataSet:
-        toolBarBuildDS->addAction(pix,  nameButton, // соеденяем его с кнопкой вызова
-                                  dock, SLOT(show()));
-        break;
-    case usedNet:
-        toolBarUsedNet->addAction(pix,  nameButton, // соеденяем его с кнопкой вызова
-                                  dock, SLOT(show()));
-        break;
-    }
+    toolBar->addAction(pix,  nameButton, // соеденяем его с кнопкой вызова
+                       dock, SLOT(show()));
+
     dock->close(); // сразу закрываем чтобы не мешался
 }
 

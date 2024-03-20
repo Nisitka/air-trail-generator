@@ -37,19 +37,6 @@ public slots:
     //
     void updateImage();
 
-    //
-    void setResultPredictRect(int idX, int idY);
-
-    // вычисляем координаты левего верхнего угла квадрата для прогнозирования
-    // и информируем об этом объекты (которым эта инфо. нужна)
-    void setIdCoordsRectPredict(int idX, int idY, int typePoint = -1);
-
-    // начать прогноз траектории
-    void startPredictTrail();
-
-    // завершение прогноза траектории
-    void readyPredictTrail();
-
 public:
     explicit visualInfoWidget(QImage* geoMap,
                               Map* map,

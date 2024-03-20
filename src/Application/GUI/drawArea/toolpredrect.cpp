@@ -13,6 +13,8 @@ ToolPredRect::ToolPredRect(areaDrawWidget* area, int id): drawAreaTool(area, id)
 
 void ToolPredRect::init()
 {
+    onButton();
+
     drawArea->setCursor(cursor);
 
     drawArea->appendDrawTask(areaDrawWidget::toolPredRect);
@@ -62,5 +64,6 @@ void ToolPredRect::mouseMove(QMouseEvent *mouse)
 
 void ToolPredRect::end()
 {
+    offButton();
     drawArea->delDrawTask(areaDrawWidget::toolPredRect);
 }
