@@ -16,6 +16,11 @@ void ToolVisMap::init()
     drawArea->appendDrawTask(areaDrawWidget::toolVis);
 }
 
+void ToolVisMap::drawTask(QPainter &painter)
+{
+
+}
+
 void ToolVisMap::mousePress(QMouseEvent *mouse)
 {
     statMouse = press;

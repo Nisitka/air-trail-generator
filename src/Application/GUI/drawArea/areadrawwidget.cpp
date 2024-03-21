@@ -94,6 +94,8 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
 
     p = &areaDrawWidget::drawBackground;
 
+    //p2 = &toolDefault::drawTask;
+
     // Настройка визуала
     this->setStyleSheet("QMainWindow{"
                         "   background-color: rgb(255,255,255);"

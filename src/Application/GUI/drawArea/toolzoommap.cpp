@@ -18,6 +18,11 @@ void ToolZoomMap::init()
     drawArea->setCursor(cursor);
 }
 
+void ToolZoomMap::drawTask(QPainter &painter)
+{
+
+}
+
 void ToolZoomMap::mousePress(QMouseEvent *mouse)
 {
     xPressMouse = mouse->x();

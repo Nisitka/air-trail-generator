@@ -18,6 +18,16 @@ class mapOpenGLWidget: public QOpenGLWidget
 {
     Q_OBJECT
 
+public slots:
+
+    void startPredictTrail();
+
+    //
+    void addTrailPoint(int idX, int idY, int idZ);
+
+    //
+    void finishPredictTrail();
+
 public:
     explicit mapOpenGLWidget(Map* map,
                              QLabel* wFrameOX, QLabel* wFrameOY, QLabel* wFrameXY,
@@ -49,6 +59,9 @@ public:
     void updateTerrain();
 
 private:
+
+    //
+    QVector <QVector3D> trail;
 
     //
     enum interVert{Short, Long}; // ближняя, дальняя

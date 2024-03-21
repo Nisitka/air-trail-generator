@@ -17,6 +17,11 @@ void ToolSetRLS::init()
     drawArea->appendDrawTask(areaDrawWidget::toolRLS);
 }
 
+void ToolSetRLS::drawTask(QPainter &painter)
+{
+
+}
+
 void ToolSetRLS::mousePress(QMouseEvent *mouse)
 {
     statMouse = press;

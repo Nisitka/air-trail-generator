@@ -34,6 +34,8 @@ public:
     explicit map3DWindow(Map* map_, QWidget *parent = 0);
     ~map3DWindow();
 
+    mapOpenGLWidget* getGraphicsWidget();
+
 private slots:
 
     // для слайдеров

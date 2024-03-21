@@ -8,14 +8,11 @@ plotWidget::plotWidget()
     points = nullptr;
     drawPoints = nullptr;
 
-    clear();
-
     this->setStyleSheet(
                 "QWidget {"
                 "   background-color: white;"
                 "   border: 2px solid gray;"
-                "   padding: 2px 0px;"
-                "   border-radius: 2px;"
+                "   border-radius: 4px;"
                 "}");
 
     this->setMinimumSize(3*dPartX, 3*dPartY);
@@ -53,69 +50,108 @@ void plotWidget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     // Расчет коофициента масштабирования
-    int pixW = this->width() - (2*pixMargin);
-    int pixH = this->height() - (2*pixMargin);
+    int pixW = this->width();
+    int pixH = this->height();
 
-    float kW = (float) pixW / dW;
-    float kH = (float) pixH / dH;
+    //
+    int longVecX = pixW - pixMarginL - pixMargin;
+    int longVecY = pixH - pixMarginU - pixMargin;
+
+    //
+    float kW = (float) longVecX / dW;
+    float kH = (float) longVecY / dH;
 
     // Разметка
-    int countXLine = pixW / dPartX;
-    int countYLine = pixH / dPartY;
+    int countXLine = longVecX / dPartX;
+    int countYLine = longVecY / dPartY;
+
+    //
+    painter.setPen(QPen(Qt::black, 1, Qt::SolidLine));
+    painter.drawLine(pixMarginL, pixMargin, pixMarginL, pixH - pixMarginU);
+    painter.drawLine(pixMarginL, pixH - pixMarginU, pixW - pixMargin, pixH - pixMarginU);
 
     QVector <QLine> Xlines;
-    int dX = pixW / countXLine;
+    QVector <QLine> hXlines;
+    int dX = longVecX / countXLine;
     painter.setPen(QPen(QColor(0, 0, 0), 1, Qt::SolidLine));
-    for (int i=0; i<countXLine; i++)
+    for (int i=1; i<=countXLine; i++)
     {
-        Xlines.append(QLine(dX/2 + dX*i, 0,
-                            dX/2 + dX*i, pixH + (2*pixMargin)));
-        if (isData)
-            painter.drawText(dX/2 + dX*i + 3, pixH + (2*pixMargin) - 5, QString::number((pixMargin + dX/2 + dX*i)/kW));
+        Xlines.append(QLine(dX*i, pixMargin,
+                            dX*i, pixH - pixMarginU));
+        hXlines.append(QLine(dX*i, pixH - pixMarginU - 5,
+                             dX*i, pixH - pixMarginU));
+
+        painter.drawText(QRect(dX*i - 20, pixH - pixMarginU, 40, 20), QString::number(dX*i/kW, 'g', 5));
     }
-    painter.setPen(QPen(QColor(100,100,100), 1, Qt::DashLine));
+    Xlines.append(QLine(pixW - pixMargin, pixMargin,
+                        pixW - pixMargin, pixH - pixMarginU));
+    hXlines.append(QLine(pixW - pixMargin, pixH - pixMarginU - 5,
+                         pixW - pixMargin, pixH - pixMarginU));
+
+    painter.setPen(QPen(QColor(200,200,200), 1, Qt::DashLine));
     painter.drawLines(Xlines);
+    painter.setPen(QPen(Qt::black, 1, Qt::SolidLine));
+    painter.drawLines(hXlines);
 
     QVector <QLine> Ylines;
-    int dY = pixH / countYLine;
+    QVector <QLine> hYlines;
+    int dY = longVecY / countYLine;
     painter.setPen(QPen(QColor(0, 0, 0), 1, Qt::SolidLine));
-    for (int i=0; i<countYLine; i++)
+    for (int i=1; i<=countYLine; i++)
     {
-        Ylines.append(QLine(3,    dY/2 + dY*i,
-                            pixW + (2*pixMargin), dY/2 + dY*i));
-        if (isData)
-            painter.drawText(5, dY/2 + dY*i - 3, QString::number(pixMargin + (dY/2 + dY*(countYLine - i - 1))/kH, 'g', 4));
+        Ylines.append(QLine(pixMarginL,        dY*i,
+                            pixW - pixMargin, dY*i));
+        hYlines.append(QLine(pixMarginL,     dY*i,
+                             pixMarginL + 5, dY*i));
+
+        painter.drawText(QRect(6, dY*i - 10, 40, 20), QString::number(dY*(countYLine - i + 1)/kH, 'g', 5));
     }
-    painter.setPen(QPen(QColor(100,100,100), 1, Qt::DashLine));
+    Ylines.append(QLine(pixMarginL, pixMargin,
+                        pixW - pixMargin, pixMargin));
+    hYlines.append(QLine(pixMarginL,     pixMargin,
+                         pixMarginL + 5, pixMargin));
+    painter.setPen(QPen(QColor(200,200,200), 1, Qt::DashLine));
     painter.drawLines(Ylines);
+    painter.setPen(QPen(Qt::black, 1, Qt::SolidLine));
+    painter.drawLines(hYlines);
 
     // Отрисовка графика
     if (isData)
     {
+        QVector <QLine> rays;
+
         painter.setPen(QPen(QColor(10, 80, 255), 1, Qt::SolidLine));
         painter.setBrush(QBrush(QColor(10, 180, 255, 80)));
 
+        int x, y;
         for (int i=0; i<countPoint; i++)
         {
-            drawPoints[i].setX(pixMargin + (float)points[i].x() * kW);
-            drawPoints[i].setY(pixMargin + pixH - (float)points[i].y() * kH);
-        }
+            x = pixMarginL + (float)points[i].x() * kW;
+            y = pixMargin  + longVecY - (float)points[i].y() * kH;
 
+            drawPoints[i].setX(x);
+            drawPoints[i].setY(y);
+
+            rays.append(QLine(pixMarginL, pixH - pixMarginU, x, y));
+        }
         painter.drawPolygon(drawPoints, countPoint);
+
+        //painter.drawLines(rays);
     }
+
+    painter.end();
 }
 
 void plotWidget::clear()
 {
     isData = false;
 
+    qDebug() << "Clear!";
     repaint();
 }
 
 void plotWidget::setData(QVector<float> X, QVector<float> Y)
 {
-    isData = true;
-
     delete [] points;
     delete [] drawPoints;
 
@@ -130,8 +166,11 @@ void plotWidget::setData(QVector<float> X, QVector<float> Y)
     }
 
     pVal(Xmin, Xmax, Ymin, Ymax);
-    dW = Xmax - Xmin;
-    dH = Ymax - Ymin;
+    //Ymin += Ymin*0.1;
+    dW = (float)Xmax*1.05 - Xmin;
+    dH = (float)Ymax*1.05 - Ymin;
+
+    isData = true;
 
     repaint();
 }

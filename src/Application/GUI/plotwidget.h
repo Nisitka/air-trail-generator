@@ -22,11 +22,10 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
 
 private:
-
     void pVal(float& Xmin, float& Xmax,
               float& Ymin, float& Ymax);
 
-    bool isData = false;
+    bool isData = {false};
 
     float Xmin, Xmax, Ymin, Ymax;
     float dW, dH;
@@ -36,7 +35,9 @@ private:
     int dPartY = 50;
 
     // Отступ зоны отрисовки графика
-    int pixMargin = 15;
+    int pixMarginL = 50;
+    int pixMargin  = 15;
+    int pixMarginU = 20;
 
     //
     QPointF* points;

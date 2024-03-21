@@ -155,6 +155,13 @@ public:
     // текущие задачи
     QMap <drawTasksID, void (areaDrawWidget::*)(QPainter&)> curDrawTasks;
 
+    // база задач отрисовки
+    QMap <drawTasksID, void (drawAreaTool::*)(QPainter&)> drawTasks2;
+
+    void (drawAreaTool::*p2)(QPainter&);
+    // текущие задачи
+    QMap <drawTasksID, void (drawAreaTool::*)(QPainter&)> curDrawTasks2;
+
     // добавить задачу для отрисовки
     void appendDrawTask(drawTasksID);
 

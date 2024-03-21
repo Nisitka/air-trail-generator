@@ -54,6 +54,11 @@ map3DWindow::map3DWindow(Map* map_, QWidget *parent) :
     visMap->show();
 }
 
+mapOpenGLWidget* map3DWindow::getGraphicsWidget()
+{
+    return visMap;
+}
+
 void map3DWindow::updateMap3D(int idXo, int idYo, int size)
 {
     visMap->updateTerrain(idXo, idYo, size);

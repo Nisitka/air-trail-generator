@@ -18,6 +18,11 @@ void ToolPredTrail::init()
     drawArea->appendDrawTask(areaDrawWidget::toolPredTrail);
 }
 
+void ToolPredTrail::drawTask(QPainter &painter)
+{
+
+}
+
 void ToolPredTrail::mousePress(QMouseEvent *mouse)
 {
     statMouse = press;

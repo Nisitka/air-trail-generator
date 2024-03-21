@@ -28,6 +28,8 @@ public:
     virtual void mouseRelease(QMouseEvent* mouse) = 0;
     virtual void mouseMove(QMouseEvent* mouse) = 0;
 
+    virtual void drawTask(QPainter& painter) = 0;
+
     virtual void wheelEvent(QWheelEvent *event);
 
     virtual void init();

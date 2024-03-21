@@ -29,6 +29,11 @@ void ToolEditMap::init()
     drawArea->setCursor(QCursor(moveCurPixmap.scaled(R,R)));
 }
 
+void ToolEditMap::drawTask(QPainter &painter)
+{
+
+}
+
 void ToolEditMap::mousePress(QMouseEvent *mouse)
 {
     statMouse = press;

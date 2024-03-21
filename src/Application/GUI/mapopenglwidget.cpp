@@ -38,6 +38,23 @@ mapOpenGLWidget::mapOpenGLWidget(Map* map,
     this->setMaximumSize(9999, 9999);
 }
 
+void mapOpenGLWidget::startPredictTrail()
+{
+    trail.clear();
+}
+
+void mapOpenGLWidget::addTrailPoint(int idX, int idY, int idZ)
+{
+    trail.append(QVector3D(idX, idY, idZ));
+
+    update();
+}
+
+void mapOpenGLWidget::finishPredictTrail()
+{
+
+}
+
 bool mapOpenGLWidget::isIntersectBorder(const QVector3D &pA, const QVector3D &pB, QVector <QVector3D>& pointsInter)
 {
     pointsInter.clear();
@@ -208,7 +225,7 @@ void mapOpenGLWidget::initializeGL()
     setFrameOX(0.5);
     setFrameOY(0.5);
     setFrameXY(0.5);
-    qDebug() << "InitGL";
+    //qDebug() << "InitGL";
 }
 
 void mapOpenGLWidget::resizeGL(int W, int H) // Сбрасывает размер окна OpenGL
@@ -532,7 +549,7 @@ void mapOpenGLWidget::paintGL()
     }
 
     glBegin(GL_LINES);
-    glColor3f(1.0, 0.0, 0.8); // цвет линий
+    glColor3f(0.39, 0.05, 0.67); // цвет линий
 
     // Отрисовка рамки для оси ОХ
     float lineX = idFrameX * MAP_SCALE;
@@ -550,7 +567,7 @@ void mapOpenGLWidget::paintGL()
 
     // Отрисовка рамки для оси ОY
     glBegin(GL_LINES);
-    glColor3f(1.0, 0.0, 0.8); // цвет линий
+    glColor3f(0.39, 0.05, 0.67); // цвет линий
 
     float lineY = idFrameY * MAP_SCALE;
 
@@ -567,7 +584,7 @@ void mapOpenGLWidget::paintGL()
 
     // Отрисовка рамки для плоскости XY
     glBegin(GL_LINES);
-    glColor3f(1.0, 0.0, 0.8); // цвет линий
+    glColor3f(0.39, 0.05, 0.67); // цвет линий
 
     float lineZ = idFrameZ * H_SCALE;
 
@@ -648,6 +665,27 @@ void mapOpenGLWidget::paintGL()
             }
         }
     }
+
+    // Отрисовка траектории
+    glBegin(GL_LINES);
+    glColor3f(1.0, 0.0, 0.8); // цвет линий
+
+    int countPoints = trail.size();
+    QVector3D point;
+    for (int i=0; i<countPoints-1; i++)
+    {
+        point = trail[i];
+        glVertex3f(point.x()*MAP_SCALE,
+                   point.z()*H_SCALE,
+                   point.y()*MAP_SCALE);
+
+        point = trail[i+1];
+        glVertex3f(point.x()*MAP_SCALE,
+                   point.z()*H_SCALE,
+                   point.y()*MAP_SCALE);
+    }
+
+    glEnd();
 }
 
 void mapOpenGLWidget::drawRectZD(int idRLS, int idLayer, int idPointLeft)

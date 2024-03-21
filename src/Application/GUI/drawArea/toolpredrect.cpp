@@ -20,6 +20,11 @@ void ToolPredRect::init()
     drawArea->appendDrawTask(areaDrawWidget::toolPredRect);
 }
 
+void ToolPredRect::drawTask(QPainter &painter)
+{
+
+}
+
 void ToolPredRect::mousePress(QMouseEvent *mouse)
 {
     statMouse = press;
