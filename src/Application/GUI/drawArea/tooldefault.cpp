@@ -24,7 +24,7 @@ void toolDefault::mouseMove(QMouseEvent *mouse)
     yMouse = mouse->y();
 }
 
-void toolDefault::drawTask(QPainter &painter)
+void toolDefault::procDrawTask(QPainter &painter)
 {
 
 }

@@ -7,6 +7,8 @@ ToolSetRLS::ToolSetRLS(areaDrawWidget* area, int id): drawAreaTool(area, id)
     cursor = Qt::CrossCursor;
 
     addButton(QPixmap(":/resurs/radarBlue"), "Постановка РЛС");
+
+    dTask = new drawTask<ToolSetRLS>(this, &ToolSetRLS::procDrawTask);
 }
 
 void ToolSetRLS::init()
@@ -14,12 +16,27 @@ void ToolSetRLS::init()
     onButton();
 
     drawArea->setCursor(cursor);
-    drawArea->appendDrawTask(areaDrawWidget::toolRLS);
+    drawArea->appendDrawTask(areaDrawWidget::toolRLS, dTask);
 }
 
-void ToolSetRLS::drawTask(QPainter &painter)
+void ToolSetRLS::setMarkCoordRLS()
 {
+    // Отправляем координаты потонциальной РЛС
+    setCoordRLS(xPosRLS, yPosRLS);
 
+    //
+    drawArea->repaint();
+}
+
+void ToolSetRLS::procDrawTask(QPainter &painter)
+{
+    int Xo, Yo;
+    drawArea->getCoordDrawArea(Xo, Yo);
+    k = drawArea->getValZoom();
+
+    painter.setPen(QPen(Qt::black, 2, Qt::SolidLine));
+    painter.setBrush(QBrush(Qt::black));
+    painter.drawEllipse(xPosRLS * k + Xo - 1, yPosRLS * k + Yo - 1, 4, 4);
 }
 
 void ToolSetRLS::mousePress(QMouseEvent *mouse)
@@ -46,14 +63,13 @@ void ToolSetRLS::mousePress(QMouseEvent *mouse)
     pXo = Xo;
     pYo = Yo;
 
-    int xMark, yMark;
-    double k = drawArea->getValZoom();
+    k = drawArea->getValZoom();
 
     // Пиксели в индексы клеток карты
-    xMark = dX / k;
-    yMark = dY / k;
+    xPosRLS = dX / k;
+    yPosRLS = dY / k;
 
-    drawArea->setMarkCoordRLS(xMark, yMark);
+    setMarkCoordRLS();
 }
 
 void ToolSetRLS::mouseRelease(QMouseEvent *mouse)

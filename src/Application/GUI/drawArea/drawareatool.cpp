@@ -14,7 +14,7 @@ int drawAreaTool::yMouse;
 int drawAreaTool::pXo;
 int drawAreaTool::pYo;
 
-drawAreaTool::drawAreaTool(areaDrawWidget* area, int id): drawArea(area), id(id)
+drawAreaTool::drawAreaTool(areaDrawWidget* area, int id, QObject *parent): drawArea(area), id(id), QObject(parent)
 {
     connect(this, SIGNAL(pickSignal(int)),
             drawArea, SLOT(setTool(int)));

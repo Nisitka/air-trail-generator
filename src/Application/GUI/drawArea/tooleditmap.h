@@ -8,6 +8,14 @@
 
 class ToolEditMap: public drawAreaTool
 {
+    Q_OBJECT
+signals:
+    // Поднять землю в указанной области
+    void upEarth(int idX, int idY, int R);
+
+    // Опустить землю в указанной области
+    void downEarth(int idX, int idY, int R);
+
 public:
     ToolEditMap(areaDrawWidget*, int id);
 
@@ -16,7 +24,7 @@ public:
     void mouseMove(QMouseEvent* mouse) override;
     void wheelEvent(QWheelEvent *event) override;
 
-    void drawTask(QPainter& painter) override;
+    void procDrawTask(QPainter& painter) override;
 
     void init() override;
     void end() override;

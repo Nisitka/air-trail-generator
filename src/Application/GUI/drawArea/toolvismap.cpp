@@ -7,18 +7,27 @@ ToolVisMap::ToolVisMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
     cursor = Qt::CrossCursor;
 
     addButton(QPixmap(":/resurs/hand3D"), "Область 3D визуализации");
+
+    dTask = new drawTask<ToolVisMap>(this, &ToolVisMap::procDrawTask);
 }
 
 void ToolVisMap::init()
 {
     onButton();
     drawArea->setCursor(cursor);
-    drawArea->appendDrawTask(areaDrawWidget::toolVis);
+    drawArea->appendDrawTask(areaDrawWidget::toolVis, dTask);
 }
 
-void ToolVisMap::drawTask(QPainter &painter)
+void ToolVisMap::procDrawTask(QPainter &painter)
 {
+    int Xo, Yo;
+    drawArea->getCoordDrawArea(Xo, Yo);
 
+    // отрисовка области 3D визуализации
+    painter.setPen(QPen(QColor(0,0,213), 1, Qt::DashLine));
+
+    painter.drawRect(QRect(QPoint(idXa*k + Xo, idYa*k + Yo),
+                           QPoint(idXb*k + Xo, idYb*k + Yo)));
 }
 
 void ToolVisMap::mousePress(QMouseEvent *mouse)
@@ -33,17 +42,22 @@ void ToolVisMap::mousePress(QMouseEvent *mouse)
     xPressMouse = mouse->x();
     yPressMouse = mouse->y();
 
-    double k = drawArea->getValZoom();
+    k = drawArea->getValZoom();
     // Дискреты карты
     idXa = double (xPressMouse - Xo) / k;
     idYa = double (yPressMouse - Yo) / k;
 
-    drawArea->setRectVis(idXa, idYa, idXa, idYa);
+    //drawArea->setRectVis(idXa, idYa, idXa, idYa);
+
+    drawArea->repaint();
 }
 
 void ToolVisMap::mouseRelease(QMouseEvent *mouse)
 {
     statMouse = release;
+
+    int Xo, Yo;
+    drawArea->getCoordDrawArea(Xo, Yo);
 
     int idXo, idYo;
     if (idXa > idXb) idXo = idXb;
@@ -57,8 +71,8 @@ void ToolVisMap::mouseRelease(QMouseEvent *mouse)
     if (numW < 2) numW = 2;
     if (numL < 2) numL = 2;
 
-    drawArea->updateRect3D(idXo, idYo,
-                           numW, numL);
+    updateRect3D(idXo, idYo,
+                 numW, numL);
 }
 
 void ToolVisMap::mouseMove(QMouseEvent *mouse)
@@ -79,8 +93,8 @@ void ToolVisMap::mouseMove(QMouseEvent *mouse)
         idXb = double (xMouse - Xo) / k;
         idYb = double (yMouse - Yo) / k;
 
-        drawArea->setRectVis(idXa, idYa,
-                             idXb, idYb);
+//        drawArea->setRectVis(idXa, idYa,
+//                             idXb, idYb);
         drawArea->repaint();
     }
 }

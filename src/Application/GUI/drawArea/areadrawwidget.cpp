@@ -35,21 +35,11 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
     // чтобы moveEvent работал без нажатия
     this->setMouseTracking(true);
 
-    k = 1;
-
-    idXoPredict = 0;
-    idYoPredict = 0;
-
-    paintPredictRect = false;
-
-    pixBeginDrone = new QPixmap(":/resurs/droneStart");
-    pixFinishDrone = new QPixmap(":/resurs/droneFinish");
+    k = 1.0;
 
     pixRLS = new QPixmap(":/resurs/offRLS");
     pixCurRLS = new QPixmap(":/resurs/onRLS");
     curRLScolor.setRgb(0,255,255);
-
-    setRangeToolEditEarth(9);
 
     this->setCursor(Qt::ArrowCursor);
 
@@ -64,37 +54,17 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
     addToolBar(Qt::TopToolBarArea, toolBar); // добавляем в панель инструментов
 
     //
-    Tools[def]          = new toolDefault(this, def);
-    Tools[editEarth]    = new ToolEditMap(this, editEarth);
-    Tools[moveImg]      = new ToolMoveMap(this, moveImg);
-    Tools[predictRect]  = new ToolPredRect(this, predictRect);
-    Tools[predictTrail] = new ToolPredTrail(this, predictTrail);
-    Tools[setRLS]       = new ToolSetRLS(this, setRLS);
-    Tools[mapVis]       = new ToolVisMap(this, mapVis);
-    Tools[zoomImg]      = new ToolZoomMap(this, zoomImg);
+    Tools[def]     = new toolDefault(this, def);
+    Tools[moveImg] = new ToolMoveMap(this, moveImg);
+    Tools[zoomImg] = new ToolZoomMap(this, zoomImg);
 
-    tool = def;
+    keyCurTool = def;
     Tool = Tools[def];
 
-
-    //qDebug() << (toolRLS < toolVis);
-
-    //
-    drawTasks[background]    = &areaDrawWidget::drawBackground;
-    drawTasks[terImg]        = &areaDrawWidget::drawMap;
-    drawTasks[iconRLS]       = &areaDrawWidget::drawRLS;
-    drawTasks[toolRLS]       = &areaDrawWidget::drawEleToolRLS;
-    drawTasks[toolVis]       = &areaDrawWidget::drawEleToolVis;
-    drawTasks[toolPredRect]  = &areaDrawWidget::drawEleToolPredRect;
-    drawTasks[toolPredTrail] = &areaDrawWidget::drawEleToolPredTrail;
-
-    appendDrawTask(background);
-    appendDrawTask(terImg);
-    appendDrawTask(iconRLS);
-
-    p = &areaDrawWidget::drawBackground;
-
-    //p2 = &toolDefault::drawTask;
+    // Задачи, которые всегда должны выполняться
+    appendDrawTask(background, new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBackground));
+    appendDrawTask(terImg,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawMap));
+    appendDrawTask(iconRLS,    new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawRLS));
 
     // Настройка визуала
     this->setStyleSheet("QMainWindow{"
@@ -103,23 +73,9 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
                         "};");
 }
 
-void areaDrawWidget::startPredictTrail()
+void areaDrawWidget::appendTool(drawAreaTool *toolArea, int idPriority)
 {
-    // Очищаем траекторию с предыдущего прогноза
-    clearTrail();
-}
-
-void areaDrawWidget::finishPredictTrail()
-{
-
-}
-
-void areaDrawWidget::addPointTrail(int idXpt, int idYpt, int idZpt)
-{
-    //qDebug() << idXpt << idYpt << idZpt;
-    trail.append(new QPoint(idXpt, idYpt));
-
-    repaint();
+    Tools[idPriority] = toolArea;
 }
 
 void areaDrawWidget::contextMenuEvent(QContextMenuEvent *event)
@@ -132,24 +88,23 @@ QToolBar* areaDrawWidget::getToolBar()
     return toolBar;
 }
 
-void areaDrawWidget::appendDrawTask(drawTasksID task)
-{   // Добавляем задачу только если её не было
-    if (!curDrawTasks.contains(task))
+void areaDrawWidget::appendDrawTask(int priorityKey, taskPainter* task)
+{
+    // Добавляем задачу только если её не было
+    if (!drawTasks.contains(priorityKey))
     {
-        curDrawTasks[task] = drawTasks[task];
+        drawTasks[priorityKey] = task;
     }
 }
 
-void areaDrawWidget::delDrawTask(drawTasksID task)
+void areaDrawWidget::delDrawTask(int priorityKey)
 {
-    curDrawTasks.remove(task);
+    drawTasks.remove(priorityKey);
 }
 
 void areaDrawWidget::drawBackground(QPainter &painter)
 {
-    //qDebug() << "drawBackground";
-
-    // отрисовка подложки
+    // Отрисовка подложки
     painter.setPen(QPen(Qt::white, 2, Qt::SolidLine));
     painter.setBrush(QBrush(Qt::black, Qt::Dense7Pattern));
     painter.drawRect(0, 0, this->geometry().width(), this->geometry().height());
@@ -158,8 +113,6 @@ void areaDrawWidget::drawBackground(QPainter &painter)
 
 void areaDrawWidget::drawMap(QPainter &painter)
 {
-    //qDebug() << "drawMap";
-
     // Какое изображение отрисовать
     switch (curOptRepaint)
     {
@@ -178,13 +131,6 @@ void areaDrawWidget::drawMap(QPainter &painter)
     wightPixMap = drawImg->width() * k;
     heightPixMap = drawImg->height() * k;
     painter.drawImage(Xo, Yo, drawImg->scaled(wightPixMap, heightPixMap));
-}
-
-void areaDrawWidget::drawEleToolRLS(QPainter &painter)
-{
-    painter.setPen(QPen(Qt::black, 2, Qt::SolidLine));
-    painter.setBrush(QBrush(Qt::black));
-    painter.drawEllipse(xPosRLS * k + Xo - 1, yPosRLS * k + Yo - 1, 4, 4);
 }
 
 void areaDrawWidget::drawRLS(QPainter &painter)
@@ -219,111 +165,6 @@ void areaDrawWidget::drawRLS(QPainter &painter)
     }
 }
 
-void areaDrawWidget::drawEleToolVis(QPainter &painter)
-{
-    // отрисовка области 3D визуализации
-    painter.setPen(QPen(QColor(0,0,213), 1, Qt::DashLine));
-
-    painter.drawRect(QRect(QPoint(a3D.x()* k + Xo, a3D.y()* k + Yo),
-                           QPoint(b3D.x()* k + Xo, b3D.y()* k + Yo)));
-}
-
-void areaDrawWidget::drawEleToolPredRect(QPainter &painter)
-{
-    // отрисовка эелементов поставленного БПЛА
-
-    // отрисовка квадрата прогноза (текущего)
-    painter.setPen(QColor(255,0,128));
-    painter.drawRect(idXoPredict * k + Xo + 1, idYoPredict * k + Yo + 1, 200*k - 1, 200*k - 1);
-
-    // индексы дискрет центра квадрата прогноза
-    idXRect = idXoPredict + 100;
-    idYRect = idYoPredict + 100;
-
-    // отрисовка БПЛА
-    int x = idXRect*k + Xo;
-    int y = idYRect*k + Yo;
-
-    painter.drawLine(x-3, y,
-                     x+3, y);
-    painter.drawLine(x, y-3,
-                     x, y+3);
-
-    // отрисовка квадрата прогноза (возможного)
-    int xMouse, yMouse;
-    Tool->getCoordMouse(xMouse, yMouse);
-    painter.setPen(QColor(143, 32, 255));
-    //if (drawRectInit)
-        painter.drawRect(xMouse - (100 * k) + 1, yMouse - (100 * k) + 1, 200*k - 1, 200*k - 1);
-
-
-    // отрисовать прогноз в квадрате
-    if (paintPredictRect)
-    {
-        painter.setPen(QPen(QColor(255,0,128), 1, Qt::DashLine));
-        painter.drawLine(idXRect * k  + Xo, idYRect  * k + Yo,
-                         idPRectX * k + Xo, idPRectY * k + Yo);
-    }
-}
-
-void areaDrawWidget::drawEleToolPredTrail(QPainter &painter)
-{
-    // отрисовка траектории прогноза
-
-    int rP = 50 * k;
-
-    int pX, pY;
-    for (int i=0; i<trail.size() - 1; i++)
-    {
-        painter.setPen(QPen(QColor(255,0,128), 1));
-
-        pX = trail[i]->x() * k  + Xo;
-        pY = trail[i]->y() * k  + Yo;
-
-        painter.drawEllipse(QPoint(pX, pY), 2, 2);
-        //painter.drawEllipse(QPoint(pX, pY), rP, rP);
-        painter.drawLine(pX, pY,
-                         trail[i+1]->x() * k  + Xo, trail[i+1]->y() * k  + Yo);
-    }
-    // отрисовываем последнию точку
-    if (trail.size() > 0)
-    {
-        painter.drawEllipse(QPoint(trail.last()->x() * k  + Xo, trail.last()->y() * k  + Yo), rP, rP);
-    }
-
-
-    // отрисовывать начальную и конечные точкитраектории
-    painter.setPen(QPen(QColor(51,255,240), 1));
-
-    int bX = beginPoint.x() * k  + Xo;
-    int bY = beginPoint.y() * k  + Yo;
-
-    int fX = lastPoint.x() * k  + Xo;
-    int fY = lastPoint.y() * k  + Yo;
-
-    painter.drawPixmap(bX-16, bY-32, pixBeginDrone->scaled(32,32));
-    painter.drawPixmap(fX-16, fY-34, pixFinishDrone->scaled(32,32));
-
-    painter.drawEllipse(QPoint(fX, fY), 2, 2);
-    painter.drawEllipse(QPoint(bX, bY), 2, 2);
-
-    //
-    painter.setPen(QPen(QColor(255,0,128), 1, Qt::DashLine));
-    painter.drawLine(bX, bY, fX, fY);
-}
-
-void areaDrawWidget::setMarkCoordRLS(int xMark, int yMark)
-{
-    xPosRLS = xMark;
-    yPosRLS = yMark;
-
-    // Отправляем координаты потонциальной РЛС
-    setCoordRLS(xPosRLS, yPosRLS);
-
-    //
-    repaint();
-}
-
 void areaDrawWidget::getCoordDrawArea(int &Xo_, int &Yo_)
 {
     Xo_ = Xo;
@@ -345,8 +186,6 @@ void areaDrawWidget::addRLS(QPoint *posRLS, const QString& nameNewRLS)
 {
     coordsRLS.append(posRLS);
     namesRLS.append(nameNewRLS);
-
-    qDebug() << "add RLS";
 }
 
 void areaDrawWidget::delRLS(int indexRLS)
@@ -355,29 +194,11 @@ void areaDrawWidget::delRLS(int indexRLS)
     namesRLS.removeAt(indexRLS);
 
     repaint();
-    qDebug() << "delete RLS";
-}
-
-void areaDrawWidget::clearTrail()
-{
-    for (int i=0; i<trail.size(); i++)
-    {
-        delete trail[i];
-    }
-    trail.clear();
 }
 
 void areaDrawWidget::setCurRLS(int idRLS)
 {
     idCurRLS = idRLS;
-    repaint();
-}
-
-void areaDrawWidget::drawResultPredictRect(int idXres, int idYres)
-{
-    idPRectX = idXres;
-    idPRectY = idYres;
-
     repaint();
 }
 
@@ -410,13 +231,13 @@ void areaDrawWidget::saveImage(const QString &dirName, formatImg fImg, typeSaveI
                                          100);
         break;
     case rect:
-        size_t offset = idXoPredict * saveImg.depth() / 8
-                      + idYoPredict * saveImg.bytesPerLine();
+//        size_t offset = idXoPredict * saveImg.depth() / 8
+//                      + idYoPredict * saveImg.bytesPerLine();
 
-        QImage(saveImg.bits() + offset, 200, 200,
-               saveImg.bytesPerLine(), saveImg.format()).save(dirName,
-                                                                strFormatImg[fImg],
-                                                                100);
+//        QImage(saveImg.bits() + offset, 200, 200,
+//               saveImg.bytesPerLine(), saveImg.format()).save(dirName,
+//                                                                strFormatImg[fImg],
+//                                                                100);
         break;
     }
 }
@@ -438,8 +259,9 @@ void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
     QBrush voidBrush;
 
     // Выполнение задач отрисовки
-    for (auto it = curDrawTasks.begin(); it != curDrawTasks.end(); ++it) {
-        (this->*it.value())(painter);
+    for (auto it = drawTasks.begin(); it != drawTasks.end(); ++it) {
+        //(this->*it.value())(painter);
+        it.value()->processing(painter);
 
         // чтобы цвет закраски был просзрачным
         painter.setBrush(voidBrush);
@@ -456,11 +278,11 @@ void areaDrawWidget::setTool(int key)
     Tool->end();
 
     // Если хотим выбрать тот же инструменет, то отключаем его
-    if (tool == key) key = def;
+    if (keyCurTool == key) key = def;
 
     //
     Tool = Tools[key];
-    tool = key;
+    keyCurTool = key;
 
     // Подготавливаем его к работе
     Tool->init();
@@ -470,29 +292,13 @@ void areaDrawWidget::setTool(int key)
 
 int areaDrawWidget::curTool()
 {
-    return tool;
+    return keyCurTool;
 }
 
 void areaDrawWidget::setCoordDrawArea(int Xo_, int Yo_)
 {
     Xo = Xo_;
     Yo = Yo_;
-}
-
-void areaDrawWidget::setPredictRect(int idXo, int idYo)
-{
-    idXoPredict = idXo;
-    idYoPredict = idYo;
-}
-
-void areaDrawWidget::setRangeToolEditEarth(int R)
-{
-    toolEarthR = R;
-
-    int r = toolEarthR*k;
-    if (r < 13) r = 13;
-
-    this->setCursor(QCursor(QPixmap(":/resurs/toolEarthMove").scaled(r,r)));
 }
 
 bool areaDrawWidget::mouseFromArea(QMouseEvent *mouseEvent)
@@ -524,15 +330,6 @@ void areaDrawWidget::wheelEvent(QWheelEvent *event)
     Tool->wheelEvent(event);
 }
 
-void areaDrawWidget::setRectVis(int idXa, int idYa, int idXb, int idYb)
-{
-    a3D.setX(idXa);
-    a3D.setY(idYa);
-
-    b3D.setX(idXb);
-    b3D.setY(idYb);
-}
-
 void areaDrawWidget::mouseReleaseEvent(QMouseEvent* mouseEvent)
 {
     Tool->mouseRelease(mouseEvent);
@@ -560,23 +357,6 @@ void areaDrawWidget::zoom(double dK)
     if (k <= 0) k = 0.1;
 }
 
-void areaDrawWidget::setBeginPointTrail(int idX, int idY)
-{
-    beginPoint.setX(idX);
-    beginPoint.setY(idY);
-}
-
-void areaDrawWidget::setLastPointTrail(int idX, int idY)
-{
-    lastPoint.setX(idX);
-    lastPoint.setY(idY);
-}
-
-void areaDrawWidget::sendPointsTrail()
-{
-    setPointsTrail(beginPoint.x(), beginPoint.y(),
-                   lastPoint.x(),  lastPoint.y());
-}
 
 void areaDrawWidget::drawGeoMap()
 {

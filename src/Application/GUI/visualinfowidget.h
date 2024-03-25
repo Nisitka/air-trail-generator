@@ -16,8 +16,6 @@ class visualInfoWidget : public QWidget
 {
     Q_OBJECT
 signals:  
-    void updateCoordRLS(int x, int y);
-
     void saveMap_signal(const QString& dirFile);
 
     void setRectPredict(int idXo, int idYo); // дискрета левого верхнего угла

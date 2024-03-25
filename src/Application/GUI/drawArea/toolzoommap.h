@@ -12,7 +12,7 @@ public:
     void mouseRelease(QMouseEvent* mouse) override;
     void mouseMove(QMouseEvent* mouse) override;
 
-    void drawTask(QPainter& painter) override;
+    void procDrawTask(QPainter& painter) override;
 
     void init() override;
     void end() override;

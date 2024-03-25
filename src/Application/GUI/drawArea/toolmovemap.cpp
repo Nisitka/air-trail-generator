@@ -17,7 +17,7 @@ void ToolMoveMap::init()
     statMouse = release;
 }
 
-void ToolMoveMap::drawTask(QPainter &painter)
+void ToolMoveMap::procDrawTask(QPainter &painter)
 {
 
 }

@@ -13,6 +13,25 @@ GUI::GUI(QImage* geoMap,
     // Задача для работы с графической информацией
     visInfoWin = new visualInfoWidget(geoMap,
                                       map_);
+
+    //
+    areaDrawWidget* drawArea = visInfoWin->getDrawArea();
+
+    /// !!! Надо будет сделать рефактор !!!
+    toolPTrail  = new ToolPredTrail(drawArea, areaDrawWidget::predictTrail);
+    toolPLine   = new ToolPredRect (drawArea, areaDrawWidget::predictRect);
+    toolRLS     = new ToolSetRLS(   drawArea, areaDrawWidget::setRLS);
+    toolEditTer = new ToolEditMap(  drawArea, areaDrawWidget::editEarth);
+    toolVisMap  = new ToolVisMap(   drawArea, areaDrawWidget::mapVis);
+
+    drawArea->appendTool(toolPTrail, areaDrawWidget::predictTrail);
+    drawArea->appendTool(toolPLine, areaDrawWidget::predictRect);
+    drawArea->appendTool(toolRLS, areaDrawWidget::setRLS);
+    drawArea->appendTool(toolEditTer, areaDrawWidget::editEarth);
+    drawArea->appendTool(toolVisMap, areaDrawWidget::mapVis);
+    /// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    //
     QObject::connect(visInfoWin, SIGNAL(saveMap_signal(QString)),
                      map,        SLOT(save(QString)));
     mainWin->addTask(visInfoWin, QPixmap(":/resurs/imgIcon"),
@@ -28,8 +47,8 @@ GUI::GUI(QImage* geoMap,
     //
     optRLSWin = new optRLSwindow(map_);
     //
-    QObject::connect(visInfoWin, SIGNAL(updateCoordRLS(int,int)),
-                     optRLSWin,  SLOT(updateCoordRLS(int,int)));
+    QObject::connect(toolRLS,   SIGNAL(setCoordRLS(int,int)),
+                     optRLSWin, SLOT(updateCoordRLS(int,int)));
     mainWin->addTask(optRLSWin, QPixmap(":/resurs/rlsIcon"),
                      "РЛС", "Радиолокационная станция");
 
@@ -37,11 +56,12 @@ GUI::GUI(QImage* geoMap,
     droneWin = new optDroneWindow;
     mainWin->addTask(droneWin, QPixmap(":/resurs/plane"),
                      "БПЛА", "Беспилотный летательный аппарат");
+
     //
-    QObject::connect(visInfoWin->getDrawArea(), SIGNAL(setPointsTrail(int,int,int,int)),
-                     droneWin,                  SLOT(setPredictPoints(int,int,int,int)));
-    QObject::connect(droneWin, SIGNAL(runPredictTrail(int,int,int,int)),
-                     visInfoWin->getDrawArea(), SLOT(startPredictTrail()));
+    QObject::connect(toolPTrail, SIGNAL(sendPointsTrail(int,int,int,int)),
+                     droneWin,   SLOT(setPredictPoints(int,int,int,int)));
+    QObject::connect(droneWin,   SIGNAL(runPredictTrail(int,int,int,int)),
+                     toolPTrail, SLOT(startPredictTrail()));
 
     //
     map3DWin = new map3DWindow(map);
@@ -59,8 +79,8 @@ void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
     //
     QObject::connect(droneWin,     SIGNAL(runPredictTrail(int,int,int,int)),
                      builderTrail, SLOT(startPredictTrail(int,int,int,int)));
-    QObject::connect(builderTrail,              SIGNAL(nextPointTrail(int,int,int)),
-                     visInfoWin->getDrawArea(), SLOT(addPointTrail(int,int,int)));
+    QObject::connect(builderTrail, SIGNAL(nextPointTrail(int,int,int)),
+                     toolPTrail,   SLOT(addPointTrail(int,int,int)));
 
     //
     QObject::connect(droneWin,                      SIGNAL(runPredictTrail(int,int,int,int)),
@@ -167,18 +187,18 @@ void GUI::connectMRLS(managerRLS* mRLS)
 void GUI::connectMapPainter(painterMapImage* painterMap)
 {
     // Ручное редактирование рельефа
-    QObject::connect(visInfoWin->getDrawArea(), SIGNAL(upEarth(int,int,int)),
-                     painterMap,                SLOT(upEarth(int,int,int)));
-    QObject::connect(visInfoWin->getDrawArea(), SIGNAL(downEarth(int,int,int)),
-                     painterMap,                SLOT(downEarth(int,int,int)));
+    QObject::connect(toolEditTer, SIGNAL(upEarth(int,int,int)),
+                     painterMap,  SLOT(upEarth(int,int,int)));
+    QObject::connect(toolEditTer, SIGNAL(downEarth(int,int,int)),
+                     painterMap,  SLOT(downEarth(int,int,int)));
 
     QObject::connect(painterMap, SIGNAL(readyEditEarth(int,int,int)),
                      map3DWin,   SLOT(updateMap3D(int,int,int)));
 
     QObject::connect(map3DWin,   SIGNAL(generateMap3D()),
                      painterMap, SLOT(buildTexture()));
-    QObject::connect(visInfoWin->getDrawArea(), SIGNAL(updateRect3D(int,int,int,int)),
-                     painterMap,                SLOT(setRectTexture(int,int,int,int)));
+    QObject::connect(toolVisMap, SIGNAL(updateRect3D(int,int,int,int)),
+                     painterMap, SLOT(setRectTexture(int,int,int,int)));
     QObject::connect(painterMap, SIGNAL(readyTexture(int,int,int,int)),
                      map3DWin,   SLOT(finishBuildMap(int,int,int,int)));
     map3DWin->generateMap3D(); // сразу же отображаем то что есть

@@ -5,6 +5,8 @@
 #include <QCursor>
 #include <QObject>
 
+#include "drawtask.h"
+
 class areaDrawWidget;
 
 class drawAreaTool: public QObject
@@ -19,7 +21,7 @@ public slots:
     void assign();
 
 public:
-    drawAreaTool(areaDrawWidget*, int id);
+    drawAreaTool(areaDrawWidget*, int id, QObject *parent = 0);
 
     enum keyMouse{left, right, mid};
     enum statusMouse{press, release};
@@ -28,7 +30,7 @@ public:
     virtual void mouseRelease(QMouseEvent* mouse) = 0;
     virtual void mouseMove(QMouseEvent* mouse) = 0;
 
-    virtual void drawTask(QPainter& painter) = 0;
+    virtual void procDrawTask(QPainter& painter) = 0;
 
     virtual void wheelEvent(QWheelEvent *event);
 

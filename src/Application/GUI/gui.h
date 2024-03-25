@@ -14,7 +14,6 @@
 #include "optrlswindow.h"
 #include "paintermapimage.h"
 #include "backend/buildertraildrones.h"
-#include "neuronnetworkwindow.h"
 #include "optdronewindow.h"
 #include "backend/managerdrones.h"
 #include "backend/managerrls.h"
@@ -64,6 +63,14 @@ private:
 
     // окно для 3D отображения рельефа
     map3DWindow* map3DWin;
+
+    // Инструменты
+    ToolPredTrail* toolPTrail;
+    ToolPredRect*  toolPLine;
+    ToolSetRLS*    toolRLS;
+    ToolEditMap*   toolEditTer;
+    ToolVisMap*    toolVisMap;
+
 };
 
 #endif // GUI_H

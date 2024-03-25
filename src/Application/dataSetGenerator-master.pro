@@ -40,7 +40,6 @@ SOURCES += main.cpp\
     GUI/mainwindow.cpp \
     GUI/map3dwindow.cpp \
     GUI/mapopenglwidget.cpp \
-    GUI/neuronnetworkwindow.cpp \
     GUI/optdronewindow.cpp \
     GUI/optmapgeneratorwindow.cpp \
     GUI/optrlswindow.cpp \
@@ -60,7 +59,8 @@ SOURCES += main.cpp\
     GUI/drawArea/tooleditmap.cpp \
     backend/managerdrones.cpp \
     backend/trail.cpp \
-    GUI/plotwidget.cpp
+    GUI/plotwidget.cpp \
+    GUI/drawArea/drawtask.cpp
 
 HEADERS  += \
     core.h \
@@ -78,7 +78,6 @@ HEADERS  += \
     GUI/mainwindow.h \
     GUI/map3dwindow.h \
     GUI/mapopenglwidget.h \
-    GUI/neuronnetworkwindow.h \
     GUI/optdronewindow.h \
     GUI/optmapgeneratorwindow.h \
     GUI/optrlswindow.h \
@@ -98,7 +97,8 @@ HEADERS  += \
     GUI/drawArea/tooleditmap.h \
     backend/managerdrones.h \
     backend/trail.h \
-    GUI/plotwidget.h
+    GUI/plotwidget.h \
+    GUI/drawArea/drawtask.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \

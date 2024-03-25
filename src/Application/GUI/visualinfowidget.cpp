@@ -24,15 +24,7 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
     drawArea = new areaDrawWidget(geoMap);
     connect(drawArea, SIGNAL(updateCoord(double,double)),
             this,     SLOT(showInfoCoord(double,double)));
-    //
-    connect(drawArea, SIGNAL(setCoordRLS(int,int)),
-            this,     SIGNAL(updateCoordRLS(int,int)));
-    //
-    connect(drawArea, SIGNAL(predictMoveDroneRect(int,int,int)),
-            this,     SLOT(setIdCoordsRectPredict(int,int,int)));
-    //
-    connect(drawArea, SIGNAL(setPointsTrail(QPoint,QPoint)),
-            this,     SIGNAL(setPointsTrail(QPoint,QPoint)));
+
     // добавляем виджет в интерфейс задачи
     ui->areaDrawLayout->addWidget(drawArea);
 

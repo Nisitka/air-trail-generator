@@ -29,7 +29,7 @@ void ToolEditMap::init()
     drawArea->setCursor(QCursor(moveCurPixmap.scaled(R,R)));
 }
 
-void ToolEditMap::drawTask(QPainter &painter)
+void ToolEditMap::procDrawTask(QPainter &painter)
 {
 
 }
@@ -66,12 +66,12 @@ void ToolEditMap::editEarth()
     case left:
         cursor = QCursor(upCurPixmap.scaled(R,R));
 
-        drawArea->upEarth(idX, idY, r);
+        upEarth(idX, idY, r);
         break;
     case right:
         cursor = QCursor(downCurPixmap.scaled(R,R));
 
-        drawArea->downEarth(idX, idY, r);
+        downEarth(idX, idY, r);
         break;
     }
 
@@ -111,10 +111,10 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
 
         switch (lastKeyMouse) {
         case left:
-            drawArea->upEarth(idX, idY, r);
+            upEarth(idX, idY, r);
             break;
         case right:
-            drawArea->downEarth(idX, idY, r);
+            downEarth(idX, idY, r);
             break;
         }
     }
