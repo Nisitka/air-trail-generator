@@ -17,19 +17,18 @@ GUI::GUI(QImage* geoMap,
     //
     areaDrawWidget* drawArea = visInfoWin->getDrawArea();
 
-    /// !!! Надо будет сделать рефактор !!!
+    // Инструменты для граф.области(какая область, приоритет-ключ задач отрисовки)
     toolPTrail  = new ToolPredTrail(drawArea, areaDrawWidget::predictTrail);
     toolPLine   = new ToolPredRect (drawArea, areaDrawWidget::predictRect);
     toolRLS     = new ToolSetRLS(   drawArea, areaDrawWidget::setRLS);
     toolEditTer = new ToolEditMap(  drawArea, areaDrawWidget::editEarth);
     toolVisMap  = new ToolVisMap(   drawArea, areaDrawWidget::mapVis);
 
-    drawArea->appendTool(toolPTrail, areaDrawWidget::predictTrail);
-    drawArea->appendTool(toolPLine, areaDrawWidget::predictRect);
-    drawArea->appendTool(toolRLS, areaDrawWidget::setRLS);
-    drawArea->appendTool(toolEditTer, areaDrawWidget::editEarth);
-    drawArea->appendTool(toolVisMap, areaDrawWidget::mapVis);
-    /// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    drawArea->appendTool(toolPTrail);
+    drawArea->appendTool(toolPLine);
+    drawArea->appendTool(toolRLS);
+    drawArea->appendTool(toolEditTer);
+    drawArea->appendTool(toolVisMap);
 
     //
     QObject::connect(visInfoWin, SIGNAL(saveMap_signal(QString)),

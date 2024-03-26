@@ -28,15 +28,10 @@ void ToolSetRLS::setMarkCoordRLS()
     drawArea->repaint();
 }
 
-void ToolSetRLS::procDrawTask(QPainter &painter)
+void ToolSetRLS::procDrawTask()
 {
-    int Xo, Yo;
-    drawArea->getCoordDrawArea(Xo, Yo);
-    k = drawArea->getValZoom();
-
-    painter.setPen(QPen(Qt::black, 2, Qt::SolidLine));
-    painter.setBrush(QBrush(Qt::black));
-    painter.drawEllipse(xPosRLS * k + Xo - 1, yPosRLS * k + Yo - 1, 4, 4);
+    drawArea->setPen(QPen(Qt::black, 2, Qt::SolidLine));
+    drawArea->drawCircle(xPosRLS, yPosRLS, 2, areaDrawWidget::pix);
 }
 
 void ToolSetRLS::mousePress(QMouseEvent *mouse)

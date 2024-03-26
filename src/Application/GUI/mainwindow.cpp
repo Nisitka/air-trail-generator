@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QDebug>
+#include <QGraphicsDropShadowEffect>
 
 mainWindow::mainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -9,7 +10,6 @@ mainWindow::mainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //
     this->setWindowTitle("Система прогнозирования маршрутов скрытного пролета БПЛА");
 
     // настройка визуала

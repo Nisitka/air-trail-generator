@@ -47,7 +47,10 @@ void plotWidget::pVal(float &Xmin, float &Xmax, float &Ymin, float &Ymax)
 
 void plotWidget::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
+
     QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
 
     // Расчет коофициента масштабирования
     int pixW = this->width();

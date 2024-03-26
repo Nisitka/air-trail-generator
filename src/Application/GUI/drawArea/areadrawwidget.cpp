@@ -73,13 +73,16 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
                         "};");
 }
 
-void areaDrawWidget::appendTool(drawAreaTool *toolArea, int idPriority)
+void areaDrawWidget::appendTool(drawAreaTool *toolArea)
 {
+    int idPriority = toolArea->getId();
+
     Tools[idPriority] = toolArea;
 }
 
 void areaDrawWidget::contextMenuEvent(QContextMenuEvent *event)
 {
+    Q_UNUSED(event);
     /* ... */
 }
 
@@ -102,16 +105,16 @@ void areaDrawWidget::delDrawTask(int priorityKey)
     drawTasks.remove(priorityKey);
 }
 
-void areaDrawWidget::drawBackground(QPainter &painter)
+void areaDrawWidget::drawBackground()
 {
     // Отрисовка подложки
-    painter.setPen(QPen(Qt::white, 2, Qt::SolidLine));
-    painter.setBrush(QBrush(Qt::black, Qt::Dense7Pattern));
-    painter.drawRect(0, 0, this->geometry().width(), this->geometry().height());
+    pPainter->setPen(QPen(Qt::white, 2, Qt::SolidLine));
+    pPainter->setBrush(QBrush(Qt::black, Qt::Dense7Pattern));
+    pPainter->drawRect(0, 0, this->geometry().width(), this->geometry().height());
 
 }
 
-void areaDrawWidget::drawMap(QPainter &painter)
+void areaDrawWidget::drawMap()
 {
     // Какое изображение отрисовать
     switch (curOptRepaint)
@@ -130,10 +133,10 @@ void areaDrawWidget::drawMap(QPainter &painter)
     }
     wightPixMap = drawImg->width() * k;
     heightPixMap = drawImg->height() * k;
-    painter.drawImage(Xo, Yo, drawImg->scaled(wightPixMap, heightPixMap));
+    pPainter->drawImage(Xo, Yo, drawImg->scaled(wightPixMap, heightPixMap));
 }
 
-void areaDrawWidget::drawRLS(QPainter &painter)
+void areaDrawWidget::drawRLS()
 {
     // Отрисовка станций (только на физ. карте)
     if (curOptRepaint == geoMap)
@@ -141,7 +144,6 @@ void areaDrawWidget::drawRLS(QPainter &painter)
         int rectX;
         int rectY;
 
-        QColor colorText;
         for (int i=0; i<coordsRLS.size(); i++)
         {
             rectX = coordsRLS[i]->x() * k  + Xo;
@@ -150,17 +152,17 @@ void areaDrawWidget::drawRLS(QPainter &painter)
             //
             if (i == idCurRLS)
             {
-                painter.drawPixmap(rectX-16, rectY-18, pixCurRLS->scaled(36, 36));
-                painter.setPen(curRLScolor);
+                pPainter->drawPixmap(rectX-16, rectY-18, pixCurRLS->scaled(36, 36));
+                pPainter->setPen(curRLScolor);
             }
 
             else
             {
-                 painter.drawPixmap(rectX-16, rectY-18, pixRLS->scaled(36, 36));
-                 painter.setPen(Qt::black);
+                 pPainter->drawPixmap(rectX-16, rectY-18, pixRLS->scaled(36, 36));
+                 pPainter->setPen(Qt::black);
             }
 
-            painter.drawText(QRect(rectX-16, rectY+15, 36, 20), namesRLS[i]);
+            pPainter->drawText(QRect(rectX-16, rectY+15, 36, 20), namesRLS[i]);
         }
     }
 }
@@ -250,21 +252,77 @@ QPixmap areaDrawWidget::getScreen()
     return pix;
 }
 
+void areaDrawWidget::setPen(const QPen &pen)
+{
+    pPainter->setPen(pen);
+}
+
+void areaDrawWidget::setBrush(const QBrush &b)
+{
+    pPainter->setBrush(b);
+}
+
+void areaDrawWidget::drawLine(int x1, int y1, int x2, int y2)
+{
+    pPainter->drawLine(x1 * k + Xo, y1 * k + Yo,
+                       x2 * k + Xo, y2 * k + Yo);
+}
+
+void areaDrawWidget::drawRect(int x1, int y1, int x2, int y2)
+{
+    pPainter->drawRect(QRect(QPoint(x1*k + Xo, y1*k + Yo),
+                             QPoint(x2*k + Xo, y2*k + Yo)));
+}
+
+void areaDrawWidget::drawCircle(int x, int y, int R, unit uR, unit uCoords)
+{
+    switch (uR) {
+    case idMap:
+        R *= k;
+        break;
+    case pix:
+
+        break;
+    }
+
+    switch (uCoords) {
+    case idMap:
+        x = x * k + Xo;
+        y = y * k + Yo;
+        break;
+    case pix:
+
+        break;
+    }
+
+    pPainter->drawEllipse(QPoint(x, y),
+                          R, R);
+}
+
+void areaDrawWidget::drawPixmap(int x, int y, int dX, int dY, const QPixmap& pix)
+{
+    x *= k;
+    y *= k;
+
+    pPainter->drawPixmap(x + Xo + dX, y + Yo + dY, pix);
+}
+
 void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
 {
-    QPainter painter;
-    painter.begin(this);
+    Q_UNUSED(pEvent);
 
-    // Прозрачная закраска
-    QBrush voidBrush;
+    QPainter painter(this);
+    pPainter = &painter;
+    //painter.setRenderHint(QPainter::Antialiasing);
 
     // Выполнение задач отрисовки
     for (auto it = drawTasks.begin(); it != drawTasks.end(); ++it) {
-        //(this->*it.value())(painter);
-        it.value()->processing(painter);
+
+        // Очередная задача по отрисовке
+        it.value()->processing();
 
         // чтобы цвет закраски был просзрачным
-        painter.setBrush(voidBrush);
+        painter.setBrush(Qt::NoBrush);
     }
 
     painter.end();
@@ -273,7 +331,6 @@ void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
 // Изменяем текущий инструмент
 void areaDrawWidget::setTool(int key)
 {
-
     // Освобождаем текущий от работы
     Tool->end();
 
@@ -347,6 +404,10 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
         // Обновляем координаты курсора
         updateCoord(double (idX - Xo) / k,
                     double (idY - Yo) / k);
+    }
+    else
+    {
+        //this->setCursor(Qt::CustomCursor);
     }
 }
 

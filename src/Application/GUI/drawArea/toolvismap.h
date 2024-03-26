@@ -17,7 +17,7 @@ public:
     void mouseRelease(QMouseEvent* mouse) override;
     void mouseMove(QMouseEvent* mouse) override;
 
-    void procDrawTask(QPainter& painter) override;
+    void procDrawTask() override;
 
     void init() override;
     void end() override;
@@ -26,11 +26,11 @@ private:
 
     drawTask <ToolVisMap>* dTask;
     //
-    int idXa;
-    int idYa;
+    int idXa = 0;
+    int idYa = 0;
 
-    int idXb;
-    int idYb;
+    int idXb = 0;
+    int idYb = 0;
 };
 
 #endif // TOOLVISMAP_H

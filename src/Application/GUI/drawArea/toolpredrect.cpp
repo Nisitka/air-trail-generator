@@ -26,37 +26,23 @@ void ToolPredRect::init()
     drawArea->appendDrawTask(areaDrawWidget::toolPredRect, dTask);
 }
 
-void ToolPredRect::procDrawTask(QPainter &painter)
+void ToolPredRect::procDrawTask()
 {
-    // отрисовка эелементов поставленного БПЛА
-    k = drawArea->getValZoom();
-
-    int Xo, Yo;
-    drawArea->getCoordDrawArea(Xo, Yo);
-
-    // Квадрат прогноза (текущего)
-    painter.setPen(QColor(255,0,128));
-    painter.drawRect(idXoPredict * k + Xo + 1, idYoPredict * k + Yo + 1, 200*k - 1, 200*k - 1);
+    // Установленная зона прогноза в единичной итерации
+    drawArea->setPen(QPen(QColor(255,0,128)));
+    drawArea->drawCircle(idXoPredict, idYoPredict, R);
 
     // Метка БПЛА
-    int x = idXRect*k + Xo;
-    int y = idYRect*k + Yo;
+    drawArea->drawCircle(idXRect, idYRect, 2, areaDrawWidget::pix);
 
-    painter.drawLine(x-3, y,
-                     x+3, y);
-    painter.drawLine(x, y-3,
-                     x, y+3);
-
-    // Квадрат прогноза (возможного)
-    painter.setPen(QColor(143, 32, 255));
-    painter.drawRect(xMouse - (100 * k) + 1, yMouse - (100 * k) + 1, 200*k - 1, 200*k - 1);
+    // Область прогноза в единичной итерации
+    drawArea->setPen(QPen(QColor(143, 32, 255)));
+    drawArea->drawCircle(xMouse, yMouse, R, areaDrawWidget::idMap, areaDrawWidget::pix);
 
     // Линия прогноза
     if (drawLineRect)
     {
-        painter.setPen(QPen(QColor(255,0,128), 1, Qt::DashLine));
-        painter.drawLine(idXRect * k  + Xo, idYRect  * k + Yo,
-                         idPRectX * k + Xo, idPRectY * k + Yo);
+        /* ... */
     }
 }
 
@@ -70,7 +56,7 @@ void ToolPredRect::mousePress(QMouseEvent *mouse)
     xPressMouse = xMouse;
     yPressMouse = yMouse;
 
-    // Координаты левого вернего угла карты отн-но виджета
+//    // Координаты левого вернего угла карты отн-но виджета
     int Xo, Yo;
     drawArea->getCoordDrawArea(Xo, Yo);
 
@@ -87,8 +73,8 @@ void ToolPredRect::mousePress(QMouseEvent *mouse)
     idYRect = dY / k;
 
     //
-    idXoPredict = idXRect  - 100;
-    idYoPredict = idYRect  - 100;
+    idXoPredict = idXRect;
+    idYoPredict = idYRect;
 
     drawArea->repaint();
 }

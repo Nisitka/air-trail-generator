@@ -9,24 +9,24 @@
 
 struct taskPainter
 {
-    virtual void processing(QPainter& painter) = 0;
+    virtual void processing() = 0;
 };
 
 template <typename T>
 class drawTask: public taskPainter
 {
 public:
-    drawTask(T* object, void (T::*method)(QPainter&)): object(object), drawMethod(method){  }
+    drawTask(T* object, void (T::*method)()): object(object), drawMethod(method){  }
 
-    void processing(QPainter& painter) override
+    void processing() override
     {
-        (object->*drawMethod)(painter);
+        (object->*drawMethod)();
     }
 
 private:
     //
     T* object;
-    void (T::*drawMethod)(QPainter&);
+    void (T::*drawMethod)();
 
 };
 

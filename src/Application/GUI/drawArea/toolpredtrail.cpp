@@ -51,53 +51,43 @@ void ToolPredTrail::clearTrail()
     trail.clear();
 }
 
-void ToolPredTrail::procDrawTask(QPainter &painter)
+void ToolPredTrail::procDrawTask()
 {
-    k = drawArea->getValZoom();
-    int rP = 50 * k;
-
-    // Координаты левого вернего угла карты отн-но виджета
-    int Xo, Yo;
-
-    int pX, pY;
-    drawArea->getCoordDrawArea(Xo, Yo);
     for (int i=0; i<trail.size() - 1; i++)
     {
-        painter.setPen(QPen(QColor(255,0,128), 1));
+        drawArea->setPen(QPen(QColor(255,0,128), 1));
 
-        pX = trail[i]->x() * k  + Xo;
-        pY = trail[i]->y() * k  + Yo;
+        drawArea->drawCircle(trail[i]->x(), trail[i]->y(), 2, areaDrawWidget::pix);
 
-        painter.drawEllipse(QPoint(pX, pY), 2, 2);
-        //painter.drawEllipse(QPoint(pX, pY), rP, rP);
-        painter.drawLine(pX, pY,
-                         trail[i+1]->x() * k  + Xo, trail[i+1]->y() * k  + Yo);
+        drawArea->drawLine(trail[i]->x(), trail[i]->y(),
+                           trail[i+1]->x(), trail[i+1]->y());
     }
     // отрисовываем последнию точку
     if (trail.size() > 0)
     {
-        painter.drawEllipse(QPoint(trail.last()->x() * k  + Xo, trail.last()->y() * k  + Yo), rP, rP);
+        drawArea->drawCircle(trail.last()->x(), trail.last()->y(), R);
     }
 
-
     // отрисовывать начальную и конечные точкитраектории
-    painter.setPen(QPen(QColor(51,255,240), 1));
+    drawArea->setPen(QPen(QColor(51,255,240), 1));
 
-    int bX = beginPoint.x() * k  + Xo;
-    int bY = beginPoint.y() * k  + Yo;
+    int bX = beginPoint.x();
+    int bY = beginPoint.y();
 
-    int fX = lastPoint.x() * k  + Xo;
-    int fY = lastPoint.y() * k  + Yo;
+    int fX = lastPoint.x();
+    int fY = lastPoint.y();
 
-    painter.drawPixmap(bX-16, bY-32, pixBeginDrone->scaled(32,32));
-    painter.drawPixmap(fX-16, fY-34, pixFinishDrone->scaled(32,32));
+    // Рисуем иконки начальной и конечной точек
+    drawArea->drawPixmap(bX, bY, -16, -32, pixBeginDrone->scaled(32,32));
+    drawArea->drawPixmap(fX, fY, -16, -34, pixFinishDrone->scaled(32,32));
 
-    painter.drawEllipse(QPoint(fX, fY), 2, 2);
-    painter.drawEllipse(QPoint(bX, bY), 2, 2);
+    // Сами точки в виде кружков
+    drawArea->drawCircle(fX, fY, 2, areaDrawWidget::pix);
+    drawArea->drawCircle(bX, bY, 2, areaDrawWidget::pix);
 
-    //
-    painter.setPen(QPen(QColor(255,0,128), 1, Qt::DashLine));
-    painter.drawLine(bX, bY, fX, fY);
+    // Самый короткий путь пунктиром
+    drawArea->setPen(QPen(QColor(255,0,128), 1, Qt::DashLine));
+    drawArea->drawLine(bX, bY, fX, fY);
 }
 
 void ToolPredTrail::mousePress(QMouseEvent *mouse)

@@ -23,6 +23,8 @@ public slots:
 public:
     drawAreaTool(areaDrawWidget*, int id, QObject *parent = 0);
 
+    int getId() const;
+
     enum keyMouse{left, right, mid};
     enum statusMouse{press, release};
 
@@ -30,7 +32,7 @@ public:
     virtual void mouseRelease(QMouseEvent* mouse) = 0;
     virtual void mouseMove(QMouseEvent* mouse) = 0;
 
-    virtual void procDrawTask(QPainter& painter) = 0;
+    virtual void procDrawTask() {  };
 
     virtual void wheelEvent(QWheelEvent *event);
 
@@ -70,8 +72,10 @@ protected:
     // курсор
     static int xPressMouse; // последние координаты нажатия
     static int yPressMouse;
-    static int xMouse;      // последние координаты
+    static int xMouse;      // последние координаты (относительно карты)
     static int yMouse;
+    static int xIdMouse;    // в индексах карты
+    static int yIdMouse;
     static int pXo;         // левый верх-й угол карты при нажатии/отпускании мыши
     static int pYo;
 

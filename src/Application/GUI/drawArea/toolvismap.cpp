@@ -18,16 +18,10 @@ void ToolVisMap::init()
     drawArea->appendDrawTask(areaDrawWidget::toolVis, dTask);
 }
 
-void ToolVisMap::procDrawTask(QPainter &painter)
+void ToolVisMap::procDrawTask()
 {
-    int Xo, Yo;
-    drawArea->getCoordDrawArea(Xo, Yo);
-
-    // отрисовка области 3D визуализации
-    painter.setPen(QPen(QColor(0,0,213), 1, Qt::DashLine));
-
-    painter.drawRect(QRect(QPoint(idXa*k + Xo, idYa*k + Yo),
-                           QPoint(idXb*k + Xo, idYb*k + Yo)));
+    drawArea->setPen(QPen(QColor(0,0,213), 1, Qt::DashLine));
+    drawArea->drawRect(idXa, idYa, idXb, idYb);
 }
 
 void ToolVisMap::mousePress(QMouseEvent *mouse)
@@ -47,7 +41,8 @@ void ToolVisMap::mousePress(QMouseEvent *mouse)
     idXa = double (xPressMouse - Xo) / k;
     idYa = double (yPressMouse - Yo) / k;
 
-    //drawArea->setRectVis(idXa, idYa, idXa, idYa);
+    idXb = idXa;
+    idYb = idYa;
 
     drawArea->repaint();
 }

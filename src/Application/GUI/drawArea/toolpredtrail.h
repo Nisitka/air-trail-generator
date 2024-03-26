@@ -26,13 +26,13 @@ public:
     void mouseRelease(QMouseEvent* mouse) override;
     void mouseMove(QMouseEvent* mouse) override;
 
-    void procDrawTask(QPainter& painter) override;
+    void procDrawTask() override;
 
     void init() override;
     void end() override;
 
 private:
-
+    //
     drawTask <ToolPredTrail>* dTask;
 
     //
@@ -46,6 +46,9 @@ private:
     // иконки оконечных точек
     QPixmap* pixBeginDrone;  // начала
     QPixmap* pixFinishDrone; // конца
+
+    // Радиус прогноза в итерации
+    int R = 50;
 };
 
 #endif // TOOLPREDTRAIL_H

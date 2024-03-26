@@ -11,6 +11,8 @@ int drawAreaTool::xPressMouse;
 int drawAreaTool::yPressMouse;
 int drawAreaTool::xMouse;
 int drawAreaTool::yMouse;
+int drawAreaTool::xIdMouse;
+int drawAreaTool::yIdMouse;
 int drawAreaTool::pXo;
 int drawAreaTool::pYo;
 
@@ -21,6 +23,11 @@ drawAreaTool::drawAreaTool(areaDrawWidget* area, int id, QObject *parent): drawA
 
     // По умолчанию стандартный курсор для всех инструментов
     cursor = Qt::ArrowCursor;
+}
+
+int drawAreaTool::getId() const
+{
+    return id;
 }
 
 void drawAreaTool::addButton(const QPixmap &pixButton, const QString &nameButton)

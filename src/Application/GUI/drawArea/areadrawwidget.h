@@ -55,8 +55,10 @@ protected:
 public:
     areaDrawWidget(QImage* mapImg);
 
+    enum unit{pix, idMap};
+
     // Добавить инструмент
-    void appendTool(drawAreaTool* toolArea, int idPriority);
+    void appendTool(drawAreaTool* toolArea);
 
     // Добавить задачу для отрисовки
     void appendDrawTask(int priorityKey, taskPainter*);
@@ -108,10 +110,21 @@ public:
     // задачи отрисовки (В порядке отрисовки)
     enum drawTasksID{background, terImg,
                      iconRLS, toolVis, toolPredRect, toolPredTrail, toolRLS};
+
     // методы для задач отрисовки
-    void drawBackground(QPainter& painter);
-    void drawMap(QPainter& painter);
-    void drawRLS(QPainter& painter);
+    void drawBackground();
+    void drawMap();
+    void drawRLS();
+
+    //
+    void setPen(const QPen&);
+    void setBrush(const QBrush&);
+
+    //
+    void drawLine(int x1, int y1, int x2, int y2);
+    void drawCircle(int x, int y, int R, unit uR = idMap, unit uCoords = idMap);
+    void drawPixmap(int x, int y, int dX, int dY, const QPixmap& pix);
+    void drawRect(int x1, int y1, int x2, int y2);
 
 protected:
     void paintEvent(QPaintEvent* pEvent);
@@ -122,6 +135,10 @@ protected:
     virtual void wheelEvent(QWheelEvent *event)             override;
 
 private:
+
+    //
+    QPainter* pPainter;
+
     // Задачи отрисовки
     QMap <int, taskPainter*> drawTasks;
 

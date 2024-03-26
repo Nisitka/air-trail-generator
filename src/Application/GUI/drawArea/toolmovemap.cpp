@@ -17,11 +17,6 @@ void ToolMoveMap::init()
     statMouse = release;
 }
 
-void ToolMoveMap::procDrawTask(QPainter &painter)
-{
-
-}
-
 void ToolMoveMap::mousePress(QMouseEvent *mouse)
 {
     drawArea->setCursor(Qt::ClosedHandCursor);
@@ -36,6 +31,8 @@ void ToolMoveMap::mousePress(QMouseEvent *mouse)
 
 void ToolMoveMap::mouseRelease(QMouseEvent *mouse)
 {
+    Q_UNUSED(mouse);
+
     drawArea->setCursor(Qt::OpenHandCursor);
 
     statMouse = release;

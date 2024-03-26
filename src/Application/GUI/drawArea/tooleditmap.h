@@ -24,8 +24,6 @@ public:
     void mouseMove(QMouseEvent* mouse) override;
     void wheelEvent(QWheelEvent *event) override;
 
-    void procDrawTask(QPainter& painter) override;
-
     void init() override;
     void end() override;
 
