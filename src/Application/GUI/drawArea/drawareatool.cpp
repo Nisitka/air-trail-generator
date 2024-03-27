@@ -23,6 +23,8 @@ drawAreaTool::drawAreaTool(areaDrawWidget* area, int id, QObject *parent): drawA
 
     // По умолчанию стандартный курсор для всех инструментов
     cursor = Qt::ArrowCursor;
+
+    button = nullptr;
 }
 
 int drawAreaTool::getId() const
@@ -30,44 +32,53 @@ int drawAreaTool::getId() const
     return id;
 }
 
-void drawAreaTool::addButton(const QPixmap &pixButton, const QString &nameButton)
+QPushButton* drawAreaTool::getButton()
 {
-    QAction* action = drawArea->getToolBar()->addAction(pixButton, nameButton,
-                                      this,      SLOT(assign()));
+    return button;
+}
 
-    button = drawArea->getToolBar()->widgetForAction(action);
+void drawAreaTool::setButton(const QPixmap &pixButton, const QString &nameButton)
+{
+    button = new QPushButton(pixButton, "");
+    button->setToolTip(nameButton);
+    button->setIconSize(QSize(23, 23));
+    button->setFixedSize(QSize(29, 29));
+
+    connect(button, SIGNAL(clicked()),
+            this,   SLOT(assign()));
+
     offButton();
 }
 
 void drawAreaTool::onButton()
 {
-    button->setStyleSheet("QToolButton{"
+    button->setStyleSheet("QPushButton{"
                           "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
                           "    border-color: rgb(0,0,0);"
                           "    border-style: outset;"
                           "    border-radius: 3px;"
                           "    border-width: 1px;"
-                          "    border-color: rgb(0,0,0);"
                           "}"
-                          "QToolButton:hover{"
+                          "QPushButton:hover{"
                           "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
                           "    border-color: rgb(0,0,0);"
                           "    border-radius: 3px;"
                           "    border-width: 1px;"
                           "    border-color: rgb(0,0,0);"
                           "}"
-                          "QToolButton:pressed{"
+                          "QPushButton:pressed{"
                           "    background-color : rgb(143,204,205); color: rgb(0,0,0);;"
                           "};");
 }
 
 void drawAreaTool::offButton()
 {
-    button->setStyleSheet("QToolButton{"
+    button->setStyleSheet("QPushButton{"
                           "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
                           "                                     stop: 0 #E0E0E0, stop: 1 #FFFFFF);"
+                          "    border-style: outset;"
                           "}"
-                          "QToolButton:hover{"
+                          "QPushButton:hover{"
                           "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
                           "    border-color: rgb(0,0,0);"
                           "    border-style: outset;"
@@ -75,7 +86,7 @@ void drawAreaTool::offButton()
                           "    border-width: 1px;"
                           "    border-color: rgb(0,0,0);"
                           "}"
-                          "QToolButton:pressed{"
+                          "QPushButton:pressed{"
                           "    background-color : rgb(143,204,205); color: rgb(0,0,0);;"
                           "};");
 }
@@ -109,9 +120,4 @@ void drawAreaTool::init()
 void drawAreaTool::wheelEvent(QWheelEvent *event)
 {
     /* По умолчанию ничего не делаем */
-}
-
-void drawAreaTool::getCoordID(int &idX, int &idY)
-{
-    /* ... */
 }

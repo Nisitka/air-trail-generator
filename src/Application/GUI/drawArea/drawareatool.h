@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <QCursor>
 #include <QObject>
+#include <QPushButton>
 
 #include "drawtask.h"
 
@@ -32,7 +33,7 @@ public:
     virtual void mouseRelease(QMouseEvent* mouse) = 0;
     virtual void mouseMove(QMouseEvent* mouse) = 0;
 
-    virtual void procDrawTask() {  };
+    virtual void procDrawTask() { /* ... */ }
 
     virtual void wheelEvent(QWheelEvent *event);
 
@@ -44,32 +45,27 @@ public:
     int getStatMouse();
     int getLastKeyMouse();
 
+    QPushButton* getButton();
+
 protected:
 
     //
-    void addButton(const QPixmap& pixButton, const QString& nameButton);
+    void setButton(const QPixmap& pixButton, const QString& nameButton);
 
     void onButton();
     void offButton();
 
     //
-//    QPixmap buttonImg;
-//    QString nameButton;
+    QPushButton* button;
 
-    //
-    QWidget* button;
-
-    // ключ  инструмента в drawArea
+    // Ключ  инструмента в drawArea
     int id;
 
-    // Получить дискреты карты
-    void getCoordID(int& idX, int& idY);
-
-    // кнопки
+    // Кнопки
     static int lastKeyMouse;
     static int statMouse;
 
-    // курсор
+    // Курсор
     static int xPressMouse; // последние координаты нажатия
     static int yPressMouse;
     static int xMouse;      // последние координаты (относительно карты)

@@ -8,7 +8,7 @@ ToolPredRect::ToolPredRect(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
     cursor = Qt::CrossCursor;
 
-    addButton(QPixmap(":/resurs/handDrone"), "Прогноз в области");
+    setButton(QPixmap(":/resurs/handDrone"), "Прогноз в области");
 
     dTask = new drawTask<ToolPredRect>(this, &ToolPredRect::procDrawTask);
 

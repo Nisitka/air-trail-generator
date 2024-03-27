@@ -9,7 +9,7 @@ ToolZoomMap::ToolZoomMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
     iconZoom = iconZoom.scaled(25, 25);
     cursor = QCursor(iconZoom);
 
-    addButton(QPixmap(":/resurs/zoom"), "Луппа");
+    setButton(QPixmap(":/resurs/zoom"), "Луппа");
 }
 
 void ToolZoomMap::init()

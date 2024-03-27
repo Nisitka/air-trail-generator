@@ -104,9 +104,6 @@ public:
     // инструменты
     enum tools{moveImg, setRLS, zoomImg, predictRect, predictTrail, mapVis, editEarth, def};
 
-    //
-    QToolBar* getToolBar();
-
     // задачи отрисовки (В порядке отрисовки)
     enum drawTasksID{background, terImg,
                      iconRLS, toolVis, toolPredRect, toolPredTrail, toolRLS};

@@ -54,9 +54,9 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
     addToolBar(Qt::TopToolBarArea, toolBar); // добавляем в панель инструментов
 
     //
-    Tools[def]     = new toolDefault(this, def);
-    Tools[moveImg] = new ToolMoveMap(this, moveImg);
-    Tools[zoomImg] = new ToolZoomMap(this, zoomImg);
+    appendTool(new toolDefault(this, def));
+    appendTool(new ToolMoveMap(this, moveImg));
+    appendTool(new ToolZoomMap(this, zoomImg));
 
     keyCurTool = def;
     Tool = Tools[def];
@@ -78,17 +78,16 @@ void areaDrawWidget::appendTool(drawAreaTool *toolArea)
     int idPriority = toolArea->getId();
 
     Tools[idPriority] = toolArea;
+
+    //
+    if (idPriority != def)
+        toolBar->addWidget(toolArea->getButton());
 }
 
 void areaDrawWidget::contextMenuEvent(QContextMenuEvent *event)
 {
     Q_UNUSED(event);
     /* ... */
-}
-
-QToolBar* areaDrawWidget::getToolBar()
-{
-    return toolBar;
 }
 
 void areaDrawWidget::appendDrawTask(int priorityKey, taskPainter* task)
@@ -417,7 +416,6 @@ void areaDrawWidget::zoom(double dK)
 
     if (k <= 0) k = 0.1;
 }
-
 
 void areaDrawWidget::drawGeoMap()
 {

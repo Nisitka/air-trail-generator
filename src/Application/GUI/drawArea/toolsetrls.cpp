@@ -6,7 +6,7 @@ ToolSetRLS::ToolSetRLS(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
     cursor = Qt::CrossCursor;
 
-    addButton(QPixmap(":/resurs/radarBlue"), "Постановка РЛС");
+    setButton(QPixmap(":/resurs/radarBlue"), "Постановка РЛС");
 
     dTask = new drawTask<ToolSetRLS>(this, &ToolSetRLS::procDrawTask);
 }

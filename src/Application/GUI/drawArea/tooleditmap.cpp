@@ -14,7 +14,7 @@ ToolEditMap::ToolEditMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 
     r = 20;
 
-    addButton(QPixmap(":/resurs/machinery"), "Редактировать рельеф");
+    setButton(QPixmap(":/resurs/machinery"), "Редактировать рельеф");
 }
 
 void ToolEditMap::init()
