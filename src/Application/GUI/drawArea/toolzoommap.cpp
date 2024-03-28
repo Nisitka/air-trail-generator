@@ -14,7 +14,6 @@ ToolZoomMap::ToolZoomMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 
 void ToolZoomMap::init()
 {
-    onButton();
     drawArea->setCursor(cursor);
 }
 
@@ -68,5 +67,5 @@ void ToolZoomMap::mouseMove(QMouseEvent *mouse)
 
 void ToolZoomMap::end()
 {
-    offButton();
+
 }

@@ -24,8 +24,9 @@ GUI::GUI(QImage* geoMap,
     toolEditTer = new ToolEditMap(  drawArea, areaDrawWidget::editEarth);
     toolVisMap  = new ToolVisMap(   drawArea, areaDrawWidget::mapVis);
 
-    drawArea->appendTool(toolPTrail);
-    drawArea->appendTool(toolPLine);
+    QVector <drawAreaTool*> predTools = {toolPTrail, toolPLine};
+    drawArea->appendToolGroup(predTools, "Прогноз");
+
     drawArea->appendTool(toolRLS);
     drawArea->appendTool(toolEditTer);
     drawArea->appendTool(toolVisMap);

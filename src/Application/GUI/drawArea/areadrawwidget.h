@@ -52,6 +52,11 @@ protected:
     // Переопределяем метод, чтоб не вылазило меню при нажатии лев.клавиши мыши
     void contextMenuEvent(QContextMenuEvent* event);
 
+private slots:
+
+    void changeGroupTools(QAction*);
+    void changeTool();
+
 public:
     areaDrawWidget(QImage* mapImg);
 
@@ -59,6 +64,9 @@ public:
 
     // Добавить инструмент
     void appendTool(drawAreaTool* toolArea);
+    // Добавить грппу инструментов
+    void appendToolGroup(const QVector <drawAreaTool*>&,
+                         const QString& nameGroup);
 
     // Добавить задачу для отрисовки
     void appendDrawTask(int priorityKey, taskPainter*);
@@ -123,6 +131,8 @@ public:
     void drawPixmap(int x, int y, int dX, int dY, const QPixmap& pix);
     void drawRect(int x1, int y1, int x2, int y2);
 
+    enum StyleButtonTool {on, off};
+
 protected:
     void paintEvent(QPaintEvent* pEvent);
 
@@ -132,6 +142,9 @@ protected:
     virtual void wheelEvent(QWheelEvent *event)             override;
 
 private:
+
+    QToolButton* lastToolButton;
+    void setButtonStyle(QToolButton*, StyleButtonTool style);
 
     //
     QPainter* pPainter;

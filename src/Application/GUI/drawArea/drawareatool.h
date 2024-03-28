@@ -4,7 +4,7 @@
 #include <QMouseEvent>
 #include <QCursor>
 #include <QObject>
-#include <QPushButton>
+#include <QToolButton>
 
 #include "drawtask.h"
 
@@ -45,18 +45,15 @@ public:
     int getStatMouse();
     int getLastKeyMouse();
 
-    QPushButton* getButton();
+    QToolButton* getButton();
 
 protected:
 
     //
     void setButton(const QPixmap& pixButton, const QString& nameButton);
 
-    void onButton();
-    void offButton();
-
     //
-    QPushButton* button;
+    QToolButton* button;
 
     // Ключ  инструмента в drawArea
     int id;

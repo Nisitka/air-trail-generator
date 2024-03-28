@@ -19,8 +19,6 @@ ToolEditMap::ToolEditMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 
 void ToolEditMap::init()
 {
-    onButton();
-
     statMouse = release;
 
     //
@@ -142,5 +140,5 @@ void ToolEditMap::wheelEvent(QWheelEvent *event)
 
 void ToolEditMap::end()
 {
-    offButton();
+
 }

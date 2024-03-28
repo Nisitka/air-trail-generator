@@ -13,8 +13,6 @@ ToolSetRLS::ToolSetRLS(areaDrawWidget* area, int id): drawAreaTool(area, id)
 
 void ToolSetRLS::init()
 {
-    onButton();
-
     drawArea->setCursor(cursor);
     drawArea->appendDrawTask(areaDrawWidget::toolRLS, dTask);
 }
@@ -81,6 +79,5 @@ void ToolSetRLS::mouseMove(QMouseEvent *mouse)
 
 void ToolSetRLS::end()
 {
-    offButton();
     drawArea->delDrawTask(areaDrawWidget::toolRLS);
 }

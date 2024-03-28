@@ -6,6 +6,10 @@
 #include <cmath>
 #include <QBrush>
 
+#include <QComboBox>
+#include <QFontComboBox>
+#include <QMenu>
+
 #include <QGuiApplication>
 
 #include <QPixmap>
@@ -60,6 +64,7 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
 
     keyCurTool = def;
     Tool = Tools[def];
+    lastToolButton = nullptr;
 
     // Задачи, которые всегда должны выполняться
     appendDrawTask(background, new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBackground));
@@ -81,7 +86,124 @@ void areaDrawWidget::appendTool(drawAreaTool *toolArea)
 
     //
     if (idPriority != def)
-        toolBar->addWidget(toolArea->getButton());
+    {
+        QToolButton* button = toolArea->getButton();
+
+        connect(button, SIGNAL(clicked(bool)),
+                this,   SLOT(changeTool()));
+
+        toolBar->addWidget(button);
+
+        setButtonStyle(button, off);
+    }
+}
+
+void areaDrawWidget::appendToolGroup(const QVector<drawAreaTool *> &boxTools,
+                                     const QString& nameGroup)
+{
+    QToolButton* inputButton = new QToolButton;
+    QMenu* toolMenu = new QMenu(inputButton);
+
+    drawAreaTool* tool;
+    QToolButton* button;
+
+    int idPriority;
+    int countTool = boxTools.size();
+    for (int i=0; i<countTool; i++)
+    {
+        tool = boxTools.at(i);
+
+        idPriority = tool->getId();
+        Tools[idPriority] = tool;
+
+        button = tool->getButton();
+        toolMenu->addAction(button->icon(), button->toolTip(),
+                            button, SIGNAL(clicked()));
+    }
+
+    inputButton->setMenu(toolMenu);
+    inputButton->setPopupMode(QToolButton::MenuButtonPopup);
+
+    connect(inputButton, SIGNAL(clicked(bool)),
+            inputButton, SLOT(showMenu()));
+    connect(inputButton, SIGNAL(triggered(QAction*)),
+            this,        SLOT(changeGroupTools(QAction*)));
+
+    setButtonStyle(inputButton, off);
+    inputButton->setToolTip(nameGroup);
+    inputButton->setIcon(button->icon());
+
+    toolBar->addWidget(inputButton);
+}
+
+void areaDrawWidget::changeGroupTools(QAction* action)
+{
+    if (lastToolButton != nullptr)
+        setButtonStyle(lastToolButton, off);
+
+    QToolButton* bMenu = qobject_cast<QToolButton*>(sender());
+    lastToolButton = bMenu;
+
+    lastToolButton->setIcon(action->icon());
+    setButtonStyle(lastToolButton, on);
+}
+
+void areaDrawWidget::changeTool()
+{
+    if (lastToolButton != nullptr)
+        setButtonStyle(lastToolButton, off);
+
+    QToolButton* toolButton = qobject_cast<QToolButton*>(sender());
+    lastToolButton = toolButton;
+    setButtonStyle(lastToolButton, on);
+}
+
+void areaDrawWidget::setButtonStyle(QToolButton *button, StyleButtonTool style)
+{
+    QString strStyle;
+    switch (style) {
+    case off:
+        strStyle =
+                "QToolButton{"
+                "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                "                                     stop: 0 #E0E0E0, stop: 1 #FFFFFF);"
+                "    border-style: outset;"
+                "}"
+                "QToolButton:hover{"
+                "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
+                "    border-color: rgb(0,0,0);"
+                "    border-style: outset;"
+                "    border-radius: 3px;"
+                "    border-width: 1px;"
+                "    border-color: rgb(0,0,0);"
+                "}"
+                "QToolButton:pressed{"
+                "    background-color : rgb(143,204,205); color: rgb(0,0,0);"
+                "};";
+        break;
+    case on:
+        strStyle =
+                "QToolButton{"
+                "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
+                "    border-color: rgb(0,0,0);"
+                "    border-style: outset;"
+                "    border-radius: 3px;"
+                "    border-width: 1px;"
+                "}"
+                "QToolButton:hover{"
+                "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
+                "    border-color: rgb(0,0,0);"
+                "    border-radius: 3px;"
+                "    border-width: 1px;"
+                "    border-color: rgb(0,0,0);"
+                "}"
+                "QToolButton:pressed{"
+                "    background-color : rgb(143,204,205); color: rgb(0,0,0);"
+                "};";
+        break;
+    }
+
+    button->setStyleSheet(strStyle);
 }
 
 void areaDrawWidget::contextMenuEvent(QContextMenuEvent *event)
@@ -334,7 +456,10 @@ void areaDrawWidget::setTool(int key)
     Tool->end();
 
     // Если хотим выбрать тот же инструменет, то отключаем его
-    if (keyCurTool == key) key = def;
+    if (keyCurTool == key)
+    {
+        key = def;
+    }
 
     //
     Tool = Tools[key];

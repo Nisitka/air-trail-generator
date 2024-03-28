@@ -17,8 +17,6 @@ ToolPredTrail::ToolPredTrail(areaDrawWidget* area, int id, QObject *parent): dra
 
 void ToolPredTrail::init()
 {
-    onButton();
-
     drawArea->setCursor(cursor);
 
     drawArea->appendDrawTask(areaDrawWidget::toolPredTrail, dTask);
@@ -145,6 +143,5 @@ void ToolPredTrail::mouseMove(QMouseEvent *mouse)
 
 void ToolPredTrail::end()
 {
-    offButton();
     //drawArea->delDrawTask(areaDrawWidget::toolPredTrail);
 }
