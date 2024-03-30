@@ -24,6 +24,7 @@
 #include "toolsetrls.h"
 #include "toolvismap.h"
 #include "toolzoommap.h"
+#include "toolruler.h"
 
 #include "drawtask.h"
 
@@ -110,11 +111,11 @@ public:
     enum showImages{geoMap, netData, QFunction};
 
     // инструменты
-    enum tools{moveImg, setRLS, zoomImg, predictRect, predictTrail, mapVis, editEarth, def};
+    enum tools{moveImg, setRLS, zoomImg, predictRect, predictTrail, mapVis, editEarth, Ruler, def};
 
     // задачи отрисовки (В порядке отрисовки)
     enum drawTasksID{background, terImg,
-                     iconRLS, toolVis, toolPredRect, toolPredTrail, toolRLS};
+                     iconRLS, toolVis, toolPredRect, toolPredTrail, toolRLS, toolRuler};
 
     // методы для задач отрисовки
     void drawBackground();
@@ -126,7 +127,7 @@ public:
     void setBrush(const QBrush&);
 
     //
-    void drawLine(int x1, int y1, int x2, int y2);
+    void drawLine(int x1, int y1, int x2, int y2, unit uPoints = idMap);
     void drawCircle(int x, int y, int R, unit uR = idMap, unit uCoords = idMap);
     void drawPixmap(int x, int y, int dX, int dY, const QPixmap& pix);
     void drawRect(int x1, int y1, int x2, int y2);

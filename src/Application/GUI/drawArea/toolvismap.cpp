@@ -6,7 +6,7 @@ ToolVisMap::ToolVisMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
     cursor = Qt::CrossCursor;
 
-    setButton(QPixmap(":/resurs/hand3D"), "Область 3D визуализации");
+    setParButton(QPixmap(":/resurs/hand3D"), "Область 3D визуализации");
 
     dTask = new drawTask<ToolVisMap>(this, &ToolVisMap::procDrawTask);
 }

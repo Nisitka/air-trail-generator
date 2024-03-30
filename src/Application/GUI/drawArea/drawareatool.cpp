@@ -23,8 +23,6 @@ drawAreaTool::drawAreaTool(areaDrawWidget* area, int id, QObject *parent): drawA
 
     // По умолчанию стандартный курсор для всех инструментов
     cursor = Qt::ArrowCursor;
-
-    button = nullptr;
 }
 
 int drawAreaTool::getId() const
@@ -32,21 +30,20 @@ int drawAreaTool::getId() const
     return id;
 }
 
-QToolButton* drawAreaTool::getButton()
+void drawAreaTool::setParButton(const QPixmap &pixButton, const QString &nButton)
 {
-    return button;
+    imgButton = pixButton;
+    nameTool = nButton;
 }
 
-void drawAreaTool::setButton(const QPixmap &pixButton, const QString &nameButton)
+QPixmap drawAreaTool::getImgButton() const
 {
-    button = new QToolButton;
-    button->setIcon(pixButton);
-    button->setToolTip(nameButton);
-    button->setIconSize(QSize(23, 23));
-    button->setFixedSize(QSize(29, 29));
+    return imgButton;
+}
 
-    connect(button, SIGNAL(clicked()),
-            this,   SLOT(assign()));
+QString drawAreaTool::getNameTool() const
+{
+    return nameTool;
 }
 
 void drawAreaTool::assign()

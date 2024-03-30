@@ -38,5 +38,8 @@
         <file>resurs/toolEarthDown.png</file>
         <file>resurs/toolEarthMove.png</file>
         <file>resurs/toolEarthUp.png</file>
+        <file>resurs/ruler.png</file>
+        <file>resurs/rulers.png</file>
+        <file>resurs/triangle.png</file>
     </qresource>
 </RCC>

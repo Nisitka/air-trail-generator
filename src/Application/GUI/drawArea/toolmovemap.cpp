@@ -6,7 +6,7 @@
 
 ToolMoveMap::ToolMoveMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
-    setButton(QPixmap(":/resurs/hand"), "Перемещение на карте");
+    setParButton(QPixmap(":/resurs/hand"), "Перемещение на карте");
 }
 
 void ToolMoveMap::init()

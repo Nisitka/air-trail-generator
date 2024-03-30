@@ -30,6 +30,8 @@ GUI::GUI(QImage* geoMap,
     drawArea->appendTool(toolRLS);
     drawArea->appendTool(toolEditTer);
     drawArea->appendTool(toolVisMap);
+    ToolRuler* toolRuler = new ToolRuler(drawArea, areaDrawWidget::Ruler);
+    drawArea->appendTool(toolRuler);
 
     //
     QObject::connect(visInfoWin, SIGNAL(saveMap_signal(QString)),

@@ -6,7 +6,7 @@ ToolPredTrail::ToolPredTrail(areaDrawWidget* area, int id, QObject *parent): dra
 {
     cursor = Qt::CrossCursor;
 
-    setButton(QPixmap(":/resurs/trail2"), "Прогноз маршрута");
+    setParButton(QPixmap(":/resurs/trail2"), "Прогноз маршрута");
 
     //
     pixBeginDrone = new QPixmap(":/resurs/droneStart");

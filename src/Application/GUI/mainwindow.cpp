@@ -48,7 +48,7 @@ void mainWindow::addTask(QWidget *widget,
     // вставка виджета в интерфейс
     QDockWidget* dock = new QDockWidget(nameWindow, this);
     dock->setStyleSheet("QDockWidget{"
-                        "   background-color: rgb(201,214,234);"
+                        "   background-color: #7795bf;"
                         "}");
     dock->setWidget(widget);
     addDockWidget(showPosition, dock);

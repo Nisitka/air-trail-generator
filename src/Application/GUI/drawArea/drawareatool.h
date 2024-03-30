@@ -45,15 +45,14 @@ public:
     int getStatMouse();
     int getLastKeyMouse();
 
-    QToolButton* getButton();
+    //
+    QPixmap getImgButton() const;
+    QString getNameTool() const;
 
 protected:
 
-    //
-    void setButton(const QPixmap& pixButton, const QString& nameButton);
-
-    //
-    QToolButton* button;
+    // Установить параметры кнопки
+    void setParButton(const QPixmap& pixButton, const QString& nameButton);
 
     // Ключ  инструмента в drawArea
     int id;
@@ -78,6 +77,10 @@ protected:
 
     // к чему принадлежат инструменты
     areaDrawWidget* drawArea;
+
+    // Параметры кнопки(ок) вызывающей(их) инструмент
+    QPixmap imgButton;
+    QString nameTool;
 
     //
     QCursor cursor;

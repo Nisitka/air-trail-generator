@@ -87,10 +87,16 @@ void areaDrawWidget::appendTool(drawAreaTool *toolArea)
     //
     if (idPriority != def)
     {
-        QToolButton* button = toolArea->getButton();
+        QToolButton* button = new QToolButton;
+        button->setIcon(toolArea->getImgButton());
+        button->setToolTip(toolArea->getNameTool());
 
+        // Для изменения визуала
         connect(button, SIGNAL(clicked(bool)),
                 this,   SLOT(changeTool()));
+        // Для реакции инструмента
+        connect(button,   SIGNAL(clicked(bool)),
+                toolArea, SLOT(assign()));
 
         toolBar->addWidget(button);
 
@@ -103,10 +109,21 @@ void areaDrawWidget::appendToolGroup(const QVector<drawAreaTool *> &boxTools,
 {
     QToolButton* inputButton = new QToolButton;
     QMenu* toolMenu = new QMenu(inputButton);
+    toolMenu->setStyleSheet("QMenu {"
+                            "   background-color: gray;"
+                            "   margin: 2px;"
+                            "   border-radius: 5px;"
+                            "}"
+                            "QMenu::item{"
+                            "   background-color: #E0E0E0;"
+                            "   color: rgb(25, 25, 25);"
+                            "}"
+                            "QMenu::item:selected{"
+                            "   background-color: rgb(193,254,255);"
+                            "   color: black;"
+                            "}");
 
     drawAreaTool* tool;
-    QToolButton* button;
-
     int idPriority;
     int countTool = boxTools.size();
     for (int i=0; i<countTool; i++)
@@ -116,9 +133,8 @@ void areaDrawWidget::appendToolGroup(const QVector<drawAreaTool *> &boxTools,
         idPriority = tool->getId();
         Tools[idPriority] = tool;
 
-        button = tool->getButton();
-        toolMenu->addAction(button->icon(), button->toolTip(),
-                            button, SIGNAL(clicked()));
+        toolMenu->addAction(tool->getImgButton(), tool->getNameTool(),
+                            tool, SLOT(assign()));
     }
 
     inputButton->setMenu(toolMenu);
@@ -131,7 +147,7 @@ void areaDrawWidget::appendToolGroup(const QVector<drawAreaTool *> &boxTools,
 
     setButtonStyle(inputButton, off);
     inputButton->setToolTip(nameGroup);
-    inputButton->setIcon(button->icon());
+    inputButton->setIcon(tool->getImgButton());
 
     toolBar->addWidget(inputButton);
 }
@@ -178,7 +194,12 @@ void areaDrawWidget::setButtonStyle(QToolButton *button, StyleButtonTool style)
                 "    border-color: rgb(0,0,0);"
                 "}"
                 "QToolButton:pressed{"
-                "    background-color : rgb(143,204,205); color: rgb(0,0,0);"
+                "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
+                "    border-color: rgb(0,0,0);"
+                "    border-style: outset;"
+                "    border-radius: 3px;"
+                "    border-width: 1px;"
+                "    border-color: rgb(0,0,0);"
                 "};";
         break;
     case on:
@@ -198,7 +219,12 @@ void areaDrawWidget::setButtonStyle(QToolButton *button, StyleButtonTool style)
                 "    border-color: rgb(0,0,0);"
                 "}"
                 "QToolButton:pressed{"
-                "    background-color : rgb(143,204,205); color: rgb(0,0,0);"
+                "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
+                "    border-color: rgb(0,0,0);"
+                "    border-style: outset;"
+                "    border-radius: 3px;"
+                "    border-width: 1px;"
+                "    border-color: rgb(0,0,0);"
                 "};";
         break;
     }
@@ -383,10 +409,18 @@ void areaDrawWidget::setBrush(const QBrush &b)
     pPainter->setBrush(b);
 }
 
-void areaDrawWidget::drawLine(int x1, int y1, int x2, int y2)
+void areaDrawWidget::drawLine(int x1, int y1, int x2, int y2, unit uPoints)
 {
-    pPainter->drawLine(x1 * k + Xo, y1 * k + Yo,
-                       x2 * k + Xo, y2 * k + Yo);
+    switch (uPoints) {
+    case idMap:
+        pPainter->drawLine(x1 * k + Xo, y1 * k + Yo,
+                           x2 * k + Xo, y2 * k + Yo);
+        break;
+    case pix:
+        pPainter->drawLine(x1, y1,
+                           x2, y2);
+        break;
+    }
 }
 
 void areaDrawWidget::drawRect(int x1, int y1, int x2, int y2)
@@ -459,6 +493,7 @@ void areaDrawWidget::setTool(int key)
     if (keyCurTool == key)
     {
         key = def;
+        setButtonStyle(lastToolButton, off);
     }
 
     //
