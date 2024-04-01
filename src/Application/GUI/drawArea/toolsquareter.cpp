@@ -1,5 +1,5 @@
 #include "toolsquareter.h"
-
+#include "math.h"
 #include "areadrawwidget.h"
 
 ToolSquareTer::ToolSquareTer(areaDrawWidget* area, int id): drawAreaTool(area, id)

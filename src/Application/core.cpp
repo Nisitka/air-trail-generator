@@ -2,7 +2,7 @@
 
 Core::Core()
 {
-
+    //Здесь был ФАРА!
 }
 
 void Core::init_map()
