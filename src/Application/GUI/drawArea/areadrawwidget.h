@@ -25,6 +25,7 @@
 #include "toolvismap.h"
 #include "toolzoommap.h"
 #include "toolruler.h"
+#include "toolsquareter.h"
 
 #include "drawtask.h"
 
@@ -87,6 +88,10 @@ public:
     //
     double getValZoom();
 
+    // Длина одного блока
+    void setBlockSize(int size); // в метрах
+    int getBlockSize() const;
+
     // установить выбранную РЛС
     void setCurRLS(int idRLS);
 
@@ -111,11 +116,13 @@ public:
     enum showImages{geoMap, netData, QFunction};
 
     // инструменты
-    enum tools{moveImg, setRLS, zoomImg, predictRect, predictTrail, mapVis, editEarth, Ruler, def};
+    enum tools{moveImg, setRLS, zoomImg, predictRect, predictTrail,
+               mapVis, editEarth, Ruler, squareTer, def};
 
     // задачи отрисовки (В порядке отрисовки)
     enum drawTasksID{background, terImg,
-                     iconRLS, toolVis, toolPredRect, toolPredTrail, toolRLS, toolRuler};
+                     iconRLS, toolVis,   toolPredRect, toolPredTrail,
+                     toolRLS, toolRuler, toolSquarTer};
 
     // методы для задач отрисовки
     void drawBackground();
@@ -131,6 +138,10 @@ public:
     void drawCircle(int x, int y, int R, unit uR = idMap, unit uCoords = idMap);
     void drawPixmap(int x, int y, int dX, int dY, const QPixmap& pix);
     void drawRect(int x1, int y1, int x2, int y2);
+    void drawText(const QRect& rect, const QString& text);
+
+    //
+    void setRenderHint(bool smoothing = true);
 
     enum StyleButtonTool {on, off};
 

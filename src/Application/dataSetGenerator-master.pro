@@ -60,7 +60,8 @@ SOURCES += main.cpp\
     backend/managerdrones.cpp \
     backend/trail.cpp \
     GUI/plotwidget.cpp \
-    GUI/drawArea/toolruler.cpp
+    GUI/drawArea/toolruler.cpp \
+    GUI/drawArea/toolsquareter.cpp
 
 HEADERS  += \
     core.h \
@@ -99,7 +100,8 @@ HEADERS  += \
     backend/trail.h \
     GUI/plotwidget.h \
     GUI/drawArea/drawtask.h \
-    GUI/drawArea/toolruler.h
+    GUI/drawArea/toolruler.h \
+    GUI/drawArea/toolsquareter.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \

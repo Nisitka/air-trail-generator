@@ -26,6 +26,8 @@ void ToolPredRect::init()
 
 void ToolPredRect::procDrawTask()
 {
+    //drawArea->setRenderHint();
+
     // Установленная зона прогноза в единичной итерации
     drawArea->setPen(QPen(QColor(255,0,128)));
     drawArea->drawCircle(idXoPredict, idYoPredict, R);
@@ -42,6 +44,8 @@ void ToolPredRect::procDrawTask()
     {
         /* ... */
     }
+
+    //drawArea->setRenderHint(false);
 }
 
 void ToolPredRect::mousePress(QMouseEvent *mouse)

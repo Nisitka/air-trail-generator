@@ -78,6 +78,16 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
                         "};");
 }
 
+void areaDrawWidget::setBlockSize(int size)
+{
+    lBlock = size;
+}
+
+int areaDrawWidget::getBlockSize() const
+{
+    return lBlock;
+}
+
 void areaDrawWidget::appendTool(drawAreaTool *toolArea)
 {
     int idPriority = toolArea->getId();
@@ -454,6 +464,19 @@ void areaDrawWidget::drawCircle(int x, int y, int R, unit uR, unit uCoords)
                           R, R);
 }
 
+void areaDrawWidget::drawText(const QRect& rect, const QString& text)
+{
+    QBrush brush = pPainter->brush();
+
+    pPainter->setBrush(QBrush(QColor(255,255,255, 180)));
+    pPainter->drawRect(rect.x() - 3, rect.y() - 3,
+                       rect.width() + 3, rect.height() + 3);
+
+    pPainter->drawText(rect, text);
+
+    pPainter->setBrush(brush);
+}
+
 void areaDrawWidget::drawPixmap(int x, int y, int dX, int dY, const QPixmap& pix)
 {
     x *= k;
@@ -468,7 +491,7 @@ void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
 
     QPainter painter(this);
     pPainter = &painter;
-    //painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform, false);
 
     // Выполнение задач отрисовки
     for (auto it = drawTasks.begin(); it != drawTasks.end(); ++it) {
@@ -481,6 +504,11 @@ void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
     }
 
     painter.end();
+}
+
+void areaDrawWidget::setRenderHint(bool smoothing)
+{
+    pPainter->setRenderHint(QPainter::Antialiasing, smoothing);
 }
 
 // Изменяем текущий инструмент

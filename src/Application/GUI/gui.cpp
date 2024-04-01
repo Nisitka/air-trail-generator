@@ -3,19 +3,17 @@
 #include <QApplication>
 
 GUI::GUI(QImage* geoMap,
-         Map* map_)
+         Map* map_): map(map_)
 {
     mainWin = new mainWindow;
 
-    // карта
-    map = map_;
-
     // Задача для работы с графической информацией
     visInfoWin = new visualInfoWidget(geoMap,
-                                      map_);
+                                      map);
 
     //
     areaDrawWidget* drawArea = visInfoWin->getDrawArea();
+    drawArea->setBlockSize(map->getLenBlock());
 
     // Инструменты для граф.области(какая область, приоритет-ключ задач отрисовки)
     toolPTrail  = new ToolPredTrail(drawArea, areaDrawWidget::predictTrail);
@@ -23,15 +21,18 @@ GUI::GUI(QImage* geoMap,
     toolRLS     = new ToolSetRLS(   drawArea, areaDrawWidget::setRLS);
     toolEditTer = new ToolEditMap(  drawArea, areaDrawWidget::editEarth);
     toolVisMap  = new ToolVisMap(   drawArea, areaDrawWidget::mapVis);
+    ToolRuler* toolRuler = new ToolRuler(drawArea, areaDrawWidget::Ruler);
+    ToolSquareTer* toolSqTer = new ToolSquareTer(drawArea, areaDrawWidget::squareTer);
 
     QVector <drawAreaTool*> predTools = {toolPTrail, toolPLine};
     drawArea->appendToolGroup(predTools, "Прогноз");
 
+    QVector <drawAreaTool*> rulersTools = {toolRuler, toolSqTer};
+    drawArea->appendToolGroup(rulersTools, "Измерения");
+
     drawArea->appendTool(toolRLS);
     drawArea->appendTool(toolEditTer);
     drawArea->appendTool(toolVisMap);
-    ToolRuler* toolRuler = new ToolRuler(drawArea, areaDrawWidget::Ruler);
-    drawArea->appendTool(toolRuler);
 
     //
     QObject::connect(visInfoWin, SIGNAL(saveMap_signal(QString)),

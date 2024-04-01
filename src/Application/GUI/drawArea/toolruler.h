@@ -22,7 +22,15 @@ private:
     //
     drawTask<ToolRuler>* dTask;
 
-    int Xmeas, Ymeas;
+    float distance(int Xa, int Ya, int Xb, int Yb);
+
+    bool checkDraw = false;
+
+    // Координаты измерения (в pix)
+    int Xb, Yb;       // начало
+    int Xmeas, Ymeas; // конец
+
+
 };
 
 #endif // TOOLRULER_H

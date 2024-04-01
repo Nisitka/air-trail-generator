@@ -41,5 +41,7 @@
         <file>resurs/ruler.png</file>
         <file>resurs/rulers.png</file>
         <file>resurs/triangle.png</file>
+        <file>resurs/polygon.png</file>
+        <file>resurs/square.png</file>
     </qresource>
 </RCC>
