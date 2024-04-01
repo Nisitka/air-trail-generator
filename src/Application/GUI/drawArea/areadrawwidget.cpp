@@ -409,6 +409,12 @@ QPixmap areaDrawWidget::getScreen()
     return pix;
 }
 
+void areaDrawWidget::toIdMapCoords(int &Xpix, int &Ypix)
+{
+    Xpix = (Xpix - Xo) / k;
+    Ypix = (Ypix - Yo) / k;
+}
+
 void areaDrawWidget::setPen(const QPen &pen)
 {
     pPainter->setPen(pen);
@@ -417,6 +423,25 @@ void areaDrawWidget::setPen(const QPen &pen)
 void areaDrawWidget::setBrush(const QBrush &b)
 {
     pPainter->setBrush(b);
+}
+
+void areaDrawWidget::drawPolygon(const QPolygon &polygon, unit uPoints)
+{
+    QPolygon p;
+
+    switch (uPoints) {
+    case idMap:
+        for (int i=0; i<polygon.size(); i++)
+        {
+            p.append(polygon[i] * k + QPoint(Xo, Yo));
+        }
+        break;
+    case pix:
+
+        break;
+    }
+
+    pPainter->drawPolygon(p);
 }
 
 void areaDrawWidget::drawLine(int x1, int y1, int x2, int y2, unit uPoints)
@@ -464,15 +489,28 @@ void areaDrawWidget::drawCircle(int x, int y, int R, unit uR, unit uCoords)
                           R, R);
 }
 
-void areaDrawWidget::drawText(const QRect& rect, const QString& text)
+void areaDrawWidget::drawText(const QRect& rect, const QString& text, unit uPoints)
 {
     QBrush brush = pPainter->brush();
 
     pPainter->setBrush(QBrush(QColor(255,255,255, 180)));
-    pPainter->drawRect(rect.x() - 3, rect.y() - 3,
-                       rect.width() + 3, rect.height() + 3);
 
-    pPainter->drawText(rect, text);
+    QRect r = rect;
+
+    switch (uPoints) {
+    case idMap:
+        r.setX(rect.x() * k + Xo);
+        r.setY(rect.y() * k + Yo);
+        break;
+    case pix:
+
+        break;
+    }
+
+    pPainter->drawRect(r.x() - 3, r.y() - 3,
+                       r.width() + 3, r.height() + 3);
+
+    pPainter->drawText(r, text);
 
     pPainter->setBrush(brush);
 }

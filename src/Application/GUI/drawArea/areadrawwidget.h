@@ -112,6 +112,9 @@ public:
     void drawDataNet();
     void drawQFunction();
 
+    //
+    void toIdMapCoords(int& Xpix, int& Ypix);
+
     // изображения для отображения
     enum showImages{geoMap, netData, QFunction};
 
@@ -138,7 +141,8 @@ public:
     void drawCircle(int x, int y, int R, unit uR = idMap, unit uCoords = idMap);
     void drawPixmap(int x, int y, int dX, int dY, const QPixmap& pix);
     void drawRect(int x1, int y1, int x2, int y2);
-    void drawText(const QRect& rect, const QString& text);
+    void drawText(const QRect& rect, const QString& text, unit uPoints = pix);
+    void drawPolygon(const QPolygon& polygon, unit uPoints = idMap);
 
     //
     void setRenderHint(bool smoothing = true);
