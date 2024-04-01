@@ -495,22 +495,27 @@ void areaDrawWidget::drawText(const QRect& rect, const QString& text, unit uPoin
 
     pPainter->setBrush(QBrush(QColor(255,255,255, 180)));
 
-    QRect r = rect;
-
     switch (uPoints) {
     case idMap:
-        r.setX(rect.x() * k + Xo);
-        r.setY(rect.y() * k + Yo);
-        break;
-    case pix:
+        {
+        int x = rect.x() * k + Xo;
+        int y = rect.y() * k + Yo;
 
+        QRect r(x, y, rect.width(), rect.height());
+
+        pPainter->drawRect(r.x() - 3, r.y() - 3,
+                           r.width() + 3, r.height() + 3);
+
+        pPainter->drawText(r, text);
+        break;
+        }
+    case pix:
+        pPainter->drawRect(rect.x() - 3, rect.y() - 3,
+                           rect.width() + 3, rect.height() + 3);
+
+        pPainter->drawText(rect, text);
         break;
     }
-
-    pPainter->drawRect(r.x() - 3, r.y() - 3,
-                       r.width() + 3, r.height() + 3);
-
-    pPainter->drawText(r, text);
 
     pPainter->setBrush(brush);
 }

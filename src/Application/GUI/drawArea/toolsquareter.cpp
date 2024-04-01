@@ -92,9 +92,11 @@ void ToolSquareTer::procDrawTask()
     if(countP > 2)
     {
         float S = squarePolygon();
+        QString sText = QString::number(S);
+        int wR = sText.size() * 7;
 
         //
-        drawArea->drawText(QRect(sumX/countP, sumY/countP, 40, 15), "dsfsd");
+        drawArea->drawText(QRect(sumX/countP, sumY/countP, wR, 14), sText, areaDrawWidget::idMap);
     }
 
     drawArea->setRenderHint(false);
@@ -102,7 +104,7 @@ void ToolSquareTer::procDrawTask()
 
 void ToolSquareTer::end()
 {
-    drawArea->delDrawTask(id);
+    //drawArea->delDrawTask(id);
 }
 
 float ToolSquareTer::squarePolygon()
