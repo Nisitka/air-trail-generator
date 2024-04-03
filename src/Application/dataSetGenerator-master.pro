@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui printsupport opengl
+QT       += core gui printsupport opengl sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -61,7 +61,8 @@ SOURCES += main.cpp\
     GUI/drawArea/toolsquareter.cpp \
     GUI/3DVisualization/map3dwindow.cpp \
     GUI/3DVisualization/mapopenglwidget.cpp \
-    GUI/drawArea/toolpredict.cpp
+    GUI/drawArea/toolpredict.cpp \
+    backend/dao.cpp
 
 HEADERS  += \
     core.h \
@@ -101,7 +102,8 @@ HEADERS  += \
     GUI/drawArea/toolsquareter.h \
     GUI/3DVisualization/map3dwindow.h \
     GUI/3DVisualization/mapopenglwidget.h \
-    GUI/drawArea/toolpredict.h
+    GUI/drawArea/toolpredict.h \
+    backend/dao.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \
