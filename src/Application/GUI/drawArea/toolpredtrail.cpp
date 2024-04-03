@@ -17,6 +17,8 @@ ToolPredTrail::ToolPredTrail(areaDrawWidget* area, int id, QObject *parent): dra
 
 void ToolPredTrail::init()
 {
+    selected = true;
+
     drawArea->setCursor(cursor);
 
     drawArea->appendDrawTask(areaDrawWidget::toolPredTrail, dTask);
@@ -51,6 +53,8 @@ void ToolPredTrail::clearTrail()
 
 void ToolPredTrail::procDrawTask()
 {
+    drawArea->setRenderHint();
+
     for (int i=0; i<trail.size() - 1; i++)
     {
         drawArea->setPen(QPen(QColor(255,0,128), 1));
@@ -63,7 +67,7 @@ void ToolPredTrail::procDrawTask()
     // отрисовываем последнию точку
     if (trail.size() > 0)
     {
-        drawArea->drawCircle(trail.last()->x(), trail.last()->y(), R);
+        drawArea->drawCircle(trail.last()->x(), trail.last()->y(), Rpred);
     }
 
     // отрисовывать начальную и конечные точкитраектории
@@ -81,11 +85,39 @@ void ToolPredTrail::procDrawTask()
 
     // Сами точки в виде кружков
     drawArea->drawCircle(fX, fY, 2, areaDrawWidget::pix);
+
     drawArea->drawCircle(bX, bY, 2, areaDrawWidget::pix);
+    // Зона прогноза в единичной итерации
+    drawArea->setPen(QPen(QColor(255,0,128)));
+    drawArea->drawCircle(bX, bY, Rpred);
 
     // Самый короткий путь пунктиром
     drawArea->setPen(QPen(QColor(255,0,128), 1, Qt::DashLine));
     drawArea->drawLine(bX, bY, fX, fY);
+
+    // Область прогноза в единичной итерации
+    if (selected)
+    {
+        drawArea->setPen(QPen(QColor(143, 32, 255)));
+        drawArea->drawCircle(xMouse, yMouse, Rpred, areaDrawWidget::idMap, areaDrawWidget::pix);
+    }
+
+    drawArea->setRenderHint(false);
+}
+
+void ToolPredTrail::wheelEvent(QWheelEvent *event)
+{
+    if (event->angleDelta().y() > 0)
+    {
+        Rpred++;
+    }
+    else
+    {
+        if (Rpred > 5) Rpred--;
+    }
+
+    setRpred(Rpred);
+    drawArea->repaint();
 }
 
 void ToolPredTrail::mousePress(QMouseEvent *mouse)
@@ -131,7 +163,7 @@ void ToolPredTrail::mousePress(QMouseEvent *mouse)
 
 void ToolPredTrail::mouseRelease(QMouseEvent *mouse)
 {
-
+    Q_UNUSED(mouse);
 }
 
 void ToolPredTrail::mouseMove(QMouseEvent *mouse)
@@ -139,9 +171,12 @@ void ToolPredTrail::mouseMove(QMouseEvent *mouse)
     // Текущие координаты
     xMouse = mouse->x();
     yMouse = mouse->y();
+
+    drawArea->repaint();
 }
 
 void ToolPredTrail::end()
 {
+    selected = false;
     //drawArea->delDrawTask(areaDrawWidget::toolPredTrail);
 }

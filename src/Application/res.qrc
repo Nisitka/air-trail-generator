@@ -43,5 +43,6 @@
         <file>resurs/triangle.png</file>
         <file>resurs/polygon.png</file>
         <file>resurs/square.png</file>
+        <file>resurs/tex.png</file>
     </qresource>
 </RCC>

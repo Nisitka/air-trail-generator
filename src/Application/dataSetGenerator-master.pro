@@ -38,15 +38,12 @@ SOURCES += main.cpp\
     GUI/designer.cpp \
     GUI/gui.cpp \
     GUI/mainwindow.cpp \
-    GUI/map3dwindow.cpp \
-    GUI/mapopenglwidget.cpp \
     GUI/optdronewindow.cpp \
     GUI/optmapgeneratorwindow.cpp \
     GUI/optrlswindow.cpp \
     GUI/paintermapimage.cpp \
     GUI/runwindow.cpp \
     GUI/visualinfowidget.cpp \
-    GUI/visualmap3d.cpp \
     GUI/drawArea/areadrawwidget.cpp \
     GUI/drawArea/drawareatool.cpp \
     GUI/drawArea/toolsetrls.cpp \
@@ -61,7 +58,10 @@ SOURCES += main.cpp\
     backend/trail.cpp \
     GUI/plotwidget.cpp \
     GUI/drawArea/toolruler.cpp \
-    GUI/drawArea/toolsquareter.cpp
+    GUI/drawArea/toolsquareter.cpp \
+    GUI/3DVisualization/map3dwindow.cpp \
+    GUI/3DVisualization/mapopenglwidget.cpp \
+    GUI/drawArea/toolpredict.cpp
 
 HEADERS  += \
     core.h \
@@ -77,15 +77,12 @@ HEADERS  += \
     GUI/designer.h \
     GUI/gui.h \
     GUI/mainwindow.h \
-    GUI/map3dwindow.h \
-    GUI/mapopenglwidget.h \
     GUI/optdronewindow.h \
     GUI/optmapgeneratorwindow.h \
     GUI/optrlswindow.h \
     GUI/paintermapimage.h \
     GUI/runwindow.h \
     GUI/visualinfowidget.h \
-    GUI/visualmap3d.h \
     GUI/drawArea/areadrawwidget.h \
     GUI/drawArea/drawareatool.h \
     GUI/drawArea/toolsetrls.h \
@@ -101,7 +98,10 @@ HEADERS  += \
     GUI/plotwidget.h \
     GUI/drawArea/drawtask.h \
     GUI/drawArea/toolruler.h \
-    GUI/drawArea/toolsquareter.h
+    GUI/drawArea/toolsquareter.h \
+    GUI/3DVisualization/map3dwindow.h \
+    GUI/3DVisualization/mapopenglwidget.h \
+    GUI/drawArea/toolpredict.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \

@@ -17,19 +17,21 @@ void Core::init_allObj()
     // Менеджер БПЛА
     mDrones = new managerDrones;
 
+    readyRunProgress(19);
+
     // генератор рельефа
     mapGenerator = new geoGenerator(map);
     objects.append(mapGenerator);
+    readyRunProgress(27);
 
     // калькулятор цвета рельефа
     mapPainter = new painterMapImage(map);
     QObject::connect(mapGenerator, SIGNAL(readyLayer(int)),
                      mapPainter,   SLOT(run()));
     objects.append(mapPainter);
+    readyRunProgress(36);
 
-    readyRunProgress(19);
-
-    // инициализация менеджера РЛС
+    // Инициализация менеджера РЛС
     mRLS = new managerRLS(map);
     // отрисовка
     QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(int,int,int,int)),
@@ -37,42 +39,32 @@ void Core::init_allObj()
     QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(QRect*, int)),
                      mapPainter, SLOT(runToRects(QRect*, int)));
     objects.append(mRLS);
+    readyRunProgress(46);
 
-    readyRunProgress(27);
 
     //
     trailBuilder = new builderTrailDrones(map);
     objects.append(trailBuilder);
-
-    readyRunProgress(36);
-
-
-    readyRunProgress(46);
-
-
     readyRunProgress(54);
 
     //
     gui = new GUI(mapPainter->getImage(),
                   map);
-
     readyRunProgress(65);
 }
 
 void Core::init_GUI()
 {
     // присоеденяем функционад генератора к GUI
-    gui->connectMapGenerator(mapGenerator);
-    //
-    gui->connectMapPainter(mapPainter);
-
+    gui->connectMapGenerator(mapGenerator);   
     readyRunProgress(72);
 
+    //
+    gui->connectMapPainter(mapPainter);
     readyRunProgress(79);
 
     //
     gui->connectMRLS(mRLS);
-
     readyRunProgress(83);
 
     //
@@ -113,10 +105,10 @@ void Core::run()
 
     init_buildThreads();
 
-    // открываем главное окно
-    gui->showMainWin();
-
     ready();
+
+    // Открываем главное окно
+    gui->showMainWin(); 
 }
 
 Core::~Core()

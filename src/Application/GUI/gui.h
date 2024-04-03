@@ -17,7 +17,7 @@
 #include "optdronewindow.h"
 #include "backend/managerdrones.h"
 #include "backend/managerrls.h"
-#include "map3dwindow.h"
+#include "3DVisualization/map3dwindow.h"
 
 class GUI
 {

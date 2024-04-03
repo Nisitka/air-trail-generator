@@ -57,6 +57,9 @@ protected:
     // Ключ  инструмента в drawArea
     int id;
 
+    // Выбран ли инструмент
+    bool selected;
+
     // Кнопки
     static int lastKeyMouse;
     static int statMouse;

@@ -1,11 +1,11 @@
 #include "map3dwindow.h"
 #include "ui_map3dwindow.h"
 
-#include "designer.h"
+#include "GUI/designer.h"
 
 #include <QDebug>
 
-map3DWindow::map3DWindow(Map* map_, QWidget *parent) :
+map3DWindow::map3DWindow(Map* map_, QImage* imgTex, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::map3DWindow)
 {
@@ -14,6 +14,7 @@ map3DWindow::map3DWindow(Map* map_, QWidget *parent) :
     ui->setupUi(this);
 
     visMap = new mapOpenGLWidget(map,
+                                 imgTex,
                                  ui->frameOXLabel, ui->frameOYLabel, ui->frameXYLabel);
 
     //ui->horizontalLayout_3->addWidget(visMap);

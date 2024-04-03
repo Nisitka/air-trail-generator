@@ -30,7 +30,8 @@ public slots:
 
 public:
     explicit mapOpenGLWidget(Map* map,
-                             QLabel* wFrameOX, QLabel* wFrameOY, QLabel* wFrameXY,
+                             QImage* imgTex,
+                             QLabel* wFrameOX, QLabel* wFrameOY, QLabel* wFrameXY,               
                              QWidget *parent = 0);
 
     void updatePosRLS(QList <QVector3D>* pRLS);
@@ -59,6 +60,8 @@ public:
     void updateTerrain();
 
 private:
+
+    QImage* currentTexture; // Текстура
 
     //
     QVector <QVector3D> trail;

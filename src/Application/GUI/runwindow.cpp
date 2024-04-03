@@ -15,7 +15,7 @@ runWindow::runWindow(QApplication* app_, const QString& dirFileImg)
     app->processEvents();
 }
 
-void runWindow::updateProgress(int progress)
+void runWindow::updateProgress(int progress, const QString& textData)
 {
     app->processEvents();
 

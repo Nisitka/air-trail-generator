@@ -67,7 +67,7 @@ GUI::GUI(QImage* geoMap,
                      toolPTrail, SLOT(startPredictTrail()));
 
     //
-    map3DWin = new map3DWindow(map);
+    map3DWin = new map3DWindow(map, geoMap);
     mainWin->addTask(map3DWin, QPixmap(":/resurs/icon3D"),
                      "3D", "Детальная визуализация рельефа");
 }
@@ -79,6 +79,12 @@ void GUI::connectMDrones(managerDrones* mDrones)
 
 void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
 {
+    // Инструменты
+    QObject::connect(toolPLine,    SIGNAL(setRpred(int)),
+                     builderTrail, SLOT(setRpredict(int)));
+    QObject::connect(toolPTrail,   SIGNAL(setRpred(int)),
+                     builderTrail, SLOT(setRpredict(int)));
+
     //
     QObject::connect(droneWin,     SIGNAL(runPredictTrail(int,int,int,int)),
                      builderTrail, SLOT(startPredictTrail(int,int,int,int)));

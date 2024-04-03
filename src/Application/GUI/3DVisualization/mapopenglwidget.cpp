@@ -11,9 +11,13 @@
 
 #include <QPicture>
 #include <QPainter>
+#include <QRgb>
+
+#include <QGLWidget>
 
 mapOpenGLWidget::mapOpenGLWidget(Map* map,
-                                 QLabel* wFrameOX, QLabel* wFrameOY, QLabel* wFrameXY,
+                                 QImage* imgTex,
+                                 QLabel* wFrameOX, QLabel* wFrameOY, QLabel* wFrameXY,   
                                  QWidget *parent):
     map(map), QOpenGLWidget(parent),
     wFrameOX(wFrameOX), wFrameOY(wFrameOY), wFrameXY(wFrameXY),
@@ -23,6 +27,8 @@ mapOpenGLWidget::mapOpenGLWidget(Map* map,
     angleOZ(0), lastAngleOZ(1.0)
 {
     winWidth=300;winHeight=200;
+
+    currentTexture = imgTex;
 
     Hmap = map->getMaxH() / map->getLenBlock();
     //qDebug() << Hmap;
@@ -329,8 +335,6 @@ void mapOpenGLWidget::updateVertBoards()
 
 void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL)
 {
-    qDebug() << "initTer";
-
     //
     idXo = idXo_;
     idYo = idYo_;
@@ -508,6 +512,26 @@ void mapOpenGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Screen и глубина кэша
 
+    /*/// !!!!!!!!!!!!!!!!!!!!!!!!!!
+    //
+    GLuint textureID;
+    glEnable(GL_TEXTURE_2D);
+    QImage texImg;
+    glGenTextures(1, &textureID);
+    texImg = QGLWidget::convertToGLFormat(*currentTexture);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    //glTexSubImage2D();
+    //glTexImage2D
+    glTexImage2D(GL_TEXTURE_2D, 0, 3,
+                 (GLsizei)texImg.width(),
+                 (GLsizei)texImg.height(),
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, texImg.bits());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    /// !!!!!!!!*/
+
     lastAngle -= angle;
     lastAngleOZ -= angleOZ;
 
@@ -522,7 +546,7 @@ void mapOpenGLWidget::paintGL()
 
     H_SCALE = MAP_SCALE * 0.2;
 
-    float r,g,b;
+    QRgb color;
     int h;
     for (int idX = 0; idX < countX - 1; idX++)
     {
@@ -530,23 +554,34 @@ void mapOpenGLWidget::paintGL()
         for (int idY = 0; idY < countY - 1; idY++)
         {
             h = heights[idX][idY];
-            colorHeight(h, r, g, b);
-            glColor3f(r, g, b); addVertex(idXo + idX, idYo + idY, h);
+            color = currentTexture->pixel(idX, idY);
+            glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+            addVertex(idXo + idX, idYo + idY, h);
 
             h = heights[idX][idY+1];
-            colorHeight(h, r, g, b);
-            glColor3f(r, g, b); addVertex(idXo + idX, idYo + idY + 1, h);
+            color = currentTexture->pixel(idX, idY + 1);
+            glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+            addVertex(idXo + idX, idYo + idY + 1, h);
 
             h = heights[idX+1][idY];
-            colorHeight(h, r, g, b);
-            glColor3f(r, g, b); addVertex(idXo + idX+1, idYo + idY, h);
+            color = currentTexture->pixel(idX+1, idY);
+            glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+            addVertex(idXo + idX+1, idYo + idY, h);
 
             h = heights[idX+1][idY+1];
-            colorHeight(h, r, g, b);
-            glColor3f(r, g, b); addVertex(idXo + idX+1, idYo + idY + 1, h);
+            color = currentTexture->pixel(idX+1, idY+1);
+            glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+            addVertex(idXo + idX+1, idYo + idY + 1, h);
         }
         glEnd();
     }
+
+    /*/// !!!!!
+    // Удаление текстуры
+    glBindTexture(GL_TEXTURE_2D, 0); // Отвязка активной текстуры
+    glDeleteTextures(1, &textureID);
+    glDisable(GL_TEXTURE_2D);
+    /// !!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
     glBegin(GL_LINES);
     glColor3f(0.39, 0.05, 0.67); // цвет линий

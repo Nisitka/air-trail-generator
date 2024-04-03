@@ -26,18 +26,18 @@ void ToolPredRect::init()
 
 void ToolPredRect::procDrawTask()
 {
-    //drawArea->setRenderHint();
+    drawArea->setRenderHint();
 
     // Установленная зона прогноза в единичной итерации
     drawArea->setPen(QPen(QColor(255,0,128)));
-    drawArea->drawCircle(idXoPredict, idYoPredict, R);
+    drawArea->drawCircle(idXoPredict, idYoPredict, Rpred);
 
     // Метка БПЛА
     drawArea->drawCircle(idXRect, idYRect, 2, areaDrawWidget::pix);
 
     // Область прогноза в единичной итерации
     drawArea->setPen(QPen(QColor(143, 32, 255)));
-    drawArea->drawCircle(xMouse, yMouse, R, areaDrawWidget::idMap, areaDrawWidget::pix);
+    drawArea->drawCircle(xMouse, yMouse, Rpred, areaDrawWidget::idMap, areaDrawWidget::pix);
 
     // Линия прогноза
     if (drawLineRect)
@@ -45,7 +45,7 @@ void ToolPredRect::procDrawTask()
         /* ... */
     }
 
-    //drawArea->setRenderHint(false);
+    drawArea->setRenderHint(false);
 }
 
 void ToolPredRect::mousePress(QMouseEvent *mouse)
@@ -83,7 +83,22 @@ void ToolPredRect::mousePress(QMouseEvent *mouse)
 
 void ToolPredRect::mouseRelease(QMouseEvent *mouse)
 {
+    Q_UNUSED(mouse);
+}
 
+void ToolPredRect::wheelEvent(QWheelEvent *event)
+{
+    if (event->angleDelta().y() > 0)
+    {
+        Rpred++;
+    }
+    else
+    {
+        if (Rpred > 5) Rpred--;
+    }
+
+    setRpred(Rpred);
+    drawArea->repaint();
 }
 
 void ToolPredRect::mouseMove(QMouseEvent *mouse)

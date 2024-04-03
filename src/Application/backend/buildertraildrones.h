@@ -29,6 +29,9 @@ public slots:
     void startPredictTrail(int idXa, int idYa,  // Нач. точка
                            int idXb, int idYb); // Кон. точка
 
+    // Изменить радиус прогноза
+    void setRpredict(int countDiscretes);
+
 public:
     builderTrailDrones(Map* map);
 

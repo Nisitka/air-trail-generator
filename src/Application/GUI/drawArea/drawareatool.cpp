@@ -23,6 +23,9 @@ drawAreaTool::drawAreaTool(areaDrawWidget* area, int id, QObject *parent): drawA
 
     // По умолчанию стандартный курсор для всех инструментов
     cursor = Qt::ArrowCursor;
+
+    //
+    selected = false;
 }
 
 int drawAreaTool::getId() const

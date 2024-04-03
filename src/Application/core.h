@@ -23,7 +23,7 @@ class Core : public QObject
     Q_OBJECT
 signals:
     // готовность приложения к работе с пользователем
-    void readyRunProgress(int p); // проценты
+    void readyRunProgress(int p, const QString& textData = ""); // проценты
 
     // готово к работе
     void ready();

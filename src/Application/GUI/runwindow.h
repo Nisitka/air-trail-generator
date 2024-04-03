@@ -14,8 +14,9 @@ class runWindow : public QObject
 signals:
 
 public slots:
-    // обновить значение полоски прогресса
-    void updateProgress(int p); // проценты
+    // Обновить значение полоски прогресса
+    void updateProgress(int p,                    // Проценты готовности
+                        const QString& textData); // Что загружается в тексте
 
     // закрыть окно
     void close();

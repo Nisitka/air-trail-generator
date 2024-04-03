@@ -2,13 +2,17 @@
 #define TOOLPREDTRAIL_H
 
 #include "GUI/drawArea/drawareatool.h"
+#include "toolpredict.h"
 
-class ToolPredTrail: public drawAreaTool
+class ToolPredTrail: public drawAreaTool, public ToolPredict
 {
     Q_OBJECT
 signals:
     //
     void sendPointsTrail(int idXa, int idYa, int idXb, int idYb);
+
+    // Изменить радиус прогноза
+    void setRpred(int countDiscretes);
 
 public slots:
 
@@ -25,6 +29,8 @@ public:
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;
     void mouseMove(QMouseEvent* mouse) override;
+
+    void wheelEvent(QWheelEvent* event) override;
 
     void procDrawTask() override;
 
@@ -46,9 +52,6 @@ private:
     // иконки оконечных точек
     QPixmap* pixBeginDrone;  // начала
     QPixmap* pixFinishDrone; // конца
-
-    // Радиус прогноза в итерации
-    int R = 50;
 };
 
 #endif // TOOLPREDTRAIL_H

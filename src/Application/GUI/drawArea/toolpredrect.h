@@ -2,9 +2,15 @@
 #define TOOLPREDRECT_H
 
 #include "GUI/drawArea/drawareatool.h"
+#include "toolpredict.h"
 
-class ToolPredRect: public drawAreaTool
+class ToolPredRect: public drawAreaTool, public ToolPredict
 {
+    Q_OBJECT
+signals:
+    // Изменить радиус прогноза
+    void setRpred(int countDiscretes);
+
 public:
     ToolPredRect(areaDrawWidget*, int id);
 
@@ -12,15 +18,14 @@ public:
     void mouseRelease(QMouseEvent* mouse) override;
     void mouseMove(QMouseEvent* mouse) override;
 
+    void wheelEvent(QWheelEvent* event) override;
+
     void procDrawTask() override;
 
     void init() override;
     void end() override;
 
 private:
-    //
-    int R = 50;
-
     // Индексы левого верхнего угла квадрата прогноза
     int idXoPredict;
     int idYoPredict;

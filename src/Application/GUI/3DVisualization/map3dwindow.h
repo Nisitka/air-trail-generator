@@ -4,8 +4,6 @@
 #include <QWidget>
 #include <QVector3D>
 
-
-#include "visualmap3d.h"
 #include "backend/map.h"
 #include "mapopenglwidget.h"
 
@@ -31,7 +29,7 @@ public slots:
     void updatePointsInterZD(QVector <QVector <QVector <QVector3D>>>* pZD, QList <QVector3D>* posRLS);
 
 public:
-    explicit map3DWindow(Map* map_, QWidget *parent = 0);
+    explicit map3DWindow(Map* map_, QImage* imgTex, QWidget *parent = 0);
     ~map3DWindow();
 
     mapOpenGLWidget* getGraphicsWidget();

@@ -21,8 +21,15 @@ builderTrailDrones::builderTrailDrones(Map* map): map(map)
     startPredictTrail(5, 5, 390, 190);
 }
 
+void builderTrailDrones::setRpredict(int countDiscretes)
+{
+    longRay = (double)countDiscretes * map->getLenBlock();
+}
+
 void builderTrailDrones::startPredictTrail(int idXa, int idYa, int idXb, int idYb)
 {
+    buildZD();
+
     Wmap = map->getWidth();
     Lmap = map->getLength();
     Hmap = map->getCountLayers();
@@ -164,6 +171,22 @@ double builderTrailDrones::getDistance(int Xa, int Ya, int Xb, int Yb)
 
 void builderTrailDrones::buildZD()
 {
+    if (ZD.size() > 0)
+    {
+        for (int i=0; i<countHorPart; i++)
+        {
+            for (int j=0; j<countVerRay; j++)
+            {
+                delete ZD.at(i)->at(j);
+            }
+
+            ZD[i]->clear();
+            delete ZD[i];
+        }
+    }
+    ZD.clear();
+
+    /*       */
     double dE = (double) (2 * Pi) / countHorPart;
     double angleE;
 

@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
 
     Core* luckyWay = new Core;
 
-    QObject::connect(luckyWay,  SIGNAL(readyRunProgress(int)),
-                     &startWin, SLOT(updateProgress(int)));
+    QObject::connect(luckyWay,  SIGNAL(readyRunProgress(int, const QString&)),
+                     &startWin, SLOT(updateProgress(int, const QString&)));
 
     QObject::connect(luckyWay,  SIGNAL(ready()),
                      &startWin, SLOT(close()));
@@ -22,5 +22,3 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
-
-
