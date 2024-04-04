@@ -12,9 +12,8 @@ builderTrailDrones::builderTrailDrones(Map* map): map(map)
     countVerRay  = 180;
     longRay = 1000.0;
 
-    //qDebug() << getDistance(0, 0, 3, 4) << "distance";
-
-    buildZD();
+    isEditOptPred = true;
+    setOptPredict();
 
     trail = nullptr;
 
@@ -24,11 +23,36 @@ builderTrailDrones::builderTrailDrones(Map* map): map(map)
 void builderTrailDrones::setRpredict(int countDiscretes)
 {
     longRay = (double)countDiscretes * map->getLenBlock();
+
+    isEditOptPred = true;
+}
+
+void builderTrailDrones::setOptPredict()
+{
+    startSetOptPredict();
+
+    buildZD();
+
+    isEditOptPred = false;
+    finishSetOptPredict();
+}
+
+void builderTrailDrones::runPredictRect(int idXa, int idYa, int idZa, int idXb, int idYb, int idZb)
+{
+    // Обновляем настройки торлько если они изменились
+    if (isEditOptPred)
+        setOptPredict();
+
+    int predX, predY, predZ;
+    predictFromRect(idXa, idYa, idZa, idXb, idYb, idZb, predX, predY, predZ);
+
+    finishPredOnlyRect(predX, predY, predZ);
 }
 
 void builderTrailDrones::startPredictTrail(int idXa, int idYa, int idXb, int idYb)
 {
-    buildZD();
+    if (isEditOptPred)
+        setOptPredict();
 
     Wmap = map->getWidth();
     Lmap = map->getLength();
@@ -50,10 +74,9 @@ void builderTrailDrones::startPredictTrail(int idXa, int idYa, int idXb, int idY
     //double l = map->getLenBlock();
 
     while (getDistance(curX, curY, idXb, idYb) > 10) {
-        predictFromRect();
+        predictFromRect(curX, curY, curZ, Xb, Yb, -1, curX, curY, curZ);
         trail->addPoint(curX, curY, curZ);
 
-        //qDebug() << curX << curY << curZ;
         nextPointTrail(curX, curY, curZ);
     }
 
@@ -65,17 +88,20 @@ void builderTrailDrones::startPredictTrail(int idXa, int idYa, int idXb, int idY
     nextPointTrail(curX, curY, curZ);
 }
 
-void builderTrailDrones::predictFromRect()
+void builderTrailDrones::predictFromRect(int  idXa,   int idYa,    int idZa,
+                                         int  idXb,   int idYb,    int idZb,
+                                         int& idXres, int& idYres, int& idZres)
 {
     // Лучшая след. точка в зоне прогноза
-    int Xp = curX;
-    int Yp = curY;
-    int Zp = curZ;
+    int Xp = idXa;
+    int Yp = idYa;
+    int Zp = idZa;
 
     // Лучшее оставшееся расстояние до финиша
-    double minD = getDistance(Xp, Yp, Xb, Yb);
+    double minD = getDistance(Xp, Yp, idXb, idYb);
 
     // По вертикальным сегментам
+    double D;
     for (int i=0; i<countHorPart; i++)
     {
         for (int j=0; j<countVerRay; j++)
@@ -146,7 +172,7 @@ void builderTrailDrones::predictFromRect()
             // Если луч прогноза дошел до конца
             if (k == countDelta)
             {
-                double D = getDistance(idX, idY, Xb, Yb);
+                D = getDistance(idX, idY, Xb, Yb);
                 //
                 if (D < minD)
                 {
@@ -159,9 +185,9 @@ void builderTrailDrones::predictFromRect()
         }
     }
 
-    curX = Xp;
-    curY = Yp;
-    curZ = Zp;
+    idXres = Xp;
+    idYres = Yp;
+    idZres = Zp;
 }
 
 double builderTrailDrones::getDistance(int Xa, int Ya, int Xb, int Yb)
@@ -170,21 +196,35 @@ double builderTrailDrones::getDistance(int Xa, int Ya, int Xb, int Yb)
 }
 
 void builderTrailDrones::buildZD()
-{
+{   
+    int numOper = 0;
+    int dPart;
+
     if (ZD.size() > 0)
     {
-        for (int i=0; i<countHorPart; i++)
+        int cDelZD = ZD.size();
+        dPart = countHorPart + cDelZD;
+
+        for (int i=0; i<cDelZD; i++)
         {
-            for (int j=0; j<countVerRay; j++)
+            int cVerRay = ZD.at(i)->size();
+            for (int j=0; j<cVerRay; j++)
             {
                 delete ZD.at(i)->at(j);
             }
 
             ZD[i]->clear();
             delete ZD[i];
+
+            numOper++;
+            procSetOptPred((double)numOper/dPart * 100);
         }
+        ZD.clear();
     }
-    ZD.clear();
+    else
+    {
+        dPart = countHorPart;
+    }
 
     /*       */
     double dE = (double) (2 * Pi) / countHorPart;
@@ -205,5 +245,8 @@ void builderTrailDrones::buildZD()
             //qDebug() << angleB << angleE;
             ZD.last()->append(new Ray(longRay, angleB, angleE));
         }
+
+        numOper++;
+        procSetOptPred((double)numOper/dPart * 100);
     }
 }

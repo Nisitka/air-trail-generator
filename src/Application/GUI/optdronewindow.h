@@ -20,6 +20,11 @@ public slots:
     void setPredictPoints(int idXa, int idYa,
                           int idXb, int idYb);
 
+    //
+    void startSetOptPredict();
+    void finishSetOptPredict();
+    void updateProgSetOptPred(int percent);
+
 public:
     explicit optDroneWindow(QWidget *parent = 0);
     ~optDroneWindow();

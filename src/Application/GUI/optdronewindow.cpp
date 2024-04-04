@@ -14,6 +14,9 @@ optDroneWindow::optDroneWindow(QWidget *parent) :
     connect(ui->runPredictTrailButton, SIGNAL(clicked(bool)),
             this,                      SLOT(startPredictTrail()));
 
+    ui->predictProgressBar->hide();
+    ui->predictProgressBar->setMaximum(100);
+
     setDesine();
 }
 
@@ -32,6 +35,22 @@ void optDroneWindow::startPredictTrail()
                     ui->XbSpinBox->value(), ui->YbSpinBox->value());
 }
 
+void optDroneWindow::startSetOptPredict()
+{
+    ui->predictProgressBar->setValue(0);
+    ui->predictProgressBar->show();
+}
+
+void optDroneWindow::updateProgSetOptPred(int percent)
+{
+    ui->predictProgressBar->setValue(percent);
+}
+
+void optDroneWindow::finishSetOptPredict()
+{
+    ui->predictProgressBar->hide();
+}
+
 void optDroneWindow::setDesine()
 {
     //
@@ -43,10 +62,15 @@ void optDroneWindow::setDesine()
     Designer::setGroupBox(ui->TPointAGBox);
     Designer::setGroupBox(ui->TPointBGBox);
 
+    //
+    Designer::setButton(ui->runPredictTrailButton);
 
     //
     Designer::setTabWidget(ui->addDroneTabWidget);
     Designer::setTabWidget(ui->curDroneTabWidget);
+
+    //
+    Designer::setProgressBar(ui->predictProgressBar);
 }
 
 optDroneWindow::~optDroneWindow()

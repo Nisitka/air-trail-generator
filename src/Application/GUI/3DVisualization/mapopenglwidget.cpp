@@ -760,8 +760,6 @@ void mapOpenGLWidget::addVertex(int idX, int idY, int idZ)
 
 void mapOpenGLWidget::setFrameOX(float partW)
 {
-
-
     idFrameY = round((float) (countX-1) * partW);
 
     int& W = countY;

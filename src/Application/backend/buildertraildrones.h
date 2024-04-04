@@ -15,17 +15,25 @@ class builderTrailDrones : public QObject
 {
     Q_OBJECT
 signals:  
-    // Начало установок пар-ов моделирования
-    void startSetOptPredict(int countIter);
 
-    // Начало прогноза в областри
-    void startPredictArea(int countIter); // кол-во итераций
+    // Установка пар-ов моделирования
+    void startSetOptPredict();
+    void procSetOptPred(int percent);    // на сколько настройки уже применены
+    void finishSetOptPredict();
 
     // Уведомление об прогнозе очередной точки
     void nextPointTrail(int idX, int idY, int idH);
 
+    //
+    void finishPredOnlyRect(int idXpred, int idYpred, int idZpred);
+
 public slots:
-    // начать прогноз траектории от точки до точки
+
+    // Запустить прогноз только в области
+    void runPredictRect(int idXa, int idYa, int idZa,
+                        int idXb, int idYb, int idZb);
+
+    // Начать прогноз траектории от точки до точки
     void startPredictTrail(int idXa, int idYa,  // Нач. точка
                            int idXb, int idYb); // Кон. точка
 
@@ -42,16 +50,22 @@ private slots:
 
 
 private:
+
+    void setOptPredict();
+
     //
     bool estimRay();
 
-    //
-    void predictFromRect();
+    // Прогноз в одной области
+    void predictFromRect(int idXa, int idYa, int idZa,
+                         int idXb, int idYb, int idZb,
+                         int& idXres, int& idYres, int& idZres);
 
     // Лучи прогноза (по вертикальным долькам)
     QVector <QVector <Ray*>*> ZD; // скелет из лучей
 
     void buildZD();
+    bool isEditOptPred;
     double Pi = 3.14159265;
 
     int Wmap;

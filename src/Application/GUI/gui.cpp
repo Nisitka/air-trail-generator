@@ -96,6 +96,14 @@ void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
                      map3DWin->getGraphicsWidget(), SLOT(startPredictTrail()));
     QObject::connect(builderTrail,                  SIGNAL(nextPointTrail(int,int,int)),
                      map3DWin->getGraphicsWidget(), SLOT(addTrailPoint(int,int,int)));
+
+    //
+    QObject::connect(builderTrail, SIGNAL(startSetOptPredict()),
+                     droneWin,     SLOT(startSetOptPredict()));
+    QObject::connect(builderTrail, SIGNAL(finishSetOptPredict()),
+                     droneWin,     SLOT(finishSetOptPredict()));
+    QObject::connect(builderTrail, SIGNAL(procSetOptPred(int)),
+                     droneWin,     SLOT(updateProgSetOptPred(int)));
 }
 
 void GUI::connectMapGenerator(geoGenerator* mapBuilder)
