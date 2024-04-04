@@ -32,7 +32,6 @@ mapOpenGLWidget::mapOpenGLWidget(Map* map,
 
     Hmap = map->getMaxH() / map->getLenBlock();
     //qDebug() << Hmap;
-
     //
     wFrameOX->setScaledContents(true);
     wFrameOY->setScaledContents(true);
