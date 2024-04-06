@@ -44,5 +44,7 @@
         <file>resurs/polygon.png</file>
         <file>resurs/square.png</file>
         <file>resurs/tex.png</file>
+        <file>resurs/backgDemo2.png</file>
+        <file>resurs/backgDemo3.png</file>
     </qresource>
 </RCC>

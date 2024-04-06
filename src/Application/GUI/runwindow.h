@@ -29,11 +29,11 @@ public:
 private:
     // Параметры полоски прогресса (относительно изображения)
     // левый верхний угол
-    const int PROGRESS_X_PX = 339;
-    const int PROGRESS_Y_PX = 449;
+    const int PROGRESS_X_PX = 390;
+    const int PROGRESS_Y_PX = 550;
     // ширина высота
-    const int PROGRESS_W_PX = 330;
-    const int PROGRESS_H_PX = 26;
+    const int PROGRESS_W_PX = 800;
+    const int PROGRESS_H_PX = 12;
 
     // изображение окна загрузки
     QPixmap* pix;

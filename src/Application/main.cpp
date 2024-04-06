@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     QApplication::setAttribute(Qt::AA_ForceRasterWidgets, false);
 
-    runWindow startWin(&a, ":/resurs/startWindow");
+    runWindow startWin(&a, ":/resurs/backgDemo3");
 
     Core* luckyWay = new Core;
 
