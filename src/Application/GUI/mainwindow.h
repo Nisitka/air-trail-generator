@@ -9,6 +9,8 @@
 #include "visualinfowidget.h"
 #include "optmapgeneratorwindow.h"
 
+#include "functionwindow.h"
+
 namespace Ui {
 class mainWindow;
 }

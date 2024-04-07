@@ -53,9 +53,11 @@ void mainWindow::addTask(QWidget *widget,
     dock->setWidget(widget);
     addDockWidget(showPosition, dock);
 
+    functionWindow* funcWin = new functionWindow(dock);
+
     // создаем кнопку для вызова задачи
-    toolBar->addAction(pix,  nameButton, // соеденяем его с кнопкой вызова
-                       dock, SLOT(show()));
+    toolBar->addAction(pix,     nameButton, // соеденяем его с кнопкой вызова
+                       funcWin, SLOT(editShowStatus()));
 
     dock->close(); // сразу закрываем чтобы не мешался
 }

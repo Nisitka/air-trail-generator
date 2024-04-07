@@ -86,7 +86,7 @@ void GUI::connectMDrones(managerDrones* mDrones)
 
 void GUI::connectDataBase(DAO *database)
 {
-    QObject::connect(daoWin, SIGNAL(connection(QString)),
+    QObject::connect(daoWin,   SIGNAL(connection(QString)),
                      database, SLOT(test_query(QString))
             );
     QObject::connect(database, SIGNAL(update_status(bool)),
