@@ -9,6 +9,8 @@ DAO::DAO()
 
 bool DAO::test_query(QString name)
 {
+    qDebug() << "test query!";
+
     db = QSqlDatabase::addDatabase("QODBC3");
     db.setDatabaseName(QString("DRIVER={SQL SERVER}; SERVER=127.1.0.0; DATABASE="+ name +"; Trusted_Connection=yes;"));
     if(db.open())
@@ -24,11 +26,11 @@ bool DAO::test_query(QString name)
 
             }
         }
-    }
 
-    db.close();
-    db = QSqlDatabase();
-    db.removeDatabase(QSqlDatabase::defaultConnection);
+        db.close();
+        db = QSqlDatabase();
+        db.removeDatabase(QSqlDatabase::defaultConnection);
+    }
 
     return 1;
 }

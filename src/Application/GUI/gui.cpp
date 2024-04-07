@@ -73,15 +73,22 @@ GUI::GUI(QImage* geoMap,
 
 
     //
-    dao = new DataAccessObjectWindow;
+    daoWin = new DataAccessObjectWindow;
     //
-    mainWin->addTask(dao, QPixmap(":/resurs/base1"),
+    mainWin->addTask(daoWin, QPixmap(":/resurs/base1"),
                      "База данных", "Радиолокационная станция");
 }
 
 void GUI::connectMDrones(managerDrones* mDrones)
 {
 
+}
+
+void GUI::connectDataBase(DAO *database)
+{
+    QObject::connect(daoWin, SIGNAL(connection(QString)),
+                     database, SLOT(test_query(QString))
+            );
 }
 
 void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)

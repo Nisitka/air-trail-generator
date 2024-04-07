@@ -54,6 +54,9 @@ void Core::init_allObj()
                   map);
 
     readyRunProgress(65, "Инициализация интерфейса...");
+
+    database = new DAO;
+    objects.append(database);
 }
 
 void Core::init_GUI()
@@ -76,6 +79,8 @@ void Core::init_GUI()
     gui->connectMDrones(mDrones);
 
     readyRunProgress(90);
+
+    gui->connectDataBase(database);
 }
 
 void Core::init_buildThreads()

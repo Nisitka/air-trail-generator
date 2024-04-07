@@ -24,8 +24,6 @@ public:
 
 private:
 
-    DAO *dao;
-
     Ui::DataAccessObjectWindow *ui;
 };
 

@@ -12,14 +12,8 @@ DataAccessObjectWindow::DataAccessObjectWindow(QWidget *parent) :
     ui->infoLabel->hide();
     ui->errorLabel->hide();
 
-    dao = new DAO;
-
     connect(ui->connectButton, SIGNAL(clicked()),
             SLOT(connect_dao())
-            );
-
-    connect(this, SIGNAL(connection(QString)),
-            dao, SLOT(test_query(QString))
             );
 }
 

@@ -19,6 +19,7 @@
 #include "backend/managerrls.h"
 #include "3DVisualization/map3dwindow.h"
 #include "dataaccessobjectwindow.h"
+#include "backend/dao.h"
 
 
 class GUI
@@ -41,6 +42,9 @@ public:
 
     //
     void connectMDrones(managerDrones*);
+
+    //
+    void connectDataBase(DAO* database);
 
     void showMainWin();
 
@@ -67,7 +71,7 @@ private:
     map3DWindow* map3DWin;
 
     // окно для работы с БД
-    DataAccessObjectWindow* dao;
+    DataAccessObjectWindow* daoWin;
 
     // Инструменты
     ToolPredTrail* toolPTrail;
