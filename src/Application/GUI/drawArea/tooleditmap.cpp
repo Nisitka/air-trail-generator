@@ -68,13 +68,17 @@ void ToolEditMap::editEarth()
         break;
     }
 
-    drawArea->setCursor(cursor);
+    setCursor();
 }
 
 void ToolEditMap::mouseRelease(QMouseEvent *mouse)
 {
+    Q_UNUSED(mouse);
+
     statMouse = release;
-    drawArea->setCursor(QCursor(moveCurPixmap.scaled(R,R)));
+
+    cursor = QCursor(moveCurPixmap.scaled(R,R));
+    setCursor();
 
     drawArea->updateSignals();
 }
@@ -113,7 +117,8 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
     }
     else
     {
-        drawArea->setCursor(QCursor(moveCurPixmap.scaled(R,R)));
+        cursor = QCursor(moveCurPixmap.scaled(R,R));
+        drawArea->setCursor(cursor);
     }
 }
 
@@ -135,7 +140,8 @@ void ToolEditMap::wheelEvent(QWheelEvent *event)
     }
 
     updateSizeCursor();
-    drawArea->setCursor(QCursor(moveCurPixmap.scaled(R,R)));
+    cursor = QCursor(moveCurPixmap.scaled(R,R));
+    drawArea->setCursor(cursor);
 }
 
 void ToolEditMap::end()

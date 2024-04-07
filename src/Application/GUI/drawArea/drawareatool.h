@@ -37,6 +37,8 @@ public:
 
     virtual void wheelEvent(QWheelEvent *event);
 
+    virtual void setCursor();
+
     virtual void init();
     virtual void end() = 0;
 

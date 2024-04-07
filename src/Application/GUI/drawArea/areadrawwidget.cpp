@@ -76,6 +76,8 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
                         "   background-color: rgb(255,255,255);"
                         "   border: 2px solid gray;"
                         "};");
+
+    isCustomCursor = true;
 }
 
 void areaDrawWidget::setBlockSize(int size)
@@ -590,6 +592,8 @@ void areaDrawWidget::setCoordDrawArea(int Xo_, int Yo_)
 
 bool areaDrawWidget::mouseFromArea(QMouseEvent *mouseEvent)
 {
+    bool inArea;
+
     int xPressMouse = mouseEvent->x();
     int yPressMouse = mouseEvent->y();
 
@@ -598,10 +602,22 @@ bool areaDrawWidget::mouseFromArea(QMouseEvent *mouseEvent)
     dY = yPressMouse - Yo;
 
     // Условия
-    return dX < wightPixMap &&
-           dY < heightPixMap &&
-           dX > 0 &&
-           dY > 0;
+    inArea = dX < wightPixMap &&
+             dY < heightPixMap &&
+             dX > 0 &&
+             dY > 0;
+
+    if (inArea)
+    {   //
+        if (isCustomCursor)
+            Tool->setCursor();
+    }
+    else
+    {
+         this->setCursor(Qt::CustomCursor);
+    }
+
+    return inArea;
 }
 
 void areaDrawWidget::mousePressEvent(QMouseEvent *mouseEvent)
@@ -634,10 +650,6 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
         // Обновляем координаты курсора
         updateCoord(double (idX - Xo) / k,
                     double (idY - Yo) / k);
-    }
-    else
-    {
-        //this->setCursor(Qt::CustomCursor);
     }
 }
 

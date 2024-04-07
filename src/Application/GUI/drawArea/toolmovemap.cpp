@@ -7,17 +7,19 @@
 ToolMoveMap::ToolMoveMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
 {
     setParButton(QPixmap(":/resurs/hand"), "Перемещение на карте");
+    cursor = Qt::OpenHandCursor;
 }
 
 void ToolMoveMap::init()
 {
-    drawArea->setCursor(Qt::OpenHandCursor);
+    setCursor();
     statMouse = release;
 }
 
 void ToolMoveMap::mousePress(QMouseEvent *mouse)
 {
-    drawArea->setCursor(Qt::ClosedHandCursor);
+    cursor = Qt::ClosedHandCursor;
+    setCursor();
 
     statMouse = press;
     xPressMouse = mouse->x();
@@ -31,7 +33,8 @@ void ToolMoveMap::mouseRelease(QMouseEvent *mouse)
 {
     Q_UNUSED(mouse);
 
-    drawArea->setCursor(Qt::OpenHandCursor);
+    cursor = Qt::OpenHandCursor;
+    setCursor();
 
     statMouse = release;
 }

@@ -179,9 +179,8 @@ private:
 
     // Текущий инструмент
     drawAreaTool* Tool;
-
-    // Текущий инструмент
     int keyCurTool;
+    bool isCustomCursor;
 
     // Форматы изображений
     QVector <const char*> strFormatImg;
