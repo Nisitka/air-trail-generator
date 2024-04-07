@@ -74,9 +74,13 @@ GUI::GUI(QImage* geoMap,
 
     //
     daoWin = new DataAccessObjectWindow;
-    //
-    mainWin->addTask(daoWin, QPixmap(":/resurs/base1"),
-                     "База данных", "Радиолокационная станция");
+    mainWin->addTask(daoWin,        QPixmap(":/resurs/base1"),
+                     "База данных", "Подключение базы данных");
+
+    // Окно по работе с функцией прогноза
+    algPredWin = new setAlgPredictWindow;
+    mainWin->addTask(algPredWin,         QPixmap(":/resurs/qFunIcon"),
+                     "Функция прогноза", "Функция прогноза");
 }
 
 void GUI::connectMDrones(managerDrones* mDrones)

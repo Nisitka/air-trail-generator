@@ -20,6 +20,7 @@
 #include "3DVisualization/map3dviswindow.h"
 #include "dataaccessobjectwindow.h"
 #include "backend/dao.h"
+#include "GUI/algorithmPredict/setalgpredictwindow.h"
 
 
 class GUI
@@ -72,6 +73,9 @@ private:
 
     // окно для работы с БД
     DataAccessObjectWindow* daoWin;
+
+    //
+    setAlgPredictWindow* algPredWin;
 
     // Инструменты
     ToolPredTrail* toolPTrail;

@@ -64,7 +64,10 @@ SOURCES += main.cpp\
     backend/dao.cpp \
     GUI/dataaccessobjectwindow.cpp \
     GUI/functionwindow.cpp \
-    GUI/3DVisualization/map3dviswindow.cpp
+    GUI/3DVisualization/map3dviswindow.cpp \
+    GUI/algorithmPredict/glyph.cpp \
+    GUI/algorithmPredict/setalgpredictwindow.cpp \
+    GUI/algorithmPredict/compospredfunctionarea.cpp
 
 HEADERS  += \
     core.h \
@@ -107,7 +110,10 @@ HEADERS  += \
     backend/dao.h \
     GUI/dataaccessobjectwindow.h \
     GUI/functionwindow.h \
-    GUI/3DVisualization/map3dviswindow.h
+    GUI/3DVisualization/map3dviswindow.h \
+    GUI/algorithmPredict/glyph.h \
+    GUI/algorithmPredict/setalgpredictwindow.h \
+    GUI/algorithmPredict/compospredfunctionarea.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \
@@ -117,7 +123,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optrlswindow.ui \
     GUI/UI/visualinfowidget.ui \
     GUI/UI/dataaccessobjectwindow.ui \
-    GUI/3DVisualization/map3dviswindow.ui
+    GUI/3DVisualization/map3dviswindow.ui \
+    GUI/algorithmPredict/setalgpredictwindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \
@@ -166,7 +173,8 @@ DISTFILES += \
     resurs/upVector.png \
     resurs/zoom.png \
     resurs/zoom2.png \
-    resurs/zoomTool.png
+    resurs/zoomTool.png \
+    GUI/algorithmPredict/doc.txt
 
 RESOURCES += \
     res.qrc
