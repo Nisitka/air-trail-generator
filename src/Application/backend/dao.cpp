@@ -25,5 +25,10 @@ bool DAO::test_query(QString name)
             }
         }
     }
+
+    db.close();
+    db = QSqlDatabase();
+    db.removeDatabase(QSqlDatabase::defaultConnection);
+
     return 1;
 }

@@ -14,10 +14,6 @@ DataAccessObjectWindow::DataAccessObjectWindow(QWidget *parent) :
 
     dao = new DAO;
 
-    QThread* thread = new QThread;
-    dao->moveToThread(thread);
-    thread->start();
-
     connect(ui->connectButton, SIGNAL(clicked()),
             SLOT(connect_dao())
             );
