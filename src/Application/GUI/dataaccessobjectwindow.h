@@ -16,6 +16,8 @@ public slots:
     void connect_dao();
 
     void status_connect(bool);
+
+    void onTimeout();
 signals:
 
     void connection(QString);
@@ -25,6 +27,8 @@ public:
     ~DataAccessObjectWindow();
 
 private:
+
+    QTimer *timer;
 
     Ui::DataAccessObjectWindow *ui;
 };
