@@ -62,7 +62,8 @@ SOURCES += main.cpp\
     GUI/3DVisualization/map3dwindow.cpp \
     GUI/3DVisualization/mapopenglwidget.cpp \
     GUI/drawArea/toolpredict.cpp \
-    backend/dao.cpp
+    backend/dao.cpp \
+    GUI/dataaccessobjectwindow.cpp
 
 HEADERS  += \
     core.h \
@@ -103,7 +104,8 @@ HEADERS  += \
     GUI/3DVisualization/map3dwindow.h \
     GUI/3DVisualization/mapopenglwidget.h \
     GUI/drawArea/toolpredict.h \
-    backend/dao.h
+    backend/dao.h \
+    GUI/dataaccessobjectwindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \
@@ -111,7 +113,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optmapgeneratorwindow.ui \
     GUI/UI/optqfunwindow.ui \
     GUI/UI/optrlswindow.ui \
-    GUI/UI/visualinfowidget.ui
+    GUI/UI/visualinfowidget.ui \
+    GUI/UI/dataaccessobjectwindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \

@@ -4,13 +4,13 @@ QSqlDatabase db;
 
 DAO::DAO()
 {
-    test_query();
+
 }
 
-void DAO::test_query()
+bool DAO::test_query(QString name)
 {
     db = QSqlDatabase::addDatabase("QODBC3");
-    db.setDatabaseName(QString("DRIVER={SQL SERVER}; SERVER=127.1.0.0; DATABASE=date; Trusted_Connection=yes;"));
+    db.setDatabaseName(QString("DRIVER={SQL SERVER}; SERVER=127.1.0.0; DATABASE="+ name +"; Trusted_Connection=yes;"));
     if(db.open())
     {
         QSqlQuery authentication;
@@ -20,7 +20,10 @@ void DAO::test_query()
 
             qDebug() << authentication.value(0).toString();
 
+            return 0;
+
             }
         }
     }
+    return 1;
 }

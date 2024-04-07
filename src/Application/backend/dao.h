@@ -10,10 +10,10 @@ class DAO : public QObject
 {
     Q_OBJECT
 public:
-    DAO();
+    DAO(); //Data Access Object
 public slots:
 
-    void test_query();
+    bool test_query(QString);
 };
 
 #endif // DAO_H

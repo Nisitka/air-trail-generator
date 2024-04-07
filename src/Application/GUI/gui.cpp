@@ -70,6 +70,13 @@ GUI::GUI(QImage* geoMap,
     map3DWin = new map3DWindow(map, geoMap);
     mainWin->addTask(map3DWin, QPixmap(":/resurs/icon3D"),
                      "3D", "Детальная визуализация рельефа");
+
+
+    //
+    dao = new DataAccessObjectWindow;
+    //
+    mainWin->addTask(dao, QPixmap(":/resurs/base1"),
+                     "База данных", "Радиолокационная станция");
 }
 
 void GUI::connectMDrones(managerDrones* mDrones)

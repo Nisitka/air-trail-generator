@@ -18,6 +18,8 @@
 #include "backend/managerdrones.h"
 #include "backend/managerrls.h"
 #include "3DVisualization/map3dwindow.h"
+#include "dataaccessobjectwindow.h"
+
 
 class GUI
 {
@@ -63,6 +65,9 @@ private:
 
     // окно для 3D отображения рельефа
     map3DWindow* map3DWin;
+
+    // окно для работы с БД
+    DataAccessObjectWindow* dao;
 
     // Инструменты
     ToolPredTrail* toolPTrail;

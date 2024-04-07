@@ -53,9 +53,6 @@ void Core::init_allObj()
     gui = new GUI(mapPainter->getImage(),
                   map);
 
-    dao = new DAO();
-    objects.append(dao);
-
     readyRunProgress(65, "Инициализация интерфейса...");
 }
 
