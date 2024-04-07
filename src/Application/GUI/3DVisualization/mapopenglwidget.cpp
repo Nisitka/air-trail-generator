@@ -17,27 +17,21 @@
 
 mapOpenGLWidget::mapOpenGLWidget(Map* map,
                                  QImage* imgTex,
-                                 QLabel* wFrameOX, QLabel* wFrameOY, QLabel* wFrameXY,   
                                  QWidget *parent):
     map(map), QOpenGLWidget(parent),
-    wFrameOX(wFrameOX), wFrameOY(wFrameOY), wFrameXY(wFrameXY),
     camX(0), camY(0), camZ(0),
     lookX(0), lookY(0), lookZ(0),
     angle(0), lastAngle(1.57),
     angleOZ(0), lastAngleOZ(1.0)
 {
-    winWidth=300;winHeight=200;
+    winWidth=300;
+    winHeight=200;
 
     currentTexture = imgTex;
 
     Hmap = map->getMaxH() / map->getLenBlock();
-    //qDebug() << Hmap;
-    //
-    wFrameOX->setScaledContents(true);
-    wFrameOY->setScaledContents(true);
-    wFrameXY->setScaledContents(true);
 
-    //parent->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    //
     this->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     this->setMinimumSize(winWidth,winHeight);
     this->setMaximumSize(9999, 9999);
@@ -106,7 +100,7 @@ bool mapOpenGLWidget::isIntersectBorder(const QVector3D &pA, const QVector3D &pB
         }
     }
 
-    // если дошли до сюда значит точка одна
+    // Если дошли до сюда значит точка одна
     pointsInter[interVert::Short] = shortInter;
     pointsInter.remove(interVert::Long);
 
@@ -227,9 +221,6 @@ void mapOpenGLWidget::initializeGL()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    setFrameOX(0.5);
-    setFrameOY(0.5);
-    setFrameXY(0.5);
     //qDebug() << "InitGL";
 }
 
@@ -238,6 +229,7 @@ void mapOpenGLWidget::resizeGL(int W, int H) // Сбрасывает разме�
     glViewport(0, 0, (GLint) W, (GLint) H); // Сброс текущего окна просмотра
     glMatrixMode(GL_PROJECTION); // Выбор матрицы проецирования
     glLoadIdentity(); // Сброс матрицы проецирования
+
     // Установить размер окна просмотра
     gluPerspective((GLdouble)45.0, (GLdouble)W/H, (GLdouble)0.1, (GLdouble)800.0);
 
@@ -307,12 +299,11 @@ void mapOpenGLWidget::updateZD(QVector<QVector<QVector<QVector3D> > > *points)
 void mapOpenGLWidget::updatePosRLS(QList<QVector3D> *pRLS)
 {
     posRLS = pRLS;
-
-    //qDebug() << *posRLS;
 }
 
 void mapOpenGLWidget::updateVertBoards()
 {
+
     boards.clear();
     boards.append(QVector<QVector3D>{
                       QVector3D(idXo,    idYo, 0),
@@ -351,19 +342,6 @@ void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL
     //
     processingPointsZD();
 
-    //
-    float k = (float)countX / countY;
-    if (countX > countY)
-    {
-        wFrameXY->setFixedWidth(maxWLabel);
-        wFrameXY->setFixedHeight(maxWLabel/k);
-    }
-    else
-    {
-        wFrameXY->setFixedHeight(maxHLabel);
-        wFrameXY->setFixedWidth(k*maxHLabel);
-    }
-
     MAP_SCALE = 0.3;
 
     if (countX > countY) R = countX * MAP_SCALE * kSCALE;
@@ -386,80 +364,6 @@ void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL
     //qDebug() << MAP_SCALE;
 
     update();
-}
-
-void mapOpenGLWidget::colorHeight(int h, float& r, float& g, float& b)
-{
-    dHeight = Hmap / colors.size();
-
-    int id = h / dHeight;
-    // если предельный цвет
-    if (id >= colors.size() - 1)
-    {
-        QColor color = colors[colors.size() - 1];
-
-        r = color.red();
-        g = color.green();
-        b = color.blue();
-
-        r = (float) r/255;
-        g = (float) g/255;
-        b = (float) b/255;
-    }
-    else
-    {
-        QColor currentColor = colors[id];
-        QColor nextColor = colors[id + 1];
-
-        double part = double(h%dHeight) / dHeight;
-
-        r = currentColor.red();
-        g = currentColor.green();
-        b = currentColor.blue();
-
-        r += (nextColor.red() - currentColor.red()) * part;
-        g += (nextColor.green() - currentColor.green()) * part;
-        b += (nextColor.blue() - currentColor.blue()) * part;
-
-        r = (float) r/255;
-        g = (float) g/255;
-        b = (float) b/255;
-    }
-}
-
-QColor mapOpenGLWidget::colorHeight(int h)
-{
-    dHeight = Hmap / colors.size();
-
-    int r,g,b;
-
-    int id = h / dHeight;
-    // если предельный цвет
-    if (id >= colors.size() - 1)
-    {
-        QColor color = colors[colors.size() - 1];
-
-        r = color.red();
-        g = color.green();
-        b = color.blue();
-    }
-    else
-    {
-        QColor currentColor = colors[id];
-        QColor nextColor = colors[id + 1];
-
-        double part = double(h%dHeight) / dHeight;
-
-        r = currentColor.red();
-        g = currentColor.green();
-        b = currentColor.blue();
-
-        r += (nextColor.red() - currentColor.red()) * part;
-        g += (nextColor.green() - currentColor.green()) * part;
-        b += (nextColor.blue() - currentColor.blue()) * part;
-    }
-
-    return QColor(r,g,b);
 }
 
 void mapOpenGLWidget::updateTerrain(int idXo_, int idYo_, int size)
@@ -511,26 +415,6 @@ void mapOpenGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Screen и глубина кэша
 
-    /*/// !!!!!!!!!!!!!!!!!!!!!!!!!!
-    //
-    GLuint textureID;
-    glEnable(GL_TEXTURE_2D);
-    QImage texImg;
-    glGenTextures(1, &textureID);
-    texImg = QGLWidget::convertToGLFormat(*currentTexture);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    //glTexSubImage2D();
-    //glTexImage2D
-    glTexImage2D(GL_TEXTURE_2D, 0, 3,
-                 (GLsizei)texImg.width(),
-                 (GLsizei)texImg.height(),
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, texImg.bits());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    /// !!!!!!!!*/
-
     lastAngle -= angle;
     lastAngleOZ -= angleOZ;
 
@@ -575,66 +459,8 @@ void mapOpenGLWidget::paintGL()
         glEnd();
     }
 
-    /*/// !!!!!
-    // Удаление текстуры
-    glBindTexture(GL_TEXTURE_2D, 0); // Отвязка активной текстуры
-    glDeleteTextures(1, &textureID);
-    glDisable(GL_TEXTURE_2D);
-    /// !!!!!!!!!!!!!!!!!!!!!!!!!!*/
-
     glBegin(GL_LINES);
     glColor3f(0.39, 0.05, 0.67); // цвет линий
-
-    // Отрисовка рамки для оси ОХ
-    float lineX = idFrameX * MAP_SCALE;
-
-    glVertex3f(0, 0, lineX);
-    glVertex3f(0, H_SCALE*Hmap, lineX);
-
-    glVertex3f(0, H_SCALE*Hmap, lineX);
-    glVertex3f(MAP_SCALE*(countX-1), H_SCALE*Hmap, lineX);
-
-    glVertex3f(MAP_SCALE*(countX-1), H_SCALE*Hmap, lineX);
-    glVertex3f(MAP_SCALE*(countX-1), 0, lineX);
-
-    glEnd();
-
-    // Отрисовка рамки для оси ОY
-    glBegin(GL_LINES);
-    glColor3f(0.39, 0.05, 0.67); // цвет линий
-
-    float lineY = idFrameY * MAP_SCALE;
-
-    glVertex3f(lineY, 0, 0);
-    glVertex3f(lineY, H_SCALE*Hmap, 0);
-
-    glVertex3f(lineY, H_SCALE*Hmap, 0);
-    glVertex3f(lineY, H_SCALE*Hmap, MAP_SCALE*(countY-1));
-
-    glVertex3f(lineY, H_SCALE*Hmap, MAP_SCALE*(countY-1));
-    glVertex3f(lineY, 0, MAP_SCALE*(countY-1));
-
-    glEnd();
-
-    // Отрисовка рамки для плоскости XY
-    glBegin(GL_LINES);
-    glColor3f(0.39, 0.05, 0.67); // цвет линий
-
-    float lineZ = idFrameZ * H_SCALE;
-
-    glVertex3f(0, lineZ, 0);
-    glVertex3f(0, lineZ, MAP_SCALE*(countY-1));
-
-    glVertex3f(0, lineZ, MAP_SCALE*(countY-1));
-    glVertex3f(MAP_SCALE*(countX-1), lineZ, MAP_SCALE*(countY-1));
-
-    glVertex3f(MAP_SCALE*(countX-1), lineZ, MAP_SCALE*(countY-1));
-    glVertex3f(MAP_SCALE*(countX-1), lineZ, 0);
-
-    glVertex3f(MAP_SCALE*(countX-1), lineZ, 0);
-    glVertex3f(0, lineZ, 0);
-
-    glEnd();
 
     // Отрисовка зоны обнаружения
     float a = 0.3;
@@ -756,118 +582,4 @@ void mapOpenGLWidget::drawRectZD(int idRLS, int idLayer, int idPointLeft)
 void mapOpenGLWidget::addVertex(int idX, int idY, int idZ)
 {
      glVertex3f((idX - idXo) * MAP_SCALE, idZ * H_SCALE, (idY - idYo) * MAP_SCALE);
-}
-
-void mapOpenGLWidget::setFrameOX(float partW)
-{
-    idFrameY = round((float) (countX-1) * partW);
-
-    int& W = countY;
-    int& H = Hmap;
-
-    qDebug() << H;
-
-    QImage img(W, H, QImage::Format_RGB32);
-
-    int maxH = 0;
-    for (int y = 0; y < W; y++)
-    {
-        maxH = heights[idFrameY][y];
-        for (int h = 0; h < H; h++)
-        { 
-            QColor color(0, 0, 0);
-            if (h < maxH)
-            {
-                color = colorHeight(h);
-            }
-            else
-            {
-                if (map->getBlock(idFrameY+idXo, y+idYo, h)->isZD())
-                {
-                    color.setRgb(0,0,255);
-                }
-            }
-            img.setPixelColor(y, H - h - 1, color);
-        }
-    }
-
-    QPixmap pix = QPixmap::fromImage(img);
-    wFrameOX->setPixmap(pix);
-
-    update();
-}
-
-void mapOpenGLWidget::setFrameOY(float partW)
-{
-    idFrameX = round((float) (countY-1) * partW);
-
-    int& W = countX;
-    int& H = Hmap;
-
-    QImage img(W, H, QImage::Format_RGB32);
-
-    int maxH = 0;
-    for (int x = 0; x < W; x++)
-    {
-        maxH = heights[x][idFrameX];
-        for (int h = 0; h < H; h++)
-        {
-            QColor color(0, 0, 0);
-            if (h < maxH)
-            {
-                color = colorHeight(h);
-            }
-            else
-            {
-                if (map->getBlock(idXo+x, idYo+idFrameX, h)->isZD())
-                {
-                    color.setRgb(0,0,255);
-                }
-            }
-            img.setPixelColor(x, H - h - 1, color);
-        }
-    }
-
-    QPixmap pix = QPixmap::fromImage(img);
-    wFrameOY->setPixmap(pix);
-
-    update();
-}
-
-void mapOpenGLWidget::setFrameXY(float partW)
-{
-    idFrameZ = round((float) (Hmap-1) * partW);
-
-    int& W = countX;
-    int& L = countY;
-
-    QImage img(W, L, QImage::Format_RGB32);
-
-    int h = 0;
-    for (int x = 0; x < W; x++)
-    {
-        for (int y = 0; y < L; y++)
-        {
-            QColor color(0, 0, 0);
-
-            h = heights[x][y];
-            if (h >= idFrameZ)
-            {
-                color = colorHeight(idFrameZ);
-            }
-            else
-            {
-                if (map->getBlock(idXo+x, idYo+y, idFrameZ)->isZD())
-                {
-                    color.setRgb(0,0,255);
-                }
-            }
-            img.setPixelColor(x, y, color);
-        }
-    }
-
-    QPixmap pix = QPixmap::fromImage(img);
-    wFrameXY->setPixmap(pix);
-
-    update();
 }

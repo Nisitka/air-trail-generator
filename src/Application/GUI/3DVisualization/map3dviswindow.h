@@ -1,17 +1,17 @@
-#ifndef MAP3DWINDOW_H
-#define MAP3DWINDOW_H
+#ifndef MAP3DVISWINDOW_H
+#define MAP3DVISWINDOW_H
 
-#include <QWidget>
+#include <QMainWindow>
 #include <QVector3D>
 
 #include "backend/map.h"
 #include "mapopenglwidget.h"
 
 namespace Ui {
-class map3DWindow;
+class map3DVisWindow;
 }
 
-class map3DWindow : public QWidget
+class map3DVisWindow : public QMainWindow
 {
     Q_OBJECT
 signals:
@@ -29,22 +29,12 @@ public slots:
     void updatePointsInterZD(QVector <QVector <QVector <QVector3D>>>* pZD, QList <QVector3D>* posRLS);
 
 public:
-    explicit map3DWindow(Map* map_, QImage* imgTex, QWidget *parent = 0);
-    ~map3DWindow();
+    explicit map3DVisWindow(Map* map_, QImage* imgTex, QWidget *parent = 0);
+    ~map3DVisWindow();
 
     mapOpenGLWidget* getGraphicsWidget();
 
 private slots:
-
-    // для слайдеров
-    void moveFrameOX(int pos);
-    void moveFrameOY(int pos);
-    void moveFrameXY(int pos);
-
-    // для спинбоксов
-    void clickFrameOX(double part);
-    void clickFrameOY(double part);
-    void clickFrameXY(double part);
 
 
 private:
@@ -54,11 +44,11 @@ private:
 
     const int maxValueSliders = 1000;
 
+    //
     Map* map;
-
-    Ui::map3DWindow *ui;
-
     mapOpenGLWidget* visMap;
+
+    Ui::map3DVisWindow *ui;
 };
 
-#endif // MAP3DWINDOW_H
+#endif // MAP3DVISWINDOW_H

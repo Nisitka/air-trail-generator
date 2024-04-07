@@ -17,7 +17,7 @@
 #include "optdronewindow.h"
 #include "backend/managerdrones.h"
 #include "backend/managerrls.h"
-#include "3DVisualization/map3dwindow.h"
+#include "3DVisualization/map3dviswindow.h"
 #include "dataaccessobjectwindow.h"
 #include "backend/dao.h"
 
@@ -68,7 +68,7 @@ private:
     optDroneWindow* droneWin;
 
     // окно для 3D отображения рельефа
-    map3DWindow* map3DWin;
+    map3DVisWindow* map3DWin;
 
     // окно для работы с БД
     DataAccessObjectWindow* daoWin;

@@ -67,7 +67,7 @@ GUI::GUI(QImage* geoMap,
                      toolPTrail, SLOT(startPredictTrail()));
 
     //
-    map3DWin = new map3DWindow(map, geoMap);
+    map3DWin = new map3DVisWindow(map, geoMap);
     mainWin->addTask(map3DWin, QPixmap(":/resurs/icon3D"),
                      "3D", "Детальная визуализация рельефа");
 
@@ -228,7 +228,6 @@ void GUI::connectMapPainter(painterMapImage* painterMap)
 
     QObject::connect(painterMap, SIGNAL(readyEditEarth(int,int,int)),
                      map3DWin,   SLOT(updateMap3D(int,int,int)));
-
     QObject::connect(map3DWin,   SIGNAL(generateMap3D()),
                      painterMap, SLOT(buildTexture()));
     QObject::connect(toolVisMap, SIGNAL(updateRect3D(int,int,int,int)),

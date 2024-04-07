@@ -59,12 +59,12 @@ SOURCES += main.cpp\
     GUI/plotwidget.cpp \
     GUI/drawArea/toolruler.cpp \
     GUI/drawArea/toolsquareter.cpp \
-    GUI/3DVisualization/map3dwindow.cpp \
     GUI/3DVisualization/mapopenglwidget.cpp \
     GUI/drawArea/toolpredict.cpp \
     backend/dao.cpp \
     GUI/dataaccessobjectwindow.cpp \
-    GUI/functionwindow.cpp
+    GUI/functionwindow.cpp \
+    GUI/3DVisualization/map3dviswindow.cpp
 
 HEADERS  += \
     core.h \
@@ -102,12 +102,12 @@ HEADERS  += \
     GUI/drawArea/drawtask.h \
     GUI/drawArea/toolruler.h \
     GUI/drawArea/toolsquareter.h \
-    GUI/3DVisualization/map3dwindow.h \
     GUI/3DVisualization/mapopenglwidget.h \
     GUI/drawArea/toolpredict.h \
     backend/dao.h \
     GUI/dataaccessobjectwindow.h \
-    GUI/functionwindow.h
+    GUI/functionwindow.h \
+    GUI/3DVisualization/map3dviswindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \
@@ -116,7 +116,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optqfunwindow.ui \
     GUI/UI/optrlswindow.ui \
     GUI/UI/visualinfowidget.ui \
-    GUI/UI/dataaccessobjectwindow.ui
+    GUI/UI/dataaccessobjectwindow.ui \
+    GUI/3DVisualization/map3dviswindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \

@@ -30,16 +30,11 @@ public slots:
 
 public:
     explicit mapOpenGLWidget(Map* map,
-                             QImage* imgTex,
-                             QLabel* wFrameOX, QLabel* wFrameOY, QLabel* wFrameXY,               
+                             QImage* imgTex,            
                              QWidget *parent = 0);
 
     void updatePosRLS(QList <QVector3D>* pRLS);
     void updateZD(QVector<QVector<QVector<QVector3D> > >* points);
-
-    void setFrameOX(float partW); // 0..1
-    void setFrameOY(float partW); // 0..1
-    void setFrameXY(float partW); // 0..1
 
     void initializeGL();
     void resizeGL(int w, int h);
@@ -102,20 +97,6 @@ private:
     QList <QVector3D>* posRLS;
 
     //
-    QLabel* wFrameOX;
-    QLabel* wFrameOY;
-    QLabel* wFrameXY;
-
-    //
-    const int maxHLabel = 400;
-    const int maxWLabel = 400;
-
-    //
-    int idFrameX;
-    int idFrameY;
-    int idFrameZ;
-
-    //
     int mouseLastX;
     int mouseLastY;
 
@@ -166,20 +147,6 @@ private:
     QVector <QVector <int>> heights;
     float MAP_SCALE = 0.3;
     float H_SCALE = 0.08;
-
-    void colorHeight(int h, float& r, float& g, float& b);
-    //const QColor& colorHeight(int h);
-    QColor colorHeight(int h);
-
-    int dHeight;
-    const QVector <QColor> colors =
-    {
-        QColor(129, 203, 140), QColor(174, 225, 150), QColor(224, 245, 180),
-        QColor(249, 244, 180), QColor(251, 228, 148), QColor(250, 216, 118),
-        QColor(252, 189, 96),  QColor(254, 179, 96),  QColor(247, 153, 79),
-        QColor(221, 128, 69),  QColor(209, 105, 54),  QColor(215, 92, 61),
-        QColor(184, 40, 37),   QColor(169, 27, 27),   QColor(134, 21, 21),
-    };
 };
 
 #endif // MAPOPENGLWIDGET_H
