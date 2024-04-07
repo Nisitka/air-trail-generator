@@ -14,6 +14,8 @@ class DataAccessObjectWindow : public QWidget
 public slots:
 
     void connect_dao();
+
+    void status_connect(bool);
 signals:
 
     void connection(QString);

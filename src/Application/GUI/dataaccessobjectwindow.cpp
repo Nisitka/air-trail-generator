@@ -9,9 +9,6 @@ DataAccessObjectWindow::DataAccessObjectWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->infoLabel->hide();
-    ui->errorLabel->hide();
-
     connect(ui->connectButton, SIGNAL(clicked()),
             SLOT(connect_dao())
             );
@@ -24,5 +21,21 @@ DataAccessObjectWindow::~DataAccessObjectWindow()
 
 void DataAccessObjectWindow::connect_dao()
 {
-   connection(ui->nameBaseEdit->text());
+    connection(ui->nameBaseEdit->text());
 }
+
+void DataAccessObjectWindow::status_connect(bool a)
+{
+    if(a == true)
+    {
+        ui->infoLabel->setText("База данных подключена");
+        ui->infoLabel->setStyleSheet("color: green;");
+    }
+    if(a == false)
+    {
+        ui->infoLabel->setText("База данных не подключена");
+        ui->infoLabel->setStyleSheet("color: red;");
+    }
+}
+
+

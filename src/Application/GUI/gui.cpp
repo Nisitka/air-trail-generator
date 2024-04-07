@@ -89,6 +89,9 @@ void GUI::connectDataBase(DAO *database)
     QObject::connect(daoWin, SIGNAL(connection(QString)),
                      database, SLOT(test_query(QString))
             );
+    QObject::connect(database, SIGNAL(update_status(bool)),
+                     daoWin, SLOT(status_connect(bool))
+            );
 }
 
 void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)

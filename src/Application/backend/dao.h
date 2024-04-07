@@ -11,6 +11,10 @@ class DAO : public QObject
     Q_OBJECT
 public:
     DAO(); //Data Access Object
+signals:
+
+    void update_status(bool);
+
 public slots:
 
     void test_query(QString);
