@@ -63,7 +63,8 @@ SOURCES += main.cpp\
     GUI/3DVisualization/mapopenglwidget.cpp \
     GUI/drawArea/toolpredict.cpp \
     backend/dao.cpp \
-    GUI/dataaccessobjectwindow.cpp
+    GUI/dataaccessobjectwindow.cpp \
+    GUI/functionwindow.cpp
 
 HEADERS  += \
     core.h \
@@ -105,7 +106,8 @@ HEADERS  += \
     GUI/3DVisualization/mapopenglwidget.h \
     GUI/drawArea/toolpredict.h \
     backend/dao.h \
-    GUI/dataaccessobjectwindow.h
+    GUI/dataaccessobjectwindow.h \
+    GUI/functionwindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \
