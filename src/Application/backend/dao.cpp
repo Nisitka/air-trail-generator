@@ -7,7 +7,7 @@ DAO::DAO()
 
 }
 
-bool DAO::test_query(QString name)
+void DAO::test_query(QString name)
 {
     qDebug() << "test query!";
 
@@ -22,15 +22,12 @@ bool DAO::test_query(QString name)
 
             qDebug() << authentication.value(0).toString();
 
-            return 0;
-
             }
         }
-
-        db.close();
-        db = QSqlDatabase();
-        db.removeDatabase(QSqlDatabase::defaultConnection);
     }
 
-    return 1;
+    db.close();
+    db = QSqlDatabase();
+    db.removeDatabase(QSqlDatabase::defaultConnection);
+
 }

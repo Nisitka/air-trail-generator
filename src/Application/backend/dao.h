@@ -13,7 +13,7 @@ public:
     DAO(); //Data Access Object
 public slots:
 
-    bool test_query(QString);
+    void test_query(QString);
 };
 
 #endif // DAO_H

@@ -16,7 +16,7 @@ public slots:
     void connect_dao();
 signals:
 
-    bool connection(QString);
+    void connection(QString);
 
 public:
     explicit DataAccessObjectWindow(QWidget *parent = nullptr);

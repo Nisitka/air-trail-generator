@@ -24,16 +24,5 @@ DataAccessObjectWindow::~DataAccessObjectWindow()
 
 void DataAccessObjectWindow::connect_dao()
 {
-   int n = connection(ui->nameBaseEdit->text());
-   if(n == 0)
-   {
-     ui->infoLabel->show();
-     ui->errorLabel->hide();
-   }
-   if(n == 1)
-   {
-       ui->errorLabel->show();
-       ui->infoLabel->hide();
-   };
-
+   connection(ui->nameBaseEdit->text());
 }
