@@ -67,7 +67,9 @@ SOURCES += main.cpp\
     GUI/3DVisualization/map3dviswindow.cpp \
     GUI/algorithmPredict/glyph.cpp \
     GUI/algorithmPredict/setalgpredictwindow.cpp \
-    GUI/algorithmPredict/compospredfunctionarea.cpp
+    GUI/algorithmPredict/compospredfunctionarea.cpp \
+    GUI/algorithmPredict/glyphpoint.cpp \
+    GUI/algorithmPredict/matchfunglyph.cpp
 
 HEADERS  += \
     core.h \
@@ -113,7 +115,9 @@ HEADERS  += \
     GUI/3DVisualization/map3dviswindow.h \
     GUI/algorithmPredict/glyph.h \
     GUI/algorithmPredict/setalgpredictwindow.h \
-    GUI/algorithmPredict/compospredfunctionarea.h
+    GUI/algorithmPredict/compospredfunctionarea.h \
+    GUI/algorithmPredict/glyphpoint.h \
+    GUI/algorithmPredict/matchfunglyph.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \

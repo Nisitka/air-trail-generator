@@ -4,7 +4,7 @@
 #include <QPainter>
 #include <QPoint>
 #include <QRect>
-#include <QVector>
+#include <QMap>
 
 #include <QMouseEvent>
 
@@ -23,7 +23,7 @@ public:
     virtual void insert(Glyph* g, int idPos);
 
     //
-    virtual void hoverEvent();
+    virtual void hoverEvent(QMouseEvent* mouse);
     virtual void missEvent();
 
     //
@@ -35,13 +35,17 @@ public:
     //
     virtual void moveEvent(QMouseEvent* mouse);
 
+    //
+    void move(const QPoint& movePoint);
+
 protected:
 
     // Область, принадлежащая текущему глифу и глифам внутри него
     QRect belongRect;
 
     // Глифы, принадлежащие этому глифу
-    QVector <Glyph*> childGlyphs;
+    QMap <int, Glyph*> childGlyphs; //
+    QMap <int, QPoint> posGlyphs;   // Позиция это относите-я точка
 
     // Виджет, на котором рисуем глифы
     QWidget* parent;
@@ -51,8 +55,6 @@ protected:
 
     // Точка, в которую нажали в глифе
     int Xpress, Ypress;
-
-    QSize sizeRect;
 };
 
 #endif // GLYPH_H

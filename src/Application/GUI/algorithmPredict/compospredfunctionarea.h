@@ -8,6 +8,8 @@
 #include <QPaintEvent>
 
 #include "glyph.h"
+#include "glyphpoint.h"
+#include "matchfunglyph.h"
 
 class composPredFunctionArea: public QWidget
 {

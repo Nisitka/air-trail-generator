@@ -11,7 +11,9 @@ setAlgPredictWindow::setAlgPredictWindow(QWidget *parent) :
 
     comArea = new composPredFunctionArea;
 
-    this->setCentralWidget(comArea);
+    ui->Layout->addWidget(comArea);
+
+    this->setMinimumHeight(200);
 }
 
 setAlgPredictWindow::~setAlgPredictWindow()

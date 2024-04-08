@@ -4,6 +4,10 @@
 
 composPredFunctionArea::composPredFunctionArea()
 {
+    this->setStyleSheet("QWidget {"
+                        "   background-color: rgb(255,255,255);"
+                        "}");
+
     // Чтоб moveEvent работал без нажатия
     this->setMouseTracking(true);
 
@@ -13,7 +17,8 @@ composPredFunctionArea::composPredFunctionArea()
 
     /* Тестовые глифы */
     glyphs.append(new Glyph(this, QPoint(10, 10), QSize(100, 60)));
-    glyphs.append(new Glyph(this, QPoint(60, 90), QSize(50, 50)));
+    glyphs.append(new matchFunGlyph(this, QPoint(80, 80)));
+
 }
 
 void composPredFunctionArea::paintEvent(QPaintEvent *event)
@@ -21,10 +26,11 @@ void composPredFunctionArea::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
 
     QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
 
     // Отрисовка подложки
-    painter.setPen(QPen(Qt::white, 2, Qt::SolidLine));
-    painter.setBrush(QBrush(Qt::black, Qt::Dense7Pattern));
+    painter.setPen(QPen(Qt::black, 2, Qt::SolidLine));
+    painter.setBrush(QBrush(Qt::white, Qt::Dense7Pattern));
     painter.drawRect(0, 0,
                       this->geometry().width(),
                       this->geometry().height());
@@ -38,6 +44,7 @@ void composPredFunctionArea::paintEvent(QPaintEvent *event)
     if (selectGlyph)
         curGlyph->draw(painter);
 
+    painter.setRenderHint(QPainter::Antialiasing, false);
     painter.end();
 }
 
@@ -66,7 +73,7 @@ void composPredFunctionArea::mouseMoveEvent(QMouseEvent *mouse)
 
                 if (statMouse == release)
                 {
-                    curGlyph->hoverEvent();
+                    curGlyph->hoverEvent(mouse);
                 }
                 else
                 {
