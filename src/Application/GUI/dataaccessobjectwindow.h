@@ -28,8 +28,6 @@ public:
 
 private:
 
-    QTimer *timer;
-
     Ui::DataAccessObjectWindow *ui;
 };
 

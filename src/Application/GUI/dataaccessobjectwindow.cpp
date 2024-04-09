@@ -11,14 +11,9 @@ DataAccessObjectWindow::DataAccessObjectWindow(QWidget *parent) :
 
     Designer::setButton(ui->connectButton);
 
-    timer = new QTimer;
-    timer->setInterval(1000);
     ui->infoLabel->hide();
     connect(ui->connectButton, SIGNAL(clicked()),
             SLOT(connect_dao())
-            );
-    connect(timer, SIGNAL(timeout()),
-            this, SLOT(onTimeout())
             );
     ui->progressBar->hide();
 }
@@ -33,10 +28,11 @@ void DataAccessObjectWindow::connect_dao()
     connection(ui->nameBaseEdit->text());
 
     ui->connectButton->setEnabled(false);
+    ui->progressBar->setMaximum(0);
+    ui->progressBar->setMinimum(0);
     ui->progressBar->setValue(0);
-    ui->progressBar->setRange(0, 100);
     ui->progressBar->show();
-    timer->start();
+
 
 }
 
