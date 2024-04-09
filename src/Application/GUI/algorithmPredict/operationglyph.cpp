@@ -33,13 +33,11 @@ void operationGlyph::addOperation(int key, const QIcon& icon)
     idToKey[countOper-1] = key;
 
     checkListWindow->addItem(icon, nullptr);
-
-    selectOperation(key);
 }
 
 void operationGlyph::draw(QPainter &painter)
 {
-    if (isHover) painter.setPen(Qt::black);
+    if (isHover) painter.setPen(QColor(84,123,177,150));
     else painter.setPen(Qt::NoPen);
 
     painter.setBrush(Qt::NoBrush);

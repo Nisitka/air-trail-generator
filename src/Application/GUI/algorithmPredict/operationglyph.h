@@ -13,7 +13,6 @@ class operationGlyph: public QObject, public Glyph
 {
     Q_OBJECT
 signals:
-    void signal1();
 
 public:
     operationGlyph(QWidget* parent,

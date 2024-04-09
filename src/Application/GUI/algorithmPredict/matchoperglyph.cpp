@@ -7,4 +7,6 @@ matchOperGlyph::matchOperGlyph(QWidget* parent, const QPoint& position):
     addOperation(min, QIcon(":/resurs/minus"));
     addOperation(div, QIcon(":/resurs/division"));
     addOperation(mul, QIcon(":/resurs/multiplication-sign"));
+
+    selectOperation(sum);
 }
