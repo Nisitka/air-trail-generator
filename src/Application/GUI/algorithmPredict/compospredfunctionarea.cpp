@@ -18,7 +18,6 @@ composPredFunctionArea::composPredFunctionArea()
     /* Тестовые глифы */
     glyphs.append(new Glyph(this, QPoint(10, 10), QSize(100, 60)));
     glyphs.append(new matchFunGlyph(this, QPoint(80, 80)));
-
 }
 
 void composPredFunctionArea::paintEvent(QPaintEvent *event)

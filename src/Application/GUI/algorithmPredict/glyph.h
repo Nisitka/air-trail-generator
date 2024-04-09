@@ -42,19 +42,23 @@ protected:
 
     // Область, принадлежащая текущему глифу и глифам внутри него
     QRect belongRect;
+    QSize size;
 
     // Глифы, принадлежащие этому глифу
     QMap <int, Glyph*> childGlyphs; //
     QMap <int, QPoint> posGlyphs;   // Позиция это относите-я точка
 
     // Виджет, на котором рисуем глифы
-    QWidget* parent;
+    QWidget* Parent;
 
     //
     QColor borderColor;
 
     // Точка, в которую нажали в глифе
     int Xpress, Ypress;
+
+    //
+    bool isHover;
 };
 
 #endif // GLYPH_H

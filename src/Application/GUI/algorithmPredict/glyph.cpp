@@ -2,8 +2,8 @@
 
 #include <QDebug>
 
-Glyph::Glyph(QWidget* parent, const QPoint& pos, const QSize& size):
-    parent(parent)
+Glyph::Glyph(QWidget* parent, const QPoint& pos, const QSize& s):
+    Parent(parent), size(s), isHover(false)
 {
     //
     belongRect = QRect(pos, size);
@@ -76,7 +76,8 @@ void Glyph::releaseEvent(QMouseEvent* mouse)
     int countChild = childGlyphs.size();
     for (int i=0; i<countChild; i++)
     {
-        childGlyphs[i]->releaseEvent(mouse);
+        if (childGlyphs[i]->intersects(mouse->pos()))
+            childGlyphs[i]->releaseEvent(mouse);
     }
 }
 

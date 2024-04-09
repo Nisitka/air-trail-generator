@@ -6,19 +6,29 @@ matchFunGlyph::matchFunGlyph(QWidget* parent, const QPoint& position, const QSiz
     int W = size.width();
     int H = size.height();
 
-    posGlyphs[A] = QPoint(6, 10);
-    posGlyphs[B] = QPoint(6, H - 10);
-    posGlyphs[result] = QPoint(W - 7, 30);
-
     Glyph* g;
-    for (int i=0; i<posGlyphs.size(); i++)
-    {
-        g = new glyphPoint(parent, position);
-        g->move(position + posGlyphs[i]);
 
-        insert(g, i);
-    }
+    posGlyphs[A] = QPoint(6, 10);
+    g = new glyphPoint(parent, position);
+    g->move(position + posGlyphs[A]);
+    insert(g, A);
 
+    posGlyphs[B] = QPoint(6, H - 10);
+    g = new glyphPoint(parent, position);
+    g->move(position + posGlyphs[B]);
+    insert(g, B);
+
+    posGlyphs[result] = QPoint(W - 3, 30);
+    g = new glyphPoint(parent, position);
+    g->move(position + posGlyphs[result]);
+    insert(g, result);
+
+    posGlyphs[oper] = QPoint(W/2, H/2);
+    g = new matchOperGlyph(parent, position);
+    g->move(position + posGlyphs[oper]);
+    insert(g, oper);
+
+    //
     isHover = false;
 }
 
@@ -60,6 +70,21 @@ void matchFunGlyph::hoverEvent(QMouseEvent* mouse)
             g->hoverEvent(mouse);
         else
             g->missEvent();
+    }
+}
+
+void matchFunGlyph::pressEvent(QMouseEvent *mouse)
+{
+    Xpress = mouse->x() - belongRect.x();
+    Ypress = mouse->y() - belongRect.y();
+
+    int countChild = childGlyphs.size();
+    Glyph* g;
+    for (int i=0; i<countChild; i++)
+    {
+        g = childGlyphs[i];
+        if (g->intersects(mouse->pos()))
+            g->pressEvent(mouse);
     }
 }
 

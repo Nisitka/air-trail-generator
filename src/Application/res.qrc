@@ -47,5 +47,10 @@
         <file>resurs/backgDemo2.png</file>
         <file>resurs/backgDemo3.png</file>
         <file>resurs/base1.png</file>
+        <file>resurs/division.png</file>
+        <file>resurs/minus.png</file>
+        <file>resurs/multiplication.png</file>
+        <file>resurs/multiplication-sign.png</file>
+        <file>resurs/plus.png</file>
     </qresource>
 </RCC>
