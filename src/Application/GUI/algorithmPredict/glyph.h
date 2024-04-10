@@ -11,7 +11,13 @@
 class Glyph
 {
 public:
-    Glyph(QWidget* parent, const QPoint& position, const QSize& size);
+    Glyph(QWidget* parent,
+          const QPoint& position = QPoint(0, 0),
+          const QSize& size = QSize(1, 1),
+          int t = def);
+
+    // Типы глифов
+    enum Type{conIn, conOut, label, def};
 
     // Отрисовать глиф
     virtual void draw(QPainter& painter);
@@ -21,6 +27,12 @@ public:
 
     // Добавить в глиф на позицию idPos другой глиф
     virtual void insert(Glyph* g, int idPos);
+
+    // Добавить позицию для глифа
+    void addPos(const QPoint& dXYpos, int idPos);
+
+    // Вытащить глиф из розиции
+    Glyph* pullGlyph(int idPos);
 
     //
     virtual void hoverEvent(QMouseEvent* mouse);
@@ -37,6 +49,9 @@ public:
 
     //
     void move(const QPoint& movePoint);
+
+    //
+    QPoint center() const;
 
 protected:
 
@@ -59,6 +74,11 @@ protected:
 
     //
     bool isHover;
+
+private:
+
+    int mType;
+
 };
 
 #endif // GLYPH_H

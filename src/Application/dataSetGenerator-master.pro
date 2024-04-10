@@ -71,7 +71,8 @@ SOURCES += main.cpp\
     GUI/algorithmPredict/glyphpoint.cpp \
     GUI/algorithmPredict/matchfunglyph.cpp \
     GUI/algorithmPredict/operationglyph.cpp \
-    GUI/algorithmPredict/matchoperglyph.cpp
+    GUI/algorithmPredict/matchoperglyph.cpp \
+    GUI/algorithmPredict/lineglyph.cpp
 
 HEADERS  += \
     core.h \
@@ -121,7 +122,8 @@ HEADERS  += \
     GUI/algorithmPredict/glyphpoint.h \
     GUI/algorithmPredict/matchfunglyph.h \
     GUI/algorithmPredict/operationglyph.h \
-    GUI/algorithmPredict/matchoperglyph.h
+    GUI/algorithmPredict/matchoperglyph.h \
+    GUI/algorithmPredict/lineglyph.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \

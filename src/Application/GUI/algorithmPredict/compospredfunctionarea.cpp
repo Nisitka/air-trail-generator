@@ -16,8 +16,23 @@ composPredFunctionArea::composPredFunctionArea()
     statMouse = release;
 
     /* Тестовые глифы */
-    glyphs.append(new Glyph(this, QPoint(10, 10), QSize(100, 60)));
+    glyphs.append(new glyphPoint(this, QPoint(30, 30)));
+    glyphs.append(new glyphPoint(this, QPoint(40, 40)));
+    glyphs.append(new glyphPoint(this, QPoint(75, 60)));
     glyphs.append(new matchFunGlyph(this, QPoint(80, 80)));
+    glyphs.append(new matchFunGlyph(this, QPoint(140, 140)));
+
+    glyphs.append(new LineGlyph(this,
+                                glyphs[0],
+                                glyphs[1]));
+    glyphs.append(new LineGlyph(this,
+                                glyphs[1],
+                                glyphs[2]));
+    glyphs.append(new LineGlyph(this,
+                                glyphs[3],
+                                glyphs[4]));
+
+    repaint();
 }
 
 void composPredFunctionArea::paintEvent(QPaintEvent *event)

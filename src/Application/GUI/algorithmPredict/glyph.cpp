@@ -2,8 +2,8 @@
 
 #include <QDebug>
 
-Glyph::Glyph(QWidget* parent, const QPoint& pos, const QSize& s):
-    Parent(parent), size(s), isHover(false)
+Glyph::Glyph(QWidget* parent, const QPoint& pos, const QSize& s, int t):
+    Parent(parent), mType(t), size(s), isHover(false)
 {
     //
     belongRect = QRect(pos, size);
@@ -17,17 +17,34 @@ bool Glyph::intersects(const QPoint &mousePos) const
     return belongRect.contains(mousePos);
 }
 
+void Glyph::addPos(const QPoint& dXYpos, int idPos)
+{
+    if (!posGlyphs.contains(idPos))
+        posGlyphs[idPos] = dXYpos;
+}
+
 void Glyph::insert(Glyph *g, int idPos)
 {
     childGlyphs[idPos] = g;
+    g->move(belongRect.topLeft() + posGlyphs[idPos]);
+}
+
+Glyph* Glyph::pullGlyph(int idPos)
+{
+    if (childGlyphs.contains(idPos))
+        return childGlyphs[idPos];
+    else return nullptr;
+}
+
+QPoint Glyph::center() const
+{
+    return belongRect.center();
 }
 
 void Glyph::draw(QPainter &painter)
 {
-    painter.setPen(borderColor);
-    painter.setBrush(Qt::white);
-
-    painter.drawRect(belongRect);
+    /* По умолчанию глиф никак не рисуется,
+     * а рисуются только его составные глифы */
 
     // Рисуем всех свои остальные глифы
     int countChild = childGlyphs.size();

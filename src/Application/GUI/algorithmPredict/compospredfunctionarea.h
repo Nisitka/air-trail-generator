@@ -11,6 +11,7 @@
 #include "glyphpoint.h"
 #include "matchfunglyph.h"
 #include "operationglyph.h"
+#include "lineglyph.h"
 
 class composPredFunctionArea: public QWidget
 {

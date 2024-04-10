@@ -6,27 +6,18 @@ matchFunGlyph::matchFunGlyph(QWidget* parent, const QPoint& position, const QSiz
     int W = size.width();
     int H = size.height();
 
-    Glyph* g;
+    //
+    addPos(QPoint(6, 10), A);
+    insert(new glyphPoint(parent, position), A);
 
-    posGlyphs[A] = QPoint(6, 10);
-    g = new glyphPoint(parent, position);
-    g->move(position + posGlyphs[A]);
-    insert(g, A);
+    addPos(QPoint(6, H - 10), B);
+    insert(new glyphPoint(parent, position), B);
 
-    posGlyphs[B] = QPoint(6, H - 10);
-    g = new glyphPoint(parent, position);
-    g->move(position + posGlyphs[B]);
-    insert(g, B);
+    addPos(QPoint(W - 3, 30), result);
+    insert(new glyphPoint(parent, position), result);
 
-    posGlyphs[result] = QPoint(W - 3, 30);
-    g = new glyphPoint(parent, position);
-    g->move(position + posGlyphs[result]);
-    insert(g, result);
-
-    posGlyphs[oper] = QPoint(W/2, H/2);
-    g = new matchOperGlyph(parent, position);
-    g->move(position + posGlyphs[oper]);
-    insert(g, oper);
+    addPos(QPoint(W/2, H/2), oper);
+    insert(new matchOperGlyph(parent, position), oper);
 
     //
     isHover = false;
