@@ -11,7 +11,7 @@ plotWidget::plotWidget()
     this->setStyleSheet(
                 "QWidget {"
                 "   background-color: white;"
-                "   border: 2px solid gray;"
+                "   border: 1px solid gray;"
                 "   border-radius: 4px;"
                 "}");
 
@@ -50,7 +50,7 @@ void plotWidget::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
 
     QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
+    //painter.setRenderHint(QPainter::Antialiasing);
 
     // Расчет коофициента масштабирования
     int pixW = this->width();
@@ -119,6 +119,7 @@ void plotWidget::paintEvent(QPaintEvent *event)
     painter.drawLines(hYlines);
 
     // Отрисовка графика
+    painter.setRenderHint(QPainter::Antialiasing);
     if (isData)
     {
         QVector <QLine> rays;
@@ -141,6 +142,7 @@ void plotWidget::paintEvent(QPaintEvent *event)
 
         //painter.drawLines(rays);
     }
+    painter.setRenderHint(QPainter::Antialiasing, false);
 
     painter.end();
 }

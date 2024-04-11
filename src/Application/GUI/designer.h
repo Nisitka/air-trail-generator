@@ -6,6 +6,10 @@
 #include <QGroupBox>
 #include <QTabWidget>
 #include <QComboBox>
+#include <QToolBar>
+#include <QMainWindow>
+#include <QDockWidget>
+#include <QMenu>
 
 class Designer
 {
@@ -28,6 +32,18 @@ public:
 
     // настроить визуал выпадающего списка
     static void setComboBox(QComboBox*);
+
+    //
+    static void setToolBar(QToolBar* toolBar, int style = tool);
+    enum styleToolBox{tool, whiteToolBox};
+
+    //
+    static void setMainWindow(QMainWindow* mainWin, int style = def);
+    enum styleMainWin{def};
+
+    static void setDockWidget(QDockWidget* dockWidget);
+
+    static void setMenu(QMenu* menu);
 };
 
 #endif // DESIGNER_H

@@ -14,7 +14,9 @@
 
 #include <QPixmap>
 
-areaDrawWidget::areaDrawWidget(QImage* mapImg)
+#include "../designer.h"
+
+areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map)
 {
     this->setMinimumSize(100, 100);
     this->setMaximumSize(10080, 25000);
@@ -27,12 +29,6 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
     images = QVector <QImage*> (3);
 
     images[geoMap] = mapImg;
-
-    //
-    strFormatImg = QVector <const char*> (3);
-    strFormatImg[jpg] = "JPG";
-    strFormatImg[png] = "PNG";
-    strFormatImg[bmp] = "BMP";
 
     drawGeoMap();
 
@@ -49,7 +45,7 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
 
     toolBar = new QToolBar("Панель инструментов");
     toolBar->setStyleSheet("QToolBar {"
-                           "   border: 2px solid gray;"
+                           "   border: 1px solid gray;"
                            "   padding: 2px 0px;"
                            "   border-radius: 2px;"
                            "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
@@ -70,24 +66,35 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg)
     appendDrawTask(background, new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBackground));
     appendDrawTask(terImg,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawMap));
     appendDrawTask(iconRLS,    new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawRLS));
+    appendDrawTask(border,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBorder));
 
     // Настройка визуала
     this->setStyleSheet("QMainWindow{"
                         "   background-color: rgb(255,255,255);"
-                        "   border: 2px solid gray;"
+                        "   border: 1px solid gray;"
                         "};");
 
     isCustomCursor = true;
+
+    //
+    QStatusBar* statusBar = new QStatusBar;
+
+    coordLabel = new QLabel("       ");
+    coordLabel->setStyleSheet("QLabel{"
+                              "   background-color: rgb(255,255,255,140);"
+                              "   border: 1px solid gray;"
+                              "   border-radius: 2px;"
+                              "};)");
+    statusBar->setFixedHeight(25);
+    statusBar->addWidget(coordLabel);
+
+    this->setStatusBar(statusBar);
+    statusBar->show();
 }
 
 void areaDrawWidget::setBlockSize(int size)
 {
     lBlock = size;
-}
-
-int areaDrawWidget::getBlockSize() const
-{
-    return lBlock;
 }
 
 void areaDrawWidget::appendTool(drawAreaTool *toolArea)
@@ -121,19 +128,7 @@ void areaDrawWidget::appendToolGroup(const QVector<drawAreaTool *> &boxTools,
 {
     QToolButton* inputButton = new QToolButton;
     QMenu* toolMenu = new QMenu(inputButton);
-    toolMenu->setStyleSheet("QMenu {"
-                            "   background-color: gray;"
-                            "   margin: 2px;"
-                            "   border-radius: 5px;"
-                            "}"
-                            "QMenu::item{"
-                            "   background-color: #E0E0E0;"
-                            "   color: rgb(25, 25, 25);"
-                            "}"
-                            "QMenu::item:selected{"
-                            "   background-color: rgb(193,254,255);"
-                            "   color: black;"
-                            "}");
+    Designer::setMenu(toolMenu);
 
     drawAreaTool* tool;
     int idPriority;
@@ -267,10 +262,15 @@ void areaDrawWidget::delDrawTask(int priorityKey)
 void areaDrawWidget::drawBackground()
 {
     // Отрисовка подложки
-    pPainter->setPen(QPen(Qt::white, 2, Qt::SolidLine));
     pPainter->setBrush(QBrush(Qt::black, Qt::Dense7Pattern));
     pPainter->drawRect(0, 0, this->geometry().width(), this->geometry().height());
+}
 
+void areaDrawWidget::drawBorder()
+{
+    pPainter->setPen(QPen(Qt::gray, 1, Qt::SolidLine));
+    pPainter->setBrush(Qt::NoBrush);
+    pPainter->drawRect(0, 0, this->geometry().width()-1, this->geometry().height()-1);
 }
 
 void areaDrawWidget::drawMap()
@@ -361,54 +361,6 @@ void areaDrawWidget::setCurRLS(int idRLS)
 {
     idCurRLS = idRLS;
     repaint();
-}
-
-void areaDrawWidget::saveImage(const QString &dirName, formatImg fImg, typeSaveImg tSave)
-{
-    // выбираем изображение которое будем сохранять
-    QImage saveImg;
-    switch (curOptRepaint) {
-    case geoMap:
-        saveImg = *images[geoMap];
-        break;
-    case netData:
-        saveImg = *images[netData];
-        break;
-    case QFunction:
-        saveImg = *images[QFunction];
-        break;
-    }
-
-    // сохраняем
-    switch (tSave) {
-    case full:
-        saveImg.save(dirName,
-                      strFormatImg[fImg],
-                      100);
-        break;
-    case screen:
-        this->getScreen().toImage().save(dirName,
-                                         strFormatImg[fImg],
-                                         100);
-        break;
-    case rect:
-//        size_t offset = idXoPredict * saveImg.depth() / 8
-//                      + idYoPredict * saveImg.bytesPerLine();
-
-//        QImage(saveImg.bits() + offset, 200, 200,
-//               saveImg.bytesPerLine(), saveImg.format()).save(dirName,
-//                                                                strFormatImg[fImg],
-//                                                                100);
-        break;
-    }
-}
-
-QPixmap areaDrawWidget::getScreen()
-{
-    QPixmap pix(this->size());
-    this->render(&pix);
-
-    return pix;
 }
 
 void areaDrawWidget::toIdMapCoords(int &Xpix, int &Ypix)
@@ -647,10 +599,15 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
         int idX, idY;
         Tool->getCoordMouse(idX, idY);
 
-        // Обновляем координаты курсора
-        updateCoord(double (idX - Xo) / k,
-                    double (idY - Yo) / k);
+        coordLabel->setText( "X:" + QString::number(double (idX - Xo) / k * lBlock) + "м"
+                            " Y:" + QString::number(double (idY - Yo) / k * lBlock) + "м"
+                            " H:" + QString::number(map->getHeight(idX, idY, Map::m)) + "м");
     }
+}
+
+int areaDrawWidget::getBlockSize() const
+{
+    return lBlock;
 }
 
 void areaDrawWidget::zoom(double dK)

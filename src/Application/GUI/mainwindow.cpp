@@ -4,39 +4,22 @@
 #include <QDebug>
 #include <QGraphicsDropShadowEffect>
 
+#include "designer.h"
+
 mainWindow::mainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::mainWindow)
 {
     ui->setupUi(this);
 
+    // Настройка визуала
+    Designer::setMainWindow(this);
     this->setWindowTitle("Система прогнозирования маршрутов скрытного пролета БПЛА");
 
-    // настройка визуала
-    this->setStyleSheet("QMainWindow{"
-                        "   background-color: rgb(201,214,234);"
-                        "   border: 2px solid rgb(84,123,177);}");
-
+    // Кнопки вызова основных окон
     toolBar = new QToolBar("Панель задач");
-    toolBar->setStyleSheet("QToolBar {"
-                           "    border: 2px solid rgb(84,123,177);"
-                           "    background-color: rgb(255,255,255);"
-                           "}"
-                           "QToolButton{"
-                           "   background-color: rgb(255,255,255);"
-                           "}"
-                           "QToolButton:hover{"
-                           "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
-                           "    border-color: rgb(0,0,0);"
-                           "    border-style: outset;"
-                           "    border-radius: 3px;"
-                           "    border-width: 1px;"
-                           "    border-color: rgb(0,0,0);"
-                           "}"
-                           "QToolButton:pressed{"
-                           "    background-color : rgb(143,204,205); color: rgb(0,0,0);;"
-                           "};");
-    addToolBar(Qt::TopToolBarArea, toolBar); // добавляем в панель инструментов
+    Designer::setToolBar(toolBar, Designer::whiteToolBox);
+    addToolBar(Qt::TopToolBarArea, toolBar);
 }
 
 void mainWindow::addTask(QWidget *widget,
@@ -45,21 +28,20 @@ void mainWindow::addTask(QWidget *widget,
                          const QString& nameWindow,
                          Qt::DockWidgetArea showPosition)
 {
-    // вставка виджета в интерфейс
+    // Вставка виджета в интерфейс
     QDockWidget* dock = new QDockWidget(nameWindow, this);
-    dock->setStyleSheet("QDockWidget{"
-                        "   background-color: #7795bf;"
-                        "}");
+    Designer::setDockWidget(dock);
+
     dock->setWidget(widget);
     addDockWidget(showPosition, dock);
 
+    //
     functionWindow* funcWin = new functionWindow(dock);
 
-    // создаем кнопку для вызова задачи
+    // Создаем кнопку для вызова задачи
     toolBar->addAction(pix,     nameButton, // соеденяем его с кнопкой вызова
                        funcWin, SLOT(editShowStatus()));
-
-    dock->close(); // сразу закрываем чтобы не мешался
+    dock->close(); // Сразу закрываем чтобы не мешался
 }
 
 mainWindow::~mainWindow()

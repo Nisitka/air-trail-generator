@@ -15,6 +15,9 @@
 #include <QVector>
 
 #include <QToolBar>
+#include <QStatusBar>
+
+#include <QLabel>
 
 #include "tooldefault.h"
 #include "tooleditmap.h"
@@ -28,6 +31,8 @@
 #include "toolsquareter.h"
 
 #include "drawtask.h"
+
+#include "backend/map.h"
 
 class areaDrawWidget: public QMainWindow
 {
@@ -60,7 +65,7 @@ private slots:
     void changeTool();
 
 public:
-    areaDrawWidget(QImage* mapImg);
+    areaDrawWidget(QImage* mapImg, Map* map);
 
     enum unit{pix, idMap};
 
@@ -101,12 +106,6 @@ public:
     // изменить коофициент приближения на dK
     void zoom(double dK);
 
-    // форматы изображений для сохр.
-    enum formatImg{jpg, png, bmp};
-
-    // сохранить текущее изображени
-    enum typeSaveImg{full, screen, rect};
-    void saveImage(const QString& dirName, formatImg, typeSaveImg = full);
 
     void drawGeoMap();
     void drawDataNet();
@@ -125,10 +124,12 @@ public:
     // задачи отрисовки (В порядке отрисовки)
     enum drawTasksID{background, terImg,
                      iconRLS, toolVis,   toolPredRect, toolPredTrail,
-                     toolRLS, toolRuler, toolSquarTer};
+                     toolRLS, toolRuler, toolSquarTer,
+                     border};
 
-    // методы для задач отрисовки
+    // Методы для задач отрисовки
     void drawBackground();
+    void drawBorder();
     void drawMap();
     void drawRLS();
 
@@ -159,6 +160,9 @@ protected:
 
 private:
 
+    // Карта (для обнаружения высоты)
+    Map* map;
+
     QToolButton* lastToolButton;
     void setButtonStyle(QToolButton*, StyleButtonTool style);
 
@@ -182,9 +186,6 @@ private:
     int keyCurTool;
     bool isCustomCursor;
 
-    // Форматы изображений
-    QVector <const char*> strFormatImg;
-
     // Обновить размеры дискреты
     void updateSizeBlock(int countPix);
 
@@ -199,8 +200,8 @@ private:
     int length = 800;
     int width = 800;
 
-    // размер дискреты изображения
-    int lBlock; // в пикселях
+    // Размер дискреты изображения
+    int lBlock; // в метрах
 
     // что отрисовывать в данный момент
     int curOptRepaint;
@@ -235,8 +236,7 @@ private:
     // выбранная РЛС
     int idCurRLS; // индекс выбранной РЛС
 
-    //
-    QPixmap getScreen();
+    QLabel* coordLabel;
 };
 
 #endif // AREADRAWWIDGET_H

@@ -26,7 +26,7 @@ bool LineGlyph::intersects(const QPoint &mousePos) const
     int Yo = mousePos.y();
 
     int x1 = pA->center().x();
-    int x2 = pB->center().x() ;
+    int x2 = pB->center().x();
 
     int y1 = pA->center().y();
     int y2 = pB->center().y();

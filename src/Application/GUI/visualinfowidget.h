@@ -6,7 +6,7 @@
 #include <QPushButton>
 
 #include "drawArea/areadrawwidget.h"
-#include "backend/map.h"
+//#include "backend/map.h"
 
 namespace Ui {
 class visualInfoWidget;
@@ -44,19 +44,10 @@ public:
 
     ~visualInfoWidget();
 
-protected:
-    virtual void mouseMoveEvent(QMouseEvent* mouseEvent);
-
 private slots:
-    void saveMap();
-    void setDirNameMap();
 
-    void showInfoCoord(double x, double y);
+    //
     void switchVisual(int idType);
-
-    void saveImage();
-
-    void setDirNameImg();
 
 private:
     // настройка визуала
@@ -68,29 +59,16 @@ private:
     int sizeFilter = 2;
     int numCurPoint;
 
-    // опции сохранения изображения
-    enum optSaveImg{screen, full, curRect}; // скирншот, всю карту, выделенную область
-    QStringList typeSaveImg = {"сриншот", "всю карту", "выд. область"};
-
-    // названия форматов изображений
-    QString formatsImg = "*.png ;; *.jpg ;; *.bmp";
-
-    // выбранный формат для сохранения
-    QString curFormat;
-
     // карта (рельеф)
     Map* map;
-    QString mapFormat = ".txt";
 
     // виджет, на котором будет происходить отрисовка изоб.
     areaDrawWidget* drawArea;
 
     // типы изображений
-    QStringList strTypeVisual = {"Рельеф",
-                                 "Образ нейронной сети",
-                                 "Целевую функцию"};
-
-    QPushButton* lastButtonTool;
+    QStringList strTypeVisual = {"Физическая",
+                                 "Спутниковый снимок",
+                                 "Схематичная"};
 
     Ui::visualInfoWidget *ui;
 };
