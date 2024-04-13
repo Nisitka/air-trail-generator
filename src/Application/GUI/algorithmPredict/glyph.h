@@ -8,13 +8,29 @@
 
 #include <QMouseEvent>
 
-class Glyph
+class Glyph: public QObject
 {
+    Q_OBJECT
+
+signals:
+
+    // Попросить уничтожить этот глиф
+    void killMe(Glyph* i);
+
+    //
+    void dead();
+
 public:
     Glyph(QWidget* parent,
           const QPoint& position = QPoint(0, 0),
           const QSize& size = QSize(1, 1),
           int t = def);
+
+    virtual ~Glyph();
+
+    // Индитификатор этого глифа
+    void setID(int id); // Обозначить
+    int getID() const;     // Спросить
 
     // Типы глифов
     enum Type{conIn, conOut, label, def};
@@ -78,6 +94,9 @@ protected:
 private:
 
     int mType;
+
+    //
+    int id;
 
 };
 

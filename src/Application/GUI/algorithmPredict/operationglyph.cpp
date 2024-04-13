@@ -4,7 +4,7 @@
 
 operationGlyph::operationGlyph(QWidget* parent,
                                const QPoint& position, const QSize& size):
-    Glyph(parent, position, size), QObject()
+    Glyph(parent, position, size)
 {
     //
     countOper = 0;

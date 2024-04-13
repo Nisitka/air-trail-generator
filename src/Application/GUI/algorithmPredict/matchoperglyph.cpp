@@ -1,6 +1,7 @@
 #include "matchoperglyph.h"
 
-matchOperGlyph::matchOperGlyph(QWidget* parent, const QPoint& position):
+matchOperGlyph::matchOperGlyph(QWidget* parent,
+                               const QPoint& position):
     operationGlyph(parent, position)
 {
     addOperation(sum, QIcon(":/resurs/plus"));

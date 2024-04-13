@@ -2,8 +2,9 @@
 
 #include <QDebug>
 
-LineGlyph::LineGlyph(QWidget* parent, Glyph* pA, Glyph* pB):
-    Glyph(parent), pA(pA), pB(pB)
+LineGlyph::LineGlyph(QWidget* parent,
+                     Glyph* pA_, Glyph* pB_):
+    Glyph(parent), pA(pA_), pB(pB_)
 {
 
 }
@@ -42,7 +43,9 @@ bool LineGlyph::intersects(const QPoint &mousePos) const
 
     double d = ((double)(Xo - x1) / dX) - ((double)(Yo - y1) / dY);
     if (fabs(d) < 0.1)
+    {
         return true;
+    }
 
     return false;
 }

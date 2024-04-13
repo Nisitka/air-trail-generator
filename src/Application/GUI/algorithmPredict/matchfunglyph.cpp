@@ -1,6 +1,7 @@
 #include "matchfunglyph.h"
 
-matchFunGlyph::matchFunGlyph(QWidget* parent, const QPoint& position, const QSize& size):
+matchFunGlyph::matchFunGlyph(QWidget* parent,
+                             const QPoint& position, const QSize& size):
     Glyph(parent, position, size)
 {
     int W = size.width();

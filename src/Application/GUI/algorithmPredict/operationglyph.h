@@ -9,7 +9,7 @@
 
 #include <QComboBox>
 
-class operationGlyph: public QObject, public Glyph
+class operationGlyph: public Glyph
 {
     Q_OBJECT
 signals:

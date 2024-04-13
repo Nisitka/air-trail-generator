@@ -7,21 +7,13 @@
 #include <QWheelEvent>
 #include <QPaintEvent>
 
-#include "glyph.h"
-#include "glyphpoint.h"
-#include "matchfunglyph.h"
-#include "operationglyph.h"
-#include "lineglyph.h"
+#include "glyphcomposer.h"
 
 class composPredFunctionArea: public QWidget
 {
     Q_OBJECT
 public:
     composPredFunctionArea();
-
-    //
-    enum keyMouse{left, right, mid};
-    enum statusMouse{press, release};
 
 protected:
 
@@ -39,17 +31,8 @@ protected:
 
 private:
 
-    // Состояние мыши
-    int statMouse;
-
-    // Все глифы
-    QVector <Glyph*> glyphs;
-
-    // Выбраный глиф (наведены на него)
-    Glyph* curGlyph;
-
-    // Выбран ли какой-нибудь глиф
-    bool selectGlyph;
+    // Управление глифами через него
+    GlyphComposer* glComposer;
 };
 
 #endif // COMPOSPREDFUNCTIONAREA_H

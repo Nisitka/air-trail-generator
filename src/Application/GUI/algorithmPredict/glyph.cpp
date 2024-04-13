@@ -2,14 +2,40 @@
 
 #include <QDebug>
 
-Glyph::Glyph(QWidget* parent, const QPoint& pos, const QSize& s, int t):
-    Parent(parent), mType(t), size(s), isHover(false)
+Glyph::Glyph(QWidget* parent,
+             const QPoint& pos, const QSize& s, int t):
+    Parent(parent),
+    mType(t), size(s), isHover(false)
 {
     //
     belongRect = QRect(pos, size);
 
 
     borderColor = Qt::black;
+}
+
+Glyph::~Glyph()
+{
+    // Удаляем все свои глифы
+    int countChild = childGlyphs.size();
+    for (int i=0; i<countChild; i++)
+    {
+        delete childGlyphs[i];
+    }
+
+    qDebug() << "delete" << id << "glyph";
+
+    dead();
+}
+
+void Glyph::setID(int id_)
+{
+    id = id_;
+}
+
+int Glyph::getID() const
+{
+    return id;
 }
 
 bool Glyph::intersects(const QPoint &mousePos) const

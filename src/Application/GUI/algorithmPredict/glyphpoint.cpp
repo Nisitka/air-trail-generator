@@ -1,6 +1,7 @@
 #include "glyphpoint.h"
 
-glyphPoint::glyphPoint(QWidget* parent, const QPoint& position, int R):
+glyphPoint::glyphPoint(QWidget* parent,
+                       const QPoint& position, int R):
     Glyph(parent, position, QSize(R*2, R*2)), R(R)
 {
     color = Qt::white;
@@ -17,7 +18,17 @@ void glyphPoint::draw(QPainter &painter)
 
 void glyphPoint::hoverEvent(QMouseEvent *mouse)
 {
+    Q_UNUSED(mouse);
+
     color = QColor(193,254,255);
+}
+
+void glyphPoint::pressEvent(QMouseEvent *mouse)
+{
+    Q_UNUSED(mouse);
+
+    /// Для теста! (глиф удаляется из программы)
+    killMe(this);
 }
 
 void glyphPoint::missEvent()

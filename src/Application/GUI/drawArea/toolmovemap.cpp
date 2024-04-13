@@ -61,6 +61,11 @@ void ToolMoveMap::mouseMove(QMouseEvent *mouse)
         drawArea->setCoordDrawArea(Xo, Yo);
         drawArea->repaint(); // !!! В будущем для оптимизации можно перенести в Release
     }
+    else
+    {
+        drawArea->updateInfoCoordMap(xMouse,
+                                     yMouse);
+    }
 }
 
 void ToolMoveMap::end()
