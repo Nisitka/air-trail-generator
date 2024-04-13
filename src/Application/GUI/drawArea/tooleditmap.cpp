@@ -89,6 +89,9 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
     xMouse = mouse->x();
     yMouse = mouse->y();
 
+    // Обновляем показания координат карты
+    drawArea->updateInfoCoordMap(xMouse,
+                                 yMouse);
 
     k = drawArea->getValZoom();
     updateSizeCursor();

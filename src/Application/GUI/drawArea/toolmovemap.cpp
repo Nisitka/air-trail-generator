@@ -18,12 +18,17 @@ void ToolMoveMap::init()
 
 void ToolMoveMap::mousePress(QMouseEvent *mouse)
 {
+    statMouse = press;
+
     cursor = Qt::ClosedHandCursor;
     setCursor();
 
-    statMouse = press;
     xPressMouse = mouse->x();
     yPressMouse = mouse->y();
+
+    //
+    drawArea->updateInfoCoordMap(xPressMouse,
+                                 yPressMouse);
 
     //
     drawArea->getCoordDrawArea(pXo, pYo);

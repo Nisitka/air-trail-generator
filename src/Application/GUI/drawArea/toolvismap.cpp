@@ -91,6 +91,10 @@ void ToolVisMap::mouseMove(QMouseEvent *mouse)
 //                             idXb, idYb);
         drawArea->repaint();
     }
+
+    // Обновляем показания координат карты
+    drawArea->updateInfoCoordMap(xMouse,
+                                 yMouse);
 }
 
 void ToolVisMap::end()

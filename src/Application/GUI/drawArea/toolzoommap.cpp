@@ -55,7 +55,7 @@ void ToolZoomMap::mousePress(QMouseEvent *mouse)
 
 void ToolZoomMap::mouseRelease(QMouseEvent *mouse)
 {
-    /* ... */
+    Q_UNUSED(mouse);
 }
 
 void ToolZoomMap::mouseMove(QMouseEvent *mouse)
@@ -63,6 +63,10 @@ void ToolZoomMap::mouseMove(QMouseEvent *mouse)
     // Текущие координаты
     xMouse = mouse->x();
     yMouse = mouse->y();
+
+    // Обновляем показания координат карты
+    drawArea->updateInfoCoordMap(xMouse,
+                                 yMouse);
 }
 
 void ToolZoomMap::end()

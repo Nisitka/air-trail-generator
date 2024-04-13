@@ -75,6 +75,10 @@ void ToolSetRLS::mouseMove(QMouseEvent *mouse)
     // Текущие координаты
     xMouse = mouse->x();
     yMouse = mouse->y();
+
+    // Обновляем показания координат карты
+    drawArea->updateInfoCoordMap(xMouse,
+                                 yMouse);
 }
 
 void ToolSetRLS::end()

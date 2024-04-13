@@ -595,14 +595,14 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
     if (mouseFromArea(mouseEvent))
     {
         Tool->mouseMove(mouseEvent);
-
-        int idX, idY;
-        Tool->getCoordMouse(idX, idY);
-
-        coordLabel->setText( "X:" + QString::number(double (idX - Xo) / k * lBlock) + "м"
-                            " Y:" + QString::number(double (idY - Yo) / k * lBlock) + "м"
-                            " H:" + QString::number(map->getHeight(idX, idY, Map::m)) + "м");
     }
+}
+
+void areaDrawWidget::updateInfoCoordMap(int idX, int idY)
+{
+    coordLabel->setText( "X:" + QString::number(double (idX - Xo) / k * lBlock) + "м"
+                        " Y:" + QString::number(double (idY - Yo) / k * lBlock) + "м"
+                        " H:" + QString::number(map->getHeight(idX - Xo, idY - Yo, Map::m)) + "м");
 }
 
 int areaDrawWidget::getBlockSize() const

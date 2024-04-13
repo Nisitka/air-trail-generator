@@ -145,6 +145,9 @@ public:
     void drawText(const QRect& rect, const QString& text, unit uPoints = pix);
     void drawPolygon(const QPolygon& polygon, unit uPoints = idMap);
 
+    // Обновить информацию об координатах
+    void updateInfoCoordMap(int idXpx, int idYpx); // в пикселях области
+
     //
     void setRenderHint(bool smoothing = true);
 
