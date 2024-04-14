@@ -45,7 +45,7 @@ private slots:
     void delGlyph(Glyph* deadGlyph);
 
     //
-
+    void selectActionArea(int idAction);
 
 private:
 

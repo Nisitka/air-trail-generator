@@ -9,6 +9,8 @@ GlyphComposer::GlyphComposer(QWidget* area_): area(area_)
                                 new QAction("Вставить")};
     actionArea->addActions(actions);
 
+    //actionArea->
+
     //
     nextKey = 0;
 
@@ -37,6 +39,11 @@ GlyphComposer::GlyphComposer(QWidget* area_): area(area_)
     //delGlyph(glyphs.last());
 
     area->repaint();
+}
+
+void GlyphComposer::selectActionArea(int idAction)
+{
+    qDebug() << idAction << "action";
 }
 
 void GlyphComposer::addGlyph(Glyph *newGlyph)
