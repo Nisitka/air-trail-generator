@@ -84,11 +84,10 @@ void Glyph::hoverEvent(QMouseEvent* mouse)
 {
     borderColor = Qt::red;
 
-    int countChild = childGlyphs.size();
     Glyph* g;
-    for (int i=0; i<countChild; i++)
+    for (auto it = childGlyphs.begin(); it != childGlyphs.end(); ++it)
     {
-        g = childGlyphs[i];
+        g = it.value();
         if (g->intersects(mouse->pos()))
             g->hoverEvent(mouse);
         else
@@ -101,10 +100,9 @@ void Glyph::missEvent()
     borderColor = Qt::black;
 
     //
-    int countChild = childGlyphs.size();
-    for (int i=0; i<countChild; i++)
+    for (auto it = childGlyphs.begin(); it != childGlyphs.end(); ++it)
     {
-        childGlyphs[i]->missEvent();
+        it.value()->missEvent();
     }
 }
 
@@ -116,11 +114,10 @@ void Glyph::pressEvent(QMouseEvent* mouse)
 
 void Glyph::releaseEvent(QMouseEvent* mouse)
 {
-    int countChild = childGlyphs.size();
-    for (int i=0; i<countChild; i++)
+    for (auto it = childGlyphs.begin(); it != childGlyphs.end(); ++it)
     {
-        if (childGlyphs[i]->intersects(mouse->pos()))
-            childGlyphs[i]->releaseEvent(mouse);
+        if (it.value()->intersects(mouse->pos()))
+            it.value()->releaseEvent(mouse);
     }
 }
 
@@ -132,10 +129,9 @@ void Glyph::moveEvent(QMouseEvent *mouse)
     belongRect.moveTo(newX, newY);
 
     //
-    int countChild = childGlyphs.size();
-    for (int i=0; i<countChild; i++)
+    for (auto it = childGlyphs.begin(); it != childGlyphs.end(); ++it)
     {
-        childGlyphs[i]->move(QPoint(newX, newY) + posGlyphs[i]);
+        it.value()->move(QPoint(newX, newY) + posGlyphs[it.key()]);
     }
 }
 

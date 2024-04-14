@@ -28,7 +28,7 @@ void glyphPoint::pressEvent(QMouseEvent *mouse)
     Q_UNUSED(mouse);
 
     /// Для теста! (глиф удаляется из программы)
-    killMe(this);
+    //killMe(this);
 }
 
 void glyphPoint::missEvent()

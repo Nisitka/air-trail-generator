@@ -3,15 +3,20 @@
 
 #include <QDebug>
 
+#include "../designer.h"
+
 setAlgPredictWindow::setAlgPredictWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::setAlgPredictWindow)
 {
     ui->setupUi(this);
 
+    Designer::setScrollArea(ui->scrollArea);
+
     comArea = new composPredFunctionArea;
 
-    ui->Layout->addWidget(comArea);
+    ui->scrollArea->setWidget(comArea);
+    //ui->Layout->addWidget(comArea);
 
     this->setMinimumHeight(200);
 }

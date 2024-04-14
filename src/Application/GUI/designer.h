@@ -10,6 +10,7 @@
 #include <QMainWindow>
 #include <QDockWidget>
 #include <QMenu>
+#include <QScrollArea>
 
 class Designer
 {
@@ -44,6 +45,8 @@ public:
     static void setDockWidget(QDockWidget* dockWidget);
 
     static void setMenu(QMenu* menu);
+
+    static void setScrollArea(QScrollArea* area);
 };
 
 #endif // DESIGNER_H

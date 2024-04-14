@@ -21,6 +21,11 @@ void LineGlyph::draw(QPainter &painter)
     pB->draw(painter);
 }
 
+void LineGlyph::pressEvent(QMouseEvent *mouse)
+{
+    qDebug() << "press";
+}
+
 bool LineGlyph::intersects(const QPoint &mousePos) const
 {
     int Xo = mousePos.x();

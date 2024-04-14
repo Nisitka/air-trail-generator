@@ -2,7 +2,7 @@
 #define LINEGLYPH_H
 
 #include "glyph.h"
-#include <QList>
+#include "glyphpoint.h"
 
 class LineGlyph: public Glyph
 {
@@ -14,15 +14,13 @@ protected:
     void draw(QPainter &painter) override;
     bool intersects(const QPoint &mousePos) const override;
 
+    void pressEvent(QMouseEvent* mouse) override;
+
 private:
 
     // Глифы, между которыми рисуется линия
     Glyph* pA;
     Glyph* pB;
-
-    /// На будущее!
-    //QList <QPoint> knots;
-
 };
 
 #endif // LINEGLYPH_H

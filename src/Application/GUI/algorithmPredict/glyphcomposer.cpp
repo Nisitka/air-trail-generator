@@ -4,6 +4,11 @@
 
 GlyphComposer::GlyphComposer(QWidget* area_): area(area_)
 {
+    actionArea = new QMenu(area);
+    QList <QAction*> actions = {new QAction("Добавить"),
+                                new QAction("Вставить")};
+    actionArea->addActions(actions);
+
     //
     nextKey = 0;
 
@@ -19,15 +24,15 @@ GlyphComposer::GlyphComposer(QWidget* area_): area(area_)
     addGlyph(new matchFunGlyph(area, QPoint(80, 80)));
     addGlyph(new matchFunGlyph(area, QPoint(140, 140)));
 
-//    addGlyph(new LineGlyph(area,
-//                                glyphs[0],
-//                                glyphs[1]));
-//    addGlyph(new LineGlyph(area,
-//                                glyphs[1],
-//                                glyphs[2]));
-//    addGlyph(new LineGlyph(area,
-//                                glyphs[3],
-//                                glyphs[4]));
+    addGlyph(new LineGlyph(area,
+                                glyphs[0],
+                                glyphs[1]));
+    addGlyph(new LineGlyph(area,
+                                glyphs[1],
+                                glyphs[2]));
+    addGlyph(new LineGlyph(area,
+                                glyphs[3],
+                                glyphs[4]));
 
     //delGlyph(glyphs.last());
 
@@ -73,8 +78,30 @@ void GlyphComposer::mousePressEvent(QMouseEvent *mouse)
 {
     statMouse = press;
 
+    int button = mouse->button();
     if (selectGlyph && curGlyph != nullptr)
-        curGlyph->pressEvent(mouse);
+    {
+        if (button == Qt::MouseButton::LeftButton)
+        {
+            curGlyph->pressEvent(mouse);
+        }
+        else
+        {
+            qDebug() << "Menu!";
+        }
+    }
+    else    // Нажатие на пустую область
+    {
+        if (button == Qt::MouseButton::LeftButton)
+        {
+            actionArea->hide();
+        }
+        else
+        {
+            actionArea->move(mouse->globalPos());
+            actionArea->show();
+        }
+    }
 }
 
 void GlyphComposer::mouseReleaseEvent(QMouseEvent *mouse)

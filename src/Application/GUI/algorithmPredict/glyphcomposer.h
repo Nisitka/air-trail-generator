@@ -2,6 +2,8 @@
 #define GLYPHCOMPOSER_H
 
 #include <QWidget>
+#include <QMenu>
+#include <QMenuBar>
 
 #include "glyph.h"
 
@@ -42,10 +44,17 @@ private slots:
     // Удалить глиф
     void delGlyph(Glyph* deadGlyph);
 
+    //
+
+
 private:
 
     // Кому принадлежат глифы, которыми управляем
     QWidget* area;
+
+    //
+    QMenu* actionArea;
+    QMenu* actionGlyph;
 
     // Состояние мыши
     int statMouse;

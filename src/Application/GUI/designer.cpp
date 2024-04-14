@@ -1,5 +1,7 @@
 #include "designer.h"
 
+#include <QScrollBar>
+
 Designer::Designer()
 {
 
@@ -340,4 +342,23 @@ void Designer::setToolBar(QToolBar *toolBar, int style)
     }
 
     toolBar->setStyleSheet(strStyle);
+}
+
+void Designer::setScrollArea(QScrollArea *area)
+{
+    QString strStyle =
+        "QScrollBar:horizontal {"
+        "   border: 2px solid grey;"
+        "   background: #32CC99;"
+        "   height: 15px;"
+        "   margin: 0px 20px 0 20px;"
+        "}"
+        "QScrollBar:vertical {"
+        "   border: 2px solid grey;"
+        "   background: #32CC99;"
+        "   height: 15px;"
+        "   margin: 0px 20px 0 20px;"
+        "}";
+
+    //area->setStyleSheet(strStyle);
 }

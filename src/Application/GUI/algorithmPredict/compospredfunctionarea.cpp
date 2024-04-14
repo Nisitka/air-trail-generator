@@ -5,6 +5,7 @@ composPredFunctionArea::composPredFunctionArea()
     this->setStyleSheet("QWidget {"
                         "   background-color: rgb(255,255,255);"
                         "}");
+    this->setFixedSize(1000, 800);
 
     // Чтоб moveEvent работал без нажатия
     this->setMouseTracking(true);
@@ -23,7 +24,7 @@ void composPredFunctionArea::paintEvent(QPaintEvent *event)
 
     // Отрисовка подложки
     painter.setPen(QPen(Qt::black, 2, Qt::SolidLine));
-    painter.setBrush(QBrush(Qt::white, Qt::Dense7Pattern));
+    painter.setBrush(QBrush(Qt::black, Qt::Dense7Pattern));
     painter.drawRect(0, 0,
                       this->geometry().width(),
                       this->geometry().height());
