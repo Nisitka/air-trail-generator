@@ -91,6 +91,11 @@ protected:
     //
     bool isHover;
 
+private slots:
+
+    //
+    void destroy();
+
 private:
 
     int mType;

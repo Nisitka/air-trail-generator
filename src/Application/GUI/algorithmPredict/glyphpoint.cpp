@@ -25,7 +25,8 @@ void glyphPoint::hoverEvent(QMouseEvent *mouse)
 
 void glyphPoint::pressEvent(QMouseEvent *mouse)
 {
-    Q_UNUSED(mouse);
+    Xpress = mouse->x() - belongRect.x();
+    Ypress = mouse->y() - belongRect.y();
 
     /// Для теста! (глиф удаляется из программы)
     //killMe(this);

@@ -6,7 +6,10 @@ LineGlyph::LineGlyph(QWidget* parent,
                      Glyph* pA_, Glyph* pB_):
     Glyph(parent), pA(pA_), pB(pB_)
 {
-
+    connect(pA,   SIGNAL(dead()),
+            this, SLOT(destroy()));
+    connect(pB,   SIGNAL(dead()),
+            this, SLOT(destroy()));
 }
 
 void LineGlyph::draw(QPainter &painter)

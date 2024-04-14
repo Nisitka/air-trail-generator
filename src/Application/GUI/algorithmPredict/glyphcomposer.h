@@ -45,15 +45,24 @@ private slots:
     void delGlyph(Glyph* deadGlyph);
 
     //
-    void selectActionArea(int idAction);
+    void addGlyphAction();
+
+    //
+    void delGlyphAction();
+
+    // Перейти в состояние по умолчанию
+    void toDefStatus();
 
 private:
 
     // Кому принадлежат глифы, которыми управляем
     QWidget* area;
 
-    //
+    // Меню для добавления глифов
     QMenu* actionArea;
+    QPoint posActArea; // Относительно area
+
+    // Меню по работе с глифом
     QMenu* actionGlyph;
 
     // Состояние мыши

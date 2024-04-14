@@ -95,6 +95,11 @@ void Glyph::hoverEvent(QMouseEvent* mouse)
     }
 }
 
+void Glyph::destroy()
+{
+    killMe(this);
+}
+
 void Glyph::missEvent()
 {
     borderColor = Qt::black;

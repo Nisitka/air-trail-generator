@@ -1,15 +1,36 @@
 #include "glyphcomposer.h"
 
+#include "../designer.h"
+
 #include <QDebug>
 
 GlyphComposer::GlyphComposer(QWidget* area_): area(area_)
 {
+    // Меню для добавления глифов
     actionArea = new QMenu(area);
-    QList <QAction*> actions = {new QAction("Добавить"),
-                                new QAction("Вставить")};
-    actionArea->addActions(actions);
+    connect(actionArea, SIGNAL(aboutToHide()),
+            this,       SLOT(toDefStatus()));
+    QAction* addGlAction = new QAction("Добавить");
+    connect(addGlAction, SIGNAL(triggered(bool)),
+            this,        SLOT(addGlyphAction()));
+    Designer::setMenu(actionArea);
 
-    //actionArea->
+    QList <QAction*> actions1 = {addGlAction,
+                                new QAction("Вставить")};
+    actionArea->addActions(actions1);
+
+    //
+    actionGlyph = new QMenu(area);
+    connect(actionGlyph, SIGNAL(aboutToHide()),
+            this,        SLOT(toDefStatus()));
+    QAction* delGlAction = new QAction("Удалить");
+    connect(delGlAction, SIGNAL(triggered(bool)),
+            this,        SLOT(delGlyphAction()));
+
+    QAction* copGlAction = new QAction("Копировать");
+    QList <QAction*> actions2 = {delGlAction, copGlAction};
+    actionGlyph->addActions(actions2);
+    Designer::setMenu(actionGlyph);
 
     //
     nextKey = 0;
@@ -35,15 +56,24 @@ GlyphComposer::GlyphComposer(QWidget* area_): area(area_)
     addGlyph(new LineGlyph(area,
                                 glyphs[3],
                                 glyphs[4]));
-
-    //delGlyph(glyphs.last());
-
     area->repaint();
 }
 
-void GlyphComposer::selectActionArea(int idAction)
+void GlyphComposer::toDefStatus()
 {
-    qDebug() << idAction << "action";
+    statMouse = release;
+    area->repaint();
+}
+
+void GlyphComposer::addGlyphAction()
+{
+    addGlyph(new glyphPoint(area, posActArea));
+}
+
+void GlyphComposer::delGlyphAction()
+{
+    delGlyph(curGlyph);
+    area->repaint();
 }
 
 void GlyphComposer::addGlyph(Glyph *newGlyph)
@@ -55,11 +85,14 @@ void GlyphComposer::addGlyph(Glyph *newGlyph)
 
     connect(newGlyph, SIGNAL(killMe(Glyph*)),
             this,     SLOT(delGlyph(Glyph*)));
+
+    // Чтоб сразу увидеть его
+    area->repaint();
 }
 
 void GlyphComposer::delGlyph(Glyph *glyph)
 {
-    if (curGlyph == glyph)
+    if (glyph == curGlyph)
         curGlyph = nullptr;
 
     glyphs.remove(glyph->getID());
@@ -87,14 +120,15 @@ void GlyphComposer::mousePressEvent(QMouseEvent *mouse)
 
     int button = mouse->button();
     if (selectGlyph && curGlyph != nullptr)
-    {
+    {       // Нажатие на глиф
         if (button == Qt::MouseButton::LeftButton)
         {
             curGlyph->pressEvent(mouse);
         }
         else
         {
-            qDebug() << "Menu!";
+            actionGlyph->move(mouse->globalPos());
+            actionGlyph->show();
         }
     }
     else    // Нажатие на пустую область
@@ -105,6 +139,8 @@ void GlyphComposer::mousePressEvent(QMouseEvent *mouse)
         }
         else
         {
+            posActArea = mouse->pos();
+
             actionArea->move(mouse->globalPos());
             actionArea->show();
         }

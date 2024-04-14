@@ -26,7 +26,6 @@ void Designer::setProgressBar(QProgressBar* pb)
             );
 }
 
-
 void Designer::setButton(QPushButton* button, int style)
 {
     QString strStyle;
