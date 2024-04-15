@@ -8,16 +8,22 @@ matchFunGlyph::matchFunGlyph(QWidget* parent,
     int H = size.height();
 
     //
-    addPos(QPoint(6, 10), A);
-    insert(new glyphPoint(parent, position), A);
+    addPos(QPoint(W - 15 - 30, H - 8), inA);
+    insert(new glyphPoint(parent, position), inA);
+    addPos(QPoint(W - 15 - 30, H/2-5), lA);
+    insert(new LabelGlyph(parent, position, QPixmap(":/resurs/b").scaled(22, 20)), lA);
 
-    addPos(QPoint(6, H - 10), B);
-    insert(new glyphPoint(parent, position), B);
+    addPos(QPoint(15, H - 8), inB);
+    insert(new glyphPoint(parent, position), inB);
+    addPos(QPoint(15, H/2-5), lB);
+    insert(new LabelGlyph(parent, position, QPixmap(":/resurs/a").scaled(22, 20)), lB);
 
-    addPos(QPoint(W - 3, 30), result);
-    insert(new glyphPoint(parent, position), result);
+    addPos(QPoint(W - 10, H/2-5), outRes);
+    insert(new glyphPoint(parent, position), outRes);
+    addPos(QPoint(W - 26, H/2-5), lRes);
+    insert(new LabelGlyph(parent, position, QPixmap(":/resurs/equal").scaled(16, 20)), lRes);
 
-    addPos(QPoint(W/2, H/2), oper);
+    addPos(QPoint((W-30)/2, H/2-5), oper);
     insert(new matchOperGlyph(parent, position), oper);
 
     //
@@ -32,10 +38,9 @@ void matchFunGlyph::draw(QPainter &painter)
     painter.drawRect(belongRect);
 
     // Рисуем всех свои остальные глифы
-    int countChild = childGlyphs.size();
-    for (int i=0; i<countChild; i++)
+    for (auto it = childGlyphs.begin(); it != childGlyphs.end(); ++it)
     {
-        childGlyphs[i]->draw(painter);
+        it.value()->draw(painter);
     }
 
     if (isHover)
@@ -53,11 +58,10 @@ void matchFunGlyph::hoverEvent(QMouseEvent* mouse)
 {
     isHover = true;
 
-    int countChild = childGlyphs.size();
     Glyph* g;
-    for (int i=0; i<countChild; i++)
+    for (auto it = childGlyphs.begin(); it != childGlyphs.end(); ++it)
     {
-        g = childGlyphs[i];
+        g = it.value();
         if (g->intersects(mouse->pos()))
             g->hoverEvent(mouse);
         else
@@ -70,11 +74,10 @@ void matchFunGlyph::pressEvent(QMouseEvent *mouse)
     Xpress = mouse->x() - belongRect.x();
     Ypress = mouse->y() - belongRect.y();
 
-    int countChild = childGlyphs.size();
     Glyph* g;
-    for (int i=0; i<countChild; i++)
+    for (auto it = childGlyphs.begin(); it != childGlyphs.end(); ++it)
     {
-        g = childGlyphs[i];
+        g = it.value();
         if (g->intersects(mouse->pos()))
             g->pressEvent(mouse);
     }

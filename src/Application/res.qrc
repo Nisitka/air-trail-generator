@@ -52,5 +52,8 @@
         <file>resurs/multiplication.png</file>
         <file>resurs/multiplication-sign.png</file>
         <file>resurs/plus.png</file>
+        <file>resurs/a.png</file>
+        <file>resurs/b.png</file>
+        <file>resurs/equal.png</file>
     </qresource>
 </RCC>

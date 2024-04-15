@@ -3,14 +3,19 @@
 
 #include "glyphpoint.h"
 #include "matchoperglyph.h"
+#include "labelglyph.h"
+
+
 
 class matchFunGlyph: public Glyph
 {
 public:
     matchFunGlyph(QWidget* parent,
-                  const QPoint& position, const QSize& size = QSize(40, 60));
+                  const QPoint& position, const QSize& size = QSize(110, 40));
 
-    enum pos{A, oper, B, result};
+    enum pos{inA, oper, inB,
+             lA, lB,
+             lRes, outRes};
 
 protected:
 

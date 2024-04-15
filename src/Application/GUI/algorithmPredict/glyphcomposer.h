@@ -11,6 +11,7 @@
 #include "matchfunglyph.h"
 #include "operationglyph.h"
 #include "lineglyph.h"
+#include "labelglyph.h"
 
 class GlyphComposer: public QObject
 {

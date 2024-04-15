@@ -73,10 +73,9 @@ void Glyph::draw(QPainter &painter)
      * а рисуются только его составные глифы */
 
     // Рисуем всех свои остальные глифы
-    int countChild = childGlyphs.size();
-    for (int i=0; i<countChild; i++)
+    for (auto it = childGlyphs.begin(); it != childGlyphs.end(); ++it)
     {
-        childGlyphs[i]->draw(painter);
+        it.value()->draw(painter);
     }
 }
 

@@ -15,8 +15,7 @@ GlyphComposer::GlyphComposer(QWidget* area_): area(area_)
             this,        SLOT(addGlyphAction()));
     Designer::setMenu(actionArea);
 
-    QList <QAction*> actions1 = {addGlAction,
-                                new QAction("Вставить")};
+    QList <QAction*> actions1 = {addGlAction};
     actionArea->addActions(actions1);
 
     //
@@ -27,8 +26,7 @@ GlyphComposer::GlyphComposer(QWidget* area_): area(area_)
     connect(delGlAction, SIGNAL(triggered(bool)),
             this,        SLOT(delGlyphAction()));
 
-    QAction* copGlAction = new QAction("Копировать");
-    QList <QAction*> actions2 = {delGlAction, copGlAction};
+    QList <QAction*> actions2 = {delGlAction};
     actionGlyph->addActions(actions2);
     Designer::setMenu(actionGlyph);
 
@@ -56,6 +54,10 @@ GlyphComposer::GlyphComposer(QWidget* area_): area(area_)
     addGlyph(new LineGlyph(area,
                                 glyphs[3],
                                 glyphs[4]));
+
+    addGlyph(new LabelGlyph(area, QPoint(200, 200),
+                            QPixmap(":/resurs/plane").scaled(40, 40)));
+
     area->repaint();
 }
 
