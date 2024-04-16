@@ -62,43 +62,19 @@ void painterMapImage::setRectTexture(int idXo_, int idYo_, int numW_, int numL_)
 
 void painterMapImage::buildTexture()
 {
-    /*
-    // вырезаем нужный нам кусок
-    size_t offset = idXo * img->depth() / 8
-                  + idYo * img->bytesPerLine();
-    QImage texture = QImage(img->bits() + offset, numW, numL,
-                     img->bytesPerLine(),  img->format());
-                     */
 
-    QImage* texture = buildImageEarth(QRect(idXo, idYo, numW, numL));
-
-    // поворачиваем
-    QMatrix mat;
-    mat.rotate(270);
-    //*texture = texture->transformed(mat);
-
-    // сохраняем
-    texture->transformed(mat).save(QApplication::applicationDirPath() +
-                                   "\\texture.jpg",
-                                   "JPG",
-                                   100);
-
-    // сообщаем об готовности
-    readyTexture(idXo, idYo, numW, numL);
-
-    // очищаем память от ненужного QImage
-    delete texture;
 }
 
 QImage* painterMapImage::buildImageEarth(const QRect &rect)
 {
+    qDebug() << "NIKITA";
+
     // инициализация изображения текстуры
     int W = rect.width();
     int L = rect.height();
 
     QImage* texture = new QImage(W, L, img->format());
 
-    qDebug() << texture->size();
     QColor color;
     for (int x=0; x<W; x++)
     {
@@ -116,8 +92,6 @@ QImage* painterMapImage::buildImageEarth(const QRect &rect)
 
 void painterMapImage::runToRect(int idX, int idY, int w, int h)
 {
-    updateSizeImage();
-
     QColor color;
     int cZD;
 
@@ -140,12 +114,12 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
     if (idY < 0) idYo = 0;
     else idYo = idY;
 
-    // вычисление rgb каждого пикселя
+    // Вычисление rgb каждого пикселя
     for (int i=idXo; i<W; i++)
     {
         for (int j=idYo; j<H; j++)
         {
-            // вычисляется цвет по данным
+            // Вычисляется цвет по данным
             cZD = map->countZD(i, j);
             color = colorHeight(map->getHeight(i, j));
             r = color.red();

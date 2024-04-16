@@ -43,19 +43,19 @@ public:
     float getMaxH(); // в метрах
 
     void setLenBlock(double);
-    double getLenBlock();
+    double getLenBlock() const;
 
     // получить размеры карты
-    void getSize(int &w, int &l, int &h);
-    int getWidth(int type = id);
-    int getLength(int type = id);
-    int getCountLayers();
+    void getSize(int &w, int &l, int &h) const;
+    int getWidth(int type = id)          const;
+    int getLength(int type = id)         const;
+    int getCountLayers()                 const;
 
     // изменить разеры
     void resize(int W, int L, int H);
 
     // получить блок
-    geoBlock* getBlock(int x, int y, int z);
+    geoBlock* getBlock(int x, int y, int z) const;
 
     // высота в координатах X, Y
     enum typeH{m, id};
@@ -63,7 +63,7 @@ public:
 
  /*   узнать кол-во блоков, находящихся в ЗО
   *   на координатах X, Y
-  */int countZD(int x, int y);
+  */int countZD(int x, int y) const;
 
 private:
     // блоки хранится в слоях

@@ -189,12 +189,12 @@ void Map::resize(int W, int L, int H)
     build(W, L, H);
 }
 
-int Map::getCountLayers()
+int Map::getCountLayers() const
 {
     return layers.size();
 }
 
-void Map::getSize(int &w, int &l, int &h)
+void Map::getSize(int &w, int &l, int &h) const
 {
     w = Width;
     l = Length;
@@ -219,7 +219,7 @@ void Map::build(int W, int L, int H)
     }
 }
 
-int Map::countZD(int x, int y)
+int Map::countZD(int x, int y) const
 {
     int countZD = 0;
     for (int h=0; h<Height; h++)
@@ -233,7 +233,7 @@ int Map::countZD(int x, int y)
     return countZD;
 }
 
-geoBlock* Map::getBlock(int x, int y, int z)
+geoBlock* Map::getBlock(int x, int y, int z) const
 {
     return layers.at(z) + Width*y + x;
 }
@@ -257,40 +257,67 @@ void Map::setSize(int w, int l, int h)
     Width = w; Length = l; Height = h;
 }
 
-double Map::getLenBlock()
+double Map::getLenBlock() const
 {
     return lenBlock;
 }
 
-int Map::getWidth(int type)
+int Map::getWidth(int type) const
 {
+    int w = 0;
+
     switch (type)
     {
-        case id: return Width;
-        case m: return Width * lenBlock;
+        case id:
+
+            w = Width;
+            break;
+        case m:
+
+            w = Width * lenBlock;
+            break;
     }
+
+    return w;
 }
 
-int Map::getLength(int type)
+int Map::getLength(int type) const
 {
+    int l = 0;
+
     switch (type)
     {
-        case id: return Length;
-        case m: return Length * lenBlock;
+        case id:
+
+            l = Length;
+            break;
+
+        case m:
+
+            l = Length * lenBlock;
+            break;
     }
+
+    return l;
 }
 
 int Map::getHeight(int X, int Y, int type)
 {
-    int h = Height - 1;
-    // спускаемся сверху пока не встретим землю
-    while (!getBlock(X, Y, h)->isEarth()) h--;
+    // Cпускаемся сверху пока не встретим землю
+    int h = 0;
+    while (getBlock(X, Y, h)->isEarth() &&
+           h < Height-1) h++;
+    h--;
 
     switch (type) {
     case m:
-        return h * lenBlock;
+        h *= lenBlock;
+        break;
 
     case id:
-        return h;
+
+        break;
     }
+
+    return h;
 }
