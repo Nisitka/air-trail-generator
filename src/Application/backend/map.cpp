@@ -304,10 +304,8 @@ int Map::getLength(int type) const
 int Map::getHeight(int X, int Y, int type)
 {
     // Cпускаемся сверху пока не встретим землю
-    int h = 0;
-    while (getBlock(X, Y, h)->isEarth() &&
-           h < Height-1) h++;
-    h--;
+    int h = Height-1;
+    while (!getBlock(X, Y, h)->isEarth()) h--;
 
     switch (type) {
     case m:

@@ -28,6 +28,8 @@ void ToolSetRLS::setMarkCoordRLS()
 
 void ToolSetRLS::procDrawTask()
 {
+    qDebug() << "draw!";
+
     drawArea->setPen(QPen(Qt::black, 2, Qt::SolidLine));
     drawArea->drawCircle(xPosRLS, yPosRLS, 2, areaDrawWidget::pix);
 }
@@ -35,6 +37,8 @@ void ToolSetRLS::procDrawTask()
 void ToolSetRLS::mousePress(QMouseEvent *mouse)
 {
     statMouse = press;
+
+    qDebug() << "press!!!";
 
     // Координаты левого вернего угла карты отн-но виджета
     int Xo, Yo;
@@ -67,7 +71,7 @@ void ToolSetRLS::mousePress(QMouseEvent *mouse)
 
 void ToolSetRLS::mouseRelease(QMouseEvent *mouse)
 {
-    /* ... */
+    Q_UNUSED(mouse);
 }
 
 void ToolSetRLS::mouseMove(QMouseEvent *mouse)

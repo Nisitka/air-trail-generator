@@ -74,7 +74,8 @@ SOURCES += main.cpp\
     GUI/algorithmPredict/matchoperglyph.cpp \
     GUI/algorithmPredict/lineglyph.cpp \
     GUI/algorithmPredict/glyphcomposer.cpp \
-    GUI/algorithmPredict/labelglyph.cpp
+    GUI/algorithmPredict/labelglyph.cpp \
+    GUI/drawArea/mapmainwindow.cpp
 
 HEADERS  += \
     core.h \
@@ -127,7 +128,8 @@ HEADERS  += \
     GUI/algorithmPredict/matchoperglyph.h \
     GUI/algorithmPredict/lineglyph.h \
     GUI/algorithmPredict/glyphcomposer.h \
-    GUI/algorithmPredict/labelglyph.h
+    GUI/algorithmPredict/labelglyph.h \
+    GUI/drawArea/mapmainwindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \

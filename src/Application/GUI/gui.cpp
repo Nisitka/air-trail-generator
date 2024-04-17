@@ -2,6 +2,8 @@
 
 #include <QApplication>
 
+#include "drawArea/mapmainwindow.h"
+
 GUI::GUI(QImage* geoMap,
          Map* map_): map(map_)
 {
@@ -12,27 +14,32 @@ GUI::GUI(QImage* geoMap,
                                       map);
 
     //
-    areaDrawWidget* drawArea = visInfoWin->getDrawArea();
-    drawArea->setBlockSize(map->getLenBlock());
+    mapMainWindow* manDrawArea = visInfoWin->getManDrawArea();
+    areaDrawWidget* drawArea = manDrawArea->getDrawArea();
+    //drawArea->setBlockSize(map->getLenBlock());
 
     // Инструменты для граф.области(какая область, приоритет-ключ задач отрисовки)
-    toolPTrail  = new ToolPredTrail(drawArea, areaDrawWidget::predictTrail);
-    toolPLine   = new ToolPredRect (drawArea, areaDrawWidget::predictRect);
-    toolRLS     = new ToolSetRLS(   drawArea, areaDrawWidget::setRLS);
-    toolEditTer = new ToolEditMap(  drawArea, areaDrawWidget::editEarth);
-    toolVisMap  = new ToolVisMap(   drawArea, areaDrawWidget::mapVis);
-    ToolRuler* toolRuler = new ToolRuler(drawArea, areaDrawWidget::Ruler);
-    ToolSquareTer* toolSqTer = new ToolSquareTer(drawArea, areaDrawWidget::squareTer);
+    toolPTrail  = new ToolPredTrail(drawArea, mapMainWindow::predictTrail);
+    toolPLine   = new ToolPredRect (drawArea, mapMainWindow::predictRect);
+    toolRLS     = new ToolSetRLS(   drawArea, mapMainWindow::setRLS);
+    toolEditTer = new ToolEditMap(  drawArea, mapMainWindow::editEarth);
+    toolVisMap  = new ToolVisMap(   drawArea, mapMainWindow::mapVis);
+    ToolRuler* toolRuler = new ToolRuler(drawArea, mapMainWindow::Ruler);
+    ToolSquareTer* toolSqTer = new ToolSquareTer(drawArea, mapMainWindow::squareTer);
 
     QVector <drawAreaTool*> predTools = {toolPTrail, toolPLine};
-    drawArea->appendToolGroup(predTools, "Прогноз");
+    //manDrawArea->appendToolGroup(predTools, "Прогноз");
 
     QVector <drawAreaTool*> rulersTools = {toolRuler, toolSqTer};
-    drawArea->appendToolGroup(rulersTools, "Измерения");
+    //manDrawArea->appendToolGroup(rulersTools, "Измерения");
 
-    drawArea->appendTool(toolRLS);
-    drawArea->appendTool(toolEditTer);
-    drawArea->appendTool(toolVisMap);
+    manDrawArea->appendTool(toolRLS);
+    manDrawArea->appendTool(toolEditTer);
+    manDrawArea->appendTool(toolVisMap);
+    manDrawArea->appendTool(toolPTrail);
+    manDrawArea->appendTool(toolPLine);
+    manDrawArea->appendTool(toolRuler);
+    manDrawArea->appendTool(toolSqTer);
 
     //
     QObject::connect(visInfoWin, SIGNAL(saveMap_signal(QString)),
@@ -213,8 +220,8 @@ void GUI::connectMRLS(managerRLS* mRLS)
     QObject::connect(mRLS,       SIGNAL(readySetRay(int)),
                      optRLSWin,  SLOT(updateProgressSetOptRLS(int)));
 
-    //
-    QObject::connect(visInfoWin->getDrawArea(), SIGNAL(updateSignals()),
+    /// !!!!!!!!!!!!!!!!!!!!!!!!!!
+    QObject::connect(visInfoWin->getManDrawArea()->getDrawArea(), SIGNAL(updateSignals()),
                      mRLS,                      SLOT(updateSignals()));
 
     // обновление визуализации сигнала

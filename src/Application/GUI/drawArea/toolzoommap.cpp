@@ -22,34 +22,15 @@ void ToolZoomMap::mousePress(QMouseEvent *mouse)
     xPressMouse = mouse->x();
     yPressMouse = mouse->y();
 
-    int Xo, Yo;
-    drawArea->getCoordDrawArea(Xo, Yo);
-
-    int wPixMap, hPixMap;
-    drawArea->getSizePixMap(wPixMap, hPixMap);
-
-    double k;
-    k = drawArea->getValZoom();
-
-    int dW, dH;
-    dW = double (wPixMap * dK) / k / 2;
-    dH = double (hPixMap * dK) / k / 2;
     switch (mouse->button() - 1) {
     case left:
-        Xo -= dW;
-        Yo -= dH;
-
         drawArea->zoom(dK);
         break;
     case right:
-        Xo += dW;
-        Yo += dH;
-
         drawArea->zoom(-dK);
         break;
     }
 
-    drawArea->setCoordDrawArea(Xo, Yo);
     drawArea->repaint();
 }
 

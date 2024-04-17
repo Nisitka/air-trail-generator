@@ -62,13 +62,11 @@ void painterMapImage::setRectTexture(int idXo_, int idYo_, int numW_, int numL_)
 
 void painterMapImage::buildTexture()
 {
-
+    readyTexture(idXo, idYo, numW, numL);
 }
 
 QImage* painterMapImage::buildImageEarth(const QRect &rect)
 {
-    qDebug() << "NIKITA";
-
     // инициализация изображения текстуры
     int W = rect.width();
     int L = rect.height();

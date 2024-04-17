@@ -5,6 +5,12 @@
 
 class ToolMoveMap: public drawAreaTool
 {
+    Q_OBJECT
+signals:
+
+    //
+    void movedMap(double dX, double dY);
+
 public:
     ToolMoveMap(areaDrawWidget*, int id);
 

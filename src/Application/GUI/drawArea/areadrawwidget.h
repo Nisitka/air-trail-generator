@@ -34,15 +34,15 @@
 
 #include "backend/map.h"
 
-class areaDrawWidget: public QMainWindow
+class areaDrawWidget: public QWidget
 {
     Q_OBJECT
 signals:
     // перемоделировать сигнал РЛС
     void updateSignals();
 
-    // обновить инфу об координатах курсора
-    void updateCoord(double x, double y);
+    // Обновить информацию об координатах курсора
+    void updateCoord(const QString& textdataCoords);
 
 public slots:
     // Добавить РЛС для отрисовки
@@ -51,29 +51,13 @@ public slots:
     // удалить РЛС с отрисовки
     void delRLS(int indexRLS);
 
-    // Выбрать инструмент
-    void setTool(int id);
-
-protected:
-
-    // Переопределяем метод, чтоб не вылазило меню при нажатии лев.клавиши мыши
-    void contextMenuEvent(QContextMenuEvent* event);
-
-private slots:
-
-    void changeGroupTools(QAction*);
-    void changeTool();
-
 public:
     areaDrawWidget(QImage* mapImg, Map* map);
 
     enum unit{pix, idMap};
 
-    // Добавить инструмент
-    void appendTool(drawAreaTool* toolArea);
-    // Добавить грппу инструментов
-    void appendToolGroup(const QVector <drawAreaTool*>&,
-                         const QString& nameGroup);
+    //
+    void setTool(drawAreaTool* tool);
 
     // Добавить задачу для отрисовки
     void appendDrawTask(int priorityKey, taskPainter*);
@@ -117,10 +101,6 @@ public:
     // изображения для отображения
     enum showImages{geoMap, netData, QFunction};
 
-    // инструменты
-    enum tools{moveImg, setRLS, zoomImg, predictRect, predictTrail,
-               mapVis, editEarth, Ruler, squareTer, def};
-
     // задачи отрисовки (В порядке отрисовки)
     enum drawTasksID{background, terImg,
                      iconRLS, toolVis,   toolPredRect, toolPredTrail,
@@ -151,7 +131,8 @@ public:
     //
     void setRenderHint(bool smoothing = true);
 
-    enum StyleButtonTool {on, off};
+    // Обновить размер виджета согласно размерам карты и приблежению
+    void updateSize();
 
 protected:
     void paintEvent(QPaintEvent* pEvent);
@@ -162,12 +143,17 @@ protected:
     virtual void wheelEvent(QWheelEvent *event)             override;
 
 private:
+    // Размеры области отображенеия
+    int W; // в px
+    int H;
+
+    bool isCustomCursor;
+
+    //
+    drawAreaTool* Tool;
 
     // Карта (для обнаружения высоты)
     Map* map;
-
-    QToolButton* lastToolButton;
-    void setButtonStyle(QToolButton*, StyleButtonTool style);
 
     //
     QPainter* pPainter;
@@ -175,19 +161,8 @@ private:
     // Задачи отрисовки
     QMap <int, taskPainter*> drawTasks;
 
-    // Панель для инструментов
-    QToolBar* toolBar;
-
     //
     bool mouseFromArea(QMouseEvent *mouseEvent);
-
-    // Все инструменты
-    QMap <int, drawAreaTool*> Tools;
-
-    // Текущий инструмент
-    drawAreaTool* Tool;
-    int keyCurTool;
-    bool isCustomCursor;
 
     // Обновить размеры дискреты
     void updateSizeBlock(int countPix);
@@ -195,36 +170,28 @@ private:
     // Изоб. для отрисовки
     QVector <QImage*> images;
 
-    // пропорции виджета
-    int LEN = 800;
-    int WID = 800;
-
-    // размеры виджета
-    int length = 800;
-    int width = 800;
-
     // Размер дискреты изображения
     int lBlock; // в метрах
 
-    // что отрисовывать в данный момент
+    // Что отрисовывать в данный момент
     int curOptRepaint;
 
-    // координаты поставленных РЛС
+    // Координаты поставленных РЛС
     QList <QPoint*> coordsRLS;
     //
     QStringList namesRLS;
     //
     QColor curRLScolor;
 
-    // отправлять ли данные об координатах
+    // Отправлять ли данные об координатах
     bool isExportCoord;
 
-    // точка, относительно которой рисуем изображение
+    // Точка, относительно которой рисуем изображение
     int Xo = 0;
     int Yo = 0;
 
-    //коофициент приближения
-    double k;
+    // Коофициент приближения
+    double kZoom;
 
     // размеры карты для отрисовки
     int wightPixMap;
@@ -238,8 +205,6 @@ private:
     QPixmap* pixCurRLS;
     // выбранная РЛС
     int idCurRLS; // индекс выбранной РЛС
-
-    QLabel* coordLabel;
 };
 
 #endif // AREADRAWWIDGET_H

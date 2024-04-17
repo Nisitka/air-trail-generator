@@ -5,7 +5,7 @@
 
 #include <QPushButton>
 
-#include "drawArea/areadrawwidget.h"
+#include "drawArea/mapmainwindow.h"
 //#include "backend/map.h"
 
 namespace Ui {
@@ -40,7 +40,7 @@ public:
                               Map* map,
                               QWidget *parent = 0);
 
-    areaDrawWidget* getDrawArea();
+    mapMainWindow* getManDrawArea();
 
     ~visualInfoWidget();
 
@@ -59,11 +59,8 @@ private:
     int sizeFilter = 2;
     int numCurPoint;
 
-    // карта (рельеф)
-    Map* map;
-
-    // виджет, на котором будет происходить отрисовка изоб.
-    areaDrawWidget* drawArea;
+    //
+    mapMainWindow* manDrawArea;
 
     // типы изображений
     QStringList strTypeVisual = {"Физическая",

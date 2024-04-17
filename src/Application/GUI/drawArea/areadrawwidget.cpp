@@ -16,26 +16,24 @@
 
 #include "../designer.h"
 
-areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map)
+areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map), kZoom(1.0)
 {
-    this->setMinimumSize(100, 100);
-    this->setMaximumSize(10080, 25000);
-    this->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    isCustomCursor = true;
 
-    // отправляем данные об координатах курсора
-    isExportCoord = true;
+    setBlockSize(map->getLenBlock());
 
     // инициализация контейнера для изображений
     images = QVector <QImage*> (3);
-
     images[geoMap] = mapImg;
+    updateSize();
+
+    // отправляем данные об координатах курсора
+    isExportCoord = true;
 
     drawGeoMap();
 
     // чтобы moveEvent работал без нажатия
     this->setMouseTracking(true);
-
-    k = 1.0;
 
     pixRLS = new QPixmap(":/resurs/offRLS");
     pixCurRLS = new QPixmap(":/resurs/onRLS");
@@ -43,206 +41,24 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map)
 
     this->setCursor(Qt::ArrowCursor);
 
-    toolBar = new QToolBar("Панель инструментов");
-    toolBar->setStyleSheet("QToolBar {"
-                           "   border: 1px solid gray;"
-                           "   padding: 2px 0px;"
-                           "   border-radius: 2px;"
-                           "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-                           "                                     stop: 0 #E0E0E0, stop: 1 #FFFFFF);"
-                           "};");
-    addToolBar(Qt::TopToolBarArea, toolBar); // добавляем в панель инструментов
-
-    //
-    appendTool(new toolDefault(this, def));
-    appendTool(new ToolMoveMap(this, moveImg));
-    appendTool(new ToolZoomMap(this, zoomImg));
-
-    keyCurTool = def;
-    Tool = Tools[def];
-    lastToolButton = nullptr;
-
     // Задачи, которые всегда должны выполняться
     appendDrawTask(background, new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBackground));
     appendDrawTask(terImg,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawMap));
     appendDrawTask(iconRLS,    new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawRLS));
     appendDrawTask(border,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBorder));
+}
 
-    // Настройка визуала
-    this->setStyleSheet("QMainWindow{"
-                        "   background-color: rgb(255,255,255);"
-                        "   border: 1px solid gray;"
-                        "};");
+void areaDrawWidget::updateSize()
+{
+    W = images[geoMap]->width()  * kZoom;
+    H = images[geoMap]->height() * kZoom;
 
-    isCustomCursor = true;
-
-    //
-    QStatusBar* statusBar = new QStatusBar;
-
-    coordLabel = new QLabel("       ");
-    coordLabel->setStyleSheet("QLabel{"
-                              "   background-color: rgb(255,255,255,140);"
-                              "   border: 1px solid gray;"
-                              "   border-radius: 2px;"
-                              "};)");
-    statusBar->setFixedHeight(25);
-    statusBar->addWidget(coordLabel);
-
-    this->setStatusBar(statusBar);
-    statusBar->show();
+    setFixedSize(W, H);
 }
 
 void areaDrawWidget::setBlockSize(int size)
 {
     lBlock = size;
-}
-
-void areaDrawWidget::appendTool(drawAreaTool *toolArea)
-{
-    int idPriority = toolArea->getId();
-
-    Tools[idPriority] = toolArea;
-
-    //
-    if (idPriority != def)
-    {
-        QToolButton* button = new QToolButton;
-        button->setIcon(toolArea->getImgButton());
-        button->setToolTip(toolArea->getNameTool());
-
-        // Для изменения визуала
-        connect(button, SIGNAL(clicked(bool)),
-                this,   SLOT(changeTool()));
-        // Для реакции инструмента
-        connect(button,   SIGNAL(clicked(bool)),
-                toolArea, SLOT(assign()));
-
-        toolBar->addWidget(button);
-
-        setButtonStyle(button, off);
-    }
-}
-
-void areaDrawWidget::appendToolGroup(const QVector<drawAreaTool *> &boxTools,
-                                     const QString& nameGroup)
-{
-    QToolButton* inputButton = new QToolButton;
-    QMenu* toolMenu = new QMenu(inputButton);
-    Designer::setMenu(toolMenu);
-
-    drawAreaTool* tool;
-    int idPriority;
-    int countTool = boxTools.size();
-    for (int i=0; i<countTool; i++)
-    {
-        tool = boxTools.at(i);
-
-        idPriority = tool->getId();
-        Tools[idPriority] = tool;
-
-        toolMenu->addAction(tool->getImgButton(), tool->getNameTool(),
-                            tool, SLOT(assign()));
-    }
-
-    inputButton->setMenu(toolMenu);
-    inputButton->setPopupMode(QToolButton::MenuButtonPopup);
-
-    connect(inputButton, SIGNAL(clicked(bool)),
-            inputButton, SLOT(showMenu()));
-    connect(inputButton, SIGNAL(triggered(QAction*)),
-            this,        SLOT(changeGroupTools(QAction*)));
-
-    setButtonStyle(inputButton, off);
-    inputButton->setToolTip(nameGroup);
-    inputButton->setIcon(tool->getImgButton());
-
-    toolBar->addWidget(inputButton);
-}
-
-void areaDrawWidget::changeGroupTools(QAction* action)
-{
-    if (lastToolButton != nullptr)
-        setButtonStyle(lastToolButton, off);
-
-    QToolButton* bMenu = qobject_cast<QToolButton*>(sender());
-    lastToolButton = bMenu;
-
-    lastToolButton->setIcon(action->icon());
-    setButtonStyle(lastToolButton, on);
-}
-
-void areaDrawWidget::changeTool()
-{
-    if (lastToolButton != nullptr)
-        setButtonStyle(lastToolButton, off);
-
-    QToolButton* toolButton = qobject_cast<QToolButton*>(sender());
-    lastToolButton = toolButton;
-    setButtonStyle(lastToolButton, on);
-}
-
-void areaDrawWidget::setButtonStyle(QToolButton *button, StyleButtonTool style)
-{
-    QString strStyle;
-    switch (style) {
-    case off:
-        strStyle =
-                "QToolButton{"
-                "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-                "                                     stop: 0 #E0E0E0, stop: 1 #FFFFFF);"
-                "    border-style: outset;"
-                "}"
-                "QToolButton:hover{"
-                "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
-                "    border-color: rgb(0,0,0);"
-                "    border-style: outset;"
-                "    border-radius: 3px;"
-                "    border-width: 1px;"
-                "    border-color: rgb(0,0,0);"
-                "}"
-                "QToolButton:pressed{"
-                "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
-                "    border-color: rgb(0,0,0);"
-                "    border-style: outset;"
-                "    border-radius: 3px;"
-                "    border-width: 1px;"
-                "    border-color: rgb(0,0,0);"
-                "};";
-        break;
-    case on:
-        strStyle =
-                "QToolButton{"
-                "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
-                "    border-color: rgb(0,0,0);"
-                "    border-style: outset;"
-                "    border-radius: 3px;"
-                "    border-width: 1px;"
-                "}"
-                "QToolButton:hover{"
-                "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
-                "    border-color: rgb(0,0,0);"
-                "    border-radius: 3px;"
-                "    border-width: 1px;"
-                "    border-color: rgb(0,0,0);"
-                "}"
-                "QToolButton:pressed{"
-                "    background-color : rgb(193,254,255); color: rgb(0,0,0);"
-                "    border-color: rgb(0,0,0);"
-                "    border-style: outset;"
-                "    border-radius: 3px;"
-                "    border-width: 1px;"
-                "    border-color: rgb(0,0,0);"
-                "};";
-        break;
-    }
-
-    button->setStyleSheet(strStyle);
-}
-
-void areaDrawWidget::contextMenuEvent(QContextMenuEvent *event)
-{
-    Q_UNUSED(event);
-    /* ... */
 }
 
 void areaDrawWidget::appendDrawTask(int priorityKey, taskPainter* task)
@@ -290,8 +106,8 @@ void areaDrawWidget::drawMap()
             drawImg = images[QFunction];
             break;
     }
-    wightPixMap = drawImg->width() * k;
-    heightPixMap = drawImg->height() * k;
+    wightPixMap = drawImg->width() * kZoom;
+    heightPixMap = drawImg->height() * kZoom;
     pPainter->drawImage(Xo, Yo, drawImg->scaled(wightPixMap, heightPixMap));
 }
 
@@ -305,8 +121,8 @@ void areaDrawWidget::drawRLS()
 
         for (int i=0; i<coordsRLS.size(); i++)
         {
-            rectX = coordsRLS[i]->x() * k  + Xo;
-            rectY = coordsRLS[i]->y() * k  + Yo;
+            rectX = coordsRLS[i]->x() * kZoom  + Xo;
+            rectY = coordsRLS[i]->y() * kZoom  + Yo;
 
             //
             if (i == idCurRLS)
@@ -340,7 +156,7 @@ void areaDrawWidget::getSizePixMap(int &W, int &H)
 
 double areaDrawWidget::getValZoom()
 {
-    return k;
+    return kZoom;
 }
 
 void areaDrawWidget::addRLS(QPoint *posRLS, const QString& nameNewRLS)
@@ -365,8 +181,8 @@ void areaDrawWidget::setCurRLS(int idRLS)
 
 void areaDrawWidget::toIdMapCoords(int &Xpix, int &Ypix)
 {
-    Xpix = (Xpix - Xo) / k;
-    Ypix = (Ypix - Yo) / k;
+    Xpix = (Xpix - Xo) / kZoom;
+    Ypix = (Ypix - Yo) / kZoom;
 }
 
 void areaDrawWidget::setPen(const QPen &pen)
@@ -387,7 +203,7 @@ void areaDrawWidget::drawPolygon(const QPolygon &polygon, unit uPoints)
     case idMap:
         for (int i=0; i<polygon.size(); i++)
         {
-            p.append(polygon[i] * k + QPoint(Xo, Yo));
+            p.append(polygon[i] * kZoom + QPoint(Xo, Yo));
         }
         break;
     case pix:
@@ -402,8 +218,8 @@ void areaDrawWidget::drawLine(int x1, int y1, int x2, int y2, unit uPoints)
 {
     switch (uPoints) {
     case idMap:
-        pPainter->drawLine(x1 * k + Xo, y1 * k + Yo,
-                           x2 * k + Xo, y2 * k + Yo);
+        pPainter->drawLine(x1 * kZoom + Xo, y1 * kZoom + Yo,
+                           x2 * kZoom + Xo, y2 * kZoom + Yo);
         break;
     case pix:
         pPainter->drawLine(x1, y1,
@@ -414,15 +230,15 @@ void areaDrawWidget::drawLine(int x1, int y1, int x2, int y2, unit uPoints)
 
 void areaDrawWidget::drawRect(int x1, int y1, int x2, int y2)
 {
-    pPainter->drawRect(QRect(QPoint(x1*k + Xo, y1*k + Yo),
-                             QPoint(x2*k + Xo, y2*k + Yo)));
+    pPainter->drawRect(QRect(QPoint(x1*kZoom + Xo, y1*kZoom + Yo),
+                             QPoint(x2*kZoom + Xo, y2*kZoom + Yo)));
 }
 
 void areaDrawWidget::drawCircle(int x, int y, int R, unit uR, unit uCoords)
 {
     switch (uR) {
     case idMap:
-        R *= k;
+        R *= kZoom;
         break;
     case pix:
 
@@ -431,8 +247,8 @@ void areaDrawWidget::drawCircle(int x, int y, int R, unit uR, unit uCoords)
 
     switch (uCoords) {
     case idMap:
-        x = x * k + Xo;
-        y = y * k + Yo;
+        x = x * kZoom + Xo;
+        y = y * kZoom + Yo;
         break;
     case pix:
 
@@ -452,8 +268,8 @@ void areaDrawWidget::drawText(const QRect& rect, const QString& text, unit uPoin
     switch (uPoints) {
     case idMap:
         {
-        int x = rect.x() * k + Xo;
-        int y = rect.y() * k + Yo;
+        int x = rect.x() * kZoom + Xo;
+        int y = rect.y() * kZoom + Yo;
 
         QRect r(x, y, rect.width(), rect.height());
 
@@ -476,8 +292,8 @@ void areaDrawWidget::drawText(const QRect& rect, const QString& text, unit uPoin
 
 void areaDrawWidget::drawPixmap(int x, int y, int dX, int dY, const QPixmap& pix)
 {
-    x *= k;
-    y *= k;
+    x *= kZoom;
+    y *= kZoom;
 
     pPainter->drawPixmap(x + Xo + dX, y + Yo + dY, pix);
 }
@@ -508,38 +324,16 @@ void areaDrawWidget::setRenderHint(bool smoothing)
     pPainter->setRenderHint(QPainter::Antialiasing, smoothing);
 }
 
-// Изменяем текущий инструмент
-void areaDrawWidget::setTool(int key)
-{
-    // Освобождаем текущий от работы
-    Tool->end();
-
-    // Если хотим выбрать тот же инструменет, то отключаем его
-    if (keyCurTool == key)
-    {
-        key = def;
-        setButtonStyle(lastToolButton, off);
-    }
-
-    //
-    Tool = Tools[key];
-    keyCurTool = key;
-
-    // Подготавливаем его к работе
-    Tool->init();
-
-    repaint();
-}
-
-int areaDrawWidget::curTool()
-{
-    return keyCurTool;
-}
-
 void areaDrawWidget::setCoordDrawArea(int Xo_, int Yo_)
 {
     Xo = Xo_;
     Yo = Yo_;
+}
+
+void areaDrawWidget::setTool(drawAreaTool *tool)
+{
+    Tool = tool;
+    repaint();
 }
 
 bool areaDrawWidget::mouseFromArea(QMouseEvent *mouseEvent)
@@ -600,9 +394,12 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
 
 void areaDrawWidget::updateInfoCoordMap(int idX, int idY)
 {
-    coordLabel->setText( "X:" + QString::number(double (idX - Xo) / k * lBlock) + "м"
-                        " Y:" + QString::number(double (idY - Yo) / k * lBlock) + "м"
-                        " H:" + QString::number(map->getHeight(idX - Xo, idY - Yo, Map::m)) + "м");
+    //coordLabel->setText(
+    QString strCoords =  "X:" + QString::number(double (idX - Xo) / kZoom * lBlock) + "м"
+                        " Y:" + QString::number(double (idY - Yo) / kZoom * lBlock) + "м"
+                        " H:" + QString::number(map->getHeight(idX - Xo, idY - Yo, Map::m)) + "м";
+
+    updateCoord(strCoords);
 }
 
 int areaDrawWidget::getBlockSize() const
@@ -612,9 +409,11 @@ int areaDrawWidget::getBlockSize() const
 
 void areaDrawWidget::zoom(double dK)
 {
-    k += dK;
+    kZoom += dK;
 
-    if (k <= 0) k = 0.1;
+    if (kZoom <= 0) kZoom = 0.1;
+
+    updateSize();
 }
 
 void areaDrawWidget::drawGeoMap()

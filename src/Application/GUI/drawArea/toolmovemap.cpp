@@ -30,8 +30,6 @@ void ToolMoveMap::mousePress(QMouseEvent *mouse)
     drawArea->updateInfoCoordMap(xPressMouse,
                                  yPressMouse);
 
-    //
-    drawArea->getCoordDrawArea(pXo, pYo);
 }
 
 void ToolMoveMap::mouseRelease(QMouseEvent *mouse)
@@ -53,13 +51,15 @@ void ToolMoveMap::mouseMove(QMouseEvent *mouse)
     //
     if (statMouse == press)
     {
-        // Новые индексы левого верхнего угла карты
-        int Xo, Yo;
-        Xo = pXo - (xPressMouse - xMouse);
-        Yo = pYo - (yPressMouse - yMouse);
+        int dX, dY;
 
-        drawArea->setCoordDrawArea(Xo, Yo);
-        drawArea->repaint(); // !!! В будущем для оптимизации можно перенести в Release
+        int W = drawArea->width();
+        int H = drawArea->height();
+
+        dX = xPressMouse - xMouse;
+        dY = yPressMouse - yMouse;
+
+        movedMap((double) dX / W, (double) dY / H);
     }
     else
     {

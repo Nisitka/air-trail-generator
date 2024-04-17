@@ -17,14 +17,9 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
 {
     ui->setupUi(this);
 
-    // Устанавливаем карту
-    map = map_;
-
     //
-    drawArea = new areaDrawWidget(geoMap, map);
-
-    // Устанавливаем область для отрисовки и взаимодейстмия
-    ui->areaDrawLayout->addWidget(drawArea);
+    manDrawArea = new mapMainWindow(geoMap, map_);
+    ui->areaDrawLayout->addWidget(manDrawArea);
 
     //
     ui->objectVisualComboBox->addItems(strTypeVisual);
@@ -39,24 +34,24 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
     isPredictTrail = false;
 }
 
-areaDrawWidget* visualInfoWidget::getDrawArea()
+mapMainWindow* visualInfoWidget::getManDrawArea()
 {
-    return drawArea;
+    return manDrawArea;
 }
 
 void visualInfoWidget::setCurRLS(int idRLS)
 {
-    drawArea->setCurRLS(idRLS);
+    manDrawArea->getDrawArea()->setCurRLS(idRLS);
 }
 
 void visualInfoWidget::addRLS(QPoint* posRLS, const QString& nameNewRLS)
 {
-    drawArea->addRLS(posRLS, nameNewRLS);
+    manDrawArea->getDrawArea()->addRLS(posRLS, nameNewRLS);
 }
 
 void visualInfoWidget::delRLS(int indexRLS)
 {
-    drawArea->delRLS(indexRLS);
+    manDrawArea->getDrawArea()->delRLS(indexRLS);
 }
 
 void visualInfoWidget::switchVisual(int idType)
@@ -64,20 +59,20 @@ void visualInfoWidget::switchVisual(int idType)
     switch (idType)
     {
     case areaDrawWidget::geoMap :
-        drawArea->drawGeoMap();
+        manDrawArea->getDrawArea()->drawGeoMap();
         break;
     case areaDrawWidget::netData :
-        drawArea->drawDataNet();
+        manDrawArea->getDrawArea()->drawDataNet();
         break;
     case areaDrawWidget::QFunction :
-        drawArea->drawQFunction();
+        manDrawArea->getDrawArea()->drawQFunction();
         break;
     }
 }
 
 void visualInfoWidget::updateImage()
 {
-    drawArea->repaint();
+    manDrawArea->getDrawArea()->repaint();
 }
 
 visualInfoWidget::~visualInfoWidget()
