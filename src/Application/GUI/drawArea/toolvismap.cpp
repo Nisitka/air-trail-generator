@@ -2,7 +2,7 @@
 
 #include "areadrawwidget.h"
 
-ToolVisMap::ToolVisMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
+ToolVisMap::ToolVisMap(int id): drawAreaTool(id)
 {
     cursor = Qt::CrossCursor;
 

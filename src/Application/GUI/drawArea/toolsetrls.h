@@ -12,7 +12,7 @@ signals:
     void setCoordRLS(int x, int y);
 
 public:
-    ToolSetRLS(areaDrawWidget*, int id);
+    ToolSetRLS(int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

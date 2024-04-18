@@ -7,7 +7,7 @@ class ToolSquareTer: public drawAreaTool
 {
     Q_OBJECT
 public:
-    ToolSquareTer(areaDrawWidget*, int id);
+    ToolSquareTer(int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

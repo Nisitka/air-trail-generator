@@ -4,7 +4,7 @@
 
 #include <QDebug>
 
-ToolMoveMap::ToolMoveMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
+ToolMoveMap::ToolMoveMap(int id): drawAreaTool(id)
 {
     setParButton(QPixmap(":/resurs/hand"), "Перемещение на карте");
     cursor = Qt::OpenHandCursor;

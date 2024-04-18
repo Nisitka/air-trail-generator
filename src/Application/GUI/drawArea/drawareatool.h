@@ -21,8 +21,11 @@ public slots:
     // Назначить инструмент выбранным
     void assign();
 
+    //
+    void setDrawArea(areaDrawWidget* drawArea);
+
 public:
-    drawAreaTool(areaDrawWidget*, int id, QObject *parent = 0);
+    drawAreaTool(int id, QObject *parent = 0);
 
     int getId() const;
 

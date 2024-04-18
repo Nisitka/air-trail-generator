@@ -11,7 +11,7 @@ signals:
     void updateRect3D(int idXo, int idYo, int numW, int numL);
 
 public:
-    ToolVisMap(areaDrawWidget*, int id);
+    ToolVisMap(int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

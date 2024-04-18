@@ -7,7 +7,7 @@ class ToolRuler: public drawAreaTool
 {
     Q_OBJECT
 public:
-    ToolRuler(areaDrawWidget*, int id);
+    ToolRuler(int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

@@ -2,7 +2,7 @@
 
 #include "areadrawwidget.h"
 
-ToolSetRLS::ToolSetRLS(areaDrawWidget* area, int id): drawAreaTool(area, id)
+ToolSetRLS::ToolSetRLS(int id): drawAreaTool(id)
 {
     cursor = Qt::CrossCursor;
 

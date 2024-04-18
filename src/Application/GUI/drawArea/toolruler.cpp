@@ -2,7 +2,7 @@
 #include "math.h"
 #include "areadrawwidget.h"
 
-ToolRuler::ToolRuler(areaDrawWidget* area, int id): drawAreaTool(area, id)
+ToolRuler::ToolRuler(int id): drawAreaTool(id)
 {
     setParButton(QPixmap(":/resurs/triangle"), "Линейка");
 

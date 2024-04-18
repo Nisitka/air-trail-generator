@@ -17,7 +17,7 @@ signals:
     void downEarth(int idX, int idY, int R);
 
 public:
-    ToolEditMap(areaDrawWidget*, int id);
+    ToolEditMap(int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

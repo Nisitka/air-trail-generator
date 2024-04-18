@@ -24,7 +24,7 @@ public slots:
     void addPointTrail(int idXpt, int idYpt, int idZpt);
 
 public:
-    ToolPredTrail(areaDrawWidget*, int id, QObject *parent = 0);
+    ToolPredTrail(int id, QObject *parent = 0);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

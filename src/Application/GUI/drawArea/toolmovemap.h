@@ -12,7 +12,7 @@ signals:
     void movedMap(double dX, double dY);
 
 public:
-    ToolMoveMap(areaDrawWidget*, int id);
+    ToolMoveMap(int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

@@ -2,7 +2,7 @@
 
 #include "areadrawwidget.h"
 
-ToolPredTrail::ToolPredTrail(areaDrawWidget* area, int id, QObject *parent): drawAreaTool(area, id, parent)
+ToolPredTrail::ToolPredTrail(int id, QObject *parent): drawAreaTool(id, parent)
 {
     cursor = Qt::CrossCursor;
 

@@ -2,7 +2,7 @@
 
 #include "areadrawwidget.h"
 
-ToolZoomMap::ToolZoomMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
+ToolZoomMap::ToolZoomMap(int id): drawAreaTool(id)
 {
     // иконка для курсора во время приближения
     QPixmap iconZoom(":/resurs/zoomTool");

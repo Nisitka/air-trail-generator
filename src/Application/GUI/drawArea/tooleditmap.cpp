@@ -4,7 +4,7 @@
 
 #include <QDebug>
 
-ToolEditMap::ToolEditMap(areaDrawWidget* area, int id): drawAreaTool(area, id)
+ToolEditMap::ToolEditMap(int id): drawAreaTool(id)
 {
     cursor = Qt::CrossCursor;
 

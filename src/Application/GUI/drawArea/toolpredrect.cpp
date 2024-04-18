@@ -4,7 +4,7 @@
 
 #include <QDebug>
 
-ToolPredRect::ToolPredRect(areaDrawWidget* area, int id): drawAreaTool(area, id)
+ToolPredRect::ToolPredRect(int id): drawAreaTool(id)
 {
     cursor = Qt::CrossCursor;
 

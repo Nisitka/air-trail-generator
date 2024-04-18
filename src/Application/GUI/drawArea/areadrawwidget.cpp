@@ -78,8 +78,8 @@ void areaDrawWidget::delDrawTask(int priorityKey)
 void areaDrawWidget::drawBackground()
 {
     // Отрисовка подложки
-    pPainter->setBrush(QBrush(Qt::black, Qt::Dense7Pattern));
-    pPainter->drawRect(0, 0, this->geometry().width(), this->geometry().height());
+//    pPainter->setBrush(QBrush(Qt::black, Qt::Dense7Pattern));
+//    pPainter->drawRect(0, 0, this->geometry().width(), this->geometry().height());
 }
 
 void areaDrawWidget::drawBorder()
@@ -336,42 +336,9 @@ void areaDrawWidget::setTool(drawAreaTool *tool)
     repaint();
 }
 
-bool areaDrawWidget::mouseFromArea(QMouseEvent *mouseEvent)
-{
-    bool inArea;
-
-    int xPressMouse = mouseEvent->x();
-    int yPressMouse = mouseEvent->y();
-
-    int dX, dY;
-    dX = xPressMouse - Xo;
-    dY = yPressMouse - Yo;
-
-    // Условия
-    inArea = dX < wightPixMap &&
-             dY < heightPixMap &&
-             dX > 0 &&
-             dY > 0;
-
-    if (inArea)
-    {   //
-        if (isCustomCursor)
-            Tool->setCursor();
-    }
-    else
-    {
-         this->setCursor(Qt::CustomCursor);
-    }
-
-    return inArea;
-}
-
 void areaDrawWidget::mousePressEvent(QMouseEvent *mouseEvent)
 {
-    if (mouseFromArea(mouseEvent)){
-
-        Tool->mousePress(mouseEvent);
-    }
+    Tool->mousePress(mouseEvent);
 }
 
 void areaDrawWidget::wheelEvent(QWheelEvent *event)
@@ -386,18 +353,15 @@ void areaDrawWidget::mouseReleaseEvent(QMouseEvent* mouseEvent)
 
 void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
 {
-    if (mouseFromArea(mouseEvent))
-    {
-        Tool->mouseMove(mouseEvent);
-    }
+    Tool->mouseMove(mouseEvent);
 }
 
 void areaDrawWidget::updateInfoCoordMap(int idX, int idY)
 {
-    //coordLabel->setText(
     QString strCoords =  "X:" + QString::number(double (idX - Xo) / kZoom * lBlock) + "м"
                         " Y:" + QString::number(double (idY - Yo) / kZoom * lBlock) + "м"
-                        " H:" + QString::number(map->getHeight(idX - Xo, idY - Yo, Map::m)) + "м";
+                        " H:" + QString::number(map->getHeight((idX - Xo) / kZoom, (idX - Xo) / kZoom,
+                                                               Map::m)) + "м";
 
     updateCoord(strCoords);
 }

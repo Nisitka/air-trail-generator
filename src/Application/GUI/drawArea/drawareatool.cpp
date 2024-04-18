@@ -16,14 +16,18 @@ int drawAreaTool::yIdMouse;
 int drawAreaTool::pXo;
 int drawAreaTool::pYo;
 
-drawAreaTool::drawAreaTool(areaDrawWidget* area, int id, QObject *parent): drawArea(area), id(id), QObject(parent)
+drawAreaTool::drawAreaTool(int id, QObject *parent): id(id), QObject(parent)
 {
     // По умолчанию стандартный курсор для всех инструментов
     cursor = Qt::ArrowCursor;
-    setCursor();
 
     //
     selected = false;
+}
+
+void drawAreaTool::setDrawArea(areaDrawWidget *area)
+{
+    drawArea = area;
 }
 
 void drawAreaTool::setCursor()

@@ -161,9 +161,6 @@ private:
     // Задачи отрисовки
     QMap <int, taskPainter*> drawTasks;
 
-    //
-    bool mouseFromArea(QMouseEvent *mouseEvent);
-
     // Обновить размеры дискреты
     void updateSizeBlock(int countPix);
 

@@ -45,7 +45,7 @@ public slots:
 protected:
 
     // Переопределяем метод, чтоб не вылазило меню при нажатии лев.клавиши мыши
-    void contextMenuEvent(QContextMenuEvent* event);
+    void contextMenuEvent(QContextMenuEvent* event) override;
 
 private slots:
 
@@ -54,8 +54,12 @@ private slots:
 
     //
     void changeTool();
+    void changeToolGroup();
+
+    void updateStyleToolButtons(QToolButton* changeButton);
 
 private:
+
     //
     QStatusBar* statusBar;
     QLabel* coordLabel;
@@ -64,7 +68,7 @@ private:
     QScrollArea* scrollArea;
 
     //
-    QMap <QToolButton*, int> buttonToKey;
+    QMap <QObject*, int> objToKeyTool;
 
     areaDrawWidget* area;
 
@@ -80,6 +84,7 @@ private:
     // Текущий инструмент
     drawAreaTool* Tool;
     int keyCurTool;
+    int lastKeyTool;
 };
 
 #endif // MAPMAINWINDOW_H

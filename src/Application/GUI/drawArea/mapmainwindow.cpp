@@ -32,18 +32,29 @@ mapMainWindow::mapMainWindow(QImage* mapImg, Map* map)
     // Игнорируем колесико (оставим его для инструментов)
     scrollArea->viewport()->installEventFilter(this);
 
+    scrollArea->setStyleSheet("QScrollArea { "
+                              " background: transparent; "
+                              " background-image: url(:/resurs/pattern1);"
+                              "}");
+
     //
     connect(area, SIGNAL(updateCoord(QString)),
             this, SLOT(updateCoord(QString)));
 
-    //
-    appendTool(new toolDefault(area, def));
-    ToolMoveMap* toolMoveMap = new ToolMoveMap(area, moveImg);
+    // Обычный курсор без дейсвий
+    appendTool(new toolDefault(def));
+
+    // Перетаскивание карты без лишнего
+    ToolMoveMap* toolMoveMap = new ToolMoveMap(moveImg);
     connect(toolMoveMap, SIGNAL(movedMap(double,double)),
             this,        SLOT(movePosLookMap(double,double)));
     appendTool(toolMoveMap);
 
-    appendTool(new ToolZoomMap(area, zoomImg));
+    // Изменение масштаба через мышь
+    appendTool(new ToolZoomMap(zoomImg));
+
+
+    //
     keyCurTool = def;
     Tool = Tools[def];
     lastToolButton = nullptr;
@@ -96,52 +107,119 @@ void mapMainWindow::movePosLookMap(double dX, double dY)
     scrollArea->horizontalScrollBar()->setValue(curX + (dX * area->width()));
 }
 
-void mapMainWindow::appendTool(drawAreaTool *toolArea)
-{   //
-    int idPriority = toolArea->getId();
+void mapMainWindow::appendTool(drawAreaTool *tool)
+{
+    // Назначаем область, где будет рисовать
+    tool->setDrawArea(area);
 
-    Tools[idPriority] = toolArea;
+    //
+    int idPriority = tool->getId();
+    Tools[idPriority] = tool;
 
     //
     if (idPriority != def)
     {
+        //
         QToolButton* button = new QToolButton;
-        button->setIcon(toolArea->getImgButton());
-        button->setToolTip(toolArea->getNameTool());
-
-        // Для изменения визуала
         connect(button, SIGNAL(clicked(bool)),
                 this,   SLOT(changeTool()));
-
-        // Для реакции инструмента
-        buttonToKey[button] = idPriority;
+        //
+        button->setIcon(tool->getImgButton());
+        setButtonStyle(button, off);
+        button->setToolTip(tool->getNameTool());
 
         toolBar->addWidget(button);
 
-        setButtonStyle(button, off);
+        // Для реакции инструмента
+        objToKeyTool[button] = idPriority;
     }
 }
 
 void mapMainWindow::appendToolGroup(const QVector<drawAreaTool *> &boxTools, const QString &nameGroup)
 {
-    /* ... */
+    //
+    QToolButton* buttonGroup = new QToolButton;
+    buttonGroup->setPopupMode(QToolButton::InstantPopup);
+    buttonGroup->setToolTip(nameGroup);
+    setButtonStyle(buttonGroup, off);
+
+    //
+    QMenu* toolMenu = new QMenu;
+    buttonGroup->setMenu(toolMenu);
+    Designer::setMenu(toolMenu);
+
+    QAction* action;
+    drawAreaTool* tool;
+    for (int i=0; i<boxTools.size(); i++)
+    {
+        tool = boxTools.at(i);
+
+        // Назначаем область, где будет рисовать
+        tool->setDrawArea(area);
+
+        //
+        int idPriority = tool->getId();
+        Tools[idPriority] = tool;
+
+        //
+        action = new QAction(tool->getImgButton(), tool->getNameTool(), buttonGroup);
+        connect(action, SIGNAL(triggered(bool)),
+                this,   SLOT(changeToolGroup()));
+        toolMenu->addAction(action);
+
+        // Для реакции инструмента
+        objToKeyTool[action] = idPriority;
+    }
+
+    //
+    toolBar->addWidget(buttonGroup);
+
+    // Изначально ставим иконку последнего инструмента
+    buttonGroup->setIcon(action->icon());
 }
 
 void mapMainWindow::changeTool()
 {
+    setTool(objToKeyTool[sender()]);
+
+    QToolButton* toolButton = qobject_cast<QToolButton*>(sender());
+    updateStyleToolButtons(toolButton);
+}
+
+void mapMainWindow::changeToolGroup()
+{
+    setTool(objToKeyTool[sender()]);
+
+    QAction* action = qobject_cast<QAction*>(sender());
+
+    QToolButton* toolButton = qobject_cast<QToolButton*>(action->parentWidget());
+    toolButton->setIcon(action->icon());
+
+    updateStyleToolButtons(toolButton);
+}
+
+void mapMainWindow::updateStyleToolButtons(QToolButton* changeButton)
+{
+    //
     if (lastToolButton != nullptr)
         setButtonStyle(lastToolButton, off);
 
-    QToolButton* toolButton = qobject_cast<QToolButton*>(sender());
-
-    lastToolButton = toolButton;
-    setButtonStyle(lastToolButton, on);
-
-    setTool(buttonToKey[toolButton]);
+    if (lastToolButton != changeButton)
+    {
+        lastToolButton = changeButton;
+        setButtonStyle(lastToolButton, on);
+    }
+    else
+    {
+        setButtonStyle(lastToolButton, off);
+    }
 }
 
 void mapMainWindow::setTool(int key)
 {
+    //
+    lastKeyTool = keyCurTool;
+
     // Освобождаем текущий от работы
     Tool->end();
 

@@ -19,27 +19,23 @@ GUI::GUI(QImage* geoMap,
     //drawArea->setBlockSize(map->getLenBlock());
 
     // Инструменты для граф.области(какая область, приоритет-ключ задач отрисовки)
-    toolPTrail  = new ToolPredTrail(drawArea, mapMainWindow::predictTrail);
-    toolPLine   = new ToolPredRect (drawArea, mapMainWindow::predictRect);
-    toolRLS     = new ToolSetRLS(   drawArea, mapMainWindow::setRLS);
-    toolEditTer = new ToolEditMap(  drawArea, mapMainWindow::editEarth);
-    toolVisMap  = new ToolVisMap(   drawArea, mapMainWindow::mapVis);
-    ToolRuler* toolRuler = new ToolRuler(drawArea, mapMainWindow::Ruler);
-    ToolSquareTer* toolSqTer = new ToolSquareTer(drawArea, mapMainWindow::squareTer);
+    toolPTrail  = new ToolPredTrail(mapMainWindow::predictTrail);
+    toolPLine   = new ToolPredRect (mapMainWindow::predictRect);
+    toolRLS     = new ToolSetRLS(   mapMainWindow::setRLS);
+    toolEditTer = new ToolEditMap(  mapMainWindow::editEarth);
+    toolVisMap  = new ToolVisMap(   mapMainWindow::mapVis);
+    ToolRuler* toolRuler = new ToolRuler(mapMainWindow::Ruler);
+    ToolSquareTer* toolSqTer = new ToolSquareTer(mapMainWindow::squareTer);
 
     QVector <drawAreaTool*> predTools = {toolPTrail, toolPLine};
-    //manDrawArea->appendToolGroup(predTools, "Прогноз");
+    manDrawArea->appendToolGroup(predTools, "Прогноз");
 
     QVector <drawAreaTool*> rulersTools = {toolRuler, toolSqTer};
-    //manDrawArea->appendToolGroup(rulersTools, "Измерения");
+    manDrawArea->appendToolGroup(rulersTools, "Измерения");
 
     manDrawArea->appendTool(toolRLS);
     manDrawArea->appendTool(toolEditTer);
     manDrawArea->appendTool(toolVisMap);
-    manDrawArea->appendTool(toolPTrail);
-    manDrawArea->appendTool(toolPLine);
-    manDrawArea->appendTool(toolRuler);
-    manDrawArea->appendTool(toolSqTer);
 
     //
     QObject::connect(visInfoWin, SIGNAL(saveMap_signal(QString)),

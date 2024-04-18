@@ -12,7 +12,7 @@ signals:
     void setRpred(int countDiscretes);
 
 public:
-    ToolPredRect(areaDrawWidget*, int id);
+    ToolPredRect(int id);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;

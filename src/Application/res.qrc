@@ -55,5 +55,8 @@
         <file>resurs/a.png</file>
         <file>resurs/b.png</file>
         <file>resurs/equal.png</file>
+        <file>resurs/pattern2.jpg</file>
+        <file>resurs/pattern3.jpg</file>
+        <file>resurs/pattern1.png</file>
     </qresource>
 </RCC>
