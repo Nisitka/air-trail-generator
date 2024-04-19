@@ -20,6 +20,9 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map), kZoom(1.0)
 {
     isCustomCursor = true;
 
+    Xo = 0;
+    Yo = 0;
+
     setBlockSize(map->getLenBlock());
 
     // инициализация контейнера для изображений
@@ -84,7 +87,7 @@ void areaDrawWidget::drawBackground()
 
 void areaDrawWidget::drawBorder()
 {
-    pPainter->setPen(QPen(Qt::gray, 1, Qt::SolidLine));
+    pPainter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
     pPainter->setBrush(Qt::NoBrush);
     pPainter->drawRect(0, 0, this->geometry().width()-1, this->geometry().height()-1);
 }
@@ -375,7 +378,7 @@ void areaDrawWidget::zoom(double dK)
 {
     kZoom += dK;
 
-    if (kZoom <= 0) kZoom = 0.1;
+    if (kZoom < 0.2) kZoom = 0.2;
 
     updateSize();
 }

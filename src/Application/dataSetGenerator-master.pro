@@ -75,7 +75,7 @@ SOURCES += main.cpp\
     GUI/algorithmPredict/lineglyph.cpp \
     GUI/algorithmPredict/glyphcomposer.cpp \
     GUI/algorithmPredict/labelglyph.cpp \
-    GUI/drawArea/mapmainwindow.cpp
+    GUI/drawArea/mapareamainwindow.cpp
 
 HEADERS  += \
     core.h \
@@ -129,7 +129,7 @@ HEADERS  += \
     GUI/algorithmPredict/lineglyph.h \
     GUI/algorithmPredict/glyphcomposer.h \
     GUI/algorithmPredict/labelglyph.h \
-    GUI/drawArea/mapmainwindow.h
+    GUI/drawArea/mapareamainwindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \
@@ -140,7 +140,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/visualinfowidget.ui \
     GUI/UI/dataaccessobjectwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \
-    GUI/algorithmPredict/setalgpredictwindow.ui
+    GUI/algorithmPredict/setalgpredictwindow.ui \
+    GUI/drawArea/mapareamainwindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \

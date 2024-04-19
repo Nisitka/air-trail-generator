@@ -2,7 +2,7 @@
 
 #include <QApplication>
 
-#include "drawArea/mapmainwindow.h"
+#include "drawArea/mapareamainwindow.h"
 
 GUI::GUI(QImage* geoMap,
          Map* map_): map(map_)
@@ -14,18 +14,16 @@ GUI::GUI(QImage* geoMap,
                                       map);
 
     //
-    mapMainWindow* manDrawArea = visInfoWin->getManDrawArea();
-    areaDrawWidget* drawArea = manDrawArea->getDrawArea();
-    //drawArea->setBlockSize(map->getLenBlock());
+    mapAreaMainWindow* manDrawArea = visInfoWin->getManDrawArea();
 
     // Инструменты для граф.области(какая область, приоритет-ключ задач отрисовки)
-    toolPTrail  = new ToolPredTrail(mapMainWindow::predictTrail);
-    toolPLine   = new ToolPredRect (mapMainWindow::predictRect);
-    toolRLS     = new ToolSetRLS(   mapMainWindow::setRLS);
-    toolEditTer = new ToolEditMap(  mapMainWindow::editEarth);
-    toolVisMap  = new ToolVisMap(   mapMainWindow::mapVis);
-    ToolRuler* toolRuler = new ToolRuler(mapMainWindow::Ruler);
-    ToolSquareTer* toolSqTer = new ToolSquareTer(mapMainWindow::squareTer);
+    toolPTrail  = new ToolPredTrail(mapAreaMainWindow::predictTrail);
+    toolPLine   = new ToolPredRect (mapAreaMainWindow::predictRect);
+    toolRLS     = new ToolSetRLS(   mapAreaMainWindow::setRLS);
+    toolEditTer = new ToolEditMap(  mapAreaMainWindow::editEarth);
+    toolVisMap  = new ToolVisMap(   mapAreaMainWindow::mapVis);
+    ToolRuler* toolRuler = new ToolRuler(mapAreaMainWindow::Ruler);
+    ToolSquareTer* toolSqTer = new ToolSquareTer(mapAreaMainWindow::squareTer);
 
     QVector <drawAreaTool*> predTools = {toolPTrail, toolPLine};
     manDrawArea->appendToolGroup(predTools, "Прогноз");

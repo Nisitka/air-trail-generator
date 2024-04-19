@@ -3,6 +3,7 @@
 #include "areadrawwidget.h"
 
 #include <QDebug>
+#include <QApplication>
 
 ToolEditMap::ToolEditMap(int id): drawAreaTool(id)
 {
@@ -89,12 +90,6 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
     xMouse = mouse->x();
     yMouse = mouse->y();
 
-    // Обновляем показания координат карты
-    drawArea->updateInfoCoordMap(xMouse,
-                                 yMouse);
-
-    k = drawArea->getValZoom();
-    updateSizeCursor();
     if (statMouse == press)
     {
         // Координаты левого вернего угла карты отн-но виджета
@@ -120,6 +115,10 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
     }
     else
     {
+        // Обновляем показания координат карты
+        drawArea->updateInfoCoordMap(xMouse,
+                                     yMouse);
+
         cursor = QCursor(moveCurPixmap.scaled(R,R));
         drawArea->setCursor(cursor);
     }
@@ -127,19 +126,24 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
 
 void ToolEditMap::updateSizeCursor()
 {
+    k = drawArea->getValZoom();
     R = r*k;
     if (R < 13) R = 13;
 }
 
 void ToolEditMap::wheelEvent(QWheelEvent *event)
 {
-    if (event->angleDelta().y() > 0)
+    // Если не нажата клавиша CTRL
+    if (QApplication::keyboardModifiers() != Qt::ControlModifier)
     {
-        r++;
-    }
-    else
-    {
-        if (r > minSIZE) r--;
+        if (event->angleDelta().y() > 0)
+        {
+            r++;
+        }
+        else
+        {
+            if (r > minSIZE) r--;
+        }
     }
 
     updateSizeCursor();

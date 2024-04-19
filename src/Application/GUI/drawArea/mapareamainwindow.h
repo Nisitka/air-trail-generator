@@ -1,19 +1,26 @@
-#ifndef MAPMAINWINDOW_H
-#define MAPMAINWINDOW_H
+#ifndef MAPAREAMAINWINDOW_H
+#define MAPAREAMAINWINDOW_H
 
 #include <QMainWindow>
-#include <QLabel>
-#include <QScrollArea>
+
+#include <QScrollBar>
 
 #include "../designer.h"
-
 #include "areadrawwidget.h"
 
-class mapMainWindow: public QMainWindow
+namespace Ui {
+class mapAreaMainWindow;
+}
+
+class mapAreaMainWindow : public QMainWindow
 {
     Q_OBJECT
+
 public:
-    mapMainWindow(QImage* mapImg, Map* map);
+    explicit mapAreaMainWindow(QImage* mapImg,
+                               Map* map,
+                               QWidget *parent = 0);
+    ~mapAreaMainWindow();
 
     areaDrawWidget* getDrawArea();
 
@@ -47,6 +54,9 @@ protected:
     // Переопределяем метод, чтоб не вылазило меню при нажатии лев.клавиши мыши
     void contextMenuEvent(QContextMenuEvent* event) override;
 
+    //
+    void wheelEvent(QWheelEvent* event);
+
 private slots:
 
     //
@@ -58,8 +68,8 @@ private slots:
 
     void updateStyleToolButtons(QToolButton* changeButton);
 
-private:
 
+private:
     //
     QStatusBar* statusBar;
     QLabel* coordLabel;
@@ -85,6 +95,8 @@ private:
     drawAreaTool* Tool;
     int keyCurTool;
     int lastKeyTool;
+
+    Ui::mapAreaMainWindow *ui;
 };
 
-#endif // MAPMAINWINDOW_H
+#endif // MAPAREAMAINWINDOW_H

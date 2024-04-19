@@ -18,7 +18,7 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
     ui->setupUi(this);
 
     //
-    manDrawArea = new mapMainWindow(geoMap, map_);
+    manDrawArea = new mapAreaMainWindow(geoMap, map_);
     ui->areaDrawLayout->addWidget(manDrawArea);
 
     //
@@ -34,7 +34,7 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
     isPredictTrail = false;
 }
 
-mapMainWindow* visualInfoWidget::getManDrawArea()
+mapAreaMainWindow* visualInfoWidget::getManDrawArea()
 {
     return manDrawArea;
 }

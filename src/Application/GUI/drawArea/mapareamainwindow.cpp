@@ -1,9 +1,12 @@
-#include "mapmainwindow.h"
+#include "mapareamainwindow.h"
+#include "ui_mapareamainwindow.h"
 
-#include <QScrollBar>
-
-mapMainWindow::mapMainWindow(QImage* mapImg, Map* map)
+mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::mapAreaMainWindow)
 {
+    ui->setupUi(this);
+
     this->setMinimumSize(100, 100);
     this->setMaximumSize(10080, 25000);
     this->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -19,23 +22,16 @@ mapMainWindow::mapMainWindow(QImage* mapImg, Map* map)
     addToolBar(Qt::TopToolBarArea, toolBar); // добавляем в панель инструментов
 
     area = new areaDrawWidget(mapImg, map);
+    ui->drawAreaLayout->addWidget(area);
 
     //
-    scrollArea = new QScrollArea;
+    scrollArea = ui->scrollArea;
     scrollArea->setMinimumSize(100, 100);
     scrollArea->setMaximumSize(10080, 25000);
     scrollArea->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-    scrollArea->setWidget(area);
-    setCentralWidget(scrollArea);
-
     // Игнорируем колесико (оставим его для инструментов)
     scrollArea->viewport()->installEventFilter(this);
-
-    scrollArea->setStyleSheet("QScrollArea { "
-                              " background: transparent; "
-                              " background-image: url(:/resurs/pattern1);"
-                              "}");
 
     //
     connect(area, SIGNAL(updateCoord(QString)),
@@ -62,8 +58,9 @@ mapMainWindow::mapMainWindow(QImage* mapImg, Map* map)
 
     // Настройка визуала
     this->setStyleSheet("QMainWindow{"
-                        "   background-color: rgb(255,255,255);"
+                        "   background-color: rgb(244,248,253);"
                         "   border: 1px solid gray;"
+                        "   border-radius: 3px;"
                         "};");
 
     //
@@ -82,7 +79,12 @@ mapMainWindow::mapMainWindow(QImage* mapImg, Map* map)
     statusBar->show();
 }
 
-bool mapMainWindow::eventFilter(QObject* /*obj*/, QEvent *evt)
+areaDrawWidget* mapAreaMainWindow::getDrawArea()
+{
+    return area;
+}
+
+bool mapAreaMainWindow::eventFilter(QObject* /*obj*/, QEvent *evt)
 {
     if (evt->type() == QEvent::Wheel)
     {
@@ -93,12 +95,28 @@ bool mapMainWindow::eventFilter(QObject* /*obj*/, QEvent *evt)
     return false;
 }
 
-void mapMainWindow::updateCoord(const QString &coordsData)
+void mapAreaMainWindow::wheelEvent(QWheelEvent *event)
+{
+    // Если нажата клавиша CTRL
+    if (QApplication::keyboardModifiers() == Qt::ControlModifier)
+    {
+        if (event->delta() > 0)
+        {
+            area->zoom(0.08);
+        }
+        else
+        {
+            area->zoom(-0.08);
+        }
+    }
+}
+
+void mapAreaMainWindow::updateCoord(const QString &coordsData)
 {
     coordLabel->setText(coordsData);
 }
 
-void mapMainWindow::movePosLookMap(double dX, double dY)
+void mapAreaMainWindow::movePosLookMap(double dX, double dY)
 {
     int curY = scrollArea->verticalScrollBar()->value();
     scrollArea->verticalScrollBar()->setValue(curY + (dY * area->height()));
@@ -107,7 +125,7 @@ void mapMainWindow::movePosLookMap(double dX, double dY)
     scrollArea->horizontalScrollBar()->setValue(curX + (dX * area->width()));
 }
 
-void mapMainWindow::appendTool(drawAreaTool *tool)
+void mapAreaMainWindow::appendTool(drawAreaTool *tool)
 {
     // Назначаем область, где будет рисовать
     tool->setDrawArea(area);
@@ -135,7 +153,7 @@ void mapMainWindow::appendTool(drawAreaTool *tool)
     }
 }
 
-void mapMainWindow::appendToolGroup(const QVector<drawAreaTool *> &boxTools, const QString &nameGroup)
+void mapAreaMainWindow::appendToolGroup(const QVector<drawAreaTool *> &boxTools, const QString &nameGroup)
 {
     //
     QToolButton* buttonGroup = new QToolButton;
@@ -178,7 +196,7 @@ void mapMainWindow::appendToolGroup(const QVector<drawAreaTool *> &boxTools, con
     buttonGroup->setIcon(action->icon());
 }
 
-void mapMainWindow::changeTool()
+void mapAreaMainWindow::changeTool()
 {
     setTool(objToKeyTool[sender()]);
 
@@ -186,7 +204,7 @@ void mapMainWindow::changeTool()
     updateStyleToolButtons(toolButton);
 }
 
-void mapMainWindow::changeToolGroup()
+void mapAreaMainWindow::changeToolGroup()
 {
     setTool(objToKeyTool[sender()]);
 
@@ -198,7 +216,7 @@ void mapMainWindow::changeToolGroup()
     updateStyleToolButtons(toolButton);
 }
 
-void mapMainWindow::updateStyleToolButtons(QToolButton* changeButton)
+void mapAreaMainWindow::updateStyleToolButtons(QToolButton* changeButton)
 {
     //
     if (lastToolButton != nullptr)
@@ -215,7 +233,7 @@ void mapMainWindow::updateStyleToolButtons(QToolButton* changeButton)
     }
 }
 
-void mapMainWindow::setTool(int key)
+void mapAreaMainWindow::setTool(int key)
 {
     //
     lastKeyTool = keyCurTool;
@@ -239,12 +257,12 @@ void mapMainWindow::setTool(int key)
     area->setTool(Tool);
 }
 
-int mapMainWindow::curTool()
+int mapAreaMainWindow::curTool()
 {
     return keyCurTool;
 }
 
-void mapMainWindow::setButtonStyle(QToolButton *button, StyleButtonTool style)
+void mapAreaMainWindow::setButtonStyle(QToolButton *button, StyleButtonTool style)
 {
     QString strStyle;
     switch (style) {
@@ -302,13 +320,13 @@ void mapMainWindow::setButtonStyle(QToolButton *button, StyleButtonTool style)
     button->setStyleSheet(strStyle);
 }
 
-void mapMainWindow::contextMenuEvent(QContextMenuEvent *event)
+void mapAreaMainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     Q_UNUSED(event);
     /* ... */
 }
 
-areaDrawWidget* mapMainWindow::getDrawArea()
+mapAreaMainWindow::~mapAreaMainWindow()
 {
-    return area;
+    delete ui;
 }
