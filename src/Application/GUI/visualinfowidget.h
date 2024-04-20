@@ -23,14 +23,14 @@ signals:
     void setPointsTrail(QPoint begin, QPoint last);
 
 public slots:
-    // установить выбранную РЛС
-    void setCurRLS(int idRLS);
+//    // установить выбранную РЛС
+//    void setCurRLS(int idRLS);
 
-    // добавить РЛС для отрисовки на карте
-    void addRLS(QPoint* posRLS, const QString& nameNewRLS);
+//    // добавить РЛС для отрисовки на карте
+//    void addRLS(QPoint* posRLS, const QString& nameNewRLS);
 
-    // удалить РЛС с отрисовки
-    void delRLS(int indexRLS);
+//    // удалить РЛС с отрисовки
+//    void delRLS(int indexRLS);
 
     //
     void updateImage();

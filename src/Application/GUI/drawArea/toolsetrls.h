@@ -11,6 +11,16 @@ signals:
     // Установить РЛС
     void setCoordRLS(int x, int y);
 
+public slots:
+    // Добавить РЛС для отрисовки
+    void addRLS(QPoint* posRLS, const QString& nameNewRLS);
+
+    // удалить РЛС с отрисовки
+    void delRLS(int indexRLS);
+
+    // Установить выбранную РЛС
+    void setCurRLS(int idRLS);
+
 public:
     ToolSetRLS(int id);
 
@@ -27,6 +37,20 @@ public:
     void setMarkCoordRLS();
 
 private:
+
+    // Иконки РЛС
+    QPixmap* pixRLS;
+    QPixmap* pixCurRLS;
+    // Выбранная РЛС
+    int idCurRLS; // индекс выбранной РЛС
+
+    // Координаты поставленных РЛС
+    QList <QPoint*> coordsRLS;
+    //
+    QStringList namesRLS;
+    //
+    QColor curRLScolor;
+
     //
     drawTask<ToolSetRLS>* dTask;
 

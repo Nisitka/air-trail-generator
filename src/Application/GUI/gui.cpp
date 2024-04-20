@@ -164,9 +164,9 @@ void GUI::connectMRLS(managerRLS* mRLS)
 
     // добавление/удаление РЛС
     QObject::connect(optRLSWin,  SIGNAL(createRLS(QPoint*,const QString&)),
-                     visInfoWin, SLOT(addRLS(QPoint*,const QString&)));
+                     toolRLS,    SLOT(addRLS(QPoint*,const QString&)));
     QObject::connect(optRLSWin,  SIGNAL(delRLS(int)),
-                     visInfoWin, SLOT(delRLS(int)));
+                     toolRLS,    SLOT(delRLS(int)));
 
     //
     QObject::connect(optRLSWin, SIGNAL(createRLS(QPoint*,const QString&)),
@@ -179,7 +179,7 @@ void GUI::connectMRLS(managerRLS* mRLS)
     QObject::connect(optRLSWin, SIGNAL(setRLS(int)),
                      mRLS,      SLOT(setRLS(int)));
     QObject::connect(optRLSWin,  SIGNAL(setRLS(int)),
-                     visInfoWin, SLOT(setCurRLS(int)));
+                     toolRLS,    SLOT(setCurRLS(int)));
 
     //
     QObject::connect(optRLSWin,  SIGNAL(signalRunRLS(int)),

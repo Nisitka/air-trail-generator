@@ -44,17 +44,13 @@ signals:
     // Обновить информацию об координатах курсора
     void updateCoord(const QString& textdataCoords);
 
-public slots:
-    // Добавить РЛС для отрисовки
-    void addRLS(QPoint* posRLS, const QString& nameNewRLS);
-
-    // удалить РЛС с отрисовки
-    void delRLS(int indexRLS);
-
 public:
     areaDrawWidget(QImage* mapImg, Map* map);
 
     enum unit{pix, idMap};
+
+    //
+    QPainter& getPainter();
 
     //
     void setTool(drawAreaTool* tool);
@@ -80,9 +76,6 @@ public:
     // Длина одного блока
     void setBlockSize(int size); // в метрах
     int getBlockSize() const;
-
-    // установить выбранную РЛС
-    void setCurRLS(int idRLS);
 
     //
     int curTool();
@@ -111,7 +104,7 @@ public:
     void drawBackground();
     void drawBorder();
     void drawMap();
-    void drawRLS();
+    //void drawRLS();
 
     //
     void setPen(const QPen&);
@@ -173,13 +166,6 @@ private:
     // Что отрисовывать в данный момент
     int curOptRepaint;
 
-    // Координаты поставленных РЛС
-    QList <QPoint*> coordsRLS;
-    //
-    QStringList namesRLS;
-    //
-    QColor curRLScolor;
-
     // Отправлять ли данные об координатах
     bool isExportCoord;
 
@@ -196,12 +182,6 @@ private:
 
     // изображение которое отрисовывается
     QImage* drawImg;
-
-    // иконки РЛС
-    QPixmap* pixRLS;
-    QPixmap* pixCurRLS;
-    // выбранная РЛС
-    int idCurRLS; // индекс выбранной РЛС
 };
 
 #endif // AREADRAWWIDGET_H

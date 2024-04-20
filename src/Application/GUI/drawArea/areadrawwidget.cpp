@@ -38,16 +38,12 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map), kZoom(1.0)
     // чтобы moveEvent работал без нажатия
     this->setMouseTracking(true);
 
-    pixRLS = new QPixmap(":/resurs/offRLS");
-    pixCurRLS = new QPixmap(":/resurs/onRLS");
-    curRLScolor.setRgb(0,255,255);
-
     this->setCursor(Qt::ArrowCursor);
 
     // Задачи, которые всегда должны выполняться
     appendDrawTask(background, new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBackground));
     appendDrawTask(terImg,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawMap));
-    appendDrawTask(iconRLS,    new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawRLS));
+    //appendDrawTask(iconRLS,    new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawRLS));
     appendDrawTask(border,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBorder));
 }
 
@@ -114,37 +110,6 @@ void areaDrawWidget::drawMap()
     pPainter->drawImage(Xo, Yo, drawImg->scaled(wightPixMap, heightPixMap));
 }
 
-void areaDrawWidget::drawRLS()
-{
-    // Отрисовка станций (только на физ. карте)
-    if (curOptRepaint == geoMap)
-    {
-        int rectX;
-        int rectY;
-
-        for (int i=0; i<coordsRLS.size(); i++)
-        {
-            rectX = coordsRLS[i]->x() * kZoom  + Xo;
-            rectY = coordsRLS[i]->y() * kZoom  + Yo;
-
-            //
-            if (i == idCurRLS)
-            {
-                pPainter->drawPixmap(rectX-16, rectY-18, pixCurRLS->scaled(36, 36));
-                pPainter->setPen(curRLScolor);
-            }
-
-            else
-            {
-                 pPainter->drawPixmap(rectX-16, rectY-18, pixRLS->scaled(36, 36));
-                 pPainter->setPen(Qt::black);
-            }
-
-            pPainter->drawText(QRect(rectX-16, rectY+15, 36, 20), namesRLS[i]);
-        }
-    }
-}
-
 void areaDrawWidget::getCoordDrawArea(int &Xo_, int &Yo_)
 {
     Xo_ = Xo;
@@ -162,24 +127,9 @@ double areaDrawWidget::getValZoom()
     return kZoom;
 }
 
-void areaDrawWidget::addRLS(QPoint *posRLS, const QString& nameNewRLS)
+QPainter& areaDrawWidget::getPainter()
 {
-    coordsRLS.append(posRLS);
-    namesRLS.append(nameNewRLS);
-}
-
-void areaDrawWidget::delRLS(int indexRLS)
-{
-    coordsRLS.removeAt(indexRLS);
-    namesRLS.removeAt(indexRLS);
-
-    repaint();
-}
-
-void areaDrawWidget::setCurRLS(int idRLS)
-{
-    idCurRLS = idRLS;
-    repaint();
+    return *pPainter;
 }
 
 void areaDrawWidget::toIdMapCoords(int &Xpix, int &Ypix)

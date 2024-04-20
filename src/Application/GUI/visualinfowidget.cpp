@@ -39,20 +39,20 @@ mapAreaMainWindow* visualInfoWidget::getManDrawArea()
     return manDrawArea;
 }
 
-void visualInfoWidget::setCurRLS(int idRLS)
-{
-    manDrawArea->getDrawArea()->setCurRLS(idRLS);
-}
+//void visualInfoWidget::setCurRLS(int idRLS)
+//{
+//    manDrawArea->getDrawArea()->setCurRLS(idRLS);
+//}
 
-void visualInfoWidget::addRLS(QPoint* posRLS, const QString& nameNewRLS)
-{
-    manDrawArea->getDrawArea()->addRLS(posRLS, nameNewRLS);
-}
+//void visualInfoWidget::addRLS(QPoint* posRLS, const QString& nameNewRLS)
+//{
+//    manDrawArea->getDrawArea()->addRLS(posRLS, nameNewRLS);
+//}
 
-void visualInfoWidget::delRLS(int indexRLS)
-{
-    manDrawArea->getDrawArea()->delRLS(indexRLS);
-}
+//void visualInfoWidget::delRLS(int indexRLS)
+//{
+//    manDrawArea->getDrawArea()->delRLS(indexRLS);
+//}
 
 void visualInfoWidget::switchVisual(int idType)
 {
