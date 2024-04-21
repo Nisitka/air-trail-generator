@@ -115,7 +115,10 @@ public:
     void drawCircle(int x, int y, int R, unit uR = idMap, unit uCoords = idMap);
     void drawPixmap(int x, int y, int dX, int dY, const QPixmap& pix);
     void drawRect(int x1, int y1, int x2, int y2);
-    void drawText(const QRect& rect, const QString& text, unit uPoints = pix);
+    void drawText(const QRect& rect, const QString& text, unit uPoints = pix, //
+                  int dXpix = 0, int dYpix = 0,                               //
+                  const QColor backColor = QColor(255,255,255, 180),          //
+                  const QColor textColor = Qt::black);                        //
     void drawPolygon(const QPolygon& polygon, unit uPoints = idMap);
 
     // Обновить информацию об координатах

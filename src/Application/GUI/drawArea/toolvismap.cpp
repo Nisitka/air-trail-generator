@@ -27,18 +27,14 @@ void ToolVisMap::mousePress(QMouseEvent *mouse)
 {
     statMouse = press;
 
-    // Координаты левого вернего угла карты отн-но виджета
-    int Xo, Yo;
-    drawArea->getCoordDrawArea(Xo, Yo);
-
     // Пиксели клика на виджете
     xPressMouse = mouse->x();
     yPressMouse = mouse->y();
 
-    k = drawArea->getValZoom();
-    // Дискреты карты
-    idXa = double (xPressMouse - Xo) / k;
-    idYa = double (yPressMouse - Yo) / k;
+    // Пиксели в индексы клеток карты
+    idXa = xPressMouse;
+    idYa = yPressMouse;
+    drawArea->toIdMapCoords(idXa, idYa);
 
     idXb = idXa;
     idYb = idYa;
@@ -48,6 +44,8 @@ void ToolVisMap::mousePress(QMouseEvent *mouse)
 
 void ToolVisMap::mouseRelease(QMouseEvent *mouse)
 {
+    Q_UNUSED(mouse);
+
     statMouse = release;
 
     int Xo, Yo;
@@ -77,15 +75,10 @@ void ToolVisMap::mouseMove(QMouseEvent *mouse)
 
     if (statMouse == press)
     {
-        // Координаты левого вернего угла карты отн-но виджета
-        int Xo, Yo;
-        drawArea->getCoordDrawArea(Xo, Yo);
-
-        double k = drawArea->getValZoom();
-
         // Пиксели относительно карты, а не виджета
-        idXb = double (xMouse - Xo) / k;
-        idYb = double (yMouse - Yo) / k;
+        idXb = xMouse;
+        idYb = yMouse;
+        drawArea->toIdMapCoords(idXb, idYb);
 
 //        drawArea->setRectVis(idXa, idYa,
 //                             idXb, idYb);

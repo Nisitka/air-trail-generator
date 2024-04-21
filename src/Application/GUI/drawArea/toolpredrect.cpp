@@ -58,21 +58,14 @@ void ToolPredRect::mousePress(QMouseEvent *mouse)
     xPressMouse = xMouse;
     yPressMouse = yMouse;
 
-//    // Координаты левого вернего угла карты отн-но виджета
-    int Xo, Yo;
-    drawArea->getCoordDrawArea(Xo, Yo);
-
-    // Пиксели относительно карты, а не виджета
-    int dX, dY;
-    dX = xPressMouse - Xo;
-    dY = yPressMouse - Yo;
+    // Пиксели в индексы клеток карты
+    idX = xPressMouse;
+    idY = yPressMouse;
+    drawArea->toIdMapCoords(idX, idY);
 
     //
-    k = drawArea->getValZoom();
-
-    // Пиксели в индексы клеток карты
-    idXRect = dX / k;
-    idYRect = dY / k;
+    idXRect = idX;
+    idYRect = idY;
 
     //
     idXoPredict = idXRect;

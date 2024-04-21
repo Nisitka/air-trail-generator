@@ -35,18 +35,10 @@ void ToolEditMap::mousePress(QMouseEvent *mouse)
     xPressMouse = mouse->x();
     yPressMouse = mouse->y();
 
-    // Координаты левого вернего угла карты отн-но виджета
-    int Xo, Yo;
-    drawArea->getCoordDrawArea(Xo, Yo);
-
-    // Пиксели относительно карты, а не виджета
-    int dX, dY;
-    dX = xPressMouse - Xo;
-    dY = yPressMouse - Yo;
-
-    k = drawArea->getValZoom();
-    idX = (double)dX / k;
-    idY = (double)dY / k;
+    //
+    idX = xPressMouse;
+    idY = yPressMouse;
+    drawArea->toIdMapCoords(idX, idY);
 
     lastKeyMouse = mouse->button() - 1;
 
@@ -92,17 +84,10 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
 
     if (statMouse == press)
     {
-        // Координаты левого вернего угла карты отн-но виджета
-        int Xo, Yo;
-        drawArea->getCoordDrawArea(Xo, Yo);
-
-        // Пиксели относительно карты, а не виджета
-        int dX, dY;
-        dX = xMouse - Xo;
-        dY = yMouse  - Yo;
-
-        int idX = (double)dX / k;
-        int idY = (double)dY / k;
+        //
+        idX = xMouse;
+        idY = yMouse;
+        drawArea->toIdMapCoords(idX, idY);
 
         switch (lastKeyMouse) {
         case left:

@@ -50,6 +50,7 @@ private:
     QStringList namesRLS;
     //
     QColor curRLScolor;
+    QColor RLScolor;
 
     //
     drawTask<ToolSetRLS>* dTask;

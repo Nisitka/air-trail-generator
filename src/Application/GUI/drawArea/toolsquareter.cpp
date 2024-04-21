@@ -23,7 +23,6 @@ void ToolSquareTer::mousePress(QMouseEvent *mouse)
     xPressMouse = mouse->x();
     yPressMouse = mouse->y();
 
-
     //
     lastKeyMouse = mouse->button() - 1;
     switch (lastKeyMouse) {

@@ -13,6 +13,7 @@
 #include <QGuiApplication>
 
 #include <QPixmap>
+#include <QTextOption>
 
 #include "../designer.h"
 
@@ -212,34 +213,41 @@ void areaDrawWidget::drawCircle(int x, int y, int R, unit uR, unit uCoords)
                           R, R);
 }
 
-void areaDrawWidget::drawText(const QRect& rect, const QString& text, unit uPoints)
+void areaDrawWidget::drawText(const QRect& rect, const QString& text, unit uPoints,
+                              int dXpix, int dYpix,
+                              const QColor backColor, const QColor textColor)
 {
     QBrush brush = pPainter->brush();
+    QPen   pen   = pPainter->pen();
 
-    pPainter->setBrush(QBrush(QColor(255,255,255, 180)));
+    pPainter->setBrush(QBrush(backColor));
+    pPainter->setPen(textColor);
 
+    int x, y;
     switch (uPoints) {
     case idMap:
         {
-        int x = rect.x() * kZoom + Xo;
-        int y = rect.y() * kZoom + Yo;
+        x = rect.x() * kZoom + Xo + dXpix;
+        y = rect.y() * kZoom + Yo + dYpix;
 
-        QRect r(x, y, rect.width(), rect.height());
-
-        pPainter->drawRect(r.x() - 3, r.y() - 3,
-                           r.width() + 3, r.height() + 3);
-
-        pPainter->drawText(r, text);
         break;
         }
     case pix:
-        pPainter->drawRect(rect.x() - 3, rect.y() - 3,
-                           rect.width() + 3, rect.height() + 3);
+        x = rect.x() + dXpix;
+        y = rect.y() + dYpix;
 
-        pPainter->drawText(rect, text);
         break;
     }
 
+    //
+    QRect r(x, y, rect.width(), rect.height());
+    pPainter->drawRect(r.x() - 3, r.y() - 3,
+                       r.width() + 6, r.height() + 6);
+    //
+    pPainter->drawText(r, Qt::AlignHCenter, text);
+
+    // Возвращаем painter-у искодное состояние
+    pPainter->setPen(pen);
     pPainter->setBrush(brush);
 }
 

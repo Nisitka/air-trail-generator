@@ -126,22 +126,10 @@ void ToolPredTrail::mousePress(QMouseEvent *mouse)
     xPressMouse = mouse->x();
     yPressMouse = mouse->y();
 
-    // Координаты левого вернего угла карты отн-но виджета
-    int Xo, Yo;
-    drawArea->getCoordDrawArea(Xo, Yo);
-
-    // Пиксели относительно карты, а не виджета
-    int dX, dY;
-    dX = xPressMouse - Xo;
-    dY = yPressMouse - Yo;
-
-    //
-    int idX, idY;
-    k = drawArea->getValZoom();
-
     // Пиксели в индексы клеток карты
-    idX = dX / k;
-    idY = dY / k;
+    idX = xPressMouse;
+    idY = yPressMouse;
+    drawArea->toIdMapCoords(idX, idY);
 
     switch (mouse->button() - 1) {
     case left:

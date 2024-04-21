@@ -12,6 +12,7 @@ ToolSetRLS::ToolSetRLS(int id): drawAreaTool(id)
     pixRLS = new QPixmap(":/resurs/offRLS");
     pixCurRLS = new QPixmap(":/resurs/onRLS");
     curRLScolor.setRgb(0,255,255);
+    RLScolor = Qt::black;
 
     dTask = new drawTask<ToolSetRLS>(this, &ToolSetRLS::procDrawTask);
 }
@@ -54,31 +55,36 @@ void ToolSetRLS::setMarkCoordRLS()
 
 void ToolSetRLS::procDrawTask()
 {
-    // Отрисовка станций
-    int rectX;
-    int rectY;
+    drawArea->setRenderHint();
 
-    QPainter& painter = drawArea->getPainter();
-    double kZoom = drawArea->getValZoom();
+    // Отрисовка станций
+    QColor textColor;
+    QPixmap iconCurRLS = pixCurRLS->scaled(36, 36, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    QPixmap iconRLS    = pixRLS->scaled(36, 36, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    QPixmap icon;
     for (int i=0; i<coordsRLS.size(); i++)
     {
-        rectX = coordsRLS[i]->x() * kZoom;
-        rectY = coordsRLS[i]->y() * kZoom;
-
         //
         if (i == idCurRLS)
         {
-            painter.drawPixmap(rectX-16, rectY-18, pixCurRLS->scaled(36, 36));
-            painter.setPen(curRLScolor);
+            icon = iconCurRLS ;
+            textColor = curRLScolor;
         }
-
         else
         {
-             painter.drawPixmap(rectX-16, rectY-18, pixRLS->scaled(36, 36));
-             painter.setPen(Qt::black);
+            icon = iconRLS;
+            textColor = RLScolor;
         }
 
-        painter.drawText(QRect(rectX-16, rectY+15, 36, 20), namesRLS[i]);
+        // Рисуем условное обозначение РЛС
+        drawArea->drawPixmap(coordsRLS[i]->x(), coordsRLS[i]->y(),
+                                           -16,               -18,
+                             icon);
+
+        drawArea->drawText(QRect(coordsRLS[i]->x(), coordsRLS[i]->y(), 36, 12), namesRLS[i],
+                           areaDrawWidget::idMap,
+                           -16, 15,
+                           QColor(0, 0, 0,30), textColor);
     }
 
     // Если инструмент выбран, то рисуем метку управления станциями
@@ -87,37 +93,28 @@ void ToolSetRLS::procDrawTask()
         drawArea->setPen(QPen(Qt::black, 2, Qt::SolidLine));
         drawArea->drawCircle(xPosRLS, yPosRLS, 2, areaDrawWidget::pix);
     }
+
+    drawArea->setRenderHint(false);
 }
 
 void ToolSetRLS::mousePress(QMouseEvent *mouse)
 {
     statMouse = press;
 
-    // Координаты левого вернего угла карты отн-но виджета
-    int Xo, Yo;
-    drawArea->getCoordDrawArea(Xo, Yo);
-
-    // Размеры карты в пикселях
-    int Wpm, Hpm;
-    drawArea->getSizePixMap(Wpm, Hpm);
-
     // Пиксели клика на виджете
     xPressMouse = mouse->x();
     yPressMouse = mouse->y();
 
-    // Пиксели относительно карты, а не виджета
-    int dX, dY;
-    dX = xPressMouse - Xo;
-    dY = yPressMouse - Yo;
-
-    pXo = Xo;
-    pYo = Yo;
-
-    k = drawArea->getValZoom();
+    //
+    int xRLS = xPressMouse;
+    int yRLS = yPressMouse;
 
     // Пиксели в индексы клеток карты
-    xPosRLS = dX / k;
-    yPosRLS = dY / k;
+    drawArea->toIdMapCoords(xRLS, yRLS);
+
+    //
+    xPosRLS = xRLS;
+    yPosRLS = yRLS;
 
     setMarkCoordRLS();
 }
@@ -140,5 +137,6 @@ void ToolSetRLS::mouseMove(QMouseEvent *mouse)
 
 void ToolSetRLS::end()
 {
+    selected = false;
     //drawArea->delDrawTask(areaDrawWidget::toolRLS);
 }
