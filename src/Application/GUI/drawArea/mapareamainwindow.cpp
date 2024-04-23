@@ -34,6 +34,16 @@ mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) 
     scrollArea->viewport()->installEventFilter(this);
 
     //
+    coordLabel = new QLabel(scrollArea);
+    coordLabel->setFixedSize(135, 20);
+    coordLabel->setStyleSheet("QLabel{"
+                              "   background-color: rgb(255,255,255,140);"
+                              "   border: 1px solid rgb(55,55,55);"
+                              "   border-radius: 2px;"
+                              "};)");
+    coordLabel->move(7, 7);
+
+    //
     connect(area, SIGNAL(updateCoord(QString)),
             this, SLOT(updateCoord(QString)));
 
@@ -64,19 +74,18 @@ mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) 
                         "};");
 
     //
+    infoLabel = new QLabel;
     statusBar = new QStatusBar;
-
-    coordLabel = new QLabel("       ");
-    coordLabel->setStyleSheet("QLabel{"
-                              "   background-color: rgb(255,255,255,140);"
-                              "   border: 1px solid gray;"
-                              "   border-radius: 2px;"
-                              "};)");
     statusBar->setFixedHeight(25);
-    statusBar->addWidget(coordLabel);
-
+    statusBar->addWidget(infoLabel);
+    //
     this->setStatusBar(statusBar);
     statusBar->show();
+}
+
+void mapAreaMainWindow::updateInfoStatusBar(const QString& info)
+{
+    infoLabel->setText(info);
 }
 
 areaDrawWidget* mapAreaMainWindow::getDrawArea()
@@ -151,6 +160,10 @@ void mapAreaMainWindow::appendTool(drawAreaTool *tool)
         // Для реакции инструмента
         objToKeyTool[button] = idPriority;
     }
+
+    //
+    connect(tool, SIGNAL(info(QString)),
+            this, SLOT(updateInfoStatusBar(QString)));
 }
 
 void mapAreaMainWindow::appendToolGroup(const QVector<drawAreaTool *> &boxTools, const QString &nameGroup)
@@ -187,6 +200,10 @@ void mapAreaMainWindow::appendToolGroup(const QVector<drawAreaTool *> &boxTools,
 
         // Для реакции инструмента
         objToKeyTool[action] = idPriority;
+
+        //
+        connect(tool, SIGNAL(info(QString)),
+                this, SLOT(updateInfoStatusBar(QString)));
     }
 
     //

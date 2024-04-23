@@ -14,13 +14,11 @@ class drawAreaTool: public QObject
 {
     Q_OBJECT
 signals:
-    //
-    void pickSignal(int id);
+
+    // Выдает вспомогательную информацию при работе
+    void info(const QString& info);
 
 public slots:
-    // Назначить инструмент выбранным
-    void assign();
-
     //
     void setDrawArea(areaDrawWidget* drawArea);
 

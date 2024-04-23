@@ -60,6 +60,9 @@ protected:
 private slots:
 
     //
+    void updateInfoStatusBar(const QString& info);
+
+    //
     void updateCoord(const QString& coordsData);
 
     //
@@ -72,6 +75,9 @@ private slots:
 private:
     //
     QStatusBar* statusBar;
+    QLabel* infoLabel;
+
+    //
     QLabel* coordLabel;
 
     //

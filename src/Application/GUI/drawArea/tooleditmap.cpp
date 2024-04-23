@@ -16,11 +16,18 @@ ToolEditMap::ToolEditMap(int id): drawAreaTool(id)
     r = 20;
 
     setParButton(QPixmap(":/resurs/machinery"), "Редактировать рельеф");
+
+    // Таймер определяет такты изменения рельефа
+    timer = new QTimer(this);
+    connect(timer,  SIGNAL(timeout()),
+            this,   SLOT(editEarth()));
 }
 
 void ToolEditMap::init()
 {
     statMouse = release;
+
+    info("Редактор рельефа");
 
     //
     k = drawArea->getValZoom();
@@ -40,33 +47,38 @@ void ToolEditMap::mousePress(QMouseEvent *mouse)
     idY = yPressMouse;
     drawArea->toIdMapCoords(idX, idY);
 
+    //
     lastKeyMouse = mouse->button() - 1;
+    switch (lastKeyMouse) {
+    case left:
+        cursor = QCursor(upCurPixmap.scaled(R,R));
+        break;
+    case right:
+        cursor = QCursor(downCurPixmap.scaled(R,R));
+        break;
+    }
+    setCursor();
 
-    editEarth();
+    //
+    timer->start(10);
 }
 
 void ToolEditMap::editEarth()
 {
-    updateSizeCursor();
     switch (lastKeyMouse) {
     case left:
-        cursor = QCursor(upCurPixmap.scaled(R,R));
-
         upEarth(idX, idY, r);
         break;
     case right:
-        cursor = QCursor(downCurPixmap.scaled(R,R));
-
         downEarth(idX, idY, r);
         break;
     }
-
-    setCursor();
 }
 
 void ToolEditMap::mouseRelease(QMouseEvent *mouse)
 {
     Q_UNUSED(mouse);
+    timer->stop();
 
     statMouse = release;
 
@@ -82,31 +94,13 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
     xMouse = mouse->x();
     yMouse = mouse->y();
 
-    if (statMouse == press)
-    {
-        //
-        idX = xMouse;
-        idY = yMouse;
-        drawArea->toIdMapCoords(idX, idY);
+    idX = xMouse;
+    idY = yMouse;
+    drawArea->toIdMapCoords(idX, idY);
 
-        switch (lastKeyMouse) {
-        case left:
-            upEarth(idX, idY, r);
-            break;
-        case right:
-            downEarth(idX, idY, r);
-            break;
-        }
-    }
-    else
-    {
-        // Обновляем показания координат карты
-        drawArea->updateInfoCoordMap(xMouse,
-                                     yMouse);
-
-        cursor = QCursor(moveCurPixmap.scaled(R,R));
-        drawArea->setCursor(cursor);
-    }
+    // Обновляем показания координат карты
+    drawArea->updateInfoCoordMap(xMouse,
+                                 yMouse);
 }
 
 void ToolEditMap::updateSizeCursor()
@@ -123,7 +117,7 @@ void ToolEditMap::wheelEvent(QWheelEvent *event)
     {
         if (event->angleDelta().y() > 0)
         {
-            r++;
+            if (r < maxSIZE) r++;
         }
         else
         {
@@ -138,5 +132,5 @@ void ToolEditMap::wheelEvent(QWheelEvent *event)
 
 void ToolEditMap::end()
 {
-
+    info("");
 }

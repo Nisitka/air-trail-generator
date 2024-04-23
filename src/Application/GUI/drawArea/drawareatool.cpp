@@ -56,11 +56,6 @@ QString drawAreaTool::getNameTool() const
     return nameTool;
 }
 
-void drawAreaTool::assign()
-{
-    pickSignal(id);
-}
-
 void drawAreaTool::getCoordMouse(int &idX, int &idY)
 {
     idX = xMouse;

@@ -6,6 +6,8 @@
 #include <QWheelEvent>
 #include <QPixmap>
 
+#include <QTimer>
+
 class ToolEditMap: public drawAreaTool
 {
     Q_OBJECT
@@ -27,9 +29,11 @@ public:
     void init() override;
     void end() override;
 
-private:
+private slots:
     //
     void editEarth();
+
+private:
 
     //
     void updateSizeCursor();
@@ -38,11 +42,15 @@ private:
     QPixmap downCurPixmap;
     QPixmap moveCurPixmap;
 
+    //
+    QTimer* timer;
+
     // Размер кисти
     int r;
     int R; // размер курсора инструмента
 
     int const minSIZE = 4;
+    int const maxSIZE = 40;
 };
 
 #endif // TOOLEDITMAP_H
