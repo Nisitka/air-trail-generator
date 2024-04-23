@@ -1,13 +1,15 @@
 #include "mapareamainwindow.h"
 #include "ui_mapareamainwindow.h"
 
+#include "scrollmapwidget.h"
+
 mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::mapAreaMainWindow)
 {
     ui->setupUi(this);
 
-    this->setMinimumSize(100, 100);
+    this->setMinimumSize(600, 400);
     this->setMaximumSize(10080, 25000);
     this->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
@@ -22,16 +24,18 @@ mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) 
     addToolBar(Qt::TopToolBarArea, toolBar); // добавляем в панель инструментов
 
     area = new areaDrawWidget(mapImg, map);
-    ui->drawAreaLayout->addWidget(area);
 
     //
-    scrollArea = ui->scrollArea;
-    scrollArea->setMinimumSize(100, 100);
-    scrollArea->setMaximumSize(10080, 25000);
-    scrollArea->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    scrollArea = new ScrollMapWidget(area);
+    setCentralWidget(scrollArea);
+    connect(scrollArea, SIGNAL(resized()), // Чтоб QScrollBar не загараживал
+            this,       SLOT(updatePosCoordLabel()));
 
     // Игнорируем колесико (оставим его для инструментов)
     scrollArea->viewport()->installEventFilter(this);
+
+    // Слайдер для изменения масштаба
+
 
     //
     coordLabel = new QLabel(scrollArea);
@@ -41,7 +45,14 @@ mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) 
                               "   border: 1px solid rgb(55,55,55);"
                               "   border-radius: 2px;"
                               "};)");
-    coordLabel->move(7, 7);
+
+    //
+    zoomSlider = new QSlider(Qt::Vertical, scrollArea);
+    zoomSlider->move(7, 7);
+    zoomSlider->setStyleSheet("QSlider{"
+                              "   background-color:transparent;"
+                              "   border: 1px solid rgb(55,55,55,0);"
+                              "};)");
 
     //
     connect(area, SIGNAL(updateCoord(QString)),
@@ -80,7 +91,45 @@ mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) 
     statusBar->addWidget(infoLabel);
     //
     this->setStatusBar(statusBar);
+    statusBar->setStyleSheet("QStatusBar{"
+                             "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                             "                                     stop: 0    #E0E0E0,"
+                             "                                     stop: 0.35 rgb(251,252,254), "
+                             "                                     stop: 1    rgb(231,232,234));"
+                             "   border: 1px solid gray;"
+                             "   padding: 1px 0px;"
+                             "   border-radius: 2px;"
+                             "};)");
     statusBar->show();
+}
+
+void mapAreaMainWindow::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+
+    // Отрисовка подложки
+    painter.setBrush(QBrush(Qt::black, Qt::Dense7Pattern));
+    painter.drawRect(0, 0, this->geometry().width(), this->geometry().height());
+
+    painter.end();
+}
+
+void mapAreaMainWindow::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+    //updatePosCoordLabel();
+}
+
+void mapAreaMainWindow::updatePosCoordLabel()
+{
+    if (scrollArea->horizontalScrollBar()->isVisible())
+    {
+        coordLabel->move(5, centralWidget()->size().height() - 45);
+    }
+    else
+    {
+        coordLabel->move(5, centralWidget()->size().height() - 25);
+    }
 }
 
 void mapAreaMainWindow::updateInfoStatusBar(const QString& info)

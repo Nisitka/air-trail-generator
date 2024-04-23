@@ -75,7 +75,8 @@ SOURCES += main.cpp\
     GUI/algorithmPredict/lineglyph.cpp \
     GUI/algorithmPredict/glyphcomposer.cpp \
     GUI/algorithmPredict/labelglyph.cpp \
-    GUI/drawArea/mapareamainwindow.cpp
+    GUI/drawArea/mapareamainwindow.cpp \
+    GUI/drawArea/scrollmapwidget.cpp
 
 HEADERS  += \
     core.h \
@@ -129,7 +130,8 @@ HEADERS  += \
     GUI/algorithmPredict/lineglyph.h \
     GUI/algorithmPredict/glyphcomposer.h \
     GUI/algorithmPredict/labelglyph.h \
-    GUI/drawArea/mapareamainwindow.h
+    GUI/drawArea/mapareamainwindow.h \
+    GUI/drawArea/scrollmapwidget.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/map3dwindow.ui \

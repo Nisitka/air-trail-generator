@@ -39,8 +39,8 @@ public:
 private:
 
     // Иконки РЛС
-    QPixmap* pixRLS;
-    QPixmap* pixCurRLS;
+    QPixmap pixRLS;
+    QPixmap pixCurRLS;
     // Выбранная РЛС
     int idCurRLS; // индекс выбранной РЛС
 

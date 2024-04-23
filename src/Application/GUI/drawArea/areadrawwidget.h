@@ -44,6 +44,9 @@ signals:
     // Обновить информацию об координатах курсора
     void updateCoord(const QString& textdataCoords);
 
+    // Изменился размер
+    void resized();
+
 public:
     areaDrawWidget(QImage* mapImg, Map* map);
 

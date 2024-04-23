@@ -9,8 +9,8 @@ ToolSetRLS::ToolSetRLS(int id): drawAreaTool(id)
     setParButton(QPixmap(":/resurs/radarBlue"), "Постановка РЛС");
 
     //
-    pixRLS = new QPixmap(":/resurs/offRLS");
-    pixCurRLS = new QPixmap(":/resurs/onRLS");
+    pixRLS = QPixmap(":/resurs/offRLS").scaled(36, 36, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);;
+    pixCurRLS = QPixmap(":/resurs/onRLS").scaled(36, 36, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);;
     curRLScolor.setRgb(0,255,255);
     RLScolor = Qt::black;
 
@@ -58,21 +58,19 @@ void ToolSetRLS::procDrawTask()
     drawArea->setRenderHint();
 
     // Отрисовка станций
-    QColor textColor;
-    QPixmap iconCurRLS = pixCurRLS->scaled(36, 36, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    QPixmap iconRLS    = pixRLS->scaled(36, 36, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     QPixmap icon;
+    QColor textColor;
     for (int i=0; i<coordsRLS.size(); i++)
     {
         //
-        if (i == idCurRLS)
+        if (i == idCurRLS) // В юудущем можно будет проверять выделенность нескольких РЛС
         {
-            icon = iconCurRLS ;
+            icon = pixCurRLS ;
             textColor = curRLScolor;
         }
         else
         {
-            icon = iconRLS;
+            icon = pixRLS;
             textColor = RLScolor;
         }
 

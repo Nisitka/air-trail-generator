@@ -54,6 +54,9 @@ void areaDrawWidget::updateSize()
     H = images[geoMap]->height() * kZoom;
 
     setFixedSize(W, H);
+
+    // Сообщаем об этом кому это нужно
+    resized();
 }
 
 void areaDrawWidget::setBlockSize(int size)

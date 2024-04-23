@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include <QScrollBar>
+#include <QSlider>
 
 #include "../designer.h"
 #include "areadrawwidget.h"
@@ -51,11 +52,16 @@ public slots:
 
 protected:
 
+    void paintEvent(QPaintEvent* event) override;
+
     // Переопределяем метод, чтоб не вылазило меню при нажатии лев.клавиши мыши
     void contextMenuEvent(QContextMenuEvent* event) override;
 
     //
-    void wheelEvent(QWheelEvent* event);
+    void wheelEvent(QWheelEvent* event) override;
+
+    //
+    void resizeEvent(QResizeEvent* event);
 
 private slots:
 
@@ -71,11 +77,17 @@ private slots:
 
     void updateStyleToolButtons(QToolButton* changeButton);
 
+    //
+    void updatePosCoordLabel();
 
 private:
+
     //
     QStatusBar* statusBar;
     QLabel* infoLabel;
+
+    //
+    QSlider* zoomSlider;
 
     //
     QLabel* coordLabel;

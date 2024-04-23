@@ -39,6 +39,7 @@ void Designer::setButton(QPushButton* button, int style)
                    "   border: 1px solid rgb(150,183,227);"
                    "   border-radius: 3px;"
                    "   border-width: 1px;"
+                   "   color: rgb(34,69,157);"
                    "}"
                    "QPushButton:hover{"
                    "   border: 1px solid rgb(255,165,0);"
