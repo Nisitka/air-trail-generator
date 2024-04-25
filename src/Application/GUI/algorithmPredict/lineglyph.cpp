@@ -1,6 +1,7 @@
 #include "lineglyph.h"
 
 #include <QDebug>
+#include <math.h>
 
 LineGlyph::LineGlyph(QWidget* parent,
                      Glyph* pA_, Glyph* pB_):

@@ -2,7 +2,9 @@
 #define MAP3DVISWINDOW_H
 
 #include <QMainWindow>
+#include <QPushButton>
 #include <QVector3D>
+#include <QDockWidget>
 
 #include "backend/map.h"
 #include "mapopenglwidget.h"
@@ -16,6 +18,7 @@ class map3DVisWindow : public QMainWindow
     Q_OBJECT
 signals:
     void generateMap3D();
+    void openToolWidget(QWidget*,QPixmap,QString,Qt::DockWidgetAreas, Qt::DockWidgetArea);
 
 public slots:
     // завершение подготовки данных для отображения 3D карты
@@ -36,6 +39,8 @@ public:
 
 private slots:
 
+    void clickProcessing();
+    void workTools(QWidget*, QPixmap, QString, Qt::DockWidgetAreas, Qt::DockWidgetArea);
 
 private:
     void setMap(int idXo, int idYo, int numW, int numL);
@@ -47,6 +52,9 @@ private:
     //
     Map* map;
     mapOpenGLWidget* visMap;
+    QToolBar *toolBar;
+    QPushButton *toolButton_1, *toolButton_2, *toolButton_3;
+    QDockWidget *dockWidget;
 
     Ui::map3DVisWindow *ui;
 };
