@@ -21,34 +21,37 @@ map3DVisWindow::map3DVisWindow(Map* map_, QImage* imgTex, QWidget *parent) :
     toolBar = new QToolBar(tr("&Файл"));
     addToolBar(Qt::TopToolBarArea,toolBar);
 
-    toolButton_1 = new QPushButton(tr("Кнопка 1"));
-    toolButton_2 = new QPushButton(tr("Кнопка 2"));
-    toolButton_3 = new QPushButton(tr("Кнопка 3"));
+//    toolButton_1 = new QPushButton(tr("Кнопка 1"));
+//    toolButton_2 = new QPushButton(tr("Кнопка 2"));
+//    toolButton_3 = new QPushButton(tr("Кнопка 3"));
 
-    toolButton_1->setIcon(QPixmap(":/resurs/a"));
-    toolButton_2->setIcon(QPixmap(":/resurs/b"));
-    toolButton_3->setIcon(QPixmap(":/resurs/base1"));
+//    toolButton_1->setIcon(QPixmap(":/resurs/a"));
+//    toolButton_2->setIcon(QPixmap(":/resurs/b"));
+//    toolButton_3->setIcon(QPixmap(":/resurs/base1"));
 
-    toolBar->setAllowedAreas(Qt::TopToolBarArea);
-    toolBar->setMovable(false);
-    toolBar->addWidget(toolButton_1);
-    toolBar->addWidget(toolButton_2);
-    toolBar->addWidget(toolButton_3);
+//    toolBar->setAllowedAreas(Qt::TopToolBarArea);
+//    toolBar->setMovable(false);
+//    toolBar->addWidget(toolButton_1);
+//    toolBar->addWidget(toolButton_2);
+//    toolBar->addWidget(toolButton_3);
 
-    connect(toolButton_1, SIGNAL(clicked(bool)),
-            SLOT(clickProcessing())
-            );
-    connect(toolButton_2, SIGNAL(clicked(bool)),
-            SLOT(clickProcessing())
-            );
-    connect(toolButton_3, SIGNAL(clicked(bool)),
-            SLOT(clickProcessing())
-            );
-    connect(this, SIGNAL(openToolWidget(QWidget*,QPixmap,QString,Qt::DockWidgetAreas, Qt::DockWidgetArea)),
-            SLOT(workTools(QWidget*, QPixmap, QString, Qt::DockWidgetAreas, Qt::DockWidgetArea))
-            );
+//    connect(toolButton_1, SIGNAL(clicked(bool)),
+//            SLOT(clickProcessing())
+//            );
+//    connect(toolButton_2, SIGNAL(clicked(bool)),
+//            SLOT(clickProcessing())
+//            );
+//    connect(toolButton_3, SIGNAL(clicked(bool)),
+//            SLOT(clickProcessing())
+//            );
+//    connect(this, SIGNAL(openToolWidget(QWidget*,QPixmap,QString,Qt::DockWidgetAreas, Qt::DockWidgetArea)),
+//            SLOT(workTools(QWidget*, QPixmap, QString, Qt::DockWidgetAreas, Qt::DockWidgetArea))
+//            );
 
+    addFunWindow(new QTabWidget, QIcon(":/resurs/a"));
+    addFunWindow(new QTabWidget, QIcon(":/resurs/b"));
 
+    // 3D
     ui->mainLayout->addWidget(visMap);
     visMap->show();
 }
@@ -56,6 +59,43 @@ map3DVisWindow::map3DVisWindow(Map* map_, QImage* imgTex, QWidget *parent) :
 mapOpenGLWidget* map3DVisWindow::getGraphicsWidget()
 {
     return visMap;
+}
+
+void map3DVisWindow::addFunWindow(QWidget *window, const QIcon &iconButton, const QString &nameWin,
+                                  Qt::DockWidgetAreas typeMoved, Qt::DockWidgetArea initShow)
+{
+    //
+    QToolButton* button = new QToolButton;
+    button->setIcon(iconButton);
+    button->setToolTip(nameWin);
+
+    toolBar->addWidget(button);
+
+    //
+    QDockWidget* dock = new QDockWidget(nameWin);
+    this->addDockWidget(initShow, dock);
+    dock->setWidget(window);
+
+    //
+    connect(button, SIGNAL(clicked(bool)),
+            this,   SLOT(showFunWindow()));
+
+    windows[button] = dock;
+}
+
+void map3DVisWindow::showFunWindow()
+{
+    QToolButton* button = qobject_cast<QToolButton*>(sender());
+
+    QDockWidget* dock = windows[button];
+    if (dock->isVisible())
+    {
+        dock->hide();
+    }
+    else
+    {
+        dock->show();
+    }
 }
 
 void map3DVisWindow::clickProcessing()

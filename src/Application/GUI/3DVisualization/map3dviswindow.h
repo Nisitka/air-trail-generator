@@ -9,6 +9,8 @@
 #include "backend/map.h"
 #include "mapopenglwidget.h"
 
+#include <QToolButton>
+
 namespace Ui {
 class map3DVisWindow;
 }
@@ -39,6 +41,14 @@ public:
 
 private slots:
 
+    void addFunWindow(QWidget* window, const QIcon& iconButton, const QString& nameWin = nullptr,
+                   Qt::DockWidgetAreas typeMoved = Qt::LeftDockWidgetArea,
+                   Qt::DockWidgetArea initShow = Qt::LeftDockWidgetArea);
+
+    //void addGroupFunWindow(const QList <QDockWidget*>);
+
+    void showFunWindow();
+
     void clickProcessing();
     void workTools(QWidget*, QPixmap, QString, Qt::DockWidgetAreas, Qt::DockWidgetArea);
 
@@ -55,6 +65,8 @@ private:
     QToolBar *toolBar;
     QPushButton *toolButton_1, *toolButton_2, *toolButton_3;
     QDockWidget *dockWidget;
+
+    QMap <QToolButton*, QDockWidget*> windows;
 
     Ui::map3DVisWindow *ui;
 };
