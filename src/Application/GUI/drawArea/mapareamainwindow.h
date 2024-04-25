@@ -47,9 +47,6 @@ public slots:
     // Выбрать инструмент
     void setTool(int id);
 
-    //
-    void movePosLookMap(double dX, double dY);
-
 protected:
 
     void paintEvent(QPaintEvent* event) override;
@@ -69,28 +66,16 @@ private slots:
     void updateInfoStatusBar(const QString& info);
 
     //
-    void updateCoord(const QString& coordsData);
-
-    //
     void changeTool();
     void changeToolGroup();
 
     void updateStyleToolButtons(QToolButton* changeButton);
-
-    //
-    void updatePosCoordLabel();
 
 private:
 
     //
     QStatusBar* statusBar;
     QLabel* infoLabel;
-
-    //
-    QSlider* zoomSlider;
-
-    //
-    QLabel* coordLabel;
 
     //
     QScrollArea* scrollArea;

@@ -28,35 +28,13 @@ mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) 
     //
     scrollArea = new ScrollMapWidget(area);
     setCentralWidget(scrollArea);
-    connect(scrollArea, SIGNAL(resized()), // Чтоб QScrollBar не загараживал
-            this,       SLOT(updatePosCoordLabel()));
 
     // Игнорируем колесико (оставим его для инструментов)
     scrollArea->viewport()->installEventFilter(this);
 
-    // Слайдер для изменения масштаба
-
-
     //
-    coordLabel = new QLabel(scrollArea);
-    coordLabel->setFixedSize(135, 20);
-    coordLabel->setStyleSheet("QLabel{"
-                              "   background-color: rgb(255,255,255,140);"
-                              "   border: 1px solid rgb(55,55,55);"
-                              "   border-radius: 2px;"
-                              "};)");
-
-    //
-    zoomSlider = new QSlider(Qt::Vertical, scrollArea);
-    zoomSlider->move(7, 7);
-    zoomSlider->setStyleSheet("QSlider{"
-                              "   background-color:transparent;"
-                              "   border: 1px solid rgb(55,55,55,0);"
-                              "};)");
-
-    //
-    connect(area, SIGNAL(updateCoord(QString)),
-            this, SLOT(updateCoord(QString)));
+    connect(area,        SIGNAL(updateCoord(QString)),
+            scrollArea , SLOT(updateCoord(QString)));
 
     // Обычный курсор без дейсвий
     appendTool(new toolDefault(def));
@@ -64,7 +42,7 @@ mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) 
     // Перетаскивание карты без лишнего
     ToolMoveMap* toolMoveMap = new ToolMoveMap(moveImg);
     connect(toolMoveMap, SIGNAL(movedMap(double,double)),
-            this,        SLOT(movePosLookMap(double,double)));
+            scrollArea,  SLOT(movePosLookMap(double,double)));
     appendTool(toolMoveMap);
 
     // Изменение масштаба через мышь
@@ -120,18 +98,6 @@ void mapAreaMainWindow::resizeEvent(QResizeEvent *event)
     //updatePosCoordLabel();
 }
 
-void mapAreaMainWindow::updatePosCoordLabel()
-{
-    if (scrollArea->horizontalScrollBar()->isVisible())
-    {
-        coordLabel->move(5, centralWidget()->size().height() - 45);
-    }
-    else
-    {
-        coordLabel->move(5, centralWidget()->size().height() - 25);
-    }
-}
-
 void mapAreaMainWindow::updateInfoStatusBar(const QString& info)
 {
     infoLabel->setText(info);
@@ -167,20 +133,6 @@ void mapAreaMainWindow::wheelEvent(QWheelEvent *event)
             area->zoom(-0.08);
         }
     }
-}
-
-void mapAreaMainWindow::updateCoord(const QString &coordsData)
-{
-    coordLabel->setText(coordsData);
-}
-
-void mapAreaMainWindow::movePosLookMap(double dX, double dY)
-{
-    int curY = scrollArea->verticalScrollBar()->value();
-    scrollArea->verticalScrollBar()->setValue(curY + (dY * area->height()));
-
-    int curX = scrollArea->horizontalScrollBar()->value();
-    scrollArea->horizontalScrollBar()->setValue(curX + (dX * area->width()));
 }
 
 void mapAreaMainWindow::appendTool(drawAreaTool *tool)
