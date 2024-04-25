@@ -63,7 +63,6 @@ SOURCES += main.cpp\
     GUI/drawArea/toolpredict.cpp \
     backend/dao.cpp \
     GUI/dataaccessobjectwindow.cpp \
-    GUI/functionwindow.cpp \
     GUI/3DVisualization/map3dviswindow.cpp \
     GUI/algorithmPredict/glyph.cpp \
     GUI/algorithmPredict/setalgpredictwindow.cpp \
@@ -76,7 +75,8 @@ SOURCES += main.cpp\
     GUI/algorithmPredict/glyphcomposer.cpp \
     GUI/algorithmPredict/labelglyph.cpp \
     GUI/drawArea/mapareamainwindow.cpp \
-    GUI/drawArea/scrollmapwidget.cpp
+    GUI/drawArea/scrollmapwidget.cpp \
+    GUI/multiplewindow.cpp
 
 HEADERS  += \
     core.h \
@@ -118,7 +118,6 @@ HEADERS  += \
     GUI/drawArea/toolpredict.h \
     backend/dao.h \
     GUI/dataaccessobjectwindow.h \
-    GUI/functionwindow.h \
     GUI/3DVisualization/map3dviswindow.h \
     GUI/algorithmPredict/glyph.h \
     GUI/algorithmPredict/setalgpredictwindow.h \
@@ -131,10 +130,10 @@ HEADERS  += \
     GUI/algorithmPredict/glyphcomposer.h \
     GUI/algorithmPredict/labelglyph.h \
     GUI/drawArea/mapareamainwindow.h \
-    GUI/drawArea/scrollmapwidget.h
+    GUI/drawArea/scrollmapwidget.h \
+    GUI/multiplewindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
-    GUI/UI/map3dwindow.ui \
     GUI/UI/optdronewindow.ui \
     GUI/UI/optmapgeneratorwindow.ui \
     GUI/UI/optqfunwindow.ui \

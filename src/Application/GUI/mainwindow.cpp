@@ -18,30 +18,50 @@ mainWindow::mainWindow(QWidget *parent) :
 
     // Кнопки вызова основных окон
     toolBar = new QToolBar("Панель задач");
+    toolBar->setMovable(false);  // Чтоб пользователь не потерял его :)
     Designer::setToolBar(toolBar, Designer::whiteToolBox);
     addToolBar(Qt::TopToolBarArea, toolBar);
 }
 
-void mainWindow::addTask(QWidget *widget,
-                         const QPixmap& pix,
+void mainWindow::showFunWindow()
+{
+    QToolButton* button = qobject_cast<QToolButton*>(sender());
+
+    QDockWidget* dock = windows[button];
+    if (dock->isVisible())
+    {
+        dock->hide();
+    }
+    else
+    {
+        dock->show();
+    }
+}
+
+void mainWindow::addTask(QWidget *window,
+                         const QIcon& iconButton,
                          const QString& nameButton,
-                         const QString& nameWindow,
+                         const QString& nameWin,
                          Qt::DockWidgetArea showPosition)
 {
-    // Вставка виджета в интерфейс
-    QDockWidget* dock = new QDockWidget(nameWindow, this);
-    Designer::setDockWidget(dock);
+    //
+    QToolButton* button = new QToolButton;
+    button->setIcon(iconButton);
+    button->setToolTip(nameButton);
 
-    dock->setWidget(widget);
-    addDockWidget(showPosition, dock);
+    toolBar->addWidget(button);
 
     //
-    functionWindow* funcWin = new functionWindow(dock);
-
-    // Создаем кнопку для вызова задачи
-    toolBar->addAction(pix,     nameButton, // соеденяем его с кнопкой вызова
-                       funcWin, SLOT(editShowStatus()));
+    QDockWidget* dock = new QDockWidget(nameWin);
+    this->addDockWidget(showPosition, dock);
+    dock->setWidget(window);
     dock->close(); // Сразу закрываем чтобы не мешался
+
+    //
+    connect(button, SIGNAL(clicked(bool)),
+            this,   SLOT(showFunWindow()));
+
+    windows[button] = dock;
 }
 
 mainWindow::~mainWindow()

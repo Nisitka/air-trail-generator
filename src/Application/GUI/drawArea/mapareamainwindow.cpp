@@ -3,6 +3,8 @@
 
 #include "scrollmapwidget.h"
 
+#include <QIcon>
+
 mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::mapAreaMainWindow)
@@ -147,19 +149,15 @@ void mapAreaMainWindow::appendTool(drawAreaTool *tool)
     //
     if (idPriority != def)
     {
-        //
-        QToolButton* button = new QToolButton;
-        connect(button, SIGNAL(clicked(bool)),
-                this,   SLOT(changeTool()));
-        //
-        button->setIcon(tool->getImgButton());
-        setButtonStyle(button, off);
-        button->setToolTip(tool->getNameTool());
+        QAction* action = toolBar->addAction(QIcon(tool->getImgButton()), tool->getNameTool(),
+                                             this,  SLOT(changeTool()));
 
-        toolBar->addWidget(button);
+        // Изначально выключен
+        setButtonStyle(dynamic_cast<QToolButton*>(
+                           toolBar->widgetForAction(action)), off);
 
         // Для реакции инструмента
-        objToKeyTool[button] = idPriority;
+        objToKeyTool[action] = idPriority;
     }
 
     //
@@ -218,7 +216,11 @@ void mapAreaMainWindow::changeTool()
 {
     setTool(objToKeyTool[sender()]);
 
-    QToolButton* toolButton = qobject_cast<QToolButton*>(sender());
+    QAction* action = qobject_cast<QAction*>(sender());
+
+    QToolButton* toolButton
+        = dynamic_cast<QToolButton*>(toolBar->widgetForAction(action));
+
     updateStyleToolButtons(toolButton);
 }
 
@@ -287,8 +289,7 @@ void mapAreaMainWindow::setButtonStyle(QToolButton *button, StyleButtonTool styl
     case off:
         strStyle =
                 "QToolButton{"
-                "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-                "                                     stop: 0 #E0E0E0, stop: 1 #FFFFFF);"
+                "    background-color:transparent;"
                 "    border-style: outset;"
                 "}"
                 "QToolButton:hover{"

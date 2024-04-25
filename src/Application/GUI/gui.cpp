@@ -38,14 +38,14 @@ GUI::GUI(QImage* geoMap,
     //
     QObject::connect(visInfoWin, SIGNAL(saveMap_signal(QString)),
                      map,        SLOT(save(QString)));
-    mainWin->addTask(visInfoWin, QPixmap(":/resurs/imgIcon"),
+    mainWin->addTask(visInfoWin, QIcon(":/resurs/imgIcon"),
                      "Визуализатор", "Графическое представление");
 
     //
     optGenMapWin = new optMapGeneratorWindow;
     QObject::connect(optGenMapWin, SIGNAL(openMap_signal(QString)),
                      map,          SLOT(open(QString)));
-    mainWin->addTask(optGenMapWin, QPixmap(":/resurs/earchIcon"),
+    mainWin->addTask(optGenMapWin, QIcon(":/resurs/earchIcon"),
                      "Карта", "Карта");
 
     //
@@ -53,12 +53,12 @@ GUI::GUI(QImage* geoMap,
     //
     QObject::connect(toolRLS,   SIGNAL(setCoordRLS(int,int)),
                      optRLSWin, SLOT(updateCoordRLS(int,int)));
-    mainWin->addTask(optRLSWin, QPixmap(":/resurs/rlsIcon"),
+    mainWin->addTask(optRLSWin, QIcon(":/resurs/rlsIcon"),
                      "РЛС", "Радиолокационная станция");
 
     //
     droneWin = new optDroneWindow;
-    mainWin->addTask(droneWin, QPixmap(":/resurs/plane"),
+    mainWin->addTask(droneWin, QIcon(":/resurs/plane"),
                      "БПЛА", "Беспилотный летательный аппарат");
 
     //

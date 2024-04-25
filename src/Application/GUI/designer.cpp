@@ -336,7 +336,12 @@ void Designer::setToolBar(QToolBar *toolBar, int style)
         "    border-color: rgb(0,0,0);"
         "}"
         "QToolButton:pressed{"
-        "    background-color : rgb(143,204,205); color: rgb(0,0,0);;"
+        "    background-color : rgb(255,251,230); color: rgb(0,0,0);"
+        "    border-color: rgb(0,0,0);"
+        "    border-style: outset;"
+        "    border-radius: 3px;"
+        "    border-width: 1px;"
+        "    border-color: rgb(0,0,0);"
         "};";
         break;
     }

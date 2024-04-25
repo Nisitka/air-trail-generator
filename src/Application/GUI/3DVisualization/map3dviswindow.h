@@ -1,22 +1,20 @@
 #ifndef MAP3DVISWINDOW_H
 #define MAP3DVISWINDOW_H
 
-#include <QMainWindow>
 #include <QPushButton>
 #include <QVector3D>
-#include <QDockWidget>
 
 #include "backend/map.h"
 #include "mapopenglwidget.h"
 
-#include <QToolButton>
 #include "GUI/designer.h"
+#include "GUI/multiplewindow.h"
 
 namespace Ui {
 class map3DVisWindow;
 }
 
-class map3DVisWindow : public QMainWindow
+class map3DVisWindow : public MultipleWindow
 {
     Q_OBJECT
 signals:
@@ -34,7 +32,7 @@ public slots:
     void updatePointsInterZD(QVector <QVector <QVector <QVector3D>>>* pZD, QList <QVector3D>* posRLS);
 
 public:
-    explicit map3DVisWindow(Map* map_, QImage* imgTex, QWidget *parent = nullptr);
+    explicit map3DVisWindow(Map* map_, QImage* imgTex);
     ~map3DVisWindow();
 
     mapOpenGLWidget* getGraphicsWidget();
@@ -43,13 +41,13 @@ public:
 
 private slots:
 
-    void addFunWindow(QWidget* window, const QIcon& iconButton, const QString& nameWin = nullptr,
-                   Qt::DockWidgetAreas typeMoved = Qt::LeftDockWidgetArea,
-                   Qt::DockWidgetArea initShow = Qt::LeftDockWidgetArea);
+//    void addFunWindow(QWidget* window, const QIcon& iconButton, const QString& nameWin = nullptr,
+//                   Qt::DockWidgetAreas typeMoved = Qt::LeftDockWidgetArea,
+//                   Qt::DockWidgetArea initShow = Qt::LeftDockWidgetArea);
 
     //void addGroupFunWindow(const QList <QDockWidget*>);
 
-    void showFunWindow();
+//    void showFunWindow();
 
 private:
     void setMap(int idXo, int idYo, int numW, int numL);
@@ -61,10 +59,10 @@ private:
     //
     Map* map;
     mapOpenGLWidget* visMap;
-    QToolBar *toolBar;
-    QDockWidget *dockWidget;
+    //QToolBar *toolBar;
+    QDockWidget *dockWidget; // ???
 
-    QMap <QToolButton*, QDockWidget*> windows;
+    //QMap <QToolButton*, QDockWidget*> windows;
 
     Ui::map3DVisWindow *ui;
 };

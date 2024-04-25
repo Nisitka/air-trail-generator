@@ -80,8 +80,7 @@ private:
     //
     QScrollArea* scrollArea;
 
-    //
-    QMap <QObject*, int> objToKeyTool;
+
 
     areaDrawWidget* area;
 
@@ -93,6 +92,9 @@ private:
 
     // Все инструменты
     QMap <int, drawAreaTool*> Tools;
+
+    //
+    QMap <QObject*, int> objToKeyTool;
 
     // Текущий инструмент
     drawAreaTool* Tool;

@@ -10,49 +10,24 @@
 #include "backend/buildertraildrones.h"
 
 visualInfoWidget::visualInfoWidget(QImage* geoMap,
-                                   Map* map_,
-                                   QWidget *parent) :
-    QWidget(parent),
+                                   Map* map_) :
     ui(new Ui::visualInfoWidget)
 {
     ui->setupUi(this);
 
+    /// Для теста!
+    addFunWindow(new QTabWidget, QIcon(":/resurs/a"),"A",Qt::LeftDockWidgetArea,Qt::LeftDockWidgetArea);
+    addFunWindow(new QTabWidget, QIcon(":/resurs/b"),"B",Qt::RightDockWidgetArea,Qt::RightDockWidgetArea);
+
     //
     manDrawArea = new mapAreaMainWindow(geoMap, map_);
-    ui->areaDrawLayout->addWidget(manDrawArea);
-
-    //
-    ui->objectVisualComboBox->addItems(strTypeVisual);
-    connect(ui->objectVisualComboBox, SIGNAL(currentIndexChanged(int)),
-            this,                     SLOT(switchVisual(int)));
-
-    //
-    Designer::setGroupBox(ui->typeVisObjGroupBox);
-    Designer::setGroupBox(ui->mainGroupBox, Designer::lightBlue);
-    Designer::setTabWidget(ui->addInfoTabWidget);
-
-    isPredictTrail = false;
+    setCentralWidget(manDrawArea);
 }
 
 mapAreaMainWindow* visualInfoWidget::getManDrawArea()
 {
     return manDrawArea;
 }
-
-//void visualInfoWidget::setCurRLS(int idRLS)
-//{
-//    manDrawArea->getDrawArea()->setCurRLS(idRLS);
-//}
-
-//void visualInfoWidget::addRLS(QPoint* posRLS, const QString& nameNewRLS)
-//{
-//    manDrawArea->getDrawArea()->addRLS(posRLS, nameNewRLS);
-//}
-
-//void visualInfoWidget::delRLS(int indexRLS)
-//{
-//    manDrawArea->getDrawArea()->delRLS(indexRLS);
-//}
 
 void visualInfoWidget::switchVisual(int idType)
 {

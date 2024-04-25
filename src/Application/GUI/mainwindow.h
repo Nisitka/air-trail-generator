@@ -9,8 +9,6 @@
 #include "visualinfowidget.h"
 #include "optmapgeneratorwindow.h"
 
-#include "functionwindow.h"
-
 namespace Ui {
 class mainWindow;
 }
@@ -26,7 +24,7 @@ public:
     explicit mainWindow(QWidget *parent = 0);
 
     void addTask(QWidget* widget,
-                 const QPixmap& pix,
+                 const QIcon& pix,
                  const QString& nameButton,
                  const QString& nameWindow,
                  Qt::DockWidgetArea showPosition = Qt::TopDockWidgetArea);
@@ -35,6 +33,8 @@ public:
 
 private slots:
 
+    //
+    void showFunWindow();
 
 private:
     // панели окон
@@ -42,6 +42,8 @@ private:
 
     // окно визулизатора данных
     QDockWidget* dockVisualInfo;
+
+    QMap <QToolButton*, QDockWidget*> windows;
 
     Ui::mainWindow *ui;
 };
