@@ -10,6 +10,7 @@
 #include "mapopenglwidget.h"
 
 #include <QToolButton>
+#include "GUI/designer.h"
 
 namespace Ui {
 class map3DVisWindow;
@@ -20,7 +21,6 @@ class map3DVisWindow : public QMainWindow
     Q_OBJECT
 signals:
     void generateMap3D();
-    void openToolWidget(QWidget*,QPixmap,QString,Qt::DockWidgetAreas, Qt::DockWidgetArea);
 
 public slots:
     // завершение подготовки данных для отображения 3D карты
@@ -34,10 +34,12 @@ public slots:
     void updatePointsInterZD(QVector <QVector <QVector <QVector3D>>>* pZD, QList <QVector3D>* posRLS);
 
 public:
-    explicit map3DVisWindow(Map* map_, QImage* imgTex, QWidget *parent = 0);
+    explicit map3DVisWindow(Map* map_, QImage* imgTex, QWidget *parent = nullptr);
     ~map3DVisWindow();
 
     mapOpenGLWidget* getGraphicsWidget();
+
+    enum StyleButtonTool {on, off};
 
 private slots:
 
@@ -48,9 +50,6 @@ private slots:
     //void addGroupFunWindow(const QList <QDockWidget*>);
 
     void showFunWindow();
-
-    void clickProcessing();
-    void workTools(QWidget*, QPixmap, QString, Qt::DockWidgetAreas, Qt::DockWidgetArea);
 
 private:
     void setMap(int idXo, int idYo, int numW, int numL);
@@ -63,7 +62,6 @@ private:
     Map* map;
     mapOpenGLWidget* visMap;
     QToolBar *toolBar;
-    QPushButton *toolButton_1, *toolButton_2, *toolButton_3;
     QDockWidget *dockWidget;
 
     QMap <QToolButton*, QDockWidget*> windows;
