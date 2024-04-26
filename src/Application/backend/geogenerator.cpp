@@ -1,10 +1,40 @@
 #include "geogenerator.h"
 
+#include <QImage>
+#include <QApplication>
 #include <cmath>
+
+#include <QDebug>
+
+#include <QRgb>
 
 geoGenerator::geoGenerator(Map* map_)
 {
     map = map_;
+}
+
+void geoGenerator::openMap(const QString &dirMapFile)
+{
+    QImage geoData(dirMapFile);
+    Wmap = geoData.width();
+    Lmap = geoData.height();
+    Hmap = 200;
+
+    map->resize(Wmap, Lmap, Hmap);
+
+    int h;
+    QColor color;
+    for (int x=0; x<Wmap; x++)
+    {
+        for (int y=0; y<Lmap; y++)
+        {
+            color = geoData.pixelColor(x, y);
+            h = Hmap * ((double) ((double)color.blueF() + color.redF() + color.greenF()) / 1.0);
+            map->setH(x, y, h);
+        }
+    }
+
+    editSizeMap();
 }
 
 void geoGenerator::run(double setBlockP, int countEpochs,

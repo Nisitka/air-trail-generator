@@ -11,13 +11,21 @@ painterMapImage::painterMapImage(Map* map) :
 {
     connect(map,  SIGNAL(updateVisual()),
             this, SLOT(run()));
-    run(); // чтобы отобразить карту в исходном состоянии
 
     // по умолчанию на всю карту
     idXo = 0;
     idYo = 0;
-    numW = map->getWidth();
-    numL = map->getLength();
+
+    connect(this, SIGNAL(resized()),
+            this, SLOT(updateFull()));
+
+    //
+    updateSizeMap();
+}
+
+void painterMapImage::updateFull()
+{
+    run();
 }
 
 void painterMapImage::upEarth(int idX, int idY, int R)
@@ -25,7 +33,7 @@ void painterMapImage::upEarth(int idX, int idY, int R)
     map->upEarth(idX, idY, R);
     runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
 
-    readyEditEarth(idX, idY, R);
+    //readyEditEarth(idX, idY, R);
 }
 
 void painterMapImage::downEarth(int idX, int idY, int R)
@@ -33,7 +41,7 @@ void painterMapImage::downEarth(int idX, int idY, int R)
     map->downEarth(idX, idY, R);
     runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
 
-    readyEditEarth(idX, idY, R);
+    //readyEditEarth(idX, idY, R);
 }
 
 void painterMapImage::runToRects(QRect* rects, int count)
@@ -142,7 +150,7 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
 
 void painterMapImage::run()
 {
-    updateSizeImage();
+    //updateSizeImage();
 
     QColor color;
     int cZD;

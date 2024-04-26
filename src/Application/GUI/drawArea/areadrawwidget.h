@@ -52,6 +52,8 @@ public:
 
     enum unit{pix, idMap};
 
+    void updateMapImage();
+
     //
     QPainter& getPainter();
 
@@ -107,7 +109,6 @@ public:
     void drawBackground();
     void drawBorder();
     void drawMap();
-    //void drawRLS();
 
     //
     void setPen(const QPen&);

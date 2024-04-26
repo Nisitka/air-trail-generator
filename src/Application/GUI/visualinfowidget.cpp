@@ -47,7 +47,7 @@ void visualInfoWidget::switchVisual(int idType)
 
 void visualInfoWidget::updateImage()
 {
-    manDrawArea->getDrawArea()->repaint();
+    manDrawArea->getDrawArea()->updateMapImage();
 }
 
 visualInfoWidget::~visualInfoWidget()

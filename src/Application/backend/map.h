@@ -33,6 +33,9 @@ public:
 
     enum coord{x, y};
 
+    //
+    void setH(int idX, int idY, int valH);
+
     // поднять высоту в области
     void upEarth(int idXo, int idYo, int R); // центр области, размер кисти
 

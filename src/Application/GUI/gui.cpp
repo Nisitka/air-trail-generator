@@ -36,8 +36,6 @@ GUI::GUI(QImage* geoMap,
     manDrawArea->appendTool(toolVisMap);
 
     //
-    QObject::connect(visInfoWin, SIGNAL(saveMap_signal(QString)),
-                     map,        SLOT(save(QString)));
     mainWin->addTask(visInfoWin, QIcon(":/resurs/imgIcon"),
                      "Визуализатор", "Графическое представление");
 

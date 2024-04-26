@@ -192,7 +192,8 @@ DISTFILES += \
     resurs/zoom.png \
     resurs/zoom2.png \
     resurs/zoomTool.png \
-    GUI/algorithmPredict/doc.txt
+    GUI/algorithmPredict/doc.txt \
+    maps/img4.png
 
 RESOURCES += \
     res.qrc

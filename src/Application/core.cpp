@@ -1,5 +1,7 @@
 #include "core.h"
 
+#include <QApplication>
+
 Core::Core()
 {
     //Здесь был ФАРА!
@@ -23,7 +25,7 @@ void Core::init_allObj()
 
     readyRunProgress(19, "Загрузка модуля по работе с рельефом...");
 
-    // генератор рельефа
+    // Генератор рельефа
     mapGenerator = new geoGenerator(map);
     objects.append(mapGenerator);
     readyRunProgress(27, "Загрузка модуля карты...");
@@ -33,6 +35,11 @@ void Core::init_allObj()
     QObject::connect(mapGenerator, SIGNAL(readyLayer(int)),
                      mapPainter,   SLOT(run()));
     objects.append(mapPainter);
+    mapPainter->updateFull();
+
+    QObject::connect(mapGenerator, SIGNAL(editSizeMap()),
+                     mapPainter,   SLOT(updateSizeMap()));
+
     readyRunProgress(36, "Загрузка менеджера РЛС...");
 
     // Инициализация менеджера РЛС
@@ -119,6 +126,10 @@ void Core::run()
 
     // Открываем главное окно
     gui->showMainWin(); 
+
+    ///!!!!
+    mapGenerator->openMap(
+                QApplication::applicationDirPath() + "/maps/img4");
 }
 
 Core::~Core()

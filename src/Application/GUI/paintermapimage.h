@@ -15,6 +15,10 @@ signals:
     void readyTexture(int idXo, int idYo, int numW, int numL);
 
 public slots:
+
+    //
+    void updateFull();
+
     // поднять землю
     void upEarth(int idX, int idY, int R);
 

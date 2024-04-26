@@ -14,11 +14,16 @@ signals:
     void readyLayer(int idLayer); // номер слоя
     void buildFinish();
 
+    //
+    void editSizeMap();
+
 public slots:
     // запуск генерации рельефа
     void run(double setBlockP, int countEpochs,
              int W, int L, int H,
              double lenBlock);
+
+    void openMap(const QString& dirMapFile);
 
 public:
     geoGenerator(Map* map);

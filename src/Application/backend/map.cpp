@@ -130,6 +130,14 @@ float Map::getMaxH()
     return getCountLayers() * lenBlock;
 }
 
+void Map::setH(int idX, int idY, int valH)
+{
+    for (int h=1; h<valH; h++)
+    {
+        getBlock(idX, idY, h)->toEarth();
+    }
+}
+
 void Map::open(const QString &dirFile)
 {
     delete file;
@@ -255,6 +263,8 @@ void Map::clear()
 void Map::setSize(int w, int l, int h)
 {
     Width = w; Length = l; Height = h;
+
+    //qDebug() << w << l << h;
 }
 
 double Map::getLenBlock() const

@@ -12,9 +12,15 @@ class painterImage : public QObject
 signals:
     void finish();
 
+    //
+    void resized();
+
 public slots:
     // запуск отрисовки изображения
     virtual void run() = 0;
+
+    //
+    void updateSizeMap();
 
 public:
     painterImage(Map* map);
@@ -32,7 +38,6 @@ protected:
     int Lmap;
     int Hmap;
 
-    void updateSizeMap();
 };
 
 #endif // PAINTERIMAGE_H
