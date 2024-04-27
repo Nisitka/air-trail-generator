@@ -14,12 +14,11 @@ void DAO::test_query(QString name)
     if(db.open())
     {
         QSqlQuery authentication;
-        if (authentication.exec(QString("SELECT test FROM Table_1")))
+        if (authentication.exec(QString("SELECT ID, nameAir FROM AirObjects ORDER BY nameAir ASC")))
         {
             while (authentication.next()){
 
-            qDebug() << authentication.value(0).toString();
-
+            loading_AirInfo(authentication.value(0).toString(), authentication.value(1).toString());
             update_status(true);
 
             }
@@ -30,4 +29,54 @@ void DAO::test_query(QString name)
         db.removeDatabase(QSqlDatabase::defaultConnection);
         update_status(false);
     }
+}
+
+void DAO::show_airInfo(QString ID)
+{
+    QSqlQuery authentication;
+    if (authentication.exec(QString("SELECT nameAir, longAir, weightAir, speedAir, photoAir FROM AirObjects WHERE ID = '%1'")
+                            .arg(ID)))
+    {
+        while (authentication.next()){
+
+        show_airInfo(authentication.value(0).toString(),
+                     authentication.value(1).toDouble(),
+                     authentication.value(2).toDouble(),
+                     authentication.value(3).toDouble(),
+                     authentication.value(4).toString());
+        }
+    }
+}
+
+void DAO::update_airInfo()
+{
+    QSqlQuery authentication;
+    emit clearBoxs();
+    if (authentication.exec(QString("SELECT ID, nameAir FROM AirObjects ORDER BY nameAir ASC")))
+    {
+        while (authentication.next()){
+
+        loading_AirInfo(authentication.value(0).toString(), authentication.value(1).toString());
+
+        }
+    }
+}
+
+void DAO::creat_airInfo(QString n_Air, double l_Air, double w_Air, double s_Air, QString p_Air)
+{
+    QSqlQuery add_doc;
+    qDebug() << n_Air << l_Air << w_Air << s_Air << p_Air;
+    QString add_doc_text = QString("INSERT INTO AirObjects (nameAir, longAir, weightAir, speedAir, photoAir)\
+            VALUES ('%1', %2, %3, %4,'%5');"
+            ).arg(n_Air)
+            .arg(l_Air)
+            .arg(w_Air)
+            .arg(s_Air)
+            .arg(p_Air);
+    if (!add_doc.exec(add_doc_text))
+    {
+        qWarning() << add_doc.lastError().databaseText();
+    }
+
+    update_airInfo();
 }

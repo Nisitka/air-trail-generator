@@ -23,7 +23,7 @@ public slots:
     void setDrawArea(areaDrawWidget* drawArea);
 
 public:
-    drawAreaTool(int id, QObject *parent = 0);
+    drawAreaTool(int id, QObject *parent = nullptr);
 
     int getId() const;
 

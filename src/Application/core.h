@@ -18,6 +18,7 @@
 #include "backend/managerdrones.h"
 #include "backend/dao.h"
 
+
 // ядро приложения
 class Core : public QObject
 {
@@ -72,8 +73,9 @@ private:
     // ПБЛА
     managerDrones* mDrones;
 
-    //
+    //База данных
     DAO* database;
+
 
 };
 

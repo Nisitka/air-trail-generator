@@ -21,6 +21,7 @@
 #include "dataaccessobjectwindow.h"
 #include "backend/dao.h"
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
+#include "backend/airobject.h"
 
 
 class GUI
@@ -76,6 +77,9 @@ private:
 
     //
     setAlgPredictWindow* algPredWin;
+
+    //ТТХ возудшных объектов
+    AirObject* airObj;
 
     // Инструменты
     ToolPredTrail* toolPTrail;

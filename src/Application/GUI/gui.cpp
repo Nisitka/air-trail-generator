@@ -68,16 +68,20 @@ GUI::GUI(QImage* geoMap,
     mainWin->addTask(map3DWin, QPixmap(":/resurs/icon3D"),
                      "3D", "Детальная визуализация рельефа");
 
-
-    //
-    daoWin = new DataAccessObjectWindow;
-    mainWin->addTask(daoWin,        QPixmap(":/resurs/base1"),
-                     "База данных", "Подключение базы данных");
-
     // Окно по работе с функцией прогноза
     algPredWin = new setAlgPredictWindow;
     mainWin->addTask(algPredWin,         QPixmap(":/resurs/qFunIcon"),
                      "Функция прогноза", "Функция прогноза");
+
+    // Окно по работе с ТТХ воздушными объектами
+    airObj = new AirObject;
+    mainWin->addTask(airObj,         QPixmap(":/resurs/a"),
+                     "ТТХ воздушных объектов", "ТТХ воздушных объектов");
+
+    // Окно по работе с Базой данных
+    daoWin = new DataAccessObjectWindow;
+    mainWin->addTask(daoWin,        QPixmap(":/resurs/base1"),
+                     "База данных", "Подключение базы данных");
 }
 
 void GUI::connectMDrones(managerDrones* mDrones)
@@ -92,6 +96,22 @@ void GUI::connectDataBase(DAO *database)
             );
     QObject::connect(database, SIGNAL(update_status(bool)),
                      daoWin, SLOT(status_connect(bool))
+            );
+
+    QObject::connect(airObj, SIGNAL(show_AirObject(QString)),
+                     database, SLOT(show_airInfo(QString))
+            );
+    QObject::connect(airObj, SIGNAL(creat_AirObject(QString, double,double,double, QString)),
+                     database, SLOT(creat_airInfo(QString, double,double,double, QString))
+            );
+    QObject::connect(database, SIGNAL(loading_AirInfo(QString, QString)),
+                     airObj, SLOT(loading_AirObject(QString, QString))
+            );
+    QObject::connect(database, SIGNAL(clearBoxs()),
+                     airObj, SLOT(clearBoxs())
+            );
+    QObject::connect(database, SIGNAL(show_airInfo(QString,double,double,double,QString)),
+                     airObj, SLOT(show_AirObject(QString, double,double,double, QString))
             );
 }
 
