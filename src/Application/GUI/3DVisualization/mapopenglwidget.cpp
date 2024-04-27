@@ -325,6 +325,8 @@ void mapOpenGLWidget::updateVertBoards()
 
 void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL)
 {
+    qDebug() << "OOOOOOOOOOOOOOOOOOOOOOOOOO";
+
     //
     idXo = idXo_;
     idYo = idYo_;

@@ -32,7 +32,7 @@
 
 #include "drawtask.h"
 
-#include "backend/map.h"
+#include "backend/gis/map.h"
 
 class areaDrawWidget: public QWidget
 {

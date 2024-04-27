@@ -5,14 +5,15 @@
 #include <QImage>
 
 
-#include "backend/geogenerator.h"
+//#include "backend/gis/geogenerator.h"
+//#include "backend/gis/paintermapimage.h"
+#include "backend/GIS/gis.h"
 
 #include "mainwindow.h"
 
 #include "visualinfowidget.h"
 #include "optmapgeneratorwindow.h"
 #include "optrlswindow.h"
-#include "backend/paintermapimage.h"
 #include "backend/buildertraildrones.h"
 #include "optdronewindow.h"
 #include "backend/managerdrones.h"
@@ -23,18 +24,21 @@
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
 #include "backend/airobject.h"
 
-
+// Интерфейс всей программы
 class GUI
 {
 public:
     GUI(QImage* geoMap,
         Map* map); // установить карту
 
-    // присоеденить к интерфейсу генератор рельефа
-    void connectMapGenerator(geoGenerator*);
+//    // присоеденить к интерфейсу генератор рельефа
+//    void connectMapGenerator(geoGenerator*);
 
-    // присоеденить отрисовщика карты к GUI
-    void connectMapPainter(painterMapImage*);
+//    // присоеденить отрисовщика карты к GUI
+//    void connectMapPainter(painterMapImage*);
+
+    //
+    void connectGIS(GIS* gis);
 
     // присоединить к интерфейсу РЛС
     void connectMRLS(managerRLS*);

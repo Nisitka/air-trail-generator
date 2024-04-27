@@ -9,10 +9,9 @@
 
 #include "GUI/gui.h"
 
-#include "backend/paintermapimage.h"
+#include "backend/gis/paintermapimage.h"
 
-#include "backend/map.h"
-#include "backend/geogenerator.h"
+#include "backend/GIS/gis.h"
 #include "backend/managerrls.h"
 #include "backend/buildertraildrones.h"
 #include "backend/managerdrones.h"
@@ -41,7 +40,7 @@ public:
     static void moveNewThread(QObject*);
 
 private:
-    void init_map();
+    void init_GIS();
 
     void init_allObj();
 
@@ -54,15 +53,13 @@ private:
 
     // интерфейс приложения
     GUI* gui;
+    QImage* backgroundMapImage;
+    QVector <QVector<int>*>* Hmatrix;
 
     // карта (рельеф)
     Map* map;
 
-    // генератор рельефа
-    geoGenerator* mapGenerator;
-
-    //
-    painterMapImage* mapPainter;
+    GIS* gis;
 
     // менеджер РЛС
     managerRLS* mRLS;

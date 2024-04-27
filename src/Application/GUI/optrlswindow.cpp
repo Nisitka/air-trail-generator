@@ -42,8 +42,6 @@ optRLSwindow::optRLSwindow(Map* map_, QWidget *parent) :
             this,                   SLOT(setOptZDvert()));
     ui->RmaxSpinBox->setValue(2000);
 
-    colorH = new QColor;
-
     //
     connect(ui->createRLSButton, SIGNAL(clicked()),
             this,                SLOT(addRLS()));
@@ -274,7 +272,6 @@ void optRLSwindow::updateCoordRLS(int x, int y)
     ui->hZDSlider->setMinimum(hRLS * l + 10);
 
     ui->hZDspinBox->setValue(hZD);
-    updateColorH();
 }
 
 void optRLSwindow::readyVector(int numVector)
@@ -308,29 +305,6 @@ void optRLSwindow::updateHZD(int value)
     // обновление визуала
     ui->hZDspinBox->setValue(hZD);
     ui->hZDSlider->setValue(hZD);
-    updateColorH();
-}
-
-void optRLSwindow::updateColorH()
-{
-    getColorHeight(colorH, hZD / map->getLenBlock());
-    int r = colorH->red();
-    int g = colorH->green();
-    int b = colorH->blue();
-    ui->colorHLabel->setStyleSheet(
-                "QLabel {"
-                    "background-color: rgb("
-                    + QString::number(r) + ","
-                    + QString::number(g) + ","
-                    + QString::number(b) + ");"
-                    "color: rgb(0,0,0);"
-
-                    "border-style: outset;"
-                    "border-radius: 3px;"
-                    "border-width: 2px;"
-                    "border-color: rgb(0,0,0);"
-                "}"
-                        );
 }
 
 void optRLSwindow::startGenerateZD(int countVectors)

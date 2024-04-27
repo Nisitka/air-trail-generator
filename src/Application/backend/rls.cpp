@@ -1,6 +1,6 @@
 #include "rls.h"
 
-#include "geoblock.h"
+#include "gis/geoblock.h"
 
 #include <QDebug>
 

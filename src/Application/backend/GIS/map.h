@@ -19,13 +19,6 @@ public:
     // очистить карту (вернуть в исход. состояние)
     void clear();
 
-    // сохранить карту
-    void save(const QString& dirFile);
-
-    // открыть карту
-    void open(const QString& dirFile);
-
-
     enum coord{x, y};
 
     //

@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QRect>
 
-#include "map.h"
+#include "gis/map.h"
 #include "rls.h"
 
 #include <memory>

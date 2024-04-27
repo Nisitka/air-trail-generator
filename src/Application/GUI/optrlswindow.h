@@ -3,8 +3,8 @@
 
 #include <QWidget>
 
-#include "backend/map.h"
-#include "backend/paintermapimage.h"
+#include "backend/gis/map.h"
+#include "backend/gis/paintermapimage.h"
 #include "plotwidget.h"
 
 namespace Ui {
@@ -42,9 +42,6 @@ signals:
     // обновить пар-ры ЗО в вертикальной плоскости
     void updateOptZDvert(int Rmax, // в метрах
                          int countVertVectors, int countPointsDV); // кол-водискрет
-
-    //
-    void getColorHeight(QColor* color, int height);
 
 public slots:
     // инициализация новой РЛС завершина
@@ -111,11 +108,7 @@ private:
 
     QStringList namesRLS;
 
-    void updateColorH();
-
     Map* map;
-
-    QColor* colorH;
 
     plotWidget* graphicWidget;
 

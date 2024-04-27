@@ -28,10 +28,7 @@ SOURCES += main.cpp\
     core.cpp \
     backend/buildertraildrones.cpp \
     backend/drone.cpp \
-    backend/geoblock.cpp \
-    backend/geogenerator.cpp \
     backend/managerrls.cpp \
-    backend/map.cpp \
     backend/ray.cpp \
     backend/rls.cpp \
     GUI/designer.cpp \
@@ -75,18 +72,19 @@ SOURCES += main.cpp\
     GUI/drawArea/mapareamainwindow.cpp \
     GUI/drawArea/scrollmapwidget.cpp \
     GUI/multiplewindow.cpp \
-    backend/paintermapimage.cpp \
     backend/airobject.cpp \
-    GUI/airobjectfunwindow.cpp
+    GUI/airobjectfunwindow.cpp \
+    backend/GIS/geoblock.cpp \
+    backend/GIS/geogenerator.cpp \
+    backend/GIS/map.cpp \
+    backend/GIS/paintermapimage.cpp \
+    backend/GIS/gis.cpp
 
 HEADERS  += \
     core.h \
     backend/buildertraildrones.h \
     backend/drone.h \
-    backend/geoblock.h \
-    backend/geogenerator.h \
     backend/managerrls.h \
-    backend/map.h \
     backend/ray.h \
     backend/rls.h \
     GUI/designer.h \
@@ -131,9 +129,13 @@ HEADERS  += \
     GUI/drawArea/mapareamainwindow.h \
     GUI/drawArea/scrollmapwidget.h \
     GUI/multiplewindow.h \
-    backend/paintermapimage.h \
     backend/airobject.h \
-    GUI/airobjectfunwindow.h
+    GUI/airobjectfunwindow.h \
+    backend/GIS/geoblock.h \
+    backend/GIS/geogenerator.h \
+    backend/GIS/map.h \
+    backend/GIS/paintermapimage.h \
+    backend/GIS/gis.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \

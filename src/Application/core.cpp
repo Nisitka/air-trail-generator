@@ -7,13 +7,19 @@ Core::Core()
     //Здесь был ФАРА!
     //Здесь была Александра
     //Здесь был Никита
+
+    init_GIS();
 }
 
-void Core::init_map()
+void Core::init_GIS()
 {
     readyRunProgress(3);
-    map = new Map;
-    readyRunProgress(12);
+
+    gis = new GIS;
+    backgroundMapImage = gis->getBackgroundImg();
+    map = gis->getMap();
+
+    readyRunProgress(12);  
 }
 
 void Core::init_allObj()
@@ -25,30 +31,17 @@ void Core::init_allObj()
 
     readyRunProgress(19, "Загрузка модуля по работе с рельефом...");
 
-    // Генератор рельефа
-    mapGenerator = new geoGenerator(map);
-    objects.append(mapGenerator);
-    readyRunProgress(27, "Загрузка модуля карты...");
-
-    // калькулятор цвета рельефа
-    mapPainter = new painterMapImage(map);
-    QObject::connect(mapGenerator, SIGNAL(readyLayer(int)),
-                     mapPainter,   SLOT(run()));
-    objects.append(mapPainter);
-
-    //
-    QObject::connect(mapGenerator, SIGNAL(editSizeMap()),
-                     mapPainter,   SLOT(updateSizeMap()));
+    /* ... */
 
     readyRunProgress(36, "Загрузка менеджера РЛС...");
 
     // Инициализация менеджера РЛС
     mRLS = new managerRLS(map);
     // Отрисовка
-    QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(int,int,int,int)),
-                     mapPainter, SLOT(runToRect(int,int,int,int)));
-    QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(QRect*, int)),
-                     mapPainter, SLOT(runToRects(QRect*, int)));
+//    QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(int,int,int,int)),
+//                     mapPainter, SLOT(runToRect(int,int,int,int)));
+//    QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(QRect*, int)),
+//                     mapPainter, SLOT(runToRects(QRect*, int)));
     objects.append(mRLS);
     readyRunProgress(46, "Загрузка строителя маршрутов...");
 
@@ -57,7 +50,7 @@ void Core::init_allObj()
     objects.append(trailBuilder);
     readyRunProgress(54, "Инициализация интерфейса...");
     //
-    gui = new GUI(mapPainter->getImage(),
+    gui = new GUI(backgroundMapImage,
                   map);
 
     readyRunProgress(65, "Инициализация интерфейса...");
@@ -68,12 +61,12 @@ void Core::init_allObj()
 
 void Core::init_GUI()
 {
-    // присоеденяем функционад генератора к GUI
-    gui->connectMapGenerator(mapGenerator);   
+    //
+    gui->connectGIS(gis);
     readyRunProgress(72);
 
     //
-    gui->connectMapPainter(mapPainter);
+
     readyRunProgress(79);
 
     //
@@ -112,17 +105,12 @@ void Core::moveNewThread(QObject *obj)
 
 void Core::run()
 {
-    init_map();
-
     init_allObj();
 
     init_GUI();
 
     init_buildThreads();
-    mapGenerator->buildFlatMap();
-    ///!!!!
-//    mapGenerator->openMap(
-//                QApplication::applicationDirPath() + "/maps/img4");
+    gis->setDefaultMap();
 
     ready();
 

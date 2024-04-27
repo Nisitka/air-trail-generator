@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>549</width>
-    <height>636</height>
+    <height>698</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -616,25 +616,6 @@
                  </property>
                  <property name="text">
                   <string>м</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="colorHLabel">
-                 <property name="minimumSize">
-                  <size>
-                   <width>40</width>
-                   <height>30</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>40</width>
-                   <height>30</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string/>
                  </property>
                 </widget>
                </item>

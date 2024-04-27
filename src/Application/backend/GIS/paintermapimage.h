@@ -7,65 +7,48 @@
 
 #include "map.h"
 
-class painterMapImage : public QObject
+class painterMapImage: public QObject
 {
     Q_OBJECT
 
 signals:
     //
-    void finish();
+    //void finish();
 
     //
-    void resized();
+    //void resized();
 
     // земля отредактирована
-    void readyEditEarth(int idXo, int idYo, int size);
+    //void readyEditEarth(int idXo, int idYo, int size);
 
     // информируем об завершении создании текстуры для 3D рельефа
-    void readyTexture(int idXo, int idYo, int numW, int numL);
+    //void readyTexture(int idXo, int idYo, int numW, int numL);
 
 public slots:
 
-    //
+    // Обновить размеры и пересчитать изображение
     void updateFull();
 
-    //
-    void updateSizeMap();
+    // Обновить только размеры
+    void updateSize();
 
-    // поднять землю
-    void upEarth(int idX, int idY, int R);
-
-    // опустить землю
-    void downEarth(int idX, int idY, int R);
-
-    // расчет цвета пикселя всего изображения
+    // Перерасчет всех пикселей
     void run();
 
-    // расчет выбранной области
+    // Расчет выбранной области
     void runToRect(int idX, int idY, int w, int h);
     void runToRect(const QRect& rect);
 
-    // расчет выбранных областей
+    // Расчет выбранных областей
     void runToRects(QRect* rects, int count);
 
-    // узнать цвет по индексу высоты (и записать его в отправленную ячейку)
-    void heightToColor(QColor* setColor, int numLayer);
-
-    // создать текстуру для 3D карты
-    void buildTexture();
-
-    // установить область создания текстуры
-    void setRectTexture(int idXo, int idYo, int numW, int numL);
-
 public:
-    // сформировать текстуру высоты рельефа в области
-    QImage* buildImageEarth(const QRect& rect);
+
+    //
+    painterMapImage(Map* map);
 
     //
     QImage* getImage();
-
-
-    painterMapImage(Map*);
 
 private:
     // область для создания текстуры 3D рельефа
@@ -73,8 +56,6 @@ private:
     int idYo;
     int numW;
     int numL;
-
-    void updateSizeImage();
 
     QImage* img;
     Map* map;

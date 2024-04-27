@@ -12,7 +12,7 @@
 #include <QVector3D>
 #include <QMap>
 
-#include "backend/map.h"
+#include "backend/gis/map.h"
 
 class mapOpenGLWidget: public QOpenGLWidget
 {

@@ -15,6 +15,8 @@ geoGenerator::geoGenerator(Map* map_)
 
 void geoGenerator::openMap(const QString &dirMapFile)
 {
+    buildStart();
+
     QImage geoData(dirMapFile);
     Wmap = geoData.width();
     Lmap = geoData.height();
@@ -34,19 +36,21 @@ void geoGenerator::openMap(const QString &dirMapFile)
         }
     }
 
-    editSizeMap();
+    buildFinish(Wmap, Lmap, Hmap);
 }
 
 void geoGenerator::buildFlatMap(int W, int L, int H)
 {
+    buildStart();
+
     map->resize(W, L, H);
 
-    editSizeMap();
+    buildFinish(W, L, H);
 }
 
-void geoGenerator::run(double setBlockP, int countEpochs,
-                       int W, int L, int H,
-                       double lenBlock)
+void geoGenerator::buildRandomMap(double setBlockP, int countEpochs,
+                                  int W, int L, int H,
+                                  double lenBlock)
 {
     // устанавливаем длину ребра блока
     map->setLenBlock(lenBlock);
@@ -75,7 +79,7 @@ void geoGenerator::run(double setBlockP, int countEpochs,
     // начинаем с 1-го слоя (0-й всегда заполнен)
     for (int h=1; h<countLayers; h++)
     {
-        buildStart(H);
+        buildStart();
 
         //
         for (int i=0; i<countBlockLayer; i++)
@@ -114,10 +118,10 @@ void geoGenerator::run(double setBlockP, int countEpochs,
             }
         }
 
-        readyLayer(h);
+        changedProcessBuild(100 * ((double) h / countBlockLayer));
     }
 
-    buildFinish();
+    buildFinish(Wmap, Lmap, Hmap);
 }
 
 int geoGenerator::sumEarth(int x, int y, int z)

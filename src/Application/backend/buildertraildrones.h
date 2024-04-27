@@ -8,7 +8,7 @@
 
 #include "ray.h"
 #include "trail.h"
-#include "map.h"
+#include "gis/map.h"
 
 // генерирует скртный маршрут
 class builderTrailDrones : public QObject

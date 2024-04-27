@@ -10,7 +10,7 @@
 #include <QVector3D>
 
 #include "ray.h"
-#include "map.h"
+#include "gis/map.h"
 
 // класс РЛС
 class RLS : public QObject

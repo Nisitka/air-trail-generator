@@ -4,7 +4,7 @@
 #include <QPushButton>
 #include <QVector3D>
 
-#include "backend/map.h"
+#include "backend/gis/map.h"
 #include "mapopenglwidget.h"
 
 #include "GUI/designer.h"
@@ -22,9 +22,9 @@ signals:
 
 public slots:
     // завершение подготовки данных для отображения 3D карты
-    void finishBuildMap(int idXo, int idYo, int numW, int numL);
+    void finishBuildMap(int numW, int numL, int numH);
 
-    // Обновить данные по рельеф и отредерить по новой
+    // Обновить данные по рельефу и отредерить по новой
     void updateMap3D(int idXo, int idYo, int size); // в каком квадрате
     void updateMap3D(); // обновить все
 
@@ -41,14 +41,6 @@ public:
 
 private slots:
 
-//    void addFunWindow(QWidget* window, const QIcon& iconButton, const QString& nameWin = nullptr,
-//                   Qt::DockWidgetAreas typeMoved = Qt::LeftDockWidgetArea,
-//                   Qt::DockWidgetArea initShow = Qt::LeftDockWidgetArea);
-
-    //void addGroupFunWindow(const QList <QDockWidget*>);
-
-//    void showFunWindow();
-
 private:
     void setMap(int idXo, int idYo, int numW, int numL);
 
@@ -59,10 +51,6 @@ private:
     //
     Map* map;
     mapOpenGLWidget* visMap;
-    //QToolBar *toolBar;
-    QDockWidget *dockWidget; // ???
-
-    //QMap <QToolButton*, QDockWidget*> windows;
 
     Ui::map3DVisWindow *ui;
 };

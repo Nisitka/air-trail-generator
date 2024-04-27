@@ -46,9 +46,9 @@ void map3DVisWindow::updatePointsInterZD(QVector<QVector<QVector<QVector3D> > >*
     visMap->updateZD(points);
 }
 
-void map3DVisWindow::finishBuildMap(int idXo, int idYo, int numW, int numL)
+void map3DVisWindow::finishBuildMap(int numW, int numL, int numH)
 {
-    setMap(idXo, idYo, numW, numL);
+    setMap(0, 0, numW, numL);
 }
 
 void map3DVisWindow::setMap(int idXo, int idYo, int numW, int numL)

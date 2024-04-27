@@ -6,32 +6,15 @@
 
 #include <QMatrix>
 
-painterMapImage::painterMapImage(Map* map_) :
+painterMapImage::painterMapImage(Map* map_):
     map(map_)
 {
     // Сразу инициализируем изображение
-    img = new QImage(10, 10,
-                     QImage::Format_RGB32);
+    img = new QImage(3, 3, QImage::Format_RGB32);
 
     // по умолчанию на всю карту
     idXo = 0;
     idYo = 0;
-
-    //
-    //updateSizeMap();
-}
-
-void painterMapImage::updateSizeMap()
-{
-    map->getSize(Wmap, Lmap, Hmap);
-    updateSizeImage();
-}
-
-void painterMapImage::updateSizeImage()
-{
-    *img = img->scaled(Wmap, Lmap); // и самого изображения соответсвенно
-
-    updateFull();
 }
 
 QImage* painterMapImage::getImage()
@@ -39,29 +22,36 @@ QImage* painterMapImage::getImage()
     return img;
 }
 
+void painterMapImage::updateSize()
+{
+    map->getSize(Wmap, Lmap, Hmap);
+    *img = img->scaled(Wmap, Lmap); // и самого изображения соответсвенно
+
+    //qDebug() << *img;
+}
+
 void painterMapImage::updateFull()
 {
+    updateSize();
+
     run();
-
-    resized();
-    buildTexture();
 }
 
-void painterMapImage::upEarth(int idX, int idY, int R)
-{
-    map->upEarth(idX, idY, R);
-    runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
+//void painterMapImage::upEarth(int idX, int idY, int R)
+//{
+//    map->upEarth(idX, idY, R);
+//    runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
 
-    readyEditEarth(idX, idY, R);
-}
+//    readyEditEarth(idX, idY, R);
+//}
 
-void painterMapImage::downEarth(int idX, int idY, int R)
-{
-    map->downEarth(idX, idY, R);
-    runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
+//void painterMapImage::downEarth(int idX, int idY, int R)
+//{
+//    map->downEarth(idX, idY, R);
+//    runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
 
-    readyEditEarth(idX, idY, R);
-}
+//    readyEditEarth(idX, idY, R);
+//}
 
 void painterMapImage::runToRects(QRect* rects, int count)
 {
@@ -79,42 +69,28 @@ void painterMapImage::runToRect(const QRect &rect)
     runToRect(rect.x(), rect.y(), rect.width(), rect.height());
 }
 
-void painterMapImage::setRectTexture(int idXo_, int idYo_, int numW_, int numL_)
-{
-    idXo = idXo_;
-    idYo = idYo_;
-    numW = numW_;
-    numL = numL_;
-}
+//QImage* painterMapImage::buildImageEarth(const QRect &rect)
+//{
+//    // инициализация изображения текстуры
+//    int W = rect.width();
+//    int L = rect.height();
 
-void painterMapImage::buildTexture()
-{
-    setRectTexture(0, 0, Wmap - 1, Lmap - 1);
-    readyTexture(idXo, idYo, numW, numL);
-}
+//    QImage* texture = new QImage(W, L, img->format());
 
-QImage* painterMapImage::buildImageEarth(const QRect &rect)
-{
-    // инициализация изображения текстуры
-    int W = rect.width();
-    int L = rect.height();
+//    QColor color;
+//    for (int x=0; x<W; x++)
+//    {
+//        for (int y=0; y<L; y++)
+//        {
+//            // вычисляется цвет по данным
+//            color = colorHeight(map->getHeight(idXo + x, idYo + y));
 
-    QImage* texture = new QImage(W, L, img->format());
+//            texture->setPixelColor(x, y, color);
+//        }
+//    }
 
-    QColor color;
-    for (int x=0; x<W; x++)
-    {
-        for (int y=0; y<L; y++)
-        {
-            // вычисляется цвет по данным
-            color = colorHeight(map->getHeight(idXo + x, idYo + y));
-
-            texture->setPixelColor(x, y, color);
-        }
-    }
-
-    return texture;
-}
+//    return texture;
+//}
 
 void painterMapImage::runToRect(int idX, int idY, int w, int h)
 {
@@ -164,14 +140,10 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
             img->setPixelColor(i, j, color);
         }
     }
-
-    finish();
 }
 
 void painterMapImage::run()
 {
-    //updateSizeImage();
-
     QColor color;
     int cZD;
 
@@ -203,13 +175,6 @@ void painterMapImage::run()
             img->setPixelColor(i, j, color);
         }
     }
-
-    finish();
-}
-
-void painterMapImage::heightToColor(QColor* setColor, int height)
-{
-    *setColor = colorHeight(height);
 }
 
 QColor painterMapImage::colorHeight(int value)

@@ -147,24 +147,58 @@ void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
                      droneWin,     SLOT(updateProgSetOptPred(int)));
 }
 
-void GUI::connectMapGenerator(geoGenerator* mapBuilder)
+void GUI::connectGIS(GIS *gis)
 {
-    //
-    QObject::connect(optGenMapWin, SIGNAL(runGenerateMap(double,int,int,int,int, double)),
-                     mapBuilder,   SLOT(run(double,int,int,int,int, double)));
-    //
-    QObject::connect(mapBuilder,   SIGNAL(buildStart(int)),
-                     optGenMapWin, SLOT(setProgressBar(int)));
-    //
-    QObject::connect(mapBuilder,   SIGNAL(readyLayer(int)),
-                     optGenMapWin, SLOT(updateProgressBar(int)));
-    //
-    QObject::connect(mapBuilder,   SIGNAL(buildFinish()),
-                     optGenMapWin, SLOT(finishGenerateMap()));
+    // Ручное редактирование рельефа
+    QObject::connect(toolEditTer, SIGNAL(upEarth(int,int,int)),
+                     gis,         SLOT(upEarth(int,int,int)));
+    QObject::connect(toolEditTer, SIGNAL(downEarth(int,int,int)),
+                     gis,         SLOT(downEarth(int,int,int)));
 
-    QObject::connect(mapBuilder, SIGNAL(readyLayer(int)),
-                     map3DWin,   SLOT(updateMap3D()));
+    // Реакция интерфейса на изменения подложки
+    QObject::connect(gis,                          SIGNAL(changedMap()),
+                     visInfoWin->getManDrawArea(), SLOT(repaintBackground()));
+    QObject::connect(gis,                          SIGNAL(changedMap(int,int,int,int)),
+                     visInfoWin->getManDrawArea(), SLOT(repaintBackground()));
+    QObject::connect(gis,                          SIGNAL(finishBuildMap(int,int,int)),
+                     visInfoWin->getManDrawArea(), SLOT(updateGeoMapImage()));
+
+    // Отображение в 3D
+    QObject::connect(gis,      SIGNAL(finishBuildMap(int,int,int)),
+                     map3DWin, SLOT(finishBuildMap(int,int,int)));
 }
+
+//void GUI::connectMapGenerator(geoGenerator* mapBuilder)
+//{
+//    //
+//    QObject::connect(optGenMapWin, SIGNAL(runGenerateMap(double,int,int,int,int, double)),
+//                     mapBuilder,   SLOT(run(double,int,int,int,int, double)));
+//    //
+//    QObject::connect(mapBuilder,   SIGNAL(buildStart(int)),
+//                     optGenMapWin, SLOT(setProgressBar(int)));
+//    //
+//    QObject::connect(mapBuilder,   SIGNAL(readyLayer(int)),
+//                     optGenMapWin, SLOT(updateProgressBar(int)));
+//    //
+//    QObject::connect(mapBuilder,   SIGNAL(buildFinish()),
+//                     optGenMapWin, SLOT(finishGenerateMap()));
+
+//    QObject::connect(mapBuilder, SIGNAL(readyLayer(int)),
+//                     map3DWin,   SLOT(updateMap3D()));
+//}
+
+//void GUI::connectMapPainter(painterMapImage* painterMap)
+//{
+//    QObject::connect(painterMap, SIGNAL(readyEditEarth(int,int,int)),
+//                     map3DWin,   SLOT(updateMap3D(int,int,int)));
+//    QObject::connect(map3DWin,   SIGNAL(generateMap3D()),
+//                     painterMap, SLOT(buildTexture()));
+//    QObject::connect(toolVisMap, SIGNAL(updateRect3D(int,int,int,int)),
+//                     painterMap, SLOT(setRectTexture(int,int,int,int)));
+//    QObject::connect(painterMap, SIGNAL(readyTexture(int,int,int,int)),
+//                     map3DWin,   SLOT(finishBuildMap(int,int,int,int)));
+//    //map3DWin->generateMap3D(); // сразу же отображаем то что есть
+//}
 
 void GUI::connectMRLS(managerRLS* mRLS)
 {
@@ -240,33 +274,6 @@ void GUI::connectMRLS(managerRLS* mRLS)
     // обновление визуализации сигнала
     QObject::connect(mRLS, SIGNAL(sendPointsInterZD(QVector<QVector<QVector<QVector3D>>>*, QList <QVector3D>*)),
                      map3DWin, SLOT(updatePointsInterZD(QVector<QVector<QVector<QVector3D>>>*, QList <QVector3D>*)));
-}
-
-void GUI::connectMapPainter(painterMapImage* painterMap)
-{
-    // Ручное редактирование рельефа
-    QObject::connect(toolEditTer, SIGNAL(upEarth(int,int,int)),
-                     painterMap,  SLOT(upEarth(int,int,int)));
-    QObject::connect(toolEditTer, SIGNAL(downEarth(int,int,int)),
-                     painterMap,  SLOT(downEarth(int,int,int)));
-
-    QObject::connect(painterMap, SIGNAL(readyEditEarth(int,int,int)),
-                     map3DWin,   SLOT(updateMap3D(int,int,int)));
-    QObject::connect(map3DWin,   SIGNAL(generateMap3D()),
-                     painterMap, SLOT(buildTexture()));
-    QObject::connect(toolVisMap, SIGNAL(updateRect3D(int,int,int,int)),
-                     painterMap, SLOT(setRectTexture(int,int,int,int)));
-    QObject::connect(painterMap, SIGNAL(readyTexture(int,int,int,int)),
-                     map3DWin,   SLOT(finishBuildMap(int,int,int,int)));
-    //map3DWin->generateMap3D(); // сразу же отображаем то что есть
-
-    QObject::connect(painterMap,                   SIGNAL(finish()),
-                     visInfoWin->getManDrawArea(), SLOT(repaintBackground()));
-    QObject::connect(painterMap,                   SIGNAL(resized()),
-                     visInfoWin->getManDrawArea(), SLOT(updateGeoMapImage()));
-
-    QObject::connect(optRLSWin,  SIGNAL(getColorHeight(QColor*,int)),
-                     painterMap, SLOT(heightToColor(QColor*,int)));
 }
 
 void GUI::showMainWin()
