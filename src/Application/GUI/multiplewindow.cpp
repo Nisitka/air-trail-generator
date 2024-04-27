@@ -1,5 +1,7 @@
 #include "multiplewindow.h"
 
+#include <QDebug>
+
 MultipleWindow::MultipleWindow()
 {
     toolBar = new QToolBar;
@@ -31,6 +33,30 @@ void MultipleWindow::addFunWindow(QWidget *window, const QIcon &iconButton, cons
             this,   SLOT(showFunWindow()));
 
     windows[button] = dock;
+}
+
+void MultipleWindow::showTmpDock(QWidget *widget, Qt::DockWidgetArea typeMoved)
+{
+    QDockWidget* dock = new QDockWidget;
+    dock->setWidget(widget);
+
+    connect(dock, SIGNAL(visibilityChanged(bool)),
+            this, SLOT(delTmpDock(bool)));
+
+    this->addDockWidget(typeMoved, dock);
+}
+
+void MultipleWindow::delTmpDock(bool statVis)
+{
+    if (statVis == false)
+    {
+        QDockWidget* dock = qobject_cast<QDockWidget*>(sender());
+
+        disconnect(dock, SIGNAL(visibilityChanged(bool)),
+                   this, SLOT(delTmpDock(bool)));
+
+        delete dock;
+    }
 }
 
 void MultipleWindow::showFunWindow()

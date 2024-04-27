@@ -76,7 +76,8 @@ SOURCES += main.cpp\
     GUI/drawArea/scrollmapwidget.cpp \
     GUI/multiplewindow.cpp \
     backend/paintermapimage.cpp \
-    backend/airobject.cpp
+    backend/airobject.cpp \
+    GUI/airobjectfunwindow.cpp
 
 HEADERS  += \
     core.h \
@@ -131,7 +132,8 @@ HEADERS  += \
     GUI/drawArea/scrollmapwidget.h \
     GUI/multiplewindow.h \
     backend/paintermapimage.h \
-    backend/airobject.h
+    backend/airobject.h \
+    GUI/airobjectfunwindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \
@@ -142,7 +144,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \
     GUI/algorithmPredict/setalgpredictwindow.ui \
     GUI/drawArea/mapareamainwindow.ui \
-    backend/airobject.ui
+    backend/airobject.ui \
+    GUI/airobjectfunwindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \

@@ -22,12 +22,18 @@ public slots:
                    Qt::DockWidgetAreas typeMoved = Qt::LeftDockWidgetArea,
                    Qt::DockWidgetArea initShow = Qt::LeftDockWidgetArea);
 
+    //
+    void showTmpDock(QWidget* widget, Qt::DockWidgetArea typeMoved = Qt::RightDockWidgetArea);
+
     //void addGroupFunWindow(const QList <QDockWidget*>);
 
 private slots:
 
     //
     void showFunWindow();
+
+    //
+    void delTmpDock(bool statVis);
 
 private:
 

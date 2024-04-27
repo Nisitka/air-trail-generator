@@ -32,7 +32,8 @@ void AirObject::show_AirObject()
     show_AirObject(ui->airBox->currentData().toString());
 }
 
-void AirObject::show_AirObject(QString n_Air, double l_Air, double w_Air, double s_Air, QString p_Air)
+void AirObject::show_AirObject(QString n_Air, double l_Air, double w_Air, double s_Air, QString p_Air
+                               /*  AirObject*  */)
 {
 
     nameLabel = new QLabel(tr("Название"));

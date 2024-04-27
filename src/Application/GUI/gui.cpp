@@ -4,6 +4,8 @@
 
 #include "drawArea/mapareamainwindow.h"
 
+#include "airobjectfunwindow.h"
+
 GUI::GUI(QImage* geoMap,
          Map* map_): map(map_)
 {
@@ -75,7 +77,8 @@ GUI::GUI(QImage* geoMap,
 
     // Окно по работе с ТТХ воздушными объектами
     airObj = new AirObject;
-    mainWin->addTask(airObj,         QPixmap(":/resurs/a"),
+    AirObjectFunWindow* airObjWin = new AirObjectFunWindow;
+    mainWin->addTask(airObjWin,         QPixmap(":/resurs/a"),
                      "ТТХ воздушных объектов", "ТТХ воздушных объектов");
 
     // Окно по работе с Базой данных
