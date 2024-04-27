@@ -52,8 +52,6 @@ public:
 
     enum unit{pix, idMap};
 
-    void updateMapImage();
-
     //
     QPainter& getPainter();
 

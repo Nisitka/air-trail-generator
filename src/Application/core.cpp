@@ -28,6 +28,7 @@ void Core::init_allObj()
     // Генератор рельефа
     mapGenerator = new geoGenerator(map);
     objects.append(mapGenerator);
+    mapGenerator->buildFlatMap();
     readyRunProgress(27, "Загрузка модуля карты...");
 
     // калькулятор цвета рельефа
@@ -44,7 +45,7 @@ void Core::init_allObj()
 
     // Инициализация менеджера РЛС
     mRLS = new managerRLS(map);
-    // отрисовка
+    // Отрисовка
     QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(int,int,int,int)),
                      mapPainter, SLOT(runToRect(int,int,int,int)));
     QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(QRect*, int)),
@@ -128,8 +129,8 @@ void Core::run()
     gui->showMainWin(); 
 
     ///!!!!
-    mapGenerator->openMap(
-                QApplication::applicationDirPath() + "/maps/img4");
+//    mapGenerator->openMap(
+//                QApplication::applicationDirPath() + "/maps/img4");
 }
 
 Core::~Core()

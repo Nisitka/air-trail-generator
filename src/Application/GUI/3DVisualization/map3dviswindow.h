@@ -24,7 +24,7 @@ public slots:
     // завершение подготовки данных для отображения 3D карты
     void finishBuildMap(int idXo, int idYo, int numW, int numL);
 
-    // Обновить данные по рельеф и отрндерить по новой
+    // Обновить данные по рельеф и отредерить по новой
     void updateMap3D(int idXo, int idYo, int size); // в каком квадрате
     void updateMap3D(); // обновить все
 

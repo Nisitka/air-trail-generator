@@ -11,14 +11,11 @@
 
 #include <QFile>
 
-class Map : public QObject
+class Map
 {
-    Q_OBJECT
-signals:
-    // обновить отоброжение карты
-    void updateVisual();
+public:
+    Map();
 
-public slots:
     // очистить карту (вернуть в исход. состояние)
     void clear();
 
@@ -28,52 +25,52 @@ public slots:
     // открыть карту
     void open(const QString& dirFile);
 
-public:
-    Map();
 
     enum coord{x, y};
 
     //
     void setH(int idX, int idY, int valH);
 
-    // поднять высоту в области
+    // Поднять высоту в области
     void upEarth(int idXo, int idYo, int R); // центр области, размер кисти
 
-    // опустить высоту в области
+    // Опустить высоту в области
     void downEarth(int idXo, int idYo, int R);
 
-    // максимальная высота на карте
+    // Максимальная высота на карте
     float getMaxH(); // в метрах
 
     void setLenBlock(double);
     double getLenBlock() const;
 
-    // получить размеры карты
+    // Получить размеры карты
     void getSize(int &w, int &l, int &h) const;
     int getWidth(int type = id)          const;
     int getLength(int type = id)         const;
     int getCountLayers()                 const;
 
-    // изменить разеры
+    // Изменить разеры
     void resize(int W, int L, int H);
 
-    // получить блок
+    // Получить блок
     geoBlock* getBlock(int x, int y, int z) const;
 
-    // высота в координатах X, Y
+    // Высота в координатах X, Y
     enum typeH{m, id};
     int getHeight(int X, int Y, int type = id);
 
- /*   узнать кол-во блоков, находящихся в ЗО
+ /*   Узнать кол-во блоков, находящихся в ЗО
   *   на координатах X, Y
   */int countZD(int x, int y) const;
+
+    // Построить скелет карты
+    void build(int W, int L, int H);// размер карты в блоках
 
 private:
     // блоки хранится в слоях
     QVector <geoBlock*> layers;
 
-    // построить скелет карты
-    void build(int W, int L, int H);// размер карты в блоках
+
     void setSize(int w, int l, int h);
     int Height; // размеры карты
     int Width;
@@ -87,8 +84,6 @@ private:
 
     // убрать землю с дискреты
     void removeEarth(int idX, int idY, int countLayer);
-
-    QFile* file;
 };
 
 #endif // MAP_H

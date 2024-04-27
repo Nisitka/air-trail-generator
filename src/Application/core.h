@@ -9,7 +9,7 @@
 
 #include "GUI/gui.h"
 
-#include "GUI/paintermapimage.h"
+#include "backend/paintermapimage.h"
 
 #include "backend/map.h"
 #include "backend/geogenerator.h"

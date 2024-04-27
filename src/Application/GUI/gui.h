@@ -12,7 +12,7 @@
 #include "visualinfowidget.h"
 #include "optmapgeneratorwindow.h"
 #include "optrlswindow.h"
-#include "paintermapimage.h"
+#include "backend/paintermapimage.h"
 #include "backend/buildertraildrones.h"
 #include "optdronewindow.h"
 #include "backend/managerdrones.h"

@@ -47,6 +47,12 @@ public slots:
     // Выбрать инструмент
     void setTool(int id);
 
+    // Обновить все пар-ы изображения карты
+    void updateGeoMapImage();
+
+    //
+    void repaintBackground();
+
 protected:
 
     void paintEvent(QPaintEvent* event) override;

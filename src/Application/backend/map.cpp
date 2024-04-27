@@ -6,11 +6,7 @@
 
 Map::Map()
 {
-    file = new QFile;
-
-    this->build(400, 400, 200);
-
-    // длина ребра блока по умолчанию
+    // Длина ребра блока по умолчанию
     lenBlock = 20;
 }
 
@@ -91,40 +87,6 @@ void Map::removeEarth(int idX, int idY, int countLayer)
     }
 }
 
-void Map::save(const QString& dirFile)
-{
-    delete file;
-
-    file = new QFile(dirFile);
-    if (file->open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        // системные данные
-        QTextStream stream(file);
-        stream << "Имя: карта№" + QString::number(rand()%1000) << endl
-                << "Размеры(x,y,h): " +
-                            QString::number(Width)  + " " +
-                            QString::number(Length) + " " +
-                            QString::number(Height) + " " << endl <<
-                   "Дата: " + QDateTime::currentDateTime().toString() << endl;
-
-        // данные карты
-        for (int y=0; y<Length; y++)
-        {
-            for (int x=0; x<Width; x++)
-            {
-                stream << getHeight(x, y) << " ";
-            }
-            stream << "\n";
-        }
-
-        qDebug() << "Save map";
-    }
-    else
-    {
-        qDebug() << "ошибка создания файла";
-    }
-}
-
 float Map::getMaxH()
 {
     return getCountLayers() * lenBlock;
@@ -135,49 +97,6 @@ void Map::setH(int idX, int idY, int valH)
     for (int h=1; h<valH; h++)
     {
         getBlock(idX, idY, h)->toEarth();
-    }
-}
-
-void Map::open(const QString &dirFile)
-{
-    delete file;
-
-    file = new QFile(dirFile);
-    if (file->open(QIODevice::ReadOnly))
-    {
-        QByteArray data;
-        data = file->readAll();
-
-        QStringList lines = QString(data).split("\n", QString::SkipEmptyParts);
-
-        int W = lines[3].split(" ", QString::SkipEmptyParts).size() - 1;
-        int L = lines.size() - 3;
-        int H = 200; // пока что так!!!
-        qDebug() << W << L;
-        // изменяем конфигурацию карты
-        resize(W, L, H);
-
-        int h;
-        for (int y=0; y<L; y++)
-        {
-            QStringList strValues = lines[y + 3].split(" ", QString::SkipEmptyParts);
-            for (int x=0; x<W; x++)
-            {
-                h = strValues[x].toInt(); // макс. высота в этой координате
-                for (int i=0; i<h; i++)
-                {
-                    this->getBlock(x, y, i)->toEarth(); // засыпаем землей
-                }
-            }
-        }
-
-        qDebug() << "Map ready!";
-
-        updateVisual();
-    }
-    else
-    {
-        qDebug() << "ошибка открытия файла";
     }
 }
 

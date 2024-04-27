@@ -4,7 +4,7 @@
 #include <QWidget>
 
 #include "backend/map.h"
-#include "paintermapimage.h"
+#include "backend/paintermapimage.h"
 #include "plotwidget.h"
 
 namespace Ui {

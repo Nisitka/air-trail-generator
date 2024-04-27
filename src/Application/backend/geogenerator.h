@@ -23,6 +23,9 @@ public slots:
              int W, int L, int H,
              double lenBlock);
 
+    //
+    void buildFlatMap(int W = 400, int L = 400, int H = 256);
+
     void openMap(const QString& dirMapFile);
 
 public:

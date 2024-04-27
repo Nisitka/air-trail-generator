@@ -83,8 +83,21 @@ mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) 
     statusBar->show();
 }
 
+void mapAreaMainWindow::updateGeoMapImage()
+{
+    area->updateSize();
+    repaintBackground();
+}
+
+void mapAreaMainWindow::repaintBackground()
+{
+    area->repaint();
+}
+
 void mapAreaMainWindow::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
+
     QPainter painter(this);
 
     // Отрисовка подложки
@@ -97,7 +110,6 @@ void mapAreaMainWindow::paintEvent(QPaintEvent *event)
 void mapAreaMainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
-    //updatePosCoordLabel();
 }
 
 void mapAreaMainWindow::updateInfoStatusBar(const QString& info)

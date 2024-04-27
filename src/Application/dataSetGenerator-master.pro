@@ -32,7 +32,6 @@ SOURCES += main.cpp\
     backend/geogenerator.cpp \
     backend/managerrls.cpp \
     backend/map.cpp \
-    backend/painterimage.cpp \
     backend/ray.cpp \
     backend/rls.cpp \
     GUI/designer.cpp \
@@ -41,7 +40,6 @@ SOURCES += main.cpp\
     GUI/optdronewindow.cpp \
     GUI/optmapgeneratorwindow.cpp \
     GUI/optrlswindow.cpp \
-    GUI/paintermapimage.cpp \
     GUI/runwindow.cpp \
     GUI/visualinfowidget.cpp \
     GUI/drawArea/areadrawwidget.cpp \
@@ -76,7 +74,8 @@ SOURCES += main.cpp\
     GUI/algorithmPredict/labelglyph.cpp \
     GUI/drawArea/mapareamainwindow.cpp \
     GUI/drawArea/scrollmapwidget.cpp \
-    GUI/multiplewindow.cpp
+    GUI/multiplewindow.cpp \
+    backend/paintermapimage.cpp
 
 HEADERS  += \
     core.h \
@@ -86,7 +85,6 @@ HEADERS  += \
     backend/geogenerator.h \
     backend/managerrls.h \
     backend/map.h \
-    backend/painterimage.h \
     backend/ray.h \
     backend/rls.h \
     GUI/designer.h \
@@ -95,7 +93,6 @@ HEADERS  += \
     GUI/optdronewindow.h \
     GUI/optmapgeneratorwindow.h \
     GUI/optrlswindow.h \
-    GUI/paintermapimage.h \
     GUI/runwindow.h \
     GUI/visualinfowidget.h \
     GUI/drawArea/areadrawwidget.h \
@@ -131,14 +128,14 @@ HEADERS  += \
     GUI/algorithmPredict/labelglyph.h \
     GUI/drawArea/mapareamainwindow.h \
     GUI/drawArea/scrollmapwidget.h \
-    GUI/multiplewindow.h
+    GUI/multiplewindow.h \
+    backend/paintermapimage.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \
     GUI/UI/optmapgeneratorwindow.ui \
     GUI/UI/optqfunwindow.ui \
     GUI/UI/optrlswindow.ui \
-    GUI/UI/visualinfowidget.ui \
     GUI/UI/dataaccessobjectwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \
     GUI/algorithmPredict/setalgpredictwindow.ui \

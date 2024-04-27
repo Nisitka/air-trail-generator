@@ -1,13 +1,23 @@
 #ifndef PAINTERMAPIMAGE_H
 #define PAINTERMAPIMAGE_H
 
-#include "backend/painterimage.h"
+#include <QObject>
+#include <QImage>
+#include <QColor>
 
-class painterMapImage : public painterImage
+#include "map.h"
+
+class painterMapImage : public QObject
 {
     Q_OBJECT
 
 signals:
+    //
+    void finish();
+
+    //
+    void resized();
+
     // земля отредактирована
     void readyEditEarth(int idXo, int idYo, int size);
 
@@ -18,6 +28,9 @@ public slots:
 
     //
     void updateFull();
+
+    //
+    void updateSizeMap();
 
     // поднять землю
     void upEarth(int idX, int idY, int R);
@@ -48,6 +61,10 @@ public:
     // сформировать текстуру высоты рельефа в области
     QImage* buildImageEarth(const QRect& rect);
 
+    //
+    QImage* getImage();
+
+
     painterMapImage(Map*);
 
 private:
@@ -57,9 +74,17 @@ private:
     int numW;
     int numL;
 
+    void updateSizeImage();
+
+    QImage* img;
+    Map* map;
+
+    int Wmap;
+    int Lmap;
+    int Hmap;
+
     // вычислить цвет по высоте (т.е. номеру слоя)
     QColor colorHeight(int numLayer);
-
     int dHeight;
     const QVector <QColor> colors =
     {

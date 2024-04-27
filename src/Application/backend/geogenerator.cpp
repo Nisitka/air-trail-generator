@@ -37,6 +37,12 @@ void geoGenerator::openMap(const QString &dirMapFile)
     editSizeMap();
 }
 
+void geoGenerator::buildFlatMap(int W, int L, int H)
+{
+    map->build(W, L, H);
+    editSizeMap();
+}
+
 void geoGenerator::run(double setBlockP, int countEpochs,
                        int W, int L, int H,
                        double lenBlock)

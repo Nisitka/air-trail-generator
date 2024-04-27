@@ -41,8 +41,6 @@ GUI::GUI(QImage* geoMap,
 
     //
     optGenMapWin = new optMapGeneratorWindow;
-    QObject::connect(optGenMapWin, SIGNAL(openMap_signal(QString)),
-                     map,          SLOT(open(QString)));
     mainWin->addTask(optGenMapWin, QIcon(":/resurs/earchIcon"),
                      "Карта", "Карта");
 
@@ -237,10 +235,13 @@ void GUI::connectMapPainter(painterMapImage* painterMap)
                      painterMap, SLOT(setRectTexture(int,int,int,int)));
     QObject::connect(painterMap, SIGNAL(readyTexture(int,int,int,int)),
                      map3DWin,   SLOT(finishBuildMap(int,int,int,int)));
-    map3DWin->generateMap3D(); // сразу же отображаем то что есть
+    //map3DWin->generateMap3D(); // сразу же отображаем то что есть
 
-    QObject::connect(painterMap, SIGNAL(finish()),
-                     visInfoWin, SLOT(updateImage()));
+    QObject::connect(painterMap,                   SIGNAL(finish()),
+                     visInfoWin->getManDrawArea(), SLOT(repaintBackground()));
+    QObject::connect(painterMap,                   SIGNAL(resized()),
+                     visInfoWin->getManDrawArea(), SLOT(updateGeoMapImage()));
+
     QObject::connect(optRLSWin,  SIGNAL(getColorHeight(QColor*,int)),
                      painterMap, SLOT(heightToColor(QColor*,int)));
 }

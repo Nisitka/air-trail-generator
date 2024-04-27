@@ -6,21 +6,38 @@
 
 #include <QMatrix>
 
-painterMapImage::painterMapImage(Map* map) :
-    painterImage(map)
+painterMapImage::painterMapImage(Map* map_) :
+    map(map_)
 {
-    connect(map,  SIGNAL(updateVisual()),
-            this, SLOT(run()));
+    // Сразу инициализируем изображение
+    img = new QImage(10, 10,
+                     QImage::Format_RGB32);
 
     // по умолчанию на всю карту
     idXo = 0;
     idYo = 0;
 
-    connect(this, SIGNAL(resized()),
-            this, SLOT(updateFull()));
-
     //
     updateSizeMap();
+}
+
+void painterMapImage::updateSizeMap()
+{
+    map->getSize(Wmap, Lmap, Hmap);
+    updateSizeImage();
+}
+
+void painterMapImage::updateSizeImage()
+{
+    *img = img->scaled(Wmap, Lmap); // и самого изображения соответсвенно
+    resized();
+
+    updateFull();
+}
+
+QImage* painterMapImage::getImage()
+{
+    return img;
 }
 
 void painterMapImage::updateFull()
@@ -33,7 +50,7 @@ void painterMapImage::upEarth(int idX, int idY, int R)
     map->upEarth(idX, idY, R);
     runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
 
-    //readyEditEarth(idX, idY, R);
+    readyEditEarth(idX, idY, R);
 }
 
 void painterMapImage::downEarth(int idX, int idY, int R)
@@ -41,7 +58,7 @@ void painterMapImage::downEarth(int idX, int idY, int R)
     map->downEarth(idX, idY, R);
     runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
 
-    //readyEditEarth(idX, idY, R);
+    readyEditEarth(idX, idY, R);
 }
 
 void painterMapImage::runToRects(QRect* rects, int count)

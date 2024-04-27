@@ -48,12 +48,6 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map), kZoom(1.0)
     appendDrawTask(border,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBorder));
 }
 
-void areaDrawWidget::updateMapImage()
-{
-    updateSize();
-    repaint();
-}
-
 void areaDrawWidget::updateSize()
 {
     W = images[geoMap]->width()  * kZoom;
