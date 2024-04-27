@@ -146,7 +146,7 @@ private:
     // Матрица высот
     QVector <QVector <int>> heights;
     float MAP_SCALE = 0.3;
-    float H_SCALE = 0.08;
+    float H_SCALE = 1.9;
 };
 
 #endif // MAPOPENGLWIDGET_H

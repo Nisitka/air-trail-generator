@@ -59,6 +59,7 @@ void map3DVisWindow::setMap(int idXo, int idYo, int numW, int numL)
 void map3DVisWindow::setAreaZD(int idXo, int idYo, int numW, int numL)
 {
     visMap->initializeTerrain(idXo, idYo, numW, numL);
+    qDebug() << "setTerrain!";
 }
 
 map3DVisWindow::~map3DVisWindow()

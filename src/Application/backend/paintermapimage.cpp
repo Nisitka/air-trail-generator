@@ -18,7 +18,7 @@ painterMapImage::painterMapImage(Map* map_) :
     idYo = 0;
 
     //
-    updateSizeMap();
+    //updateSizeMap();
 }
 
 void painterMapImage::updateSizeMap()
@@ -30,7 +30,6 @@ void painterMapImage::updateSizeMap()
 void painterMapImage::updateSizeImage()
 {
     *img = img->scaled(Wmap, Lmap); // и самого изображения соответсвенно
-    resized();
 
     updateFull();
 }
@@ -43,6 +42,9 @@ QImage* painterMapImage::getImage()
 void painterMapImage::updateFull()
 {
     run();
+
+    resized();
+    buildTexture();
 }
 
 void painterMapImage::upEarth(int idX, int idY, int R)
@@ -87,6 +89,7 @@ void painterMapImage::setRectTexture(int idXo_, int idYo_, int numW_, int numL_)
 
 void painterMapImage::buildTexture()
 {
+    setRectTexture(0, 0, Wmap - 1, Lmap - 1);
     readyTexture(idXo, idYo, numW, numL);
 }
 

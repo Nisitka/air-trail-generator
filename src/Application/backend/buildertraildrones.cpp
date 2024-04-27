@@ -16,8 +16,6 @@ builderTrailDrones::builderTrailDrones(Map* map): map(map)
     setOptPredict();
 
     trail = nullptr;
-
-    startPredictTrail(5, 5, 390, 190);
 }
 
 void builderTrailDrones::setRpredict(int countDiscretes)

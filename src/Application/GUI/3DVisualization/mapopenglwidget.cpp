@@ -361,8 +361,6 @@ void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL
     lookY = (float) ((float)countY * MAP_SCALE) / 2;
     lookZ = 0.0;
 
-    //qDebug() << MAP_SCALE;
-
     update();
 }
 
@@ -427,7 +425,7 @@ void mapOpenGLWidget::paintGL()
               lookX, lookZ, lookY,
               0, 1.0, 0);
 
-    H_SCALE = MAP_SCALE * 0.2;
+    H_SCALE = MAP_SCALE * 5.1;
 
     QRgb color;
     int h;

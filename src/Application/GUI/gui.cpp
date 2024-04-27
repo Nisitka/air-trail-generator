@@ -212,7 +212,7 @@ void GUI::connectMRLS(managerRLS* mRLS)
 
     /// !!!!!!!!!!!!!!!!!!!!!!!!!!
     QObject::connect(visInfoWin->getManDrawArea()->getDrawArea(), SIGNAL(updateSignals()),
-                     mRLS,                      SLOT(updateSignals()));
+                     mRLS, SLOT(updateSignals()));
 
     // обновление визуализации сигнала
     QObject::connect(mRLS, SIGNAL(sendPointsInterZD(QVector<QVector<QVector<QVector3D>>>*, QList <QVector3D>*)),

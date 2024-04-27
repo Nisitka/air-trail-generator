@@ -28,7 +28,6 @@ void Core::init_allObj()
     // Генератор рельефа
     mapGenerator = new geoGenerator(map);
     objects.append(mapGenerator);
-    mapGenerator->buildFlatMap();
     readyRunProgress(27, "Загрузка модуля карты...");
 
     // калькулятор цвета рельефа
@@ -36,8 +35,8 @@ void Core::init_allObj()
     QObject::connect(mapGenerator, SIGNAL(readyLayer(int)),
                      mapPainter,   SLOT(run()));
     objects.append(mapPainter);
-    mapPainter->updateFull();
 
+    //
     QObject::connect(mapGenerator, SIGNAL(editSizeMap()),
                      mapPainter,   SLOT(updateSizeMap()));
 
@@ -53,12 +52,10 @@ void Core::init_allObj()
     objects.append(mRLS);
     readyRunProgress(46, "Загрузка строителя маршрутов...");
 
-
     //
     trailBuilder = new builderTrailDrones(map);
     objects.append(trailBuilder);
     readyRunProgress(54, "Инициализация интерфейса...");
-
     //
     gui = new GUI(mapPainter->getImage(),
                   map);
@@ -122,15 +119,15 @@ void Core::run()
     init_GUI();
 
     init_buildThreads();
+    mapGenerator->buildFlatMap();
+    ///!!!!
+//    mapGenerator->openMap(
+//                QApplication::applicationDirPath() + "/maps/img4");
 
     ready();
 
     // Открываем главное окно
     gui->showMainWin(); 
-
-    ///!!!!
-//    mapGenerator->openMap(
-//                QApplication::applicationDirPath() + "/maps/img4");
 }
 
 Core::~Core()
