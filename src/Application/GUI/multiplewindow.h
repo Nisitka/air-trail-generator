@@ -27,6 +27,11 @@ public slots:
 
     //void addGroupFunWindow(const QList <QDockWidget*>);
 
+protected:
+
+    // Переопределяем метод, чтоб не вылазило меню при нажатии лев.клавиши мыши
+    void contextMenuEvent(QContextMenuEvent* event) override;
+
 private slots:
 
     //

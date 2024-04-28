@@ -15,6 +15,8 @@ void ToolVisMap::init()
 {
     drawArea->setCursor(cursor);
     drawArea->appendDrawTask(areaDrawWidget::toolVis, dTask);
+
+    statMouse = release;
 }
 
 void ToolVisMap::procDrawTask()

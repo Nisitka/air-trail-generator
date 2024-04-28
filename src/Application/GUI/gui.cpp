@@ -69,6 +69,8 @@ GUI::GUI(QImage* geoMap,
     map3DWin = new map3DVisWindow(map, geoMap);
     mainWin->addTask(map3DWin, QPixmap(":/resurs/icon3D"),
                      "3D", "Детальная визуализация рельефа");
+    QObject::connect(toolVisMap, SIGNAL(updateRect3D(int,int,int,int)),
+                     map3DWin,   SLOT(setVisRect(int,int,int,int)));
 
     // Окно по работе с функцией прогноза
     algPredWin = new setAlgPredictWindow;
@@ -165,7 +167,9 @@ void GUI::connectGIS(GIS *gis)
 
     // Отображение в 3D
     QObject::connect(gis,      SIGNAL(finishBuildMap(int,int,int)),
-                     map3DWin, SLOT(finishBuildMap(int,int,int)));
+                     map3DWin, SLOT(setVisRectDef()));
+    QObject::connect(gis,      SIGNAL(changedMap(int,int,int,int)),
+                     map3DWin, SLOT(updateMap3D(int,int,int,int)));
 }
 
 //void GUI::connectMapGenerator(geoGenerator* mapBuilder)

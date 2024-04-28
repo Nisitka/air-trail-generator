@@ -24,17 +24,15 @@ mapOpenGLWidget::mapOpenGLWidget(Map* map,
     angle(0), lastAngle(1.57),
     angleOZ(0), lastAngleOZ(1.0)
 {
-    winWidth=300;
-    winHeight=200;
-
+    //
     currentTexture = imgTex;
-
-    Hmap = map->getMaxH() / map->getLenBlock();
 
     //
     this->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-    this->setMinimumSize(winWidth,winHeight);
+    this->setMinimumSize(300, 200);
     this->setMaximumSize(9999, 9999);
+
+    readyRender = false;
 }
 
 void mapOpenGLWidget::startPredictTrail()
@@ -118,7 +116,6 @@ bool mapOpenGLWidget::isInterFlatness(const QVector3D &A, const QVector3D &B,
 
     // Расстояние до плоскости по нормали
     float d = QVector3D::dotProduct(N, V);
-    //qDebug() << d;
 
     QVector3D W = A - B;
     float e = QVector3D::dotProduct(N, W);
@@ -143,8 +140,6 @@ bool mapOpenGLWidget::isInterFlatness(const QVector3D &A, const QVector3D &B,
 
 void mapOpenGLWidget::processingPointsZD()
 {
-    //qDebug() << idXo << countX << idYo << countY << Hmap;
-
     pZDinBorder.clear();
     pZDinBorder = pointsZD;
 
@@ -325,30 +320,34 @@ void mapOpenGLWidget::updateVertBoards()
 
 void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL)
 {
-    qDebug() << "OOOOOOOOOOOOOOOOOOOOOOOOOO";
+    readyRender = false;
 
-    //
-    idXo = idXo_;
+    // Дискреты углов
+    idXo = idXo_;            // Левый верхний
     idYo = idYo_;
-    countX = numW;
-    countY = numL;
-    idLastX = idXo + countX;
-    idLastY = idYo + countY;
+    idLastX = idXo + numW; // Правый нижний
+    idLastY = idYo + numL;
 
-    //
+    // Размер области
+    countX = numW; // Ширина
+    countY = numL; // Высота
+
+    // Кол-во дискрет высоты
     Hmap = map->getCountLayers();
 
-    //
+    // Обновляем данные по стенкам
     updateVertBoards();
 
-    //
+    // Корректировка точек ЗО
     processingPointsZD();
 
     MAP_SCALE = 0.3;
 
+    // Расчет радиуса вращения камеры
     if (countX > countY) R = countX * MAP_SCALE * kSCALE;
     else                 R = countY * MAP_SCALE * kSCALE;
 
+    // Перерасчет матрицы высот
     heights.clear();
     for (int idX = idXo; idX < idLastX; idX++)
     {
@@ -359,34 +358,39 @@ void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL
         }
     }
 
+    // Обновляем взор камеры
     lookX = (float) ((float)countX * MAP_SCALE) / 2;
     lookY = (float) ((float)countY * MAP_SCALE) / 2;
     lookZ = 0.0;
 
+    //
+    readyRender = true;
+
+    // Рисуем обновленную картинку
     update();
 }
 
-void mapOpenGLWidget::updateTerrain(int idXo_, int idYo_, int size)
+void mapOpenGLWidget::updateTerrain(int idXo_, int idYo_, int W, int L)
 {
     // Сразу выходим если никак не попадаем в область отображения
     if (idXo_ > idLastX | idYo_ > idLastY) return;
 
-    idXo_ -= size/2;
-    idYo_ -= size/2;
-
-    int lastIdX = idXo_ + size;
-    int lastIdY = idYo_ + size;
-
-    //
-    if (lastIdX < idXo | lastIdY < idYo) return;
+    // Правая нижняя точка зоны изменения
+    int lastIdX = idXo_ + W;
+    int lastIdY = idYo_ + L;
 
     // Если частично попадаем в область
     if (idXo_ < idXo) idXo_ = idXo;
     if (idYo_ < idYo) idYo_ = idYo;
 
-    if (lastIdX > idXo+countX) lastIdX = idLastX;
-    if (lastIdY > idYo+countY) lastIdY = idLastY;
+    //
+    if (lastIdX > idLastX) lastIdX = idLastX;
+    if (lastIdY > idLastY) lastIdY = idLastY;
 
+    //
+    if (lastIdX < idXo | lastIdY < idYo) return;
+
+    //
     for (int idX = idXo_; idX < lastIdX; idX++)
     {
         for (int idY = idYo_; idY < lastIdY; idY++)
@@ -395,6 +399,7 @@ void mapOpenGLWidget::updateTerrain(int idXo_, int idYo_, int size)
         }
     }
 
+    // Показываем обновленное
     update();
 }
 
@@ -413,139 +418,142 @@ void mapOpenGLWidget::updateTerrain()
 
 void mapOpenGLWidget::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Screen и глубина кэша
-
-    lastAngle -= angle;
-    lastAngleOZ -= angleOZ;
-
-    camX = lookX + ((float)cos(lastAngle)*R);
-    camY = lookY + ((float)sin(lastAngle)*R);
-    camZ = lookZ + ((float)(lastAngleOZ)*R);
-
-    glLoadIdentity();
-    gluLookAt(camX, camZ, camY,
-              lookX, lookZ, lookY,
-              0, 1.0, 0);
-
-    H_SCALE = MAP_SCALE * 5.1;
-
-    QRgb color;
-    int h;
-    for (int idX = 0; idX < countX - 1; idX++)
+    if (readyRender)
     {
-        glBegin(GL_TRIANGLE_STRIP);
-        for (int idY = 0; idY < countY - 1; idY++)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Screen и глубина кэша
+
+        lastAngle -= angle;
+        lastAngleOZ -= angleOZ;
+
+        camX = lookX + ((float)cos(lastAngle)*R);
+        camY = lookY + ((float)sin(lastAngle)*R);
+        camZ = lookZ + ((float)(lastAngleOZ)*R);
+
+        glLoadIdentity();
+        gluLookAt(camX, camZ, camY,
+                  lookX, lookZ, lookY,
+                  0, 1.0, 0);
+
+        H_SCALE = MAP_SCALE * 5.1;
+
+        QRgb color;
+        int h;
+        for (int idX = 0; idX < countX - 1; idX++)
         {
-            h = heights[idX][idY];
-            color = currentTexture->pixel(idX, idY);
-            glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
-            addVertex(idXo + idX, idYo + idY, h);
+            glBegin(GL_TRIANGLE_STRIP);
+            for (int idY = 0; idY < countY - 1; idY++)
+            {
+                h = heights[idX][idY];
+                color = currentTexture->pixel(idXo + idX, idYo + idY);
+                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+                addVertex(idXo + idX, idYo + idY, h);
 
-            h = heights[idX][idY+1];
-            color = currentTexture->pixel(idX, idY + 1);
-            glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
-            addVertex(idXo + idX, idYo + idY + 1, h);
+                h = heights[idX][idY+1];
+                color = currentTexture->pixel(idXo + idX, idYo + idY + 1);
+                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+                addVertex(idXo + idX, idYo + idY + 1, h);
 
-            h = heights[idX+1][idY];
-            color = currentTexture->pixel(idX+1, idY);
-            glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
-            addVertex(idXo + idX+1, idYo + idY, h);
+                h = heights[idX+1][idY];
+                color = currentTexture->pixel(idXo + idX+1, idYo + idY);
+                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+                addVertex(idXo + idX+1, idYo + idY, h);
 
-            h = heights[idX+1][idY+1];
-            color = currentTexture->pixel(idX+1, idY+1);
-            glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
-            addVertex(idXo + idX+1, idYo + idY + 1, h);
+                h = heights[idX+1][idY+1];
+                color = currentTexture->pixel(idXo + idX+1, idYo + idY+1);
+                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+                addVertex(idXo + idX+1, idYo + idY + 1, h);
+            }
+            glEnd();
         }
+
+        glBegin(GL_LINES);
+        glColor3f(0.39, 0.05, 0.67); // цвет линий
+
+        // Отрисовка зоны обнаружения
+        float a = 0.3;
+        glColor4f(0.0, 0.0, 0.8, // цвет
+                  a);            // прозрачность
+        QVector3D p;
+        if (pZDinBorder.size() > 0)
+        {   // по РЛС
+            for (int idRLS=0; idRLS<pZDinBorder.size(); idRLS++)
+            {
+                // по горизонтальным сегментам
+                int countL = pZDinBorder[idRLS][0].size();
+                for (int idL=0; idL < countL-1; idL++)
+                {
+                    // по левым нижним точкам в квадратах
+                    glBegin(GL_TRIANGLE_STRIP);
+                    for (int idP = 0; idP < pZDinBorder[idRLS].size() - 1; idP++)
+                    {
+                        drawRectZD(idRLS, idL, idP);
+                    }
+
+                    // замыкаем слой
+                    drawRectZD(idRLS, idL, 0);
+
+                    glEnd();
+                }
+
+                p = posRLS->at(idRLS); // точка стояния РЛС
+                if (p.x() > idXo & p.x() < (idXo + countX) &
+                    p.y() > idYo & p.y() < (idYo + countY))
+                {
+                    /* Надо будет вычислять в какой точке пересекаются лучи в плоскостями топоражения 3D */
+
+                    // замыкаем верх
+                    int countV = pZDinBorder[idRLS].size();
+                    glBegin(GL_TRIANGLE_STRIP);
+                    for (int t = 0; t < countV; t++)
+                    {
+                        p = pZDinBorder[idRLS][t].last();
+                        //glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
+                        addVertex(p.x(), p.y(), p.z());
+
+                        p = posRLS->at(idRLS); // точка стояния РЛС
+                        //glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
+                        addVertex(p.x(), p.y(), p.z());
+
+                    }
+                    glEnd();
+
+                    // замыкаем низ
+                    glBegin(GL_TRIANGLE_STRIP);
+                    for (int t = 0; t < countV; t++)
+                    {
+                        p = pZDinBorder[idRLS][t][0];
+                        glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
+
+                        p = posRLS->at(idRLS);
+                        glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
+
+                    }
+                    glEnd();
+                }
+            }
+        }
+
+        // Отрисовка траектории
+        glBegin(GL_LINES);
+        glColor3f(1.0, 0.0, 0.8); // цвет линий
+
+        int countPoints = trail.size();
+        QVector3D point;
+        for (int i=0; i<countPoints-1; i++)
+        {
+            point = trail[i];
+            glVertex3f(point.x()*MAP_SCALE,
+                       point.z()*H_SCALE,
+                       point.y()*MAP_SCALE);
+
+            point = trail[i+1];
+            glVertex3f(point.x()*MAP_SCALE,
+                       point.z()*H_SCALE,
+                       point.y()*MAP_SCALE);
+        }
+
         glEnd();
     }
-
-    glBegin(GL_LINES);
-    glColor3f(0.39, 0.05, 0.67); // цвет линий
-
-    // Отрисовка зоны обнаружения
-    float a = 0.3;
-    glColor4f(0.0, 0.0, 0.8, // цвет
-              a);            // прозрачность
-    QVector3D p;
-    if (pZDinBorder.size() > 0)
-    {   // по РЛС
-        for (int idRLS=0; idRLS<pZDinBorder.size(); idRLS++)
-        {
-            // по горизонтальным сегментам
-            int countL = pZDinBorder[idRLS][0].size();
-            for (int idL=0; idL < countL-1; idL++)
-            {
-                // по левым нижним точкам в квадратах
-                glBegin(GL_TRIANGLE_STRIP);
-                for (int idP = 0; idP < pZDinBorder[idRLS].size() - 1; idP++)
-                {
-                    drawRectZD(idRLS, idL, idP);
-                }
-
-                // замыкаем слой
-                drawRectZD(idRLS, idL, 0);
-
-                glEnd();
-            }
-
-            p = posRLS->at(idRLS); // точка стояния РЛС
-            if (p.x() > idXo & p.x() < (idXo + countX) &
-                p.y() > idYo & p.y() < (idYo + countY))
-            {
-                /* Надо будет вычислять в какой точке пересекаются лучи в плоскостями топоражения 3D */
-
-                // замыкаем верх
-                int countV = pZDinBorder[idRLS].size();
-                glBegin(GL_TRIANGLE_STRIP);
-                for (int t = 0; t < countV; t++)
-                {
-                    p = pZDinBorder[idRLS][t].last();
-                    //glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
-                    addVertex(p.x(), p.y(), p.z());
-
-                    p = posRLS->at(idRLS); // точка стояния РЛС
-                    //glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
-                    addVertex(p.x(), p.y(), p.z());
-
-                }
-                glEnd();
-
-                // замыкаем низ
-                glBegin(GL_TRIANGLE_STRIP);
-                for (int t = 0; t < countV; t++)
-                {
-                    p = pZDinBorder[idRLS][t][0];
-                    glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
-
-                    p = posRLS->at(idRLS);
-                    glVertex3f((p.x() - idXo) * MAP_SCALE, p.z() * H_SCALE, (p.y() - idYo) * MAP_SCALE);
-
-                }
-                glEnd();
-            }
-        }
-    }
-
-    // Отрисовка траектории
-    glBegin(GL_LINES);
-    glColor3f(1.0, 0.0, 0.8); // цвет линий
-
-    int countPoints = trail.size();
-    QVector3D point;
-    for (int i=0; i<countPoints-1; i++)
-    {
-        point = trail[i];
-        glVertex3f(point.x()*MAP_SCALE,
-                   point.z()*H_SCALE,
-                   point.y()*MAP_SCALE);
-
-        point = trail[i+1];
-        glVertex3f(point.x()*MAP_SCALE,
-                   point.z()*H_SCALE,
-                   point.y()*MAP_SCALE);
-    }
-
-    glEnd();
 }
 
 void mapOpenGLWidget::drawRectZD(int idRLS, int idLayer, int idPointLeft)

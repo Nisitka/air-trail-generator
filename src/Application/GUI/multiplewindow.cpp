@@ -74,4 +74,9 @@ void MultipleWindow::showFunWindow()
     }
 }
 
+void MultipleWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    Q_UNUSED(event);
+}
+
 

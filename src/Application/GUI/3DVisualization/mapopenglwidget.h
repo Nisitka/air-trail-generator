@@ -20,12 +20,9 @@ class mapOpenGLWidget: public QOpenGLWidget
 
 public slots:
 
+    // Отображение прогноза маршрута
     void startPredictTrail();
-
-    //
     void addTrailPoint(int idX, int idY, int idZ);
-
-    //
     void finishPredictTrail();
 
 public:
@@ -47,18 +44,23 @@ public:
 
     void wheelEvent(QWheelEvent* event);
 
-    //
-    void initializeTerrain(int idXo, int idYo, int numW, int numL);
+    // Какую часть карты отображать в 3D
+    void initializeTerrain(int idXo, int idYo,  // id левой верхней дискреты
+                           int numW, int numL); // ширина, высота
 
-    //
-    void updateTerrain(int idXo, int idYo, int size); //
-    void updateTerrain();
+    // Актуализировать значения матрицы высот
+    void updateTerrain(int idXo, int idYo, int W, int L); // в области
+    void updateTerrain();                                 // везде
 
 private:
 
-    QImage* currentTexture; // Текстура
+    // Подготовлены ли данные
+    bool readyRender;
 
-    //
+    // Текстура
+    QImage* currentTexture; // Цвета вершин
+
+    // Точки траектории
     QVector <QVector3D> trail;
 
     //
@@ -73,7 +75,7 @@ private:
                          const QVector3D& fA, const QVector3D& fB, const QVector3D& fC, // плоскость
                          QVector3D& interPoint); // точка пер-я
 
-    // внутри ли зоны отрисовки точка
+    // Внутри ли зоны отрисовки точка
     bool isDrawArea(const QVector3D& point);
 
     int c = 0;
@@ -88,7 +90,7 @@ private:
     // Добавить точку подобно glVetex3f
     void addVertex(int idX, int idY, int idZ);
 
-    // прозрачность ЗО
+    // Прозрачность ЗО
     float aZD;
 
     // РЛС, гор. сегмент, верт. сегмент
@@ -110,7 +112,6 @@ private:
     float lastAngleOZ;
     float angleOZ;
 
-
     // Где стоит камера
     float camX;
     float camY;
@@ -127,8 +128,6 @@ private:
 
     Map* map;
     int Hmap;
-
-    int winWidth, winHeight;
 
     //
     int idXo;

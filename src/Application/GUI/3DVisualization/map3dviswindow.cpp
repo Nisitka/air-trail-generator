@@ -15,9 +15,13 @@ map3DVisWindow::map3DVisWindow(Map* map_, QImage* imgTex):
     //
     visMap = new mapOpenGLWidget(map, imgTex);
 
+    // Функциональные окна
     addFunWindow(new QTabWidget, QIcon(":/resurs/a"),"A",Qt::LeftDockWidgetArea,Qt::LeftDockWidgetArea);
     addFunWindow(new QTabWidget, QIcon(":/resurs/b"),"B",Qt::LeftDockWidgetArea,Qt::LeftDockWidgetArea);
     addFunWindow(new QTabWidget, QIcon(":/resurs/b"),"B",Qt::RightDockWidgetArea,Qt::RightDockWidgetArea);
+
+    //
+    //loadingLabel = new processTmpWidget(this);
 
     // 3D
     setCentralWidget(visMap);
@@ -29,9 +33,9 @@ mapOpenGLWidget* map3DVisWindow::getGraphicsWidget()
     return visMap;
 }
 
-void map3DVisWindow::updateMap3D(int idXo, int idYo, int size)
+void map3DVisWindow::updateMap3D(int idXo, int idYo, int W, int L)
 {
-    visMap->updateTerrain(idXo, idYo, size);
+    visMap->updateTerrain(idXo, idYo, W, L);
 }
 
 void map3DVisWindow::updateMap3D()
@@ -46,20 +50,18 @@ void map3DVisWindow::updatePointsInterZD(QVector<QVector<QVector<QVector3D> > >*
     visMap->updateZD(points);
 }
 
-void map3DVisWindow::finishBuildMap(int numW, int numL, int numH)
+void map3DVisWindow::setVisRectDef()
 {
-    setMap(0, 0, numW, numL);
+    visMap->initializeTerrain(0, 0,
+                              map->getWidth(),
+                              map->getLength());
 }
 
-void map3DVisWindow::setMap(int idXo, int idYo, int numW, int numL)
+void map3DVisWindow::setVisRect(int idXo, int idYo, int W, int L)
 {
-    setAreaZD(idXo, idYo, numW, numL);
-}
-
-void map3DVisWindow::setAreaZD(int idXo, int idYo, int numW, int numL)
-{
-    visMap->initializeTerrain(idXo, idYo, numW, numL);
-    qDebug() << "setTerrain!";
+    //loadingLabel->Show();
+    visMap->initializeTerrain(idXo, idYo, W, L);
+    //loadingLabel->Hide();
 }
 
 map3DVisWindow::~map3DVisWindow()
