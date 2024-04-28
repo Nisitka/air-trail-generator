@@ -6,6 +6,8 @@
 
 #include "designer.h"
 
+#include "processtmpwidget.h"
+
 mainWindow::mainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::mainWindow)

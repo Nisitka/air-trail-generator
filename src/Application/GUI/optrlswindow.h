@@ -7,6 +7,8 @@
 #include "backend/gis/paintermapimage.h"
 #include "plotwidget.h"
 
+#include "processtmpwidget.h"
+
 namespace Ui {
 class optRLSwindow;
 }
@@ -74,9 +76,6 @@ public slots:
     //
     void readyOptZDvert();
 
-    // обновить все, что зависит от пар-ов карты
-    void updateInfoMap();
-
 public:
     explicit optRLSwindow(Map* map_, QWidget *parent = 0);
     ~optRLSwindow();
@@ -89,8 +88,6 @@ private slots:
     void setNewPosRLS();
 
     void enablingRLS();
-
-    void updateHZD(int);
 
     // уcтановить пар-ры ЗО в вертикальной плоскости
     void setOptZDvert();
@@ -119,6 +116,9 @@ private:
 
     // срез высоты ЗО
     int hZD;
+
+    //
+    processTmpWidget* loadingWidget;
 
     Ui::optRLSwindow *ui;
 };

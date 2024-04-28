@@ -41,21 +41,12 @@ signals:
     // сообщаем об начале поиска лучшей позиции РЛС
     void startSearchBestPos(int numW, int numL, int sizeProgress);
 
-    // обновляем полоску прогресса поиска лучшей позиции
-    //void
-
     // отправляем результаты поиска наилучшей позиции
     void readySearchBestPos(int idX, int idY, double* K);
 
 public slots:
     // перемоделировать сигналы всех РЛС
     void updateSignals();
-
-    //
-
-
-    // поиск лучшей позиции для выбранной РЛС
-    void searchBestPosRLS(int idXo, int idYo, int W, int L, int idMaxH);
 
     // создать новую РЛС
     void addRLS(QPoint* posRLS, const QString& nameRLS);

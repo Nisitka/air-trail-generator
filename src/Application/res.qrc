@@ -58,5 +58,11 @@
         <file>resurs/pattern2.jpg</file>
         <file>resurs/pattern3.jpg</file>
         <file>resurs/pattern1.png</file>
+        <file>resurs/carve-a-pumpkin-michael-myers.gif</file>
+        <file>resurs/cute-blush.gif</file>
+        <file>resurs/loading2.gif</file>
+        <file>resurs/looping.gif</file>
+        <file>resurs/transparent-the-simpsons.gif</file>
+        <file>resurs/victory.gif</file>
     </qresource>
 </RCC>

@@ -13,7 +13,7 @@
 #include "gis/map.h"
 
 // класс РЛС
-class RLS : public QObject
+class RLS: public QObject
 {
     Q_OBJECT
 signals:
@@ -61,7 +61,7 @@ public slots:
     void off();
 
 public:
-    explicit RLS(Map* map, QPoint* position, const QString& nameRLS = NULL, QObject *parent = 0);
+    explicit RLS(Map* map, QPoint* position, const QString& nameRLS = nullptr);
 
     //
     void getPosition(QVector3D& point);

@@ -12,7 +12,7 @@ painterMapImage::painterMapImage(Map* map_):
     // Сразу инициализируем изображение
     img = new QImage(3, 3, QImage::Format_RGB32);
 
-    // по умолчанию на всю карту
+    // По умолчанию на всю карту
     idXo = 0;
     idYo = 0;
 }
@@ -26,8 +26,6 @@ void painterMapImage::updateSize()
 {
     map->getSize(Wmap, Lmap, Hmap);
     *img = img->scaled(Wmap, Lmap); // и самого изображения соответсвенно
-
-    //qDebug() << *img;
 }
 
 void painterMapImage::updateFull()
@@ -36,22 +34,6 @@ void painterMapImage::updateFull()
 
     run();
 }
-
-//void painterMapImage::upEarth(int idX, int idY, int R)
-//{
-//    map->upEarth(idX, idY, R);
-//    runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
-
-//    readyEditEarth(idX, idY, R);
-//}
-
-//void painterMapImage::downEarth(int idX, int idY, int R)
-//{
-//    map->downEarth(idX, idY, R);
-//    runToRect(QRect(idX - (R / 2), idY - (R / 2), R, R));
-
-//    readyEditEarth(idX, idY, R);
-//}
 
 void painterMapImage::runToRects(QRect* rects, int count)
 {

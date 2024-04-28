@@ -7,8 +7,6 @@ Core::Core()
     //Здесь был ФАРА!
     //Здесь была Александра
     //Здесь был Никита
-
-    init_GIS();
 }
 
 void Core::init_GIS()
@@ -16,6 +14,7 @@ void Core::init_GIS()
     readyRunProgress(3);
 
     gis = new GIS;
+    objects.append(gis);
     backgroundMapImage = gis->getBackgroundImg();
     map = gis->getMap();
 
@@ -38,10 +37,10 @@ void Core::init_allObj()
     // Инициализация менеджера РЛС
     mRLS = new managerRLS(map);
     // Отрисовка
-//    QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(int,int,int,int)),
-//                     mapPainter, SLOT(runToRect(int,int,int,int)));
-//    QObject::connect(mRLS,       SIGNAL(updateVisInfoMap(QRect*, int)),
-//                     mapPainter, SLOT(runToRects(QRect*, int)));
+    QObject::connect(mRLS, SIGNAL(updateVisInfoMap(int,int,int,int)),
+                     gis,  SLOT(updateFromRect(int,int,int,int)));
+    QObject::connect(mRLS, SIGNAL(updateVisInfoMap(QRect*, int)),
+                     gis,  SLOT(updateFromRects(QRect*,int)));
     objects.append(mRLS);
     readyRunProgress(46, "Загрузка строителя маршрутов...");
 
@@ -85,14 +84,10 @@ void Core::init_GUI()
 
 void Core::init_buildThreads()
 {
-    int dP = (100 - 90) / objects.size();
-
-    // помещаем все объекты в разные потоки
+    // Помещаем все объекты в разные потоки
     for (int i=0; i<objects.size(); i++)
     {
-        moveNewThread(objects[i]);
-
-        readyRunProgress((dP+1)*i + 90);
+        moveNewThread(objects.at(i));
     }
 }
 
@@ -105,6 +100,8 @@ void Core::moveNewThread(QObject *obj)
 
 void Core::run()
 {
+    init_GIS();
+
     init_allObj();
 
     init_GUI();

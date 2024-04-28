@@ -272,7 +272,7 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      mRLS, SLOT(updateSignals()));
 
     // обновление визуализации сигнала
-    QObject::connect(mRLS, SIGNAL(sendPointsInterZD(QVector<QVector<QVector<QVector3D>>>*, QList <QVector3D>*)),
+    QObject::connect(mRLS,     SIGNAL(sendPointsInterZD(QVector<QVector<QVector<QVector3D>>>*, QList <QVector3D>*)),
                      map3DWin, SLOT(updatePointsInterZD(QVector<QVector<QVector<QVector3D>>>*, QList <QVector3D>*)));
 }
 

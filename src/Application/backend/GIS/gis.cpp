@@ -38,16 +38,23 @@ Map* GIS::getMap()
 void GIS::updateFromRect(const QRect &rect)
 {
     backPainter->runToRect(rect);
+
+    changedMap(rect.x(),     rect.y(),
+               rect.width(), rect.height());
 }
 
 void GIS::updateFromRect(int idX, int idY, int w, int h)
 {
     backPainter->runToRect(idX, idY, w, h);
+
+    changedMap(idX, idY, w, h);
 }
 
 void GIS::updateFromRects(QRect *rects, int countS)
 {
     backPainter->runToRects(rects, countS);
+
+    changedMap();
 }
 
 void GIS::upEarth(int idX, int idY, int R)

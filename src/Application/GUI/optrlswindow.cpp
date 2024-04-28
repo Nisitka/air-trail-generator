@@ -22,17 +22,10 @@ optRLSwindow::optRLSwindow(Map* map_, QWidget *parent) :
     ui->setOptRLSProgressBar->setValue(0);
     ui->setOptRLSProgressBar->hide();
 
-    connect(ui->hZDspinBox, SIGNAL(valueChanged(int)),
-            this,           SLOT(updateHZD(int)));
-
-    // срез высоты ЗО по умолчанию
-    hZD = 2000;
+    // Срез высоты ЗО по умолчанию
+    hZD = 4000;
     hRLS = 0;
 
-    connect(ui->hZDSlider, SIGNAL(sliderMoved(int)),
-            this,          SLOT(updateHZD(int)));
-    ui->hZDSlider->setMinimum(5);
-    updateInfoMap();
 
     ui->on_off_RLS_Button->hide();
     ui->setCoordRLSpushButton->hide();
@@ -62,12 +55,14 @@ optRLSwindow::optRLSwindow(Map* map_, QWidget *parent) :
     graphicWidget = new plotWidget;
     ui->plotZDLayout->addWidget(graphicWidget);
 
+    //
+    loadingWidget = new processTmpWidget(this);
+
     setDesine();
 }
 
 void optRLSwindow::runSearchBestPos()
 {
-    //qDebug() << "sear"
     sendDataForSearchBestPos(0, 0, 100, 100, 200);
 }
 
@@ -97,6 +92,9 @@ void optRLSwindow::removeRLS()
 
 void optRLSwindow::addRLS()
 {   
+    //
+    loadingWidget->Show();
+
     // значения с интерфейса
     xRLS = ui->xRLSspinBox->value() / map->getLenBlock();
     yRLS = ui->yRLSspinBox->value() / map->getLenBlock();
@@ -122,8 +120,9 @@ void optRLSwindow::buildNewRLSready()
 
 void optRLSwindow::setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working)
 {
+    loadingWidget->Hide();
+
     updateCoordRLS(Xpos, Ypos);
-    updateHZD(Hzd);
     ui->RmaxSpinBox->setValue(Rmax);
 
     workingCurRLS = working;
@@ -156,7 +155,6 @@ void optRLSwindow::setDesine()
     // настройка визуала GroupBox-ов
     Designer::setGroupBox(ui->RmaxGroupBox);
     Designer::setGroupBox(ui->ZDvertGroupBox);
-    Designer::setGroupBox(ui->HRLSgroupBox);
     Designer::setGroupBox(ui->coordRLSgroupBox);
     Designer::setGroupBox(ui->mainGroupBox, Designer::lightBlue);
     Designer::setGroupBox(ui->addRLSGroupBox);
@@ -263,15 +261,6 @@ void optRLSwindow::updateCoordRLS(int x, int y)
     ui->xRLSspinBox->setValue(xRLS * l);
     ui->yRLSspinBox->setValue(yRLS * l);
     ui->zValueRLSLabel->setText(QString::number(hRLS * l));
-
-    // автоматически выставляем срез высоты на 10м больше высоты РЛС
-    if (hZD < hRLS * l + 10)
-    {
-        hZD = hRLS * l + 10;
-    }
-    ui->hZDSlider->setMinimum(hRLS * l + 10);
-
-    ui->hZDspinBox->setValue(hZD);
 }
 
 void optRLSwindow::readyVector(int numVector)
@@ -283,28 +272,6 @@ void optRLSwindow::finishGenerateZD()
 {
     ui->setRLSprogressBar->setValue(0);
     ui->setRLSprogressBar->hide();
-}
-
-void optRLSwindow::updateInfoMap()
-{
-    ui->hZDSlider->setMaximum(map->getCountLayers() * map->getLenBlock());
-}
-
-void optRLSwindow::updateHZD(int value)
-{
-    double l = map->getLenBlock();
-
-    // автоматически выставляем срез высоты на 10м больше высоты РЛС
-    if (value < hRLS * l + 10)
-    {
-        value = hRLS * l + 10;
-        ui->hZDSlider->setMinimum(value);
-    }
-    hZD = value;
-
-    // обновление визуала
-    ui->hZDspinBox->setValue(hZD);
-    ui->hZDSlider->setValue(hZD);
 }
 
 void optRLSwindow::startGenerateZD(int countVectors)

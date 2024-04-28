@@ -6,7 +6,7 @@
 
 #include <cmath>
 
-RLS::RLS(Map* map_, QPoint* position_, const QString& nameRLS, QObject *parent) : QObject(parent), map(map_)
+RLS::RLS(Map* map_, QPoint* position_, const QString& nameRLS): map(map_)
 {
     name = nameRLS;
 
@@ -242,7 +242,6 @@ void RLS::emitSignal()
 
     int num_Hmin = Hpos / map->getLenBlock(); // индекс слоя мин-ой высоты
     minHzd = num_Hmin;
-    qDebug() << minHzd;
 
     interPointsZD.clear();
     // по вертикальным сегментам
@@ -393,8 +392,9 @@ double RLS::functionDV(double e)
     if (e > 0 && e <= Emin) return 1 - (double) (Emin - e) / Emin;
     if (e > Emin && e < Eo) return 1.0;
     if (e >= Eo && e <= Emax) return sin(Eo) / sin(e);
-    if (e > Emax && e < (double)Pi/2) return 0;
+    if (e > Emax && e < (double)Pi/2) return 0.0;
 
+    return 0.0;
 }
 
 void RLS::set_lDV()
