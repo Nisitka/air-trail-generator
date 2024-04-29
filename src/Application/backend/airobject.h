@@ -5,6 +5,8 @@
 #include <QSqlQueryModel>
 #include <QDockWidget>
 #include <QtWidgets>
+#include "GUI/airobjectfunwindow.h"
+#include "GUI/multiplewindow.h"
 
 namespace Ui {
 class AirObject;
@@ -34,19 +36,6 @@ private slots:
     void dowPhoto();
 private:
 
-    QDockWidget *dockWidget;
-    QLabel *nameLabel;
-    QLabel *longsLabel;
-    QLabel *weightLabel;
-    QLabel *speedLabel;
-
-    QLineEdit* nameEdit;
-    QLineEdit* longsEdit;
-    QLineEdit* nweightEdit;
-    QLineEdit* speedEdit;
-
-    QGridLayout *leftLayout;
-    QWidget *widget;
 
     
     Ui::AirObject *ui;

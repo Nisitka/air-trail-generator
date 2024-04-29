@@ -79,8 +79,8 @@ GUI::GUI(QImage* geoMap,
 
     // Окно по работе с ТТХ воздушными объектами
     airObj = new AirObject;
-    AirObjectFunWindow* airObjWin = new AirObjectFunWindow;
-    mainWin->addTask(airObjWin,         QPixmap(":/resurs/a"),
+    airObjWin = new AirObjectFunWindow;
+    mainWin->addTask(airObj,         QPixmap(":/resurs/a"),
                      "ТТХ воздушных объектов", "ТТХ воздушных объектов");
 
     // Окно по работе с Базой данных

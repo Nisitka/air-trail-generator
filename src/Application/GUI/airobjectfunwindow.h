@@ -16,6 +16,9 @@ class AirObjectFunWindow : public MultipleWindow
 public:
     explicit AirObjectFunWindow();
     ~AirObjectFunWindow();
+public slots:
+
+    void setParameters(QString, double,double,double, QString);
 
 private:
     Ui::AirObjectFunWindow *ui;

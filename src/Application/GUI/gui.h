@@ -23,6 +23,7 @@
 #include "backend/dao.h"
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
 #include "backend/airobject.h"
+#include "airobjectfunwindow.h"
 
 // Интерфейс всей программы
 class GUI
@@ -84,6 +85,7 @@ private:
 
     //ТТХ возудшных объектов
     AirObject* airObj;
+    AirObjectFunWindow* airObjWin;
 
     // Инструменты
     ToolPredTrail* toolPTrail;
