@@ -20,8 +20,8 @@ painterMapImage::painterMapImage(Map* map_, int W, int H):
 void painterMapImage::setPosArea(int idXo_, int idYo_)
 {
     // id левого верхнего угла
-    idXo = idXo_;
-    idYo = idYo_;
+    idXo = 0; //idXo_;
+    idYo = 0; //idYo_;
 
     // id нижнего правого угла
     idXlast = idXo + numW;

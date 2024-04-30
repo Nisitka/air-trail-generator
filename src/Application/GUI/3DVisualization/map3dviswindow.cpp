@@ -35,32 +35,32 @@ mapOpenGLWidget* map3DVisWindow::getGraphicsWidget()
 
 void map3DVisWindow::updateMap3D(int idXo, int idYo, int W, int L)
 {
-    visMap->updateTerrain(idXo, idYo, W, L);
+    //visMap->updateTerrain(idXo, idYo, W, L);
 }
 
 void map3DVisWindow::updateMap3D()
 {
-    visMap->updateTerrain();
+    //visMap->updateTerrain();
 }
 
 void map3DVisWindow::updatePointsInterZD(QVector<QVector<QVector<QVector3D> > >* points,
                                       QList <QVector3D>* posRLS)
 {
-    visMap->updatePosRLS(posRLS);
-    visMap->updateZD(points);
+    //visMap->updatePosRLS(posRLS);
+    //visMap->updateZD(points);
 }
 
 void map3DVisWindow::setVisRectDef()
 {
-    visMap->initializeTerrain(0, 0,
-                              map->getWidth(),
-                              map->getLength());
+//    visMap->initializeTerrain(0, 0,
+//                              map->getWidth(),
+//                              map->getLength());
 }
 
 void map3DVisWindow::setVisRect(int idXo, int idYo, int W, int L)
 {
     //loadingLabel->Show();
-    visMap->initializeTerrain(idXo, idYo, W, L);
+    //visMap->initializeTerrain(idXo, idYo, W, L);
     //loadingLabel->Hide();
 }
 

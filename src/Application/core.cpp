@@ -107,7 +107,8 @@ void Core::run()
     init_GUI();
 
     init_buildThreads();
-    gis->setDefaultMap();
+    //gis->setDefaultMap();
+    gis->openMap(QApplication::applicationDirPath() + "\\maps\\img4.png");
 
     ready();
 

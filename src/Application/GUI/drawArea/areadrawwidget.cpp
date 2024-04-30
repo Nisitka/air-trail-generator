@@ -31,6 +31,9 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map), kZoom(1.0)
     // отправляем данные об координатах курсора
     isExportCoord = true;
 
+    //
+    drawEnable = true;
+
     drawGeoMap();
 
     // чтобы moveEvent работал без нажатия
@@ -262,25 +265,33 @@ void areaDrawWidget::drawPixmap(int x, int y, int dX, int dY, const QPixmap& pix
     pPainter->drawPixmap(x + dX, y + dY, pix);
 }
 
+void areaDrawWidget::setDrawEnabled(bool isDrawEvent)
+{
+    drawEnable = isDrawEvent;
+}
+
 void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
 {
     Q_UNUSED(pEvent);
 
-    QPainter painter(this);
-    pPainter = &painter;
-    painter.setRenderHint(QPainter::SmoothPixmapTransform, false);
+    if (drawEnable)
+    {
+        QPainter painter(this);
+        pPainter = &painter;
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, false);
 
-    // Выполнение задач отрисовки
-    for (auto it = drawTasks.begin(); it != drawTasks.end(); ++it) {
+        // Выполнение задач отрисовки
+        for (auto it = drawTasks.begin(); it != drawTasks.end(); ++it) {
 
-        // Очередная задача по отрисовке
-        it.value()->processing();
+            // Очередная задача по отрисовке
+            it.value()->processing();
 
-        // чтобы цвет закраски был просзрачным
-        painter.setBrush(Qt::NoBrush);
+            // чтобы цвет закраски был просзрачным
+            painter.setBrush(Qt::NoBrush);
+        }
+
+        painter.end();
     }
-
-    painter.end();
 }
 
 void areaDrawWidget::setRenderHint(bool smoothing)
@@ -292,8 +303,6 @@ void areaDrawWidget::initActionArea(int idXo_, int idYo_)
 {
     idXo = idXo_;
     idYo = idYo_;
-
-    repaint();
 }
 
 void areaDrawWidget::setTool(drawAreaTool *tool)
@@ -324,11 +333,9 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
 
 void areaDrawWidget::updateInfoCoordMap(int idX, int idY)
 {
-    toIdMapCoords(idX, idY);
-
-    QString strCoords =  "X:" + QString::number((idXo + idX) * lBlock) + "м"
-                        " Y:" + QString::number((idYo + idY) * lBlock) + "м"
-                        " H:" + QString::number(map->getHeight((idXo + idX), (idYo + idY), Map::m)) + "м";
+    QString strCoords =  "X:" + QString::number(idX / kZoom * lBlock) + "м"
+                        " Y:" + QString::number(idY / kZoom * lBlock) + "м"
+                        " H:" + QString::number(map->getHeight(idX/kZoom, idY/kZoom, Map::m)) + "м";
 
     updateCoord(strCoords);
 }

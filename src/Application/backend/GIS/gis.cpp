@@ -16,7 +16,9 @@ GIS::GIS()
     backgroundImg = backPainter->getImage();
 
     //
-    geoBuilder = new geoGenerator(map);
+    geoBuilder = new geoGenerator(map, currentW, currentH, Hmatrix);
+    connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
+            this,       SLOT(setMapSize(int,int,int)));
 }
 
 void GIS::setPosActionArea(int idXmap, int idYmap)
@@ -42,6 +44,13 @@ void GIS::setPosActionArea(int idXmap, int idYmap)
     changedActionArea(idXpos, idYpos);
 }
 
+void GIS::setMapSize(int W, int L, int H)
+{
+    Wmap = W;
+    Lmap = L;
+    Hmap = H;
+}
+
 void GIS::movePosActionArea(int dX, int dY)
 {
     int posX, posY;
@@ -58,6 +67,8 @@ void GIS::movePosActionArea(int dX, int dY)
     idXpos = posX;
     idYpos = posY;
 
+    //qDebug() << idXpos << idYpos;
+
     // Адоптируем все компоненты под новую область
     initActionArea();
 
@@ -67,7 +78,7 @@ void GIS::movePosActionArea(int dX, int dY)
 
 void GIS::initActionArea()
 {
-    qDebug() << idXpos << idYpos;
+    geoBuilder->setPosActionArea(idXpos, idYpos);
 
     backPainter->setPosArea(idXpos, idYpos);
     backPainter->updateFull();
@@ -91,9 +102,15 @@ QVector<QVector<int> *>* GIS::getHmatrix()
     return Hmatrix;
 }
 
+void GIS::openMap(const QString &dirNameFile)
+{
+    geoBuilder->openMap(dirNameFile);
+    backPainter->updateFull();
+}
+
 void GIS::setDefaultMap()
 {
-    geoBuilder->buildFlatMap();
+    geoBuilder->buildFlatMap(currentW, currentH);
     backPainter->updateFull();
 
     int H;

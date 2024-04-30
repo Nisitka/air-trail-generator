@@ -8,9 +8,15 @@
 
 #include <QRgb>
 
-geoGenerator::geoGenerator(Map* map_)
+geoGenerator::geoGenerator(Map* map_,
+                           int wArea_, int lArea_,
+                           QVector<QVector<int> *>* pHeights):
+    map(map_), wArea(wArea_), lArea(lArea_)
 {
-    map = map_;
+    Hmap = 256;
+
+    //heights = QVector<QVector<int> *>;
+    pHeights = &heights;
 }
 
 void geoGenerator::openMap(const QString &dirMapFile)
@@ -18,25 +24,85 @@ void geoGenerator::openMap(const QString &dirMapFile)
     buildStart();
 
     QImage geoData(dirMapFile);
+    map->resize(wArea, lArea, Hmap);
+
     Wmap = geoData.width();
     Lmap = geoData.height();
-    Hmap = 200;
-
-    map->resize(Wmap, Lmap, Hmap);
 
     int h;
     QColor color;
     for (int x=0; x<Wmap; x++)
     {
+        heights.append(new QVector<int>);
         for (int y=0; y<Lmap; y++)
         {
             color = geoData.pixelColor(x, y);
-            h = Hmap * ((double) ((double)color.blueF() + color.redF() + color.greenF()) / 1.0);
-            map->setH(x, y, h);
+            h = Hmap * ((double) ((double)color.blueF() +
+                                          color.redF()  +
+                                          color.greenF()) / 1.0);
+            heights.last()->append(h);
         }
     }
 
+    setPosActionArea(0, 0);
+
     buildFinish(Wmap, Lmap, Hmap);
+}
+
+void geoGenerator::setPosActionArea(int idXo_, int idYo_)
+{
+    map->clear();
+
+    idXo = idXo_;
+    idYo = idYo_;
+
+    int h;
+    QColor color;
+    for (int x=0; x<wArea; x++)
+    {
+        for (int y=0; y<lArea; y++)
+        {
+            h = heights[idXo + x]->at(idYo + y);
+            map->setH(x, y, h);
+        }
+    }
+}
+
+void geoGenerator::upEarth(int idX, int idY, int R)
+{
+    map->upEarth(idX, idY, R);
+
+    int X = idX - (R / 2);
+    int Y = idY - (R / 2);
+
+    for (int x=0; x<R; x++)
+    {
+        for (int y=0; y<R; y++)
+        {
+            (*heights[idXo+X+x])[idYo+Y+y] = map->getHeight(x, y);
+        }
+    }
+}
+
+void geoGenerator::downEarth(int idX, int idY, int R)
+{
+    map->downEarth(idX, idY, R);
+
+    int X = idX - (R / 2);
+    int Y = idY - (R / 2);
+
+    for (int x=0; x<R; x++)
+    {
+        for (int y=0; y<R; y++)
+        {
+            (*heights[idXo+X+x])[idYo+Y+y] = map->getHeight(x, y);
+        }
+    }
+}
+
+void geoGenerator::updateHeights(int idX, int idY, int W, int L)
+{
+
 }
 
 void geoGenerator::buildFlatMap(int W, int L, int H)

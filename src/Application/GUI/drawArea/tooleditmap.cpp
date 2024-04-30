@@ -94,13 +94,19 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
     xMouse = mouse->x();
     yMouse = mouse->y();
 
-    idX = xMouse;
-    idY = yMouse;
-    drawArea->toIdMapCoords(idX, idY);
-
-    // Обновляем показания координат карты
-    drawArea->updateInfoCoordMap(xMouse,
-                                 yMouse);
+    // В целях оптимизации
+    if (statMouse == press)
+    {
+        idX = xMouse;
+        idY = yMouse;
+        drawArea->toIdMapCoords(idX, idY);
+    }
+    else
+    {
+        // Обновляем показания координат карты
+        drawArea->updateInfoCoordMap(xMouse,
+                                     yMouse);
+    }
 }
 
 void ToolEditMap::updateSizeCursor()

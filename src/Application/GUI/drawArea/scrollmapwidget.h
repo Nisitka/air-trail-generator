@@ -8,6 +8,8 @@
 #include "areadrawwidget.h"
 #include "GUI/processtmpwidget.h"
 
+#include <QPushButton>
+
 class ScrollMapWidget: public QScrollArea
 {
     Q_OBJECT
@@ -53,6 +55,10 @@ private:
     // Последние значения передвижения карты
     int lastCurY;
     int lastCurX;
+
+    // Ползунки
+    QScrollBar* verScroll;
+    QScrollBar* horScroll;
 
     //
     bool readyActionArea;

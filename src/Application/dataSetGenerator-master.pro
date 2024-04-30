@@ -79,7 +79,8 @@ SOURCES += main.cpp\
     backend/GIS/map.cpp \
     backend/GIS/paintermapimage.cpp \
     backend/GIS/gis.cpp \
-    GUI/processtmpwidget.cpp
+    GUI/processtmpwidget.cpp \
+    backend/graphicengine.cpp
 
 HEADERS  += \
     core.h \
@@ -137,7 +138,8 @@ HEADERS  += \
     backend/GIS/map.h \
     backend/GIS/paintermapimage.h \
     backend/GIS/gis.h \
-    GUI/processtmpwidget.h
+    GUI/processtmpwidget.h \
+    backend/graphicengine.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \

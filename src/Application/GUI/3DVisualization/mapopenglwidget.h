@@ -18,20 +18,20 @@ class mapOpenGLWidget: public QOpenGLWidget
 {
     Q_OBJECT
 
-public slots:
+//public slots:
 
-    // Отображение прогноза маршрута
-    void startPredictTrail();
-    void addTrailPoint(int idX, int idY, int idZ);
-    void finishPredictTrail();
+//    // Отображение прогноза маршрута
+//    void startPredictTrail();
+//    void addTrailPoint(int idX, int idY, int idZ);
+//    void finishPredictTrail();
 
 public:
     explicit mapOpenGLWidget(Map* map,
                              QImage* imgTex,            
                              QWidget *parent = 0);
 
-    void updatePosRLS(QList <QVector3D>* pRLS);
-    void updateZD(QVector<QVector<QVector<QVector3D> > >* points);
+//    void updatePosRLS(QList <QVector3D>* pRLS);
+//    void updateZD(QVector<QVector<QVector<QVector3D> > >* points);
 
     void initializeGL();
     void resizeGL(int w, int h);
@@ -44,108 +44,108 @@ public:
 
     void wheelEvent(QWheelEvent* event);
 
-    // Какую часть карты отображать в 3D
+/*    // Какую часть карты отображать в 3D
     void initializeTerrain(int idXo, int idYo,  // id левой верхней дискреты
                            int numW, int numL); // ширина, высота
 
     // Актуализировать значения матрицы высот
     void updateTerrain(int idXo, int idYo, int W, int L); // в области
-    void updateTerrain();                                 // везде
+    void updateTerrain();      */                           // везде
 
 private:
 
     // Подготовлены ли данные
     bool readyRender;
 
-    // Текстура
+//    // Текстура
     QImage* currentTexture; // Цвета вершин
 
-    // Точки траектории
-    QVector <QVector3D> trail;
+//    // Точки траектории
+//    QVector <QVector3D> trail;
 
-    //
-    enum interVert{Short, Long}; // ближняя, дальняя
+//    //
+//    enum interVert{Short, Long}; // ближняя, дальняя
 
-    // Пересекает ли отрезок границы области отображения
-    bool isIntersectBorder(const QVector3D& A, const QVector3D& B, // отрезок
-                           QVector <QVector3D>& pointsInter);      // точки пер-я
+//    // Пересекает ли отрезок границы области отображения
+//    bool isIntersectBorder(const QVector3D& A, const QVector3D& B, // отрезок
+//                           QVector <QVector3D>& pointsInter);      // точки пер-я
 
-    // Пересекает ли отрезок плоскость
-    bool isInterFlatness(const QVector3D& A,  const QVector3D& B, // отрезок
-                         const QVector3D& fA, const QVector3D& fB, const QVector3D& fC, // плоскость
-                         QVector3D& interPoint); // точка пер-я
+//    // Пересекает ли отрезок плоскость
+//    bool isInterFlatness(const QVector3D& A,  const QVector3D& B, // отрезок
+//                         const QVector3D& fA, const QVector3D& fB, const QVector3D& fC, // плоскость
+//                         QVector3D& interPoint); // точка пер-я
 
-    // Внутри ли зоны отрисовки точка
-    bool isDrawArea(const QVector3D& point);
+//    // Внутри ли зоны отрисовки точка
+//    bool isDrawArea(const QVector3D& point);
 
-    int c = 0;
+//    int c = 0;
 
-    // Обработка точек ЗО
-    void processingPointsZD();
+//    // Обработка точек ЗО
+//    void processingPointsZD();
 
-    void drawWallFrame();
+//    void drawWallFrame();
 
-    void drawRectZD(int idRLS, int idLayer, int idPointLeft);
+//    void drawRectZD(int idRLS, int idLayer, int idPointLeft);
 
-    // Добавить точку подобно glVetex3f
-    void addVertex(int idX, int idY, int idZ);
+//    // Добавить точку подобно glVetex3f
+//    void addVertex(int idX, int idY, int idZ);
 
-    // Прозрачность ЗО
-    float aZD;
+//    // Прозрачность ЗО
+//    float aZD;
 
-    // РЛС, гор. сегмент, верт. сегмент
-    QVector<QVector<QVector<QVector3D> > > pointsZD;
-    QVector<QVector<QVector<QVector3D> > > pZDinBorder;
-    QList <QVector3D>* posRLS;
+//    // РЛС, гор. сегмент, верт. сегмент
+//    QVector<QVector<QVector<QVector3D> > > pointsZD;
+//    QVector<QVector<QVector<QVector3D> > > pZDinBorder;
+//    QList <QVector3D>* posRLS;
 
-    //
-    int mouseLastX;
-    int mouseLastY;
+//    //
+//    int mouseLastX;
+//    int mouseLastY;
 
-    //
-    int mousePressX;
-    int mousePressY;
+//    //
+//    int mousePressX;
+//    int mousePressY;
 
-    float lastAngle;
-    float angle;
+//    float lastAngle;
+//    float angle;
 
-    float lastAngleOZ;
-    float angleOZ;
+//    float lastAngleOZ;
+//    float angleOZ;
 
-    // Где стоит камера
-    float camX;
-    float camY;
-    float camZ;
+//    // Где стоит камера
+//    float camX;
+//    float camY;
+//    float camZ;
 
-    // Куда смотрит камера
-    float lookX;
-    float lookY;
-    float lookZ;
+//    // Куда смотрит камера
+//    float lookX;
+//    float lookY;
+//    float lookZ;
 
-    // Радиус вращения камеры
-    float R;
-    float kSCALE = 1.2;
+//    // Радиус вращения камеры
+//    float R;
+//    float kSCALE = 1.2;
 
     Map* map;
-    int Hmap;
+//    int Hmap;
 
-    //
-    int idXo;
-    int idYo;
-    int countX = 15;
-    int countY = 15;
-    int idLastX;
-    int idLastY;
+//    //
+//    int idXo;
+//    int idYo;
+//    int countX = 15;
+//    int countY = 15;
+////    int idLastX;
+////    int idLastY;
 
-    // Границы зоны визуализации
-    enum vert{A, B, C};
-    QVector <QVector <QVector3D>> boards;
-    void updateVertBoards();
+////    // Границы зоны визуализации
+////    enum vert{A, B, C};
+////    QVector <QVector <QVector3D>> boards;
+////    void updateVertBoards();
 
-    // Матрица высот
-    QVector <QVector <int>> heights;
-    float MAP_SCALE = 0.3;
-    float H_SCALE = 1.9;
+//    // Матрица высот
+//    QVector <QVector <int>> heights;
+//    float MAP_SCALE = 0.3;
+//    float H_SCALE = 1.9;
 };
 
 #endif // MAPOPENGLWIDGET_H

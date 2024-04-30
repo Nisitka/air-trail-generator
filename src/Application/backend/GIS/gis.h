@@ -62,6 +62,13 @@ public:
     //
     void setDefaultMap();
 
+    //
+    void openMap(const QString& dirNameFile);
+
+private slots:
+
+    void setMapSize(int W, int L, int H);
+
 private:
 
     //
@@ -73,8 +80,8 @@ private:
     // Точка, относительно которой формируется
     //  область, не требующая загрузки
     int idXpos, idYpos;       // Левый верхний угол
-    const int currentW = 200; // Размеры области
-    const int currentH = 200;
+    const int currentW = 400; // Размеры области
+    const int currentH = 400; //  в дискретах
 
     // Матрица высот
     void buildHmatrix();
@@ -84,6 +91,7 @@ private:
     Map* map;
     int Wmap;
     int Lmap;
+    int Hmap;
 
     //
     geoGenerator* geoBuilder;

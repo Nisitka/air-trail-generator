@@ -45,24 +45,36 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
 
     readyActionArea = true;
 
+    //
+    verScroll = verticalScrollBar();
+    horScroll = horizontalScrollBar();
+
+    // Гифка загрузки новой области
     loadingWidget = new processTmpWidget(this);
 }
 
 void ScrollMapWidget::setMoveMapEnabled(bool val)
 {
+    //
+    verticalScrollBar()->setValue(lastCurY);
+    horizontalScrollBar()->setValue(lastCurX);
+
     readyActionArea = val;
     loadingWidget->Hide();
+
+    //drawArea->setDrawEnabled();
+    drawArea->repaint();
 }
 
 void ScrollMapWidget::movePosLookMap(double dX, double dY)
 {
     if (readyActionArea)
     {
-        lastCurY = verticalScrollBar()->value();
-        verticalScrollBar()->setValue(lastCurY + (dY * drawArea->height()));
+        lastCurY = verScroll->value();
+        verScroll->setValue(lastCurY + (dY * drawArea->height()));
 
-        lastCurX = horizontalScrollBar()->value();
-        horizontalScrollBar()->setValue(lastCurX + (dX * drawArea->width()));
+        lastCurX = horScroll->value();
+        horScroll->setValue(lastCurX + (dX * drawArea->width()));
     }
 }
 
@@ -70,9 +82,12 @@ void ScrollMapWidget::checkShowNewActionArea()
 {
     if (readyActionArea)
     {
+        if (!verScroll->isVisible() &&
+            !horScroll->isVisible()) return;
+
         //
-        int CurY = verticalScrollBar()->value();
-        int CurX = horizontalScrollBar()->value();
+        int CurY = verScroll->value();
+        int CurX = horScroll->value();
 
         bool isMoveArea = false;
         int dXmove = 0;
@@ -81,40 +96,41 @@ void ScrollMapWidget::checkShowNewActionArea()
         lastCurX = CurX;
         lastCurY = CurY;
 
-        if (CurX == horizontalScrollBar()->maximum())
+        int dPix = 36;
+
+        if (CurX == horScroll->maximum() && horScroll->isVisible())
         {
-            dXmove = (drawArea->width() - this->width()  + 40) / drawArea->getValZoom();
+            dXmove = (drawArea->width() - this->width()  + dPix) / drawArea->getValZoom();
             lastCurX = 0;
             isMoveArea = true;
         }
-        if (CurY == verticalScrollBar()->maximum())
+        if (CurY == verScroll->maximum() && verScroll->isVisible())
         {
-            dYmove  = (drawArea->height() - this->height() + 40) / drawArea->getValZoom();
+            dYmove  = (drawArea->height() - this->height() + dPix) / drawArea->getValZoom();
             lastCurY = 0;
             isMoveArea = true;
         }
 
-        if (CurX == 0)
+        if (CurX == 0 && horScroll->isVisible())
         {
-            dXmove = (drawArea->width() - this->width()  + 40) / drawArea->getValZoom();
+            dXmove = (drawArea->width() - this->width()  + dPix) / drawArea->getValZoom();
             dXmove *= -1;
-            lastCurX = horizontalScrollBar()->maximum();
+            lastCurX = horScroll->maximum();
             isMoveArea = true;
         }
-        if (CurY == 0)
+        if (CurY == 0 && verScroll->isVisible())
         {
-            dYmove  = (drawArea->height() - this->height() + 40) / drawArea->getValZoom();
+            dYmove  = (drawArea->height() - this->height() + dPix) / drawArea->getValZoom();
             dYmove *= -1;
-            lastCurY = verticalScrollBar()->maximum();
+            lastCurY = verScroll->maximum();
             isMoveArea = true;
         }
 
         if (isMoveArea)
         {
             readyActionArea = false;
-            verticalScrollBar()->setValue(lastCurY);
-            horizontalScrollBar()->setValue(lastCurX);
 
+            //drawArea->setDrawEnabled(false);
             loadingWidget->Show();
 
             moveActionArea(dXmove, dYmove);

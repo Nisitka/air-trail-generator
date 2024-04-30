@@ -17,7 +17,9 @@ signals:
     void buildFinish(int W, int L, int H);
 
 public:
-    geoGenerator(Map* map);
+    geoGenerator(Map* map,
+                 int wArea, int lArea,
+                 QVector<QVector<int> *>* heights);
 
     // Запуск генерации рельефа
     void buildRandomMap(double setBlockP, int countEpochs,
@@ -29,9 +31,28 @@ public:
 
     void openMap(const QString& dirMapFile);
 
+    //
+    void setPosActionArea(int idXo, int idYo);
+
+    void downEarth(int idX, int idY, int R);
+    void upEarth(int idX, int idY, int R);
+
+    // Обновить данные по высотам вобласти
+    void updateHeights(int idX, int idY, // Левый верхний угол
+                       int W, int L);    // Ширина, длина
+
 private:
     // Карта
     Map* map;
+
+    // Матрица высот
+    QVector<QVector<int>*> heights;
+
+    int wArea;
+    int lArea;
+
+    int idXo;
+    int idYo;
 
     //
     int Wmap;

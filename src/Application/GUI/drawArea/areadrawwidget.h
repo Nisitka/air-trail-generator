@@ -53,6 +53,9 @@ public:
     enum unit{pix, idMap};
 
     //
+    void setDrawEnabled(bool isDrawEvent = true);
+
+    //
     void initActionArea(int idXo, int idYo);
 
     //
@@ -139,6 +142,9 @@ protected:
     virtual void wheelEvent(QWheelEvent *event)             override;
 
 private:
+
+    //
+    bool drawEnable;
 
     // Размеры области отображенеия
     int W; // в px
