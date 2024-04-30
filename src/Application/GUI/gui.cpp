@@ -151,6 +151,12 @@ void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
 
 void GUI::connectGIS(GIS *gis)
 {
+    // Изменяем подгруженную область
+    QObject::connect(visInfoWin->getManDrawArea(), SIGNAL(moveActionArea(int,int)),
+                     gis,                          SLOT(movePosActionArea(int,int)));
+    QObject::connect(gis,                          SIGNAL(changedActionArea(int,int)),
+                     visInfoWin->getManDrawArea(), SLOT(setNewActionArea(int,int)));
+
     // Ручное редактирование рельефа
     QObject::connect(toolEditTer, SIGNAL(upEarth(int,int,int)),
                      gis,         SLOT(upEarth(int,int,int)));

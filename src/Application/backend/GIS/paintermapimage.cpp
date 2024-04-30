@@ -2,19 +2,30 @@
 
 #include <QDebug>
 
-#include <QApplication>
-
-#include <QMatrix>
-
-painterMapImage::painterMapImage(Map* map_):
+painterMapImage::painterMapImage(Map* map_, int W, int H):
     map(map_)
 {
     // Сразу инициализируем изображение
-    img = new QImage(3, 3, QImage::Format_RGB32);
+    img = new QImage(W, H, QImage::Format_RGB32);
 
-    // По умолчанию на всю карту
+    //
+    numW = W;
+    numL = H;
+
+    // По умолчанию
     idXo = 0;
     idYo = 0;
+}
+
+void painterMapImage::setPosArea(int idXo_, int idYo_)
+{
+    // id левого верхнего угла
+    idXo = idXo_;
+    idYo = idYo_;
+
+    // id нижнего правого угла
+    idXlast = idXo + numW;
+    idYlast = idYo + numL;
 }
 
 QImage* painterMapImage::getImage()
@@ -22,16 +33,9 @@ QImage* painterMapImage::getImage()
     return img;
 }
 
-void painterMapImage::updateSize()
-{
-    map->getSize(Wmap, Lmap, Hmap);
-    *img = img->scaled(Wmap, Lmap); // и самого изображения соответсвенно
-}
-
 void painterMapImage::updateFull()
 {
-    updateSize();
-
+    Hmap = map->getCountLayers();
     run();
 }
 
@@ -51,31 +55,11 @@ void painterMapImage::runToRect(const QRect &rect)
     runToRect(rect.x(), rect.y(), rect.width(), rect.height());
 }
 
-//QImage* painterMapImage::buildImageEarth(const QRect &rect)
-//{
-//    // инициализация изображения текстуры
-//    int W = rect.width();
-//    int L = rect.height();
-
-//    QImage* texture = new QImage(W, L, img->format());
-
-//    QColor color;
-//    for (int x=0; x<W; x++)
-//    {
-//        for (int y=0; y<L; y++)
-//        {
-//            // вычисляется цвет по данным
-//            color = colorHeight(map->getHeight(idXo + x, idYo + y));
-
-//            texture->setPixelColor(x, y, color);
-//        }
-//    }
-
-//    return texture;
-//}
-
 void painterMapImage::runToRect(int idX, int idY, int w, int h)
 {
+    // Если не попадает в область, то ничего не делаем
+    if (idX > idXlast | idY > idYlast) return;
+
     QColor color;
     int cZD;
 
@@ -84,24 +68,20 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
     int b;
     double k;
 
-    int idXo, idYo;
-
-    // вычисляем начальные и конечные индексы области расчета
+    // Вычисляем начальные и конечные индексы области расчета
     int W, H;
     W = idX + w;
-    if (W > Wmap) W = Wmap - 1;
+    if (W > idXlast) W = idXlast;
     H = idY + h;
-    if (H > Lmap) H = Lmap - 1;
+    if (H > idYlast) H = idYlast;
 
-    if (idX < 0) idXo = 0;
-    else idXo = idX;
-    if (idY < 0) idYo = 0;
-    else idYo = idY;
+    if (idX < idXo) idX = idXo;
+    if (idY < idYo) idY = idYo;
 
     // Вычисление rgb каждого пикселя
-    for (int i=idXo; i<W; i++)
+    for (int i=idX; i<W; i++)
     {
-        for (int j=idYo; j<H; j++)
+        for (int j=idY; j<H; j++)
         {
             // Вычисляется цвет по данным
             cZD = map->countZD(i, j);
@@ -119,44 +99,18 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
             color.setRed(r);
             color.setGreen(g);
             color.setBlue(b);
-            img->setPixelColor(i, j, color);
+
+            //
+            img->setPixelColor(i - idXo, j - idYo,
+                               color);
         }
     }
 }
 
 void painterMapImage::run()
 {
-    QColor color;
-    int cZD;
-
-    int r;
-    int g;
-    double k;
-
-    int b;
-    for (int i=0; i<Wmap; i++)
-    {
-        for (int j=0; j<Lmap; j++)
-        {
-            // вычисляется цвет по данным
-            cZD = map->countZD(i, j);
-            color = colorHeight(map->getHeight(i, j));
-            r = color.red();
-            g = color.green();
-            k = 1 - ((double)cZD / 50);
-            if (k < 0) k = 0;
-            r *= k;
-            g *= k;
-
-            b = color.blue();
-            b += 255 * ( (double) cZD / 50);
-            if (b > 255) b = 255;
-            color.setRed(r);
-            color.setGreen(g);
-            color.setBlue(b);
-            img->setPixelColor(i, j, color);
-        }
-    }
+    //
+    runToRect(idXo, idYo, numW, numL);
 }
 
 QColor painterMapImage::colorHeight(int value)

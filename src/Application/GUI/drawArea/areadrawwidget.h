@@ -53,6 +53,9 @@ public:
     enum unit{pix, idMap};
 
     //
+    void initActionArea(int idXo, int idYo);
+
+    //
     QPainter& getPainter();
 
     //
@@ -63,12 +66,6 @@ public:
 
     // Снять задачу с отрисовки
     void delDrawTask(int priorityKey);
-
-    // узнать левый верхний угол карты относительно виджета
-    void getCoordDrawArea(int& Xo, int& Yo);
-
-    // установить левый верхний угол карты относительно виджета
-    void setCoordDrawArea(int Xo, int Yo);
 
     // узнать размеры карты
     void getSizePixMap(int& W, int& H); // в пикселях
@@ -93,6 +90,7 @@ public:
 
     //
     void toIdMapCoords(int& Xpix, int& Ypix);
+    void toPixDrawArea(int& Xid,  int& Yid);
 
     // изображения для отображения
     enum showImages{geoMap, netData, QFunction};
@@ -141,6 +139,7 @@ protected:
     virtual void wheelEvent(QWheelEvent *event)             override;
 
 private:
+
     // Размеры области отображенеия
     int W; // в px
     int H;
@@ -152,6 +151,10 @@ private:
 
     // Карта (для обнаружения высоты)
     Map* map;
+
+    // Точка, относительно которой рисуется подложка
+    int idXo = 0; // В id дискрет карты
+    int idYo = 0;
 
     //
     QPainter* pPainter;
@@ -173,10 +176,6 @@ private:
 
     // Отправлять ли данные об координатах
     bool isExportCoord;
-
-    // Точка, относительно которой рисуем изображение
-    int Xo = 0;
-    int Yo = 0;
 
     // Коофициент приближения
     double kZoom;

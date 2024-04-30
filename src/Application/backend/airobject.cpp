@@ -8,6 +8,7 @@ AirObject::AirObject(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //setCentralWidget();
 
     connect(ui->loadingButton, SIGNAL(clicked()),
             SLOT(show_AirObject()));

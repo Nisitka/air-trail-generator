@@ -12,25 +12,13 @@ class painterMapImage: public QObject
     Q_OBJECT
 
 signals:
-    //
-    //void finish();
 
-    //
-    //void resized();
-
-    // земля отредактирована
-    //void readyEditEarth(int idXo, int idYo, int size);
-
-    // информируем об завершении создании текстуры для 3D рельефа
-    //void readyTexture(int idXo, int idYo, int numW, int numL);
+    /* ... */
 
 public slots:
 
-    // Обновить размеры и пересчитать изображение
+    // Пересчитать все изображение
     void updateFull();
-
-    // Обновить только размеры
-    void updateSize();
 
     // Перерасчет всех пикселей
     void run();
@@ -45,23 +33,29 @@ public slots:
 public:
 
     //
-    painterMapImage(Map* map);
+    painterMapImage(Map* map,      // Для расчета цвета
+                    int W, int H); // Размеры изображения
+
+    //
+    void setPosArea(int idXo, int idYo); // Левый верхний угол
 
     //
     QImage* getImage();
 
 private:
-    // область для создания текстуры 3D рельефа
+
+    // Область для создания текстуры
     int idXo;
     int idYo;
     int numW;
     int numL;
+    int idXlast;
+    int idYlast;
 
     QImage* img;
     Map* map;
 
-    int Wmap;
-    int Lmap;
+    //
     int Hmap;
 
     // вычислить цвет по высоте (т.е. номеру слоя)

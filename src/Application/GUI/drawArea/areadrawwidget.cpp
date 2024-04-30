@@ -21,9 +21,6 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map), kZoom(1.0)
 {
     isCustomCursor = true;
 
-    Xo = 0;
-    Yo = 0;
-
     setBlockSize(map->getLenBlock());
 
     // инициализация контейнера для изображений
@@ -46,6 +43,18 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map), kZoom(1.0)
     appendDrawTask(terImg,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawMap));
     //appendDrawTask(iconRLS,    new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawRLS));
     appendDrawTask(border,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBorder));
+}
+
+void areaDrawWidget::toPixDrawArea(int &Xid, int &Yid)
+{
+    Xid = (Xid - idXo) * kZoom;
+    Yid = (Yid - idYo) * kZoom;
+}
+
+void areaDrawWidget::toIdMapCoords(int &Xpix, int &Ypix)
+{
+    Xpix = (Xpix / kZoom) + idXo;
+    Ypix = (Ypix / kZoom) + idYo;
 }
 
 void areaDrawWidget::updateSize()
@@ -111,13 +120,7 @@ void areaDrawWidget::drawMap()
     }
     wightPixMap = drawImg->width() * kZoom;
     heightPixMap = drawImg->height() * kZoom;
-    pPainter->drawImage(Xo, Yo, drawImg->scaled(wightPixMap, heightPixMap));
-}
-
-void areaDrawWidget::getCoordDrawArea(int &Xo_, int &Yo_)
-{
-    Xo_ = Xo;
-    Yo_ = Yo;
+    pPainter->drawImage(0, 0, drawImg->scaled(wightPixMap, heightPixMap));
 }
 
 void areaDrawWidget::getSizePixMap(int &W, int &H)
@@ -134,12 +137,6 @@ double areaDrawWidget::getValZoom()
 QPainter& areaDrawWidget::getPainter()
 {
     return *pPainter;
-}
-
-void areaDrawWidget::toIdMapCoords(int &Xpix, int &Ypix)
-{
-    Xpix = (Xpix - Xo) / kZoom;
-    Ypix = (Ypix - Yo) / kZoom;
 }
 
 void areaDrawWidget::setPen(const QPen &pen)
@@ -160,7 +157,7 @@ void areaDrawWidget::drawPolygon(const QPolygon &polygon, unit uPoints)
     case idMap:
         for (int i=0; i<polygon.size(); i++)
         {
-            p.append(polygon[i] * kZoom + QPoint(Xo, Yo));
+            p.append((polygon[i] - QPoint(idXo, idYo)) * kZoom);
         }
         break;
     case pix:
@@ -175,20 +172,24 @@ void areaDrawWidget::drawLine(int x1, int y1, int x2, int y2, unit uPoints)
 {
     switch (uPoints) {
     case idMap:
-        pPainter->drawLine(x1 * kZoom + Xo, y1 * kZoom + Yo,
-                           x2 * kZoom + Xo, y2 * kZoom + Yo);
+        toPixDrawArea(x1, y1);
+        toPixDrawArea(x2, y2);
         break;
     case pix:
-        pPainter->drawLine(x1, y1,
-                           x2, y2);
+
         break;
     }
+    pPainter->drawLine(x1, y1,
+                       x2, y2);
 }
 
 void areaDrawWidget::drawRect(int x1, int y1, int x2, int y2)
 {
-    pPainter->drawRect(QRect(QPoint(x1*kZoom + Xo, y1*kZoom + Yo),
-                             QPoint(x2*kZoom + Xo, y2*kZoom + Yo)));
+    toPixDrawArea(x1, y1);
+    toPixDrawArea(x2, y2);
+
+    pPainter->drawRect(QRect(QPoint(x1, y1),
+                             QPoint(x2, y2)));
 }
 
 void areaDrawWidget::drawCircle(int x, int y, int R, unit uR, unit uCoords)
@@ -204,8 +205,7 @@ void areaDrawWidget::drawCircle(int x, int y, int R, unit uR, unit uCoords)
 
     switch (uCoords) {
     case idMap:
-        x = x * kZoom + Xo;
-        y = y * kZoom + Yo;
+        toPixDrawArea(x, y);
         break;
     case pix:
 
@@ -227,20 +227,21 @@ void areaDrawWidget::drawText(const QRect& rect, const QString& text, unit uPoin
     pPainter->setPen(textColor);
 
     int x, y;
+    x = rect.x();
+    y = rect.y();
     switch (uPoints) {
     case idMap:
         {
-        x = rect.x() * kZoom + Xo + dXpix;
-        y = rect.y() * kZoom + Yo + dYpix;
+        toPixDrawArea(x, y);
 
         break;
         }
     case pix:
-        x = rect.x() + dXpix;
-        y = rect.y() + dYpix;
 
         break;
     }
+    x += dXpix;
+    y += dYpix;
 
     //
     QRect r(x, y, rect.width(), rect.height());
@@ -256,10 +257,9 @@ void areaDrawWidget::drawText(const QRect& rect, const QString& text, unit uPoin
 
 void areaDrawWidget::drawPixmap(int x, int y, int dX, int dY, const QPixmap& pix)
 {
-    x *= kZoom;
-    y *= kZoom;
+    toPixDrawArea(x, y);
 
-    pPainter->drawPixmap(x + Xo + dX, y + Yo + dY, pix);
+    pPainter->drawPixmap(x + dX, y + dY, pix);
 }
 
 void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
@@ -288,10 +288,12 @@ void areaDrawWidget::setRenderHint(bool smoothing)
     pPainter->setRenderHint(QPainter::Antialiasing, smoothing);
 }
 
-void areaDrawWidget::setCoordDrawArea(int Xo_, int Yo_)
+void areaDrawWidget::initActionArea(int idXo_, int idYo_)
 {
-    Xo = Xo_;
-    Yo = Yo_;
+    idXo = idXo_;
+    idYo = idYo_;
+
+    repaint();
 }
 
 void areaDrawWidget::setTool(drawAreaTool *tool)
@@ -324,9 +326,9 @@ void areaDrawWidget::updateInfoCoordMap(int idX, int idY)
 {
     toIdMapCoords(idX, idY);
 
-    QString strCoords =  "X:" + QString::number(idX * lBlock) + "м"
-                        " Y:" + QString::number(idY * lBlock) + "м"
-                        " H:" + QString::number(map->getHeight(idX, idY, Map::m)) + "м";
+    QString strCoords =  "X:" + QString::number((idXo + idX) * lBlock) + "м"
+                        " Y:" + QString::number((idYo + idY) * lBlock) + "м"
+                        " H:" + QString::number(map->getHeight((idXo + idX), (idYo + idY), Map::m)) + "м";
 
     updateCoord(strCoords);
 }

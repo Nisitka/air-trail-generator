@@ -9,7 +9,7 @@ processTmpWidget::processTmpWidget(QWidget* backgroundWidget_):
                         "   border: 1px solid rgb(55,55,55,0);"
                         "};)");
 
-    gif = new QMovie(":/resurs/carve-a-pumpkin-michael-myers.gif");
+    gif = new QMovie(":/resurs/victory.gif");
     this->setMovie(gif);
 
     //this->hide();

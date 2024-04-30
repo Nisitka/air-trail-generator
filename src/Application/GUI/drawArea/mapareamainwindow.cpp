@@ -31,6 +31,10 @@ mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) 
     scrollArea = new ScrollMapWidget(area);
     setCentralWidget(scrollArea);
 
+    //
+    connect(scrollArea, SIGNAL(moveActionArea(int,int)),
+            this,       SIGNAL(moveActionArea(int,int)));
+
     // Игнорируем колесико (оставим его для инструментов)
     scrollArea->viewport()->installEventFilter(this);
 
@@ -45,6 +49,8 @@ mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) 
     ToolMoveMap* toolMoveMap = new ToolMoveMap(moveImg);
     connect(toolMoveMap, SIGNAL(movedMap(double,double)),
             scrollArea,  SLOT(movePosLookMap(double,double)));
+    connect(toolMoveMap, SIGNAL(changedRelease()),
+            scrollArea,  SLOT(checkShowNewActionArea()));
     appendTool(toolMoveMap);
 
     // Изменение масштаба через мышь
@@ -87,6 +93,12 @@ void mapAreaMainWindow::updateGeoMapImage()
 {
     area->updateSize();
     repaintBackground();
+}
+
+void mapAreaMainWindow::setNewActionArea(int idXo, int idYo)
+{
+    area->initActionArea(idXo, idYo);
+    scrollArea->setMoveMapEnabled();
 }
 
 void mapAreaMainWindow::repaintBackground()

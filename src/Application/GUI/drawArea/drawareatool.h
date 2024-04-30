@@ -15,6 +15,9 @@ class drawAreaTool: public QObject
     Q_OBJECT
 signals:
 
+    //
+    void changedRelease();
+
     // Выдает вспомогательную информацию при работе
     void info(const QString& info);
 

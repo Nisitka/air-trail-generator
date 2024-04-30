@@ -50,9 +50,6 @@ void ToolVisMap::mouseRelease(QMouseEvent *mouse)
 
     statMouse = release;
 
-    int Xo, Yo;
-    drawArea->getCoordDrawArea(Xo, Yo);
-
     int idXo, idYo;
     if (idXa > idXb) idXo = idXb;
     else idXo = idXa;

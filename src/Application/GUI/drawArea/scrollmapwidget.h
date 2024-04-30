@@ -6,11 +6,16 @@
 #include <QWidget>
 
 #include "areadrawwidget.h"
+#include "GUI/processtmpwidget.h"
 
 class ScrollMapWidget: public QScrollArea
 {
     Q_OBJECT
+
 signals:
+
+    //
+    void moveActionArea(int dX, int dY);
 
     //
     void resized();
@@ -21,9 +26,16 @@ public slots:
     void updateCoord(const QString& coordsData);
 
     //
-    void movePosLookMap(double dX, double dY);
+    void movePosLookMap(double dX, double dY); // в долях от макс.
+
+    // Проверить, надо ли изменить активную область
+    void checkShowNewActionArea();
+
+    //
+    void setMoveMapEnabled(bool val = true);
 
 public:
+    //
     ScrollMapWidget(areaDrawWidget* drawArea);
 
 protected:
@@ -38,6 +50,13 @@ private slots:
 
 private:
 
+    // Последние значения передвижения карты
+    int lastCurY;
+    int lastCurX;
+
+    //
+    bool readyActionArea;
+
     //
     areaDrawWidget* drawArea;
 
@@ -49,6 +68,9 @@ private:
 
 
     QWidget* backWidget;
+
+    //
+    processTmpWidget* loadingWidget;
 
 };
 

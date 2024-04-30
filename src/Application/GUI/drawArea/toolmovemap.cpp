@@ -34,12 +34,16 @@ void ToolMoveMap::mousePress(QMouseEvent *mouse)
 
 void ToolMoveMap::mouseRelease(QMouseEvent *mouse)
 {
-    Q_UNUSED(mouse);
-
     cursor = Qt::OpenHandCursor;
     setCursor();
 
     statMouse = release;
+
+    xMouse = mouse->x();
+    yMouse = mouse->y();
+
+    //
+    changedRelease();
 }
 
 void ToolMoveMap::mouseMove(QMouseEvent *mouse)
@@ -51,13 +55,13 @@ void ToolMoveMap::mouseMove(QMouseEvent *mouse)
     //
     if (statMouse == press)
     {
-        int dX, dY;
-
         int W = drawArea->width();
         int H = drawArea->height();
 
         dX = xPressMouse - xMouse;
         dY = yPressMouse - yMouse;
+
+        //qDebug() << dX << dY;
 
         movedMap((double) dX / W, (double) dY / H);
     }

@@ -20,6 +20,10 @@ public:
 
     void init() override;
     void end() override;
+
+private:
+
+    int dX, dY;
 };
 
 #endif // TOOLMOVEMAP_H

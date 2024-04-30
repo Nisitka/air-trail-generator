@@ -3,11 +3,11 @@
 
 #include <QMainWindow>
 
-#include <QScrollBar>
 #include <QSlider>
 
 #include "../designer.h"
 #include "areadrawwidget.h"
+#include "scrollmapwidget.h"
 
 namespace Ui {
 class mapAreaMainWindow;
@@ -16,6 +16,11 @@ class mapAreaMainWindow;
 class mapAreaMainWindow : public QMainWindow
 {
     Q_OBJECT
+
+signals:
+
+    //
+    void moveActionArea(int dX, int dY);
 
 public:
     explicit mapAreaMainWindow(QImage* mapImg,
@@ -43,6 +48,9 @@ public:
     bool eventFilter(QObject* /*obj*/, QEvent* evt) override;
 
 public slots:
+
+    //
+    void setNewActionArea(int idXo, int idYo);
 
     // Выбрать инструмент
     void setTool(int id);
@@ -84,10 +92,9 @@ private:
     QLabel* infoLabel;
 
     //
-    QScrollArea* scrollArea;
+    ScrollMapWidget* scrollArea;
 
-
-
+    //
     areaDrawWidget* area;
 
     QToolButton* lastToolButton;
