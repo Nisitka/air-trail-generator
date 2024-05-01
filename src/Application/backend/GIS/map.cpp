@@ -164,8 +164,6 @@ void Map::clear()
 void Map::setSize(int w, int l, int h)
 {
     Width = w; Length = l; Height = h;
-
-    //qDebug() << w << l << h;
 }
 
 double Map::getLenBlock() const

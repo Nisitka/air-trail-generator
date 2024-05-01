@@ -61,7 +61,7 @@ private:
     // Блоки хранится в слоях
     QVector <geoBlock*> layers;
 
-
+    //
     void setSize(int w, int l, int h);
     int Height; // размеры карты
     int Width;

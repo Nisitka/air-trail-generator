@@ -4,9 +4,6 @@
 
 GIS::GIS()
 {
-    // По умолчанию находимся в левом верхнем углу
-    idXpos = 0; idYpos = 0;
-
     // Отвечает за работу с рельефом карты
     geoBuilder = new geoGenerator(currentW, currentH, Hmatrix);
     connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
@@ -18,8 +15,10 @@ GIS::GIS()
 
     // Отвечает за отрисовку подложки
     backPainter = new painterMapImage(map, currentW, currentH);
-    backPainter->setPosArea(idXpos, idYpos);
     backgroundImg = backPainter->getImage();
+
+    // По умолчанию находимся в левом верхнем углу
+    idXpos = 0; idYpos = 0;
 }
 
 void GIS::setPosActionArea(int idXmap, int idYmap)
@@ -104,13 +103,13 @@ QVector<QVector<int> *>* GIS::getHmatrix()
 void GIS::openMap(const QString &dirNameFile)
 {
     geoBuilder->openMap(dirNameFile);
-    backPainter->updateFull();
+    initActionArea();
 }
 
 void GIS::setDefaultMap()
 {
     geoBuilder->buildFlatMap(currentW, currentH);
-    backPainter->updateFull();
+    initActionArea();
 }
 
 QImage* GIS::getBackgroundImg()

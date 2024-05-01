@@ -12,6 +12,9 @@ geoGenerator::geoGenerator(int wArea_, int lArea_,
                            QVector<QVector<int> *>* pHeights):
     wArea(wArea_), lArea(lArea_)
 {
+    idXo = 0;
+    idYo = 0;
+
     //
     map = new Map;
 
@@ -66,10 +69,11 @@ void geoGenerator::editEarth(int idXo, int idYo, int w, int l, int dH, int t)
 
 void geoGenerator::setPosActionArea(int idXo_, int idYo_)
 {
-    map->clear();
-
     idXo = idXo_;
     idYo = idYo_;
+
+    //
+    map->clear();
 
     int h;
     for (int x=0; x<wArea; x++)

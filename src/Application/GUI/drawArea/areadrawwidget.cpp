@@ -333,9 +333,10 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
 
 void areaDrawWidget::updateInfoCoordMap(int idX, int idY)
 {
-    QString strCoords =  "X:" + QString::number(idX / kZoom * lBlock) + "м"
-                        " Y:" + QString::number(idY / kZoom * lBlock) + "м"
-                        " H:" + QString::number(map->getHeight(idX/kZoom, idY/kZoom, Map::m)) + "м";
+    toIdMapCoords(idX, idY);
+    QString strCoords =  "X:" + QString::number(idX * lBlock) + "м"
+                        " Y:" + QString::number(idY * lBlock) + "м"
+                        " H: + QString::number(map->getHeight(idX, idY, Map::m)) + м";
 
     updateCoord(strCoords);
 }
