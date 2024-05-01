@@ -88,7 +88,6 @@ private:
     QVector<QVector<int> *>* Hmatrix;
 
     // Карта в виде блоков
-    Map* map;
     int Wmap;
     int Lmap;
     int Hmap;

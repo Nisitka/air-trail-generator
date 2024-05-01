@@ -44,15 +44,6 @@ void ToolSetRLS::init()
     selected = true;
 }
 
-void ToolSetRLS::setMarkCoordRLS()
-{
-    // Отправляем координаты потонциальной РЛС
-    setCoordRLS(xPosRLS, yPosRLS);
-
-    //
-    drawArea->repaint();
-}
-
 void ToolSetRLS::procDrawTask()
 {
     drawArea->setRenderHint();
@@ -115,6 +106,15 @@ void ToolSetRLS::mousePress(QMouseEvent *mouse)
     yPosRLS = yRLS;
 
     setMarkCoordRLS();
+}
+
+void ToolSetRLS::setMarkCoordRLS()
+{
+    // Отправляем координаты потонциальной РЛС
+    setCoordRLS(xPosRLS, yPosRLS);
+
+    //
+    drawArea->repaint();
 }
 
 void ToolSetRLS::mouseRelease(QMouseEvent *mouse)

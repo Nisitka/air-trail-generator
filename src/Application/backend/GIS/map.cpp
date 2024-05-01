@@ -10,50 +10,35 @@ Map::Map()
     lenBlock = 20;
 }
 
-void Map::upEarth(int idXo, int idYo, int R)
+void Map::editEarth(int idXo, int idYo, int w, int l, int dH, int t)
 {
-    int Xo = idXo - (R / 2);
-    int Yo = idYo - (R / 2);
+    //
+    int lastX = idXo + w;
+    int lastY = idYo + l;
 
-    int idX;
-    int idY;
-    for (int x=0; x<R; x++)
-    {
-        for (int y=0; y<R; y++)
-        {
-            idX = Xo+x;
-            idY = Yo+y;
+    //
+    if (idXo < 0) idXo = 0;
+    if (idYo < 0) idYo = 0;
+    if (lastX >= Width)  lastX = Width -1;
+    if (lastY >= Length) lastY = Length-1;
 
-            //
-            if (idX >= 0 && idX < Width &&
-                idY >= 0 && idY < Length)
-            {
-                dropEarth(idX, idY, 1);
-            }
-        }
+    //
+    void (Map::*f)(int, int, int);
+    switch (t) {
+    case up:
+        f = &Map::dropEarth;
+        break;
+    case down:
+        f = &Map::removeEarth;
+        break;
     }
-}
 
-void Map::downEarth(int idXo, int idYo, int R)
-{
-    int Xo = idXo - (R / 2);
-    int Yo = idYo - (R / 2);
-
-    int idX;
-    int idY;
-    for (int x=0; x<R; x++)
+    //
+    for (int x = idXo; x < lastX; x++)
     {
-        for (int y=0; y<R; y++)
+        for (int y = idYo; y < lastY; y++)
         {
-            idX = Xo+x;
-            idY = Yo+y;
-
-            //
-            if (idX >= 0 && idX < Width &&
-                idY >= 0 && idY < Length)
-            {
-                removeEarth(idX, idY, 1);
-            }
+            (this->*f)(x, y, dH);
         }
     }
 }
@@ -62,14 +47,13 @@ void Map::dropEarth(int idX, int idY, int countLayer)
 {
     int idH = getHeight(idX, idY);
 
-    int maxH = layers.size();
+    int maxH = Height;
 
-    int id;
-    for (int h = 1; h <= countLayer; h++)
+    int idLast = idH + countLayer;
+    if (idLast > maxH-1) idLast = maxH-1;
+    for (int id = idH; id <= idLast; id++)
     {
-        id = idH + h;
-        if (id < maxH) getBlock(idX, idY, id)->toEarth();
-        else break;
+        getBlock(idX, idY, id)->toEarth();
     }
 }
 
@@ -77,13 +61,11 @@ void Map::removeEarth(int idX, int idY, int countLayer)
 {
     int idH = getHeight(idX, idY);
 
-    int id;
-    for (int h = 0; h < countLayer; h++)
+    int idLast = idH - countLayer;
+    if (idLast <= 0) idLast = 1;
+    for (int id = idH; id > idLast; id--)
     {
-        id = idH - h;
-
-        if (id > 0) getBlock(idX, idY, id)->remove();
-        else break;
+        getBlock(idX, idY, id)->remove();
     }
 }
 

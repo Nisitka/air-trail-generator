@@ -178,38 +178,6 @@ void GUI::connectGIS(GIS *gis)
                      map3DWin, SLOT(updateMap3D(int,int,int,int)));
 }
 
-//void GUI::connectMapGenerator(geoGenerator* mapBuilder)
-//{
-//    //
-//    QObject::connect(optGenMapWin, SIGNAL(runGenerateMap(double,int,int,int,int, double)),
-//                     mapBuilder,   SLOT(run(double,int,int,int,int, double)));
-//    //
-//    QObject::connect(mapBuilder,   SIGNAL(buildStart(int)),
-//                     optGenMapWin, SLOT(setProgressBar(int)));
-//    //
-//    QObject::connect(mapBuilder,   SIGNAL(readyLayer(int)),
-//                     optGenMapWin, SLOT(updateProgressBar(int)));
-//    //
-//    QObject::connect(mapBuilder,   SIGNAL(buildFinish()),
-//                     optGenMapWin, SLOT(finishGenerateMap()));
-
-//    QObject::connect(mapBuilder, SIGNAL(readyLayer(int)),
-//                     map3DWin,   SLOT(updateMap3D()));
-//}
-
-//void GUI::connectMapPainter(painterMapImage* painterMap)
-//{
-//    QObject::connect(painterMap, SIGNAL(readyEditEarth(int,int,int)),
-//                     map3DWin,   SLOT(updateMap3D(int,int,int)));
-//    QObject::connect(map3DWin,   SIGNAL(generateMap3D()),
-//                     painterMap, SLOT(buildTexture()));
-//    QObject::connect(toolVisMap, SIGNAL(updateRect3D(int,int,int,int)),
-//                     painterMap, SLOT(setRectTexture(int,int,int,int)));
-//    QObject::connect(painterMap, SIGNAL(readyTexture(int,int,int,int)),
-//                     map3DWin,   SLOT(finishBuildMap(int,int,int,int)));
-//    //map3DWin->generateMap3D(); // сразу же отображаем то что есть
-//}
-
 void GUI::connectMRLS(managerRLS* mRLS)
 {
     //

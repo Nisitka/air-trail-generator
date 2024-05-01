@@ -16,7 +16,7 @@ class Map
 public:
     Map();
 
-    // очистить карту (вернуть в исход. состояние)
+    // Очистить карту (вернуть в исход. состояние)
     void clear();
 
     enum coord{x, y};
@@ -24,11 +24,9 @@ public:
     //
     void setH(int idX, int idY, int valH);
 
-    // Поднять высоту в области
-    void upEarth(int idXo, int idYo, int R); // центр области, размер кисти
-
-    // Опустить высоту в области
-    void downEarth(int idXo, int idYo, int R);
+    // Отредакутировать рельеф
+    void editEarth(int idXo, int idYo, int w, int l, int dH, int t = up);
+    enum editH{up, down};
 
     // Максимальная высота на карте
     float getMaxH(); // в метрах
@@ -60,7 +58,7 @@ public:
     void build(int W, int L, int H);// размер карты в блоках
 
 private:
-    // блоки хранится в слоях
+    // Блоки хранится в слоях
     QVector <geoBlock*> layers;
 
 
@@ -69,13 +67,13 @@ private:
     int Width;
     int Length;
 
-    // размеры куба в метрах
+    // Размеры куба в метрах
     double lenBlock;
 
-    // посыпать замлей дискрету
+    // Посыпать землей дискрету
     void dropEarth(int idX, int idY, int countLayer);
 
-    // убрать землю с дискреты
+    // Убрать землю с дискреты
     void removeEarth(int idX, int idY, int countLayer);
 };
 

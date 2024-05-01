@@ -17,29 +17,34 @@ signals:
     void buildFinish(int W, int L, int H);
 
 public:
-    geoGenerator(Map* map,
-                 int wArea, int lArea,
+    geoGenerator(int wArea, int lArea,
                  QVector<QVector<int> *>* heights);
+
+    /// !!!! пока так, надо убрать
+    Map* getMap() const;
 
     // Запуск генерации рельефа
     void buildRandomMap(double setBlockP, int countEpochs,
                         int W, int L, int H,
                         double lenBlock);
 
-    //
+    // Создать плоский (пустой) рельеф
     void buildFlatMap(int W = 400, int L = 400, int H = 256);
 
+    // Открыть рельеф
     void openMap(const QString& dirMapFile);
 
-    //
+    // Установить область активных действий
     void setPosActionArea(int idXo, int idYo);
 
-    void downEarth(int idX, int idY, int R);
-    void upEarth(int idX, int idY, int R);
-
-    // Обновить данные по высотам вобласти
+    // Обновить данные по высотам в области
     void updateHeights(int idX, int idY, // Левый верхний угол
                        int W, int L);    // Ширина, длина
+
+    // Отредакутировать рельеф
+    void editEarth(int idXo, int idYo,       // Левый верхний угол обл.
+                   int w, int l,             // Ширина, длина области
+                   int dH, int t = Map::up); // Дельта изм., поднять/опустить
 
 private:
     // Карта
@@ -48,16 +53,11 @@ private:
     // Матрица высот
     QVector<QVector<int>*> heights;
 
-    int wArea;
-    int lArea;
-
-    int idXo;
+    // Активная зона
+    int idXo;  // Угол
     int idYo;
-
-    //
-    int Wmap;
-    int Lmap;
-    int Hmap;
+    int wArea; // Размеры
+    int lArea;
 
     // Действия с блоками около указанного
     int  sumEarth(int x, int y, int z); // кол-во с землей

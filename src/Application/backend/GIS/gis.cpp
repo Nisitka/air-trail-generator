@@ -4,21 +4,22 @@
 
 GIS::GIS()
 {
-    //
-    map = new Map;
-
     // По умолчанию находимся в левом верхнем углу
     idXpos = 0; idYpos = 0;
 
-    //
+    // Отвечает за работу с рельефом карты
+    geoBuilder = new geoGenerator(currentW, currentH, Hmatrix);
+    connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
+            this,       SLOT(setMapSize(int,int,int)));
+    connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
+            this,       SIGNAL(finishBuildMap(int,int,int)));
+
+    Map* map = geoBuilder->getMap();
+
+    // Отвечает за отрисовку подложки
     backPainter = new painterMapImage(map, currentW, currentH);
     backPainter->setPosArea(idXpos, idYpos);
     backgroundImg = backPainter->getImage();
-
-    //
-    geoBuilder = new geoGenerator(map, currentW, currentH, Hmatrix);
-    connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
-            this,       SLOT(setMapSize(int,int,int)));
 }
 
 void GIS::setPosActionArea(int idXmap, int idYmap)
@@ -67,8 +68,6 @@ void GIS::movePosActionArea(int dX, int dY)
     idXpos = posX;
     idYpos = posY;
 
-    //qDebug() << idXpos << idYpos;
-
     // Адоптируем все компоненты под новую область
     initActionArea();
 
@@ -112,11 +111,6 @@ void GIS::setDefaultMap()
 {
     geoBuilder->buildFlatMap(currentW, currentH);
     backPainter->updateFull();
-
-    int H;
-    map->getSize(Wmap, Lmap, H);
-
-    finishBuildMap(Wmap, Lmap, H);
 }
 
 QImage* GIS::getBackgroundImg()
@@ -124,10 +118,10 @@ QImage* GIS::getBackgroundImg()
     return backgroundImg;
 }
 
-//////////
+////////// ВРЕМЕННО
 Map* GIS::getMap()
 {
-    return map;
+    return geoBuilder->getMap();
 }
 
 void GIS::updateFromRect(const QRect &rect)
@@ -154,10 +148,10 @@ void GIS::updateFromRects(QRect *rects, int countS)
 
 void GIS::upEarth(int idX, int idY, int R)
 {
-    map->upEarth(idX, idY, R);
-
     int idXo = idX - (R / 2);
     int idYo = idY - (R / 2);
+    geoBuilder->editEarth(idXo, idYo, R, R, 1);
+
     backPainter->runToRect(QRect(idXo, idYo, R, R));
 
     changedMap(idXo, idYo, R, R);
@@ -165,10 +159,10 @@ void GIS::upEarth(int idX, int idY, int R)
 
 void GIS::downEarth(int idX, int idY, int R)
 {
-    map->downEarth(idX, idY, R);
-
     int idXo = idX - (R / 2);
     int idYo = idY - (R / 2);
+    geoBuilder->editEarth(idXo, idYo, R, R, 3, Map::down);
+
     backPainter->runToRect(QRect(idXo, idYo, R, R));
 
     changedMap(idXo, idYo, R, R);

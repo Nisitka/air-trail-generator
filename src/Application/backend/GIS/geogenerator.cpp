@@ -8,26 +8,36 @@
 
 #include <QRgb>
 
-geoGenerator::geoGenerator(Map* map_,
-                           int wArea_, int lArea_,
+geoGenerator::geoGenerator(int wArea_, int lArea_,
                            QVector<QVector<int> *>* pHeights):
-    map(map_), wArea(wArea_), lArea(lArea_)
+    wArea(wArea_), lArea(lArea_)
 {
-    Hmap = 256;
+    //
+    map = new Map;
 
     //heights = QVector<QVector<int> *>;
     pHeights = &heights;
+}
+
+Map* geoGenerator::getMap() const
+{
+    return map;
 }
 
 void geoGenerator::openMap(const QString &dirMapFile)
 {
     buildStart();
 
+    // Источник данных об рельефе
     QImage geoData(dirMapFile);
-    map->resize(wArea, lArea, Hmap);
 
-    Wmap = geoData.width();
-    Lmap = geoData.height();
+    // Полные размеры карты
+    int Wmap = geoData.width();
+    int Lmap = geoData.height();
+    int Hmap = 256;
+
+    // Размер карты, олицитворяющей активную зону
+    map->resize(wArea, lArea, Hmap);
 
     int h;
     QColor color;
@@ -49,6 +59,11 @@ void geoGenerator::openMap(const QString &dirMapFile)
     buildFinish(Wmap, Lmap, Hmap);
 }
 
+void geoGenerator::editEarth(int idXo, int idYo, int w, int l, int dH, int t)
+{
+    map->editEarth(idXo, idYo, w, l, dH, t);
+}
+
 void geoGenerator::setPosActionArea(int idXo_, int idYo_)
 {
     map->clear();
@@ -57,45 +72,12 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
     idYo = idYo_;
 
     int h;
-    QColor color;
     for (int x=0; x<wArea; x++)
     {
         for (int y=0; y<lArea; y++)
         {
             h = heights[idXo + x]->at(idYo + y);
             map->setH(x, y, h);
-        }
-    }
-}
-
-void geoGenerator::upEarth(int idX, int idY, int R)
-{
-    map->upEarth(idX, idY, R);
-
-    int X = idX - (R / 2);
-    int Y = idY - (R / 2);
-
-    for (int x=0; x<R; x++)
-    {
-        for (int y=0; y<R; y++)
-        {
-            (*heights[idXo+X+x])[idYo+Y+y] = map->getHeight(x, y);
-        }
-    }
-}
-
-void geoGenerator::downEarth(int idX, int idY, int R)
-{
-    map->downEarth(idX, idY, R);
-
-    int X = idX - (R / 2);
-    int Y = idY - (R / 2);
-
-    for (int x=0; x<R; x++)
-    {
-        for (int y=0; y<R; y++)
-        {
-            (*heights[idXo+X+x])[idYo+Y+y] = map->getHeight(x, y);
         }
     }
 }
@@ -118,10 +100,15 @@ void geoGenerator::buildRandomMap(double setBlockP, int countEpochs,
                                   int W, int L, int H,
                                   double lenBlock)
 {
+    buildStart();
+
     // устанавливаем длину ребра блока
     map->setLenBlock(lenBlock);
 
     // берем актуальный размер карты
+    int Wmap;
+    int Lmap;
+    int Hmap;
     map->getSize(Wmap, Lmap, Hmap);
 
     // если размеры необходимо изменить
@@ -145,8 +132,6 @@ void geoGenerator::buildRandomMap(double setBlockP, int countEpochs,
     // начинаем с 1-го слоя (0-й всегда заполнен)
     for (int h=1; h<countLayers; h++)
     {
-        buildStart();
-
         //
         for (int i=0; i<countBlockLayer; i++)
         {

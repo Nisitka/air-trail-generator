@@ -3,6 +3,8 @@
 
 #include "designer.h"
 
+#include <QDebug>
+
 optRLSwindow::optRLSwindow(Map* map_, QWidget *parent) :
     map(map_),
     QWidget(parent),
@@ -253,6 +255,8 @@ void optRLSwindow::updateProgressSetOptRLS(int id)
 void optRLSwindow::updateCoordRLS(int x, int y)
 {
     double l = map->getLenBlock();
+
+    qDebug() << "Coord RLS:" << x << y ;
 
     xRLS = x;
     yRLS = y;
