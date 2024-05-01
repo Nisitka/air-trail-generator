@@ -6,19 +6,15 @@
 
 #include <cmath>
 
-RLS::RLS(Map* map_, QPoint* position_, const QString& nameRLS): map(map_)
+RLS::RLS(QPoint* position_, const QString& nameRLS):
+    name(nameRLS), position(position_)
 {
-    name = nameRLS;
-
-    position = position_;
-    Hpos = (double) map->getHeight(position->x(), position->y(), Map::m) + hSender;
+    //Hpos = (double) map->getHeight(position->x(), position->y(), Map::m) + hSender;
 
     mE = new double [2];
 
     set_lDV();
     buildZD();
-
-    maxHzd = 20;
 
     D = 2000;
 
@@ -30,7 +26,7 @@ void RLS::getPosition(QVector3D &point)
     // в индексах
     point.setX(position->x());
     point.setY(position->y());
-    point.setZ(minHzd);
+    point.setZ(1234);
 }
 
 int RLS::getCountMaxBlocksZD()
@@ -72,79 +68,6 @@ int RLS::getCountMaxBlocksZD()
     return maxCountBlocks;
 }
 
-int RLS::getCurrentBlocksZD(int idX, int idY, int idMaxH)
-{
-    int countBlocksZD = 0;
-
-    // кол-во вертикальных сегментов
-    int countS_ZD = ZD.size();
-
-    int Wmap = map->getWidth();
-    int Lmap = map->getLength();
-    int Hmap = map->getCountLayers();
-
-    int xRLS = idX;
-    int yRLS = idY;
-
-    int num_Hmin = map->getHeight(xRLS, yRLS); // индекс слоя мин-ой высоты
-    minHzd = num_Hmin;
-    qDebug() << minHzd;
-
-    // по вертикальным сегментам
-    for (int i=0; i<countS_ZD; i++)
-    {   // по лучам в сегменте
-        int countLZD = ZD.at(i)->size();
-        for (int j=0; j<countLZD; j++)
-        {
-            QVector <int*> way = ZD[i]->at(j)->getWay();
-            int idX;
-            int idY;
-            int idH;
-
-            // полет луча
-            int countDelta = way.size(); // кол-во дискрет одного луча
-            for (int k=1; k<countDelta; k++)
-            {   // в пути луча содержатся относительные индексы
-                int* l = way[k];
-
-                idX = xRLS + l[Ray::X];
-                idY = yRLS + l[Ray::Y];
-                idH = 1 + num_Hmin + l[Ray::Z];
-
-                // если выше среза ЗО
-                if (idH > idMaxH) break;
-
-                // если луч вышел за карту
-                if (idY >= Lmap) break;
-                if (idY < 0) break;
-
-                if (idX >= Wmap) break;
-                if (idX < 0) break;
-
-                if (idH >= Hmap) break;
-                if (idH < 0) break;
-
-                geoBlock* block = map->getBlock(idX, idY, idH);
-                // если блок на пути, является землей, то
-                if (block->isEarth())
-                {
-                    // луч столкнулся с рельефом
-                    break;
-                }
-                else
-                {
-                    if (!block->isZD())
-                    {
-                        countBlocksZD++;
-                    }
-                }
-            }
-        }
-    }
-
-    return countBlocksZD;
-}
-
 bool RLS::isWorking()
 {
     return working;
@@ -172,7 +95,7 @@ void RLS::getOpt(int &Rmax, int &Xpos, int &Ypos, int &Hzd, bool &working_)
     Rmax = D;
     Xpos = position->x();
     Ypos = position->y();
-    Hzd = maxHzd * map->getLenBlock();
+    Hzd = 99999; //map->getLenBlock();
     working_ = working;
 }
 
@@ -183,8 +106,7 @@ void RLS::setPosition(int X, int Y)
 
     // сразу считаем высоту, на которую ставим РЛС в этой позиции
     //Hpos = (double) map->getHeight(position->x(), position->y()) * Ray::mH + hSender;
-    Hpos = (double) map->getHeight(X, Y, Map::m) + hSender;
-    minHzd = map->getHeight(X, Y, Map::id);
+    //Hpos = (double) map->getHeight(X, Y, Map::m) + hSender;
 }
 
 void RLS::removeZD()
@@ -225,28 +147,26 @@ void RLS::setOptZDvert(int Rmax,
     getDataGraphic();
 }
 
-void RLS::emitSignal()
+void RLS::emitSignal(const Map& map)
 {
-    // если РЛС не включена, то ничего не делаем
+    // Если РЛС не включена, то ничего не делаем
     if (!working) return;
 
-    // кол-во вертикальных сегментов
+    // Кол-во вертикальных сегментов
     int countS_ZD = ZD.size();
 
-    int Wmap = map->getWidth();
-    int Lmap = map->getLength();
-    int Hmap = map->getCountLayers();
+    int Wmap = map.getWidth();
+    int Lmap = map.getLength();
+    int Hmap = map.getCountLayers();
 
     int xRLS = position->x();
     int yRLS = position->y();
-
-    int num_Hmin = Hpos / map->getLenBlock(); // индекс слоя мин-ой высоты
-    minHzd = num_Hmin;
+    int hRLS = map.getHeight(xRLS, yRLS);
 
     interPointsZD.clear();
-    // по вертикальным сегментам
+    // По вертикальным сегментам
     for (int i=0; i<countS_ZD; i++)
-    {   // по лучам в сегменте
+    {   // По лучам в сегменте
         interPointsZD.append(QVector <QVector3D>()); // добавляем список точек пер-я в сегменте
         int countLZD = ZD.at(i)->size();
         for (int j=0; j<countLZD; j++)
@@ -256,26 +176,17 @@ void RLS::emitSignal()
             int idY;
             int idH;
 
-            // полет луча
+            // Полет луча:
             int countDelta = way.size(); // кол-во дискрет одного луча
             for (int k=1; k<countDelta; k++)
-            {   // в пути луча содержатся относительные индексы
+            {   // В пути луча содержатся относительные индексы
                 int* l = way[k];
 
                 idX = xRLS + l[Ray::X];
                 idY = yRLS + l[Ray::Y];
-                idH = 1 + num_Hmin + l[Ray::Z];
+                idH = hRLS + l[Ray::Z] + 2;
 
                 //bool isBreak = false;
-
-                // если выше среза ЗО
-                if (idH > maxHzd) {
-                    // то последней точкой будет предыдущая
-                    idX = xRLS + way[k-1][Ray::X];
-                    idY = yRLS + way[k-1][Ray::Y];
-                    interPointsZD.last().push_back(QVector3D(idX, idY, maxHzd));
-                    break;
-                }
 
                 // если луч вышел за карту
                 if (idY >= Lmap) {
@@ -307,10 +218,10 @@ void RLS::emitSignal()
 
                 //if (isBreak) break;
 
-                // блок, в котором пролетает луч
-                geoBlock* block = map->getBlock(idX, idY, idH);
+                // Блок, в котором пролетает луч:
+                geoBlock* block = map.getBlock(idX, idY, idH);
 
-                // если блок на пути, является землей, то
+                // Если блок на пути, является землей, то
                 if (block->isEarth())
                 {
                     // луч столкнулся с рельефом
@@ -318,7 +229,7 @@ void RLS::emitSignal()
                     break;
                 }
                 else
-                {   // если блок не в ЗО
+                {   // Если блок не в ЗО
                     if (!block->isZD())
                     {
                         block->toZD();
@@ -341,19 +252,6 @@ void RLS::emitSignal()
 const QVector <QVector <QVector3D>>& RLS::getPointsInterZD()
 {
     return interPointsZD;
-}
-
-void RLS::emitSignal(int srez_H)
-{
-    this->on();
-
-    // установка среза высоты
-    maxHzd = srez_H;
-
-    // очистка карты от сигнала данной РЛС
-    clearZD();
-
-    emitSignal();
 }
 
 void RLS::clearZD()
@@ -475,7 +373,7 @@ void RLS::getDataGraphic()
 
 void RLS::getRectPosition(int &idX, int &idY, int &W, int &H)
 {
-    int w = D / map->getLenBlock();
+    int w = D / 20.0; //map->getLenBlock();
 
     idX = position->x() - w;
     idY = position->y() - w;

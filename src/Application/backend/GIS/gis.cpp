@@ -21,6 +21,11 @@ GIS::GIS()
     idXpos = 0; idYpos = 0;
 }
 
+void GIS::getH(int idX, int idY)
+{
+    /* ... */
+}
+
 void GIS::setPosActionArea(int idXmap, int idYmap)
 {
     int posX, posY;

@@ -210,7 +210,7 @@ int Map::getLength(int type) const
     return l;
 }
 
-int Map::getHeight(int X, int Y, int type)
+int Map::getHeight(int X, int Y, int type) const
 {
     // Cпускаемся сверху пока не встретим землю
     int h = Height-1;

@@ -17,25 +17,25 @@ class optRLSwindow : public QWidget
 {
     Q_OBJECT
 signals:
-    // запустить поиск оптимальной позиции РЛС
+    // Запустить поиск оптимальной позиции РЛС
     void sendDataForSearchBestPos(int idXo, int idYo, int W, int L, int idMaxH);
 
-    // создать новую РЛС
+    // Создать новую РЛС
     void createRLS(QPoint* posRLS, const QString& nameNewRLS);
 
-    // удалить РЛС
+    // Удалить РЛС
     void delRLS(int id);
 
-    // выбрать РЛС
+    // Выбрать РЛС
     void setRLS(int id);
 
-    // установить новую позицию РЛС
+    // Установить новую позицию РЛС
     void setPositionRLS(int idX, int idY);
 
-    // запуск моделирования РЛС
-    void signalRunRLS(int H); // срез высот
+    // Запуск моделирования работы РЛС
+    void signalRunRLS();
 
-    // выключить РЛС(т.е. очистить от РЛ поля)
+    // Выключить РЛС(т.е. очистить от РЛ поля)
     void signalOffRLS();
 
     // запросить данные для графика ДН антены
@@ -98,11 +98,10 @@ private slots:
 
 private:
 
-    // работает ли выбранная РЛС
+    // Работает ли выбранная РЛС
     bool workingCurRLS;
 
-    void setDesine();
-
+    // Названия всех РЛС
     QStringList namesRLS;
 
     Map* map;
@@ -114,12 +113,10 @@ private:
     int yRLS;
     int hRLS;
 
-    // срез высоты ЗО
-    int hZD;
-
     //
     processTmpWidget* loadingWidget;
 
+    void setDesine();
     Ui::optRLSwindow *ui;
 };
 

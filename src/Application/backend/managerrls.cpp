@@ -18,7 +18,7 @@ managerRLS::managerRLS(Map* map_)
 
 void managerRLS::addRLS(QPoint* posRLS_, const QString& nameRLS)
 {
-    RLS* rls = new RLS(map, posRLS_);
+    RLS* rls = new RLS(posRLS_, nameRLS);
     listRLS.append(rls);
 
     // завершение генерации вертикального сегмента
@@ -66,7 +66,7 @@ void managerRLS::updateVisInfoRLS()
 
             if (rls->isWorking())
             {
-                rls->emitSignal();
+                rls->emitSignal(*map);
                 pointsInterZD->push_back(rls->getPointsInterZD());
             }
         }
@@ -142,8 +142,6 @@ void managerRLS::setRLS(int id)
         bool working;
         listRLS.at(idCurRLS)->getOpt(Rmax, Xpos, Ypos, Hzd, working);
         updateOptGui(Rmax, Xpos, Ypos, Hzd, working);
-
-        qDebug() << "set RLS: " << id;
     }
 }
 
@@ -169,7 +167,7 @@ void managerRLS::updateSignals()
         {
             rls->off();
             rls->on();
-            rls->emitSignal();
+            rls->emitSignal(*map);
 
             // обновляем визуальную информацию на карте
             int idX, idY, w, h;
@@ -204,7 +202,7 @@ void managerRLS::emitSignalAllRLS()
     finishGenerateZD();
 }
 
-void managerRLS::runRLS(int idX, int idY, int H)
+void managerRLS::runRLS(int idX, int idY)
 {
     int sizeLoading = 0;
     for (int i=0; i<listRLS.size(); i++)
@@ -213,17 +211,11 @@ void managerRLS::runRLS(int idX, int idY, int H)
     startGenerateZD(sizeLoading);
     curVecReady = 0;
 
+    listRLS.at(idCurRLS)->on();
+    listRLS.at(idCurRLS)->setPosition(idX, idY);
     for (int i=0; i<listRLS.size(); i++)
     {
-        if (i == idCurRLS)
-        {
-            listRLS.at(i)->setPosition(idX, idY);
-            listRLS.at(i)->emitSignal(H);
-        }
-        else
-        {
-            listRLS.at(i)->emitSignal();
-        }
+        listRLS.at(i)->emitSignal(*map);
     }
 
     // обновляем визуальную информацию на карте
@@ -235,7 +227,7 @@ void managerRLS::runRLS(int idX, int idY, int H)
     //updateVisInfoRLS();
 }
 
-void managerRLS::runRLS(int H)
+void managerRLS::runRLS()
 {
     int sizeLoading = 0;
     for (int i=0; i<listRLS.size(); i++)
@@ -244,16 +236,10 @@ void managerRLS::runRLS(int H)
     startGenerateZD(sizeLoading);
     curVecReady = 0;
 
+    listRLS.at(idCurRLS)->on();
     for (int i=0; i<listRLS.size(); i++)
     {
-        if (i == idCurRLS)
-        {
-            listRLS.at(i)->emitSignal(H);
-        }
-        else
-        {
-            listRLS.at(i)->emitSignal();
-        }
+        listRLS.at(i)->emitSignal(*map);
     }
 
     // обновляем визуальную информацию на карте

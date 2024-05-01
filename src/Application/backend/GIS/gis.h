@@ -31,7 +31,12 @@ signals:
     void changedProgressBuildMap(int countPercent); // в %
     void finishBuildMap(int W, int L, int H);       // Завершился
 
+    //
+
 public slots:
+
+    // Запросить высоту в дискрете карты
+    void getH(int idX, int idY); // Индексы дискреты
 
     // Изменить активную область
     void setPosActionArea(int idXmap, int idYmap); // центр области

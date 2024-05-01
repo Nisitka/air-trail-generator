@@ -213,8 +213,8 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      toolRLS,    SLOT(setCurRLS(int)));
 
     //
-    QObject::connect(optRLSWin,  SIGNAL(signalRunRLS(int)),
-                     mRLS,       SLOT(runRLS(int)));
+    QObject::connect(optRLSWin,  SIGNAL(signalRunRLS()),
+                     mRLS,       SLOT(runRLS()));
     //
     QObject::connect(mRLS,       SIGNAL(startGenerateZD(int)),
                      optRLSWin,  SLOT(startGenerateZD(int)));

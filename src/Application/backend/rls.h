@@ -17,42 +17,41 @@ class RLS: public QObject
 {
     Q_OBJECT
 signals:
-    // завершение очистки карты от ЗО
+    // Завершение очистки карты от ЗО
     void readyClearZD();
 
-    // начата установка настроек РЛС
+    // Начата установка настроек РЛС
     void startSetOpt(int countRay);
 
     //
     void readySetRay(int numRay); // номер луча
 
-    // зона обнаружения начала расчитываться
+    // Зона обнаружения начала расчитываться
     void startGenerateZD(int countM);
 
-    // вертикальный сегмент готов
+    // Вертикальный сегмент готов
     void readyVector(int numVector);
 
-    // зона обнаружения сгенерирована
+    // Зона обнаружения сгенерирована
     void finishGenerateZD();
 
-    // отправка графика ДН антены
+    // Отправка графика ДН антены
     void exportGraphicData(double* x, double* y, int count);
 
-    // информируем завершении настройки РЛС
+    // Информируем завершении настройки РЛС
     void readyOptZDvert();
     
 public slots:
-    // запрос данных для отрисовки графика ДН антены
+    // Запрос данных для отрисовки графика ДН антены
     void getDataGraphic();
 
-    // установка точки стояния РЛС
+    // Установка точки стояния РЛС
     void setPosition(int idX, int idY);
 
-    // моделирование локации РЛС
-    void emitSignal(int H); // срез высот (и запускаем РЛС)
-    void emitSignal(); // перемоделировать по предыдущим значениям (если РЛС вкл.)
+    // Моделирование локации РЛС
+    void emitSignal(const Map&); // перемоделировать по предыдущим значениям (если РЛС вкл.)
 
-    // установить пар-ры ЗО в вертикальной плоскости
+    // Установить пар-ры ЗО в вертикальной плоскости
     void setOptZDvert(int Rmax,  // в метрах
                       int countVertVectors, int countPointsDV);
 
@@ -61,21 +60,18 @@ public slots:
     void off();
 
 public:
-    explicit RLS(Map* map, QPoint* position, const QString& nameRLS = nullptr);
+    explicit RLS(QPoint* position, const QString& nameRLS = nullptr);
 
-    //
+    // Позиция РЛС в пространстве
     void getPosition(QVector3D& point);
 
-    // получить точки пересечения сигнала с рельефом
+    // Получить точки пересечения сигнала с рельефом
     const QVector <QVector <QVector3D>>& getPointsInterZD();
 
-    // узнать максимальное кол-во дискрет ЗО, которое может дать эта РЛС
+    // Узнать максимальное кол-во дискрет ЗО, которое может дать эта РЛС
     int getCountMaxBlocksZD();
 
-    //
-    int getCurrentBlocksZD(int idX, int idY, int idMaxH);
-
-    // узнать, работает ли РЛС
+    // Узнать, работает ли РЛС
     bool isWorking();
 
     void getRectPosition(int& idX, int& idY, int& W, int& H);
@@ -92,10 +88,10 @@ public:
     ~RLS();
 
 private:
-    // точки соприкосновения ЗО с рельефом
+    // Точки соприкосновения ЗО с рельефом
     QVector <QVector <QVector3D>> interPointsZD;
 
-    // включена ли РЛС
+    // Включена ли РЛС
     bool working;
 
     // Дискретность ЗО
@@ -110,24 +106,20 @@ private:
 
     void removeZD();
 
-    // обновить значения ЗО в вертю плоскости
+    // Обновить значения ЗО в вертю плоскости
     void updateDV();
 
-    // точка стояния РЛС
+    // Точка стояния РЛС
     QPoint* position;
     double Hpos; // высота(координата Z) метры
 
     const double hSender = 3.1; // высота антены
 
- // ДН антены
+    // ДН антены
     // построение ДН
     void buildDV();
 
-    // срез ЗО
-    int maxHzd; // в индексах высоты
-    int minHzd;
-
-    // дальность луча антены
+    // Дальность луча антены
     double D = 2000; // метров
 
     double Emin = 0.01;
@@ -143,16 +135,13 @@ private:
     // ЗО (по вертикальным долькам)
     QVector <QVector <Ray*>*> ZD; // скелет из лучей
 
-    // построение каркаса ЗО
+    // Построение каркаса ЗО
     void buildZD();
 
- // Рельеф (карта блоков)
-    Map* map;
-
-    // блоки, которые находятся в ЗО данной РЛС
+    // Блоки, которые находятся в ЗО данной РЛС
     QVector <geoBlock*> blocksZD;
 
-    // для отображения прогресса
+    // Для отображения прогресса
     int sizeZD;
 };
 

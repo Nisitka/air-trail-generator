@@ -24,10 +24,7 @@ optRLSwindow::optRLSwindow(Map* map_, QWidget *parent) :
     ui->setOptRLSProgressBar->setValue(0);
     ui->setOptRLSProgressBar->hide();
 
-    // Срез высоты ЗО по умолчанию
-    hZD = 4000;
     hRLS = 0;
-
 
     ui->on_off_RLS_Button->hide();
     ui->setCoordRLSpushButton->hide();
@@ -192,7 +189,7 @@ void optRLSwindow::enablingRLS()
     }
     else
     {
-        signalRunRLS(hZD / map->getLenBlock());
+        signalRunRLS();
         workingCurRLS = true;
         Designer::setButton(ui->on_off_RLS_Button, Designer::red);
         ui->on_off_RLS_Button->setText("Выключить");

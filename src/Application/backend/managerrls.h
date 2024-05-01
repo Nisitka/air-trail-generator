@@ -64,9 +64,9 @@ public slots:
     void offRLS(); // выключется выбранная РЛС
 
     // смоделировать сигнал по уже уст. позиции
-    void runRLS(int); // срез высоты
+    void runRLS(); // срез высоты
     // установить поз. РЛС и смод-ть сигнал
-    void runRLS(int, int, int); // индексы дискрет гор. координат, срез высоты
+    void runRLS(int, int); // индексы дискрет гор. координат
 
     void getDataGraphic();
     void setOptZDvert(int,int,int);

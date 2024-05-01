@@ -48,7 +48,7 @@ public:
 
     // Высота в координатах X, Y
     enum typeH{m, id};
-    int getHeight(int X, int Y, int type = id);
+    int getHeight(int X, int Y, int type = id) const;
 
  /*   Узнать кол-во блоков, находящихся в ЗО
   *   на координатах X, Y
