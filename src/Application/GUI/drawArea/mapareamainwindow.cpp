@@ -5,8 +5,8 @@
 
 #include <QIcon>
 
-mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) :
-    QMainWindow(parent),
+mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
+    gis(gis), QMainWindow(parent),
     ui(new Ui::mapAreaMainWindow)
 {
     ui->setupUi(this);
@@ -25,7 +25,7 @@ mapAreaMainWindow::mapAreaMainWindow(QImage* mapImg, Map* map, QWidget *parent) 
                            "};");
     addToolBar(Qt::TopToolBarArea, toolBar); // добавляем в панель инструментов
 
-    area = new areaDrawWidget(mapImg, map);
+    area = new areaDrawWidget(gis);
 
     //
     scrollArea = new ScrollMapWidget(area);

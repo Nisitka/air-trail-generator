@@ -17,6 +17,7 @@ void Core::init_GIS()
     objects.append(gis);
     backgroundMapImage = gis->getBackgroundImg();
     map = gis->getMap();
+    gisInformer = gis->Informer();
 
     readyRunProgress(12);  
 }
@@ -49,8 +50,8 @@ void Core::init_allObj()
     objects.append(trailBuilder);
     readyRunProgress(54, "Инициализация интерфейса...");
     //
-    gui = new GUI(backgroundMapImage,
-                  map);
+    gui = new GUI(backgroundMapImage, ///ВРЕМЕННО!
+                  gis);
 
     readyRunProgress(65, "Инициализация интерфейса...");
 

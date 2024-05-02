@@ -24,8 +24,8 @@ void ToolRuler::procDrawTask()
                            Xmeas,       Ymeas,
                            areaDrawWidget::pix);
 
-        // Расстояние (в метрах)
-        int D = distance(Xb, Yb, Xmeas, Ymeas) * drawArea->getBlockSize();
+        // Расстояние (в метрах) ///!!!!!!!!!!!!!!!!!!!!!!!!!
+        int D = distance(Xb, Yb, Xmeas, Ymeas) * 20.0;
 
         // Середина
         int Xt = Xb + ((Xmeas - Xb) / 2);

@@ -3,8 +3,8 @@
 
 #include <QWidget>
 
-#include "backend/gis/map.h"
-#include "backend/gis/paintermapimage.h"
+#include "backend/GIS/gisinformer.h"
+//#include "backend/gis/paintermapimage.h"
 #include "plotwidget.h"
 
 #include "processtmpwidget.h"
@@ -77,7 +77,7 @@ public slots:
     void readyOptZDvert();
 
 public:
-    explicit optRLSwindow(Map* map_, QWidget *parent = 0);
+    explicit optRLSwindow(GISInformer* gis, QWidget *parent = 0);
     ~optRLSwindow();
 
 private slots:
@@ -98,14 +98,16 @@ private slots:
 
 private:
 
+    //
+    GISInformer* gis;
+
     // Работает ли выбранная РЛС
     bool workingCurRLS;
 
     // Названия всех РЛС
     QStringList namesRLS;
 
-    Map* map;
-
+    // Для графика ДН
     plotWidget* graphicWidget;
 
     // координаты РЛС

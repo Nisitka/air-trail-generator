@@ -22,6 +22,22 @@ geoGenerator::geoGenerator(int wArea_, int lArea_,
     pHeights = &heights;
 }
 
+int geoGenerator::getH(int idX, int idY) const
+{
+    map->getHeight(idX - idXo, idY - idYo, Map::m);
+}
+
+Coords* geoGenerator::getCoords(int idX, int idY) const
+{
+    int l = map->getLenBlock();
+
+    int X = (idXo + idX) * l;
+    int Y = (idYo + idY) * l;
+    int H = getH(idX, idY);
+
+    return new Coords(X, Y, H);
+}
+
 Map* geoGenerator::getMap() const
 {
     return map;

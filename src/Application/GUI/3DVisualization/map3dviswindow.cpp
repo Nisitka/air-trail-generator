@@ -5,15 +5,13 @@
 
 #include <QDebug>
 
-map3DVisWindow::map3DVisWindow(Map* map_, QImage* imgTex):
+map3DVisWindow::map3DVisWindow(QImage* imgTex):
     ui(new Ui::map3DVisWindow)
 {
-    map = map_;
-
     ui->setupUi(this);
 
     //
-    visMap = new mapOpenGLWidget(map, imgTex);
+    visMap = new mapOpenGLWidget(imgTex);
 
     // Функциональные окна
     addFunWindow(new QTabWidget, QIcon(":/resurs/a"),"A",Qt::LeftDockWidgetArea,Qt::LeftDockWidgetArea);

@@ -15,10 +15,9 @@
 
 #include <QGLWidget>
 
-mapOpenGLWidget::mapOpenGLWidget(Map* map,
-                                 QImage* imgTex,
+mapOpenGLWidget::mapOpenGLWidget(QImage* imgTex,
                                  QWidget *parent):
-    map(map), QOpenGLWidget(parent)//,
+    QOpenGLWidget(parent)//,
 //    camX(0), camY(0), camZ(0),
 //    lookX(0), lookY(0), lookZ(0),
 //    angle(0), lastAngle(1.57),

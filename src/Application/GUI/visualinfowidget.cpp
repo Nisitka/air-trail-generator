@@ -8,8 +8,8 @@
 
 #include "backend/buildertraildrones.h"
 
-visualInfoWidget::visualInfoWidget(QImage* geoMap,
-                                   Map* map_)
+visualInfoWidget::visualInfoWidget(GISInformer* gis):
+    gis(gis)
 {
 
     /// Для теста!
@@ -17,7 +17,7 @@ visualInfoWidget::visualInfoWidget(QImage* geoMap,
     addFunWindow(new QTabWidget, QIcon(":/resurs/b"),"B",Qt::RightDockWidgetArea,Qt::RightDockWidgetArea);
 
     //
-    manDrawArea = new mapAreaMainWindow(geoMap, map_);
+    manDrawArea = new mapAreaMainWindow(gis);
     setCentralWidget(manDrawArea);
 }
 

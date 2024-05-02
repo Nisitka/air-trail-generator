@@ -6,8 +6,9 @@
 #include <QPushButton>
 
 #include "drawArea/mapareamainwindow.h"
-//#include "backend/map.h"
 #include "multiplewindow.h"
+
+#include "backend/GIS/gisinformer.h"
 
 class visualInfoWidget: public MultipleWindow
 {
@@ -21,8 +22,7 @@ public slots:
     /* ... */
 
 public:
-    explicit visualInfoWidget(QImage* geoMap,
-                              Map* map);
+    explicit visualInfoWidget(GISInformer* gis);
     ~visualInfoWidget();
 
     mapAreaMainWindow* getManDrawArea();
@@ -32,6 +32,10 @@ private slots:
     /* ... */
 
 private:
+
+    //
+    GISInformer* gis;
+
     //
     mapAreaMainWindow* manDrawArea;
 };

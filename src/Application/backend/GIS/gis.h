@@ -10,8 +10,10 @@
 #include "paintermapimage.h"
 #include "geogenerator.h"
 
+#include "gisinformer.h"
+
 // Геоинформационная система
-class GIS: public QObject
+class GIS: public QObject, public GISInformer
 {
     Q_OBJECT
 signals:
@@ -35,8 +37,6 @@ signals:
 
 public slots:
 
-    // Запросить высоту в дискрете карты
-    void getH(int idX, int idY); // Индексы дискреты
 
     // Изменить активную область
     void setPosActionArea(int idXmap, int idYmap); // центр области
@@ -52,6 +52,15 @@ public slots:
     void downEarth(int idX, int idY, int R); // Опустить землю
 
 public:
+
+    // Получить интерфейс
+    GISInformer* Informer() /* const */;
+
+    // Методы-интерфейс по работе с ГИС:
+    int getH(int idX, int idY) const override final;
+    Coords* getCoords(int idX, int idY) const override final;
+    const QImage& getGeoImage() const override final;
+
     ///!!!! ВРЕМЕННО !!!!!!
     Map* getMap();
 

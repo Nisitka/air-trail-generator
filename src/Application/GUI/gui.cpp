@@ -7,13 +7,13 @@
 #include "airobjectfunwindow.h"
 
 GUI::GUI(QImage* geoMap,
-         Map* map_): map(map_)
+         GISInformer* gis):
+    gisInformer(gis)
 {
     mainWin = new mainWindow;
 
     // Задача для работы с графической информацией
-    visInfoWin = new visualInfoWidget(geoMap,
-                                      map);
+    visInfoWin = new visualInfoWidget(gisInformer);
 
     //
     mapAreaMainWindow* manDrawArea = visInfoWin->getManDrawArea();
@@ -47,7 +47,7 @@ GUI::GUI(QImage* geoMap,
                      "Карта", "Карта");
 
     //
-    optRLSWin = new optRLSwindow(map_);
+    optRLSWin = new optRLSwindow(gisInformer);
     //
     QObject::connect(toolRLS,   SIGNAL(setCoordRLS(int,int)),
                      optRLSWin, SLOT(updateCoordRLS(int,int)));
@@ -66,7 +66,7 @@ GUI::GUI(QImage* geoMap,
                      toolPTrail, SLOT(startPredictTrail()));
 
     //
-    map3DWin = new map3DVisWindow(map, geoMap);
+    map3DWin = new map3DVisWindow(geoMap);
     mainWin->addTask(map3DWin, QPixmap(":/resurs/icon3D"),
                      "3D", "Детальная визуализация рельефа");
     QObject::connect(toolVisMap, SIGNAL(updateRect3D(int,int,int,int)),

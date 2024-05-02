@@ -9,6 +9,8 @@
 #include "areadrawwidget.h"
 #include "scrollmapwidget.h"
 
+#include "backend/GIS/gisinformer.h"
+
 namespace Ui {
 class mapAreaMainWindow;
 }
@@ -23,8 +25,7 @@ signals:
     void moveActionArea(int dX, int dY);
 
 public:
-    explicit mapAreaMainWindow(QImage* mapImg,
-                               Map* map,
+    explicit mapAreaMainWindow(GISInformer* gis,
                                QWidget *parent = 0);
     ~mapAreaMainWindow();
 
@@ -86,6 +87,9 @@ private slots:
     void updateStyleToolButtons(QToolButton* changeButton);
 
 private:
+
+    //
+    GISInformer* gis;
 
     //
     QStatusBar* statusBar;

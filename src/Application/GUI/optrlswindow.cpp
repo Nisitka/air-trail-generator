@@ -5,8 +5,8 @@
 
 #include <QDebug>
 
-optRLSwindow::optRLSwindow(Map* map_, QWidget *parent) :
-    map(map_),
+optRLSwindow::optRLSwindow(GISInformer* gis, QWidget *parent):
+    gis(gis),
     QWidget(parent),
     ui(new Ui::optRLSwindow)
 {
@@ -94,9 +94,9 @@ void optRLSwindow::addRLS()
     //
     loadingWidget->Show();
 
-    // значения с интерфейса
-    xRLS = ui->xRLSspinBox->value() / map->getLenBlock();
-    yRLS = ui->yRLSspinBox->value() / map->getLenBlock();
+    // значения с интерфейса ///!!!!!!!!!!!!!
+    xRLS = ui->xRLSspinBox->value() / 20.0;
+    yRLS = ui->yRLSspinBox->value() / 20.0;//map->getLenBlock();
 
     // создаем объект и передаем его адрес в менеджер РЛС
     createRLS(new QPoint(xRLS, yRLS), ui->nameNewRLSLineEdit->text()); //ui->nameNewRLSLineEdit->text()
@@ -198,9 +198,9 @@ void optRLSwindow::enablingRLS()
 
 void optRLSwindow::setNewPosRLS()
 {
-    // значения с интерфейса
-    xRLS = ui->xRLSspinBox->value() / map->getLenBlock();
-    yRLS = ui->yRLSspinBox->value() / map->getLenBlock();
+    // значения с интерфейса ///!!!!!!!!!!!!!!!!!!!!!!!
+    xRLS = ui->xRLSspinBox->value() / 20.0;
+    yRLS = ui->yRLSspinBox->value() / 20.0;
 
     setPositionRLS(xRLS, yRLS);
 }
@@ -251,17 +251,19 @@ void optRLSwindow::updateProgressSetOptRLS(int id)
 
 void optRLSwindow::updateCoordRLS(int x, int y)
 {
-    double l = map->getLenBlock();
+    //qDebug() << "Coord RLS:" << x << y ;
 
-    qDebug() << "Coord RLS:" << x << y ;
+    Coords* coords = gis->getCoords(x, y);
 
-    xRLS = x;
-    yRLS = y;
-    hRLS = map->getHeight(xRLS, yRLS) ;
+    xRLS = coords->X();
+    yRLS = coords->Y();
+    hRLS = coords->H();
 
-    ui->xRLSspinBox->setValue(xRLS * l);
-    ui->yRLSspinBox->setValue(yRLS * l);
-    ui->zValueRLSLabel->setText(QString::number(hRLS * l));
+    ui->xRLSspinBox->setValue(xRLS);
+    ui->yRLSspinBox->setValue(yRLS);
+    ui->zValueRLSLabel->setText(QString::number(hRLS));
+
+    delete coords;
 }
 
 void optRLSwindow::readyVector(int numVector)

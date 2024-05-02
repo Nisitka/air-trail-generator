@@ -30,13 +30,7 @@ class GUI
 {
 public:
     GUI(QImage* geoMap,
-        Map* map); // установить карту
-
-//    // присоеденить к интерфейсу генератор рельефа
-//    void connectMapGenerator(geoGenerator*);
-
-//    // присоеденить отрисовщика карты к GUI
-//    void connectMapPainter(painterMapImage*);
+        GISInformer* gisInformer); // установить карту
 
     //
     void connectGIS(GIS* gis);
@@ -56,8 +50,9 @@ public:
     void showMainWin();
 
 private:
-    //
-    Map* map;
+
+    // Получаем необходимые данные об карте через него
+    GISInformer* gisInformer;
 
     // основное окно приложения
     mainWindow* mainWin;

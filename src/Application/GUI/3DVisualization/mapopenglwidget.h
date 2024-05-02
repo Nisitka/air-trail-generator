@@ -26,8 +26,7 @@ class mapOpenGLWidget: public QOpenGLWidget
 //    void finishPredictTrail();
 
 public:
-    explicit mapOpenGLWidget(Map* map,
-                             QImage* imgTex,            
+    explicit mapOpenGLWidget(QImage* imgTex,
                              QWidget *parent = 0);
 
 //    void updatePosRLS(QList <QVector3D>* pRLS);

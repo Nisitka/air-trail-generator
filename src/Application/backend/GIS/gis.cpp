@@ -21,9 +21,24 @@ GIS::GIS()
     idXpos = 0; idYpos = 0;
 }
 
-void GIS::getH(int idX, int idY)
+GISInformer* GIS::Informer() /* const */
 {
-    /* ... */
+    return this;
+}
+
+int GIS::getH(int idX, int idY) const
+{
+    return geoBuilder->getH(idX, idY);
+}
+
+Coords* GIS::getCoords(int idX, int idY) const
+{
+    return geoBuilder->getCoords(idX, idY);
+}
+
+const QImage& GIS::getGeoImage() const
+{
+    return *backPainter->getImage();
 }
 
 void GIS::setPosActionArea(int idXmap, int idYmap)
@@ -33,7 +48,7 @@ void GIS::setPosActionArea(int idXmap, int idYmap)
     posX = idXmap - (currentW / 2);
     posY = idYmap - (currentH / 2);
 
-    // Крайние положения
+    // Крайнее положения
     if (posX < 0) posX = 0;
     if (posY < 0) posY = 0;
     if (posX + currentW > Wmap) posX = Wmap - currentW;

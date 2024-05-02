@@ -6,6 +6,8 @@
 #include "map.h"
 #include "paintermapimage.h"
 
+#include "coords.h"
+
 class geoGenerator : public QObject
 {
     Q_OBJECT
@@ -22,6 +24,10 @@ public:
 
     /// !!!! пока так, надо убрать
     Map* getMap() const;
+
+    // В дискретах текущей активной зоны
+    int getH(int idX, int idY) const;
+    Coords* getCoords(int idX, int idY) const;
 
     // Запуск генерации рельефа
     void buildRandomMap(double setBlockP, int countEpochs,

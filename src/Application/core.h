@@ -9,7 +9,7 @@
 
 #include "GUI/gui.h"
 
-#include "backend/gis/paintermapimage.h"
+#include "backend/GIS/paintermapimage.h"
 
 #include "backend/GIS/gis.h"
 #include "backend/managerrls.h"
@@ -17,6 +17,7 @@
 #include "backend/managerdrones.h"
 #include "backend/dao.h"
 
+#include "backend/GIS/gisinformer.h"
 
 // ядро приложения
 class Core : public QObject
@@ -59,7 +60,9 @@ private:
     // карта (рельеф)
     Map* map;
 
+    //
     GIS* gis;
+    GISInformer* gisInformer;
 
     // менеджер РЛС
     managerRLS* mRLS;

@@ -17,15 +17,14 @@
 
 #include "../designer.h"
 
-areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map), kZoom(1.0)
+areaDrawWidget::areaDrawWidget(GISInformer* gis):
+    gis(gis), kZoom(1.0)
 {
     isCustomCursor = true;
 
-    setBlockSize(map->getLenBlock());
-
     // инициализация контейнера для изображений
     images = QVector <QImage*> (3);
-    images[geoMap] = mapImg;
+    //images[geoMap] = mapImg;
     updateSize();
 
     // отправляем данные об координатах курсора
@@ -50,30 +49,25 @@ areaDrawWidget::areaDrawWidget(QImage* mapImg, Map* map): map(map), kZoom(1.0)
 
 void areaDrawWidget::toPixDrawArea(int &Xid, int &Yid)
 {
-    Xid = (Xid - idXo) * kZoom;
-    Yid = (Yid - idYo) * kZoom;
+    Xid = (Xid - 0) * kZoom;
+    Yid = (Yid - 0) * kZoom;
 }
 
 void areaDrawWidget::toIdMapCoords(int &Xpix, int &Ypix)
 {
-    Xpix = (Xpix / kZoom) + idXo;
-    Ypix = (Ypix / kZoom) + idYo;
+    Xpix = (Xpix / kZoom) + 0;
+    Ypix = (Ypix / kZoom) + 0;
 }
 
 void areaDrawWidget::updateSize()
 {
-    W = images[geoMap]->width()  * kZoom;
-    H = images[geoMap]->height() * kZoom;
+//    W = images[geoMap]->width()  * kZoom;
+//    H = images[geoMap]->height() * kZoom;
 
     setFixedSize(W, H);
 
     // Сообщаем об этом кому это нужно
     resized();
-}
-
-void areaDrawWidget::setBlockSize(int size)
-{
-    lBlock = size;
 }
 
 void areaDrawWidget::appendDrawTask(int priorityKey, taskPainter* task)
@@ -124,6 +118,13 @@ void areaDrawWidget::drawMap()
     wightPixMap = drawImg->width() * kZoom;
     heightPixMap = drawImg->height() * kZoom;
     pPainter->drawImage(0, 0, drawImg->scaled(wightPixMap, heightPixMap));
+
+    ///!!!!!!!!!!!!!!
+//    drawImg = gis->getGeoImage();
+
+//    wightPixMap = drawImg.width() * kZoom;
+//    heightPixMap = drawImg.height() * kZoom;
+//    pPainter->drawImage(0, 0, drawImg.scaled(wightPixMap, heightPixMap));
 }
 
 void areaDrawWidget::getSizePixMap(int &W, int &H)
@@ -334,16 +335,13 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
 void areaDrawWidget::updateInfoCoordMap(int idX, int idY)
 {
     toIdMapCoords(idX, idY);
-    QString strCoords =  "X:" + QString::number(idX * lBlock) + "м"
-                        " Y:" + QString::number(idY * lBlock) + "м"
-                        " H: + QString::number(map->getHeight(idX, idY, Map::m)) + м";
+    Coords* coords = gis->getCoords(idX, idY);
+
+    QString strCoords =  "X:" + QString::number(coords->X()) + "м"
+                        " Y:" + QString::number(coords->Y()) + "м"
+                        " H:" + QString::number(coords->H()) + "м";
 
     updateCoord(strCoords);
-}
-
-int areaDrawWidget::getBlockSize() const
-{
-    return lBlock;
 }
 
 void areaDrawWidget::zoom(double dK)

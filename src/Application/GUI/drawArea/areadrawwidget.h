@@ -32,7 +32,7 @@
 
 #include "drawtask.h"
 
-#include "backend/gis/map.h"
+#include "backend/GIS/gisinformer.h"
 
 class areaDrawWidget: public QWidget
 {
@@ -48,7 +48,7 @@ signals:
     void resized();
 
 public:
-    areaDrawWidget(QImage* mapImg, Map* map);
+    areaDrawWidget(GISInformer* gis);
 
     enum unit{pix, idMap};
 
@@ -75,10 +75,6 @@ public:
 
     //
     double getValZoom();
-
-    // Длина одного блока
-    void setBlockSize(int size); // в метрах
-    int getBlockSize() const;
 
     //
     int curTool();
@@ -144,6 +140,9 @@ protected:
 private:
 
     //
+    GISInformer* gis;
+
+    //
     bool drawEnable;
 
     // Размеры области отображенеия
@@ -154,9 +153,6 @@ private:
 
     //
     drawAreaTool* Tool;
-
-    // Карта (для обнаружения высоты)
-    Map* map;
 
     // Точка, относительно которой рисуется подложка
     int idXo = 0; // В id дискрет карты
@@ -173,9 +169,6 @@ private:
 
     // Изоб. для отрисовки
     QVector <QImage*> images;
-
-    // Размер дискреты изображения
-    int lBlock; // в метрах
 
     // Что отрисовывать в данный момент
     int curOptRepaint;
