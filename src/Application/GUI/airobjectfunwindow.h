@@ -2,26 +2,41 @@
 #define AIROBJECTFUNWINDOW_H
 
 #include <QWidget>
+#include <QLabel>
+#include <QLineEdit>
 
 #include "multiplewindow.h"
+#include "backend/airobject.h"
+#include "UI/airwindow.h"
+#include "ui/airinfowindow.h"
 
-namespace Ui {
-class AirObjectFunWindow;
-}
 
 class AirObjectFunWindow : public MultipleWindow
 {
     Q_OBJECT
+signals:
+
+    void creat_AirObject(QString,double,double,double,QString);
+    void show_AirObject(QString);
+    void loading_AirInfo(QString, QString);
+    void cleareBoxs();
 
 public:
-    explicit AirObjectFunWindow();
-    ~AirObjectFunWindow();
+    AirObjectFunWindow();
 public slots:
 
-    void setParameters(QString, double,double,double, QString);
+    void loading_AirObject(QString, QString);
+    void clearBoxs();
+    void show_AirObject(AirInfoWindow*);
+
 
 private:
-    Ui::AirObjectFunWindow *ui;
+
+    QLabel *photoLabel, *nameLabel, *longLabel, *wigthLabel, *speedLabel;
+    QLineEdit *photoEdit, *nameEdit, *longEdit, *wigthEdit, *speedEdit;
+    QWidget *wid;
+    AirWindow *AirWin = new AirWindow;
+    AirObject *airObj;
 };
 
 #endif // AIROBJECTFUNWINDOW_H

@@ -6,7 +6,7 @@
 
 #include <QToolBar>
 #include <QToolButton>
-
+#include "UI/airwindow.h"
 #include <QMap>
 
 class MultipleWindow: public QMainWindow
@@ -24,6 +24,7 @@ public slots:
 
     //
     void showTmpDock(QWidget* widget, Qt::DockWidgetArea typeMoved = Qt::RightDockWidgetArea);
+    void creatSplitDock();
 
     //void addGroupFunWindow(const QList <QDockWidget*>);
 
@@ -43,6 +44,8 @@ private slots:
 private:
 
     QMap <QToolButton*, QDockWidget*> windows;
+
+    QDockWidget* splitDock = new QDockWidget;
 
     QToolBar *toolBar;
 };

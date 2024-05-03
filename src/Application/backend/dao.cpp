@@ -34,18 +34,26 @@ void DAO::test_query(QString name)
 void DAO::show_airInfo(QString ID)
 {
     QSqlQuery authentication;
+    airObj = new AirObject;
     if (authentication.exec(QString("SELECT nameAir, longAir, weightAir, speedAir, photoAir FROM AirObjects WHERE ID = '%1'")
                             .arg(ID)))
     {
         while (authentication.next()){
 
-        show_airInfo(authentication.value(0).toString(),
-                     authentication.value(1).toDouble(),
-                     authentication.value(2).toDouble(),
-                     authentication.value(3).toDouble(),
-                     authentication.value(4).toString());
+            airObj->setNameAir(authentication.value(0).toString());
+            airObj->setLongAir(authentication.value(1).toDouble());
+            airObj->setWightAir(authentication.value(2).toDouble());
+            airObj->setSpeedAir(authentication.value(3).toDouble());
+            airObj->setPhotoAir(authentication.value(4).toString());
+
+//        show_airInfo(authentication.value(0).toString(),
+//                     authentication.value(1).toDouble(),
+//                     authentication.value(2).toDouble(),
+//                     authentication.value(3).toDouble(),
+//                     authentication.value(4).toString());
         }
     }
+    show_AirObject(airObj);
 }
 
 void DAO::update_airInfo()

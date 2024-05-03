@@ -1,71 +1,57 @@
 #include "airobject.h"
-#include "ui_airobject.h"
 #include <QDebug>
 
-AirObject::AirObject(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::AirObject)
+AirObject::AirObject(QObject *parent) : QObject(parent)
 {
-    ui->setupUi(this);
 
-    //setCentralWidget();
-
-    connect(ui->loadingButton, SIGNAL(clicked()),
-            SLOT(show_AirObject()));
-    connect(ui->creatButton, SIGNAL(clicked()),
-            SLOT(creat_AirObject()));
-    connect(ui->loadingPhotButton, SIGNAL(clicked()),
-            SLOT(dowPhoto()));
 }
 
-AirObject::~AirObject()
+QString AirObject::getNameAir()
 {
-    delete ui;
+    return nameAir;
 }
 
-void AirObject::loading_AirObject(QString ID, QString name)
+double AirObject::getLongAir()
 {
-    ui->airBox->addItem(name, ID);
+    return longsAir;
 }
 
-void AirObject::show_AirObject()
+double AirObject::getWightAir()
 {
-    show_AirObject(ui->airBox->currentData().toString());
+    return wightAir;
 }
 
-void AirObject::show_AirObject(QString n_Air, double l_Air, double w_Air, double s_Air, QString p_Air
-                               /*  AirObject*  */)
+double AirObject::getSpeedAir()
 {
-    AirObjectFunWindow *air = new AirObjectFunWindow;
-    air->setParameters(n_Air,l_Air, w_Air,s_Air,p_Air);
-
-    QDockWidget *dockWidget = new QDockWidget(n_Air);
-    dockWidget->setObjectName(n_Air);
-    dockWidget->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
-    dockWidget->setWidget(air);
-    dockWidget->setAllowedAreas(Qt::RightDockWidgetArea);
-    addDockWidget(Qt::RightDockWidgetArea,dockWidget);
+    return speedAir;
 }
 
-void AirObject::creat_AirObject()
+QString AirObject::getPhotoAir()
 {
-    creat_AirObject(ui->nameEdit->text(),
-                    ui->longEdit->text().toDouble(),
-                    ui->weightEdit->text().toDouble(),
-                    ui->speedEdit->text().toDouble(),
-                    ui->photEdit->text());
+    return photoAir;
 }
 
-void AirObject::clearBoxs()
+void AirObject::setNameAir(QString name)
 {
-    ui->airBox->clear();
+    nameAir = name;
 }
 
-void AirObject::dowPhoto()
+void AirObject::setLongAir(double longs)
 {
-    QString fileName = QFileDialog::getOpenFileName(this, "Open text", "/home/",
-                                                    "(*.png)");
-    QFileInfo fileinfo(fileName);
-    QString photo = fileinfo.fileName();
-    ui->photEdit->setText(photo);
+    longsAir = longs;
+}
+
+void AirObject::setWightAir(double wight)
+{
+    wightAir = wight;
+}
+
+void AirObject::setSpeedAir(double speed)
+{
+    speedAir = speed;
+}
+
+void AirObject::setPhotoAir(QString photo)
+{
+    photoAir = photo;
 }

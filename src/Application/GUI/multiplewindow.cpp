@@ -40,10 +40,27 @@ void MultipleWindow::showTmpDock(QWidget *widget, Qt::DockWidgetArea typeMoved)
     QDockWidget* dock = new QDockWidget;
     dock->setWidget(widget);
 
-    connect(dock, SIGNAL(visibilityChanged(bool)),
-            this, SLOT(delTmpDock(bool)));
+//    connect(dock, SIGNAL(visibilityChanged(bool)),
+//            this, SLOT(delTmpDock(bool)));
 
-    this->addDockWidget(typeMoved, dock);
+    dock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
+    dock->setAllowedAreas(Qt::RightDockWidgetArea);
+
+    //this->addDockWidget(typeMoved, dock1);
+
+    //splitDockWidget(dock1, dock, Qt::Horizontal);
+    tabifyDockWidget(splitDock, dock);
+    //dock1->show();
+}
+
+void MultipleWindow::creatSplitDock()
+{
+    splitDock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetClosable);
+    splitDock->setAllowedAreas(Qt::RightDockWidgetArea);
+
+    this->addDockWidget(Qt::RightDockWidgetArea, splitDock);
+
+    splitDock->hide();
 }
 
 void MultipleWindow::delTmpDock(bool statVis)

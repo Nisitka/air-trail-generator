@@ -24,6 +24,8 @@
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
 #include "backend/airobject.h"
 #include "airobjectfunwindow.h"
+#include "ui/airwindow.h"
+#include "ui/airinfowindow.h"
 
 // Интерфейс всей программы
 class GUI
@@ -79,8 +81,9 @@ private:
     setAlgPredictWindow* algPredWin;
 
     //ТТХ возудшных объектов
-    AirObject* airObj;
     AirObjectFunWindow* airObjWin;
+    AirWindow *AirWin;
+    AirInfoWindow *AirInfo;
 
     // Инструменты
     ToolPredTrail* toolPTrail;

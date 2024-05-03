@@ -5,6 +5,7 @@
 #include <QtSql>
 #include <QSqlQuery>
 #include <QSqlTableModel>
+#include "airobject.h"
 
 class DAO : public QObject
 {
@@ -14,8 +15,11 @@ public:
 signals:
     void loading_AirInfo(QString, QString);
     void show_airInfo(QString,double,double,double,QString);
-    void update_status(bool);
     void clearBoxs();
+
+    void update_status(bool);
+    void show_AirObject(AirObject*);
+
 
 public slots:
 
@@ -29,6 +33,8 @@ public slots:
 private:
 
     QSqlQueryModel *model_nameAir = new QSqlQueryModel();
+
+    AirObject *airObj;
 };
 
 #endif // DAO_H

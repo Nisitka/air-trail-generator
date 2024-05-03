@@ -78,9 +78,10 @@ GUI::GUI(QImage* geoMap,
                      "Функция прогноза", "Функция прогноза");
 
     // Окно по работе с ТТХ воздушными объектами
-    airObj = new AirObject;
     airObjWin = new AirObjectFunWindow;
-    mainWin->addTask(airObj,         QPixmap(":/resurs/a"),
+    AirWin = new AirWindow;
+    AirInfo = new AirInfoWindow;
+    mainWin->addTask(airObjWin,         QPixmap(":/resurs/a"),
                      "ТТХ воздушных объектов", "ТТХ воздушных объектов");
 
     // Окно по работе с Базой данных
@@ -103,20 +104,24 @@ void GUI::connectDataBase(DAO *database)
                      daoWin, SLOT(status_connect(bool))
             );
 
-    QObject::connect(airObj, SIGNAL(show_AirObject(QString)),
+    QObject::connect(airObjWin, SIGNAL(show_AirObject(QString)),
                      database, SLOT(show_airInfo(QString))
             );
-    QObject::connect(airObj, SIGNAL(creat_AirObject(QString, double,double,double, QString)),
+    QObject::connect(airObjWin, SIGNAL(creat_AirObject(QString, double,double,double, QString)),
                      database, SLOT(creat_airInfo(QString, double,double,double, QString))
             );
     QObject::connect(database, SIGNAL(loading_AirInfo(QString, QString)),
-                     airObj, SLOT(loading_AirObject(QString, QString))
+                     airObjWin, SLOT(loading_AirObject(QString, QString))
             );
     QObject::connect(database, SIGNAL(clearBoxs()),
-                     airObj, SLOT(clearBoxs())
+                     airObjWin, SLOT(clearBoxs())
             );
-    QObject::connect(database, SIGNAL(show_airInfo(QString,double,double,double,QString)),
-                     airObj, SLOT(show_AirObject(QString, double,double,double, QString))
+    QObject::connect(database, SIGNAL(show_AirObject(AirObject*)),
+                     AirInfo, SLOT(showInfo(AirObject*))
+            );
+
+    QObject::connect(AirInfo, SIGNAL(addDocks(AirInfoWindow*)),
+                     airObjWin, SLOT(show_AirObject(AirInfoWindow*))
             );
 }
 

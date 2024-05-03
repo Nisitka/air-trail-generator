@@ -1,26 +1,41 @@
 #include "airobjectfunwindow.h"
-#include "ui_airobjectfunwindow.h"
+#include <QtWidgets>
+#include <QFileDialog>
 #include <QDebug>
 
-AirObjectFunWindow::AirObjectFunWindow() :
-    ui(new Ui::AirObjectFunWindow)
+AirObjectFunWindow::AirObjectFunWindow()
 {
-    ui->setupUi(this);
+    //AirWin = new AirWindow;
+    this->setCentralWidget(AirWin);
 
-   //showTmpDock(new QWidget);
+    QObject::connect(AirWin, SIGNAL(creat_AirObject(QString, double,double,double, QString)),
+                     this, SIGNAL(creat_AirObject(QString, double,double,double, QString))
+                     );
+    QObject::connect(this, SIGNAL(loading_AirInfo(QString, QString)),
+                     AirWin, SLOT(loading_AirObject(QString, QString))
+                     );
+    QObject::connect(this, SIGNAL(cleareBoxs()),
+                     AirWin, SLOT(clearBoxs())
+                     );
+    QObject::connect(AirWin, SIGNAL(show_AirObject(QString)),
+                     this, SIGNAL(show_AirObject(QString))
+                     );
+
+    creatSplitDock();
 }
 
-AirObjectFunWindow::~AirObjectFunWindow()
+void AirObjectFunWindow::show_AirObject(AirInfoWindow* AirInfo)
 {
-    delete ui;
+    showTmpDock(AirInfo);
 }
 
-void AirObjectFunWindow::setParameters(QString name, double longs, double wight, double speed, QString photo)
+void AirObjectFunWindow::loading_AirObject(QString ID, QString name)
 {
-    ui->nameEdit->setText(name);
-    ui->longEdit->setText(QString::number(longs));
-    ui->wightEdit->setText(QString::number(wight));
-    ui->speedEdit->setText(QString::number(speed));
-    QPixmap pix(":/resurs/"+ photo +"");
-    ui->photoLlabel->setPixmap(pix.scaled(290,150,Qt::KeepAspectRatio));
+    loading_AirInfo(ID, name);
 }
+
+void AirObjectFunWindow::clearBoxs()
+{
+    cleareBoxs();
+}
+

@@ -1,44 +1,38 @@
 #ifndef AIROBJECT_H
 #define AIROBJECT_H
 
-#include <QMainWindow>
-#include <QSqlQueryModel>
-#include <QDockWidget>
-#include <QtWidgets>
-#include "GUI/airobjectfunwindow.h"
-#include "GUI/multiplewindow.h"
+#include <QObject>
 
-namespace Ui {
-class AirObject;
-}
-
-class AirObject : public QMainWindow
+class AirObject : public QObject
 {
     Q_OBJECT
+public:
+    explicit AirObject(QObject *parent = nullptr);
+
 signals:
 
-    void show_AirObject(QString);
-    void creat_AirObject(QString, double,double,double, QString);
+public slots:
+
+    QString getNameAir();
+    double getLongAir();
+    double getWightAir();
+    double getSpeedAir();
+    QString getPhotoAir();
+
+    void setNameAir(QString);
+    void setLongAir(double);
+    void setWightAir(double);
+    void setSpeedAir(double);
+    void setPhotoAir(QString);
 
 public:
-    explicit AirObject(QWidget *parent = nullptr);
-    ~AirObject();
 
-private slots:
+    QString nameAir;
+    double longsAir;
+    double wightAir;
+    double speedAir;
+    QString photoAir;
 
-    void loading_AirObject(QString, QString);
-
-    void show_AirObject();
-    void show_AirObject(QString, double,double,double, QString);
-    void creat_AirObject();
-    void clearBoxs();
-
-    void dowPhoto();
-private:
-
-
-    
-    Ui::AirObject *ui;
 };
 
 #endif // AIROBJECT_H

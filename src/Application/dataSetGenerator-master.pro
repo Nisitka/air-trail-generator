@@ -82,7 +82,9 @@ SOURCES += main.cpp\
     GUI/processtmpwidget.cpp \
     backend/graphicengine.cpp \
     backend/GIS/gisinformer.cpp \
-    backend/GIS/coords.cpp
+    backend/GIS/coords.cpp \
+    GUI/UI/airinfowindow.cpp \
+    GUI/UI/airwindow.cpp
 
 HEADERS  += \
     core.h \
@@ -143,7 +145,9 @@ HEADERS  += \
     GUI/processtmpwidget.h \
     backend/graphicengine.h \
     backend/GIS/gisinformer.h \
-    backend/GIS/coords.h
+    backend/GIS/coords.h \
+    GUI/UI/airinfowindow.h \
+    GUI/UI/airwindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \
@@ -155,7 +159,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/algorithmPredict/setalgpredictwindow.ui \
     GUI/drawArea/mapareamainwindow.ui \
     backend/airobject.ui \
-    GUI/airobjectfunwindow.ui
+    GUI/UI/airinfowindow.ui \
+    GUI/UI/airwindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \
