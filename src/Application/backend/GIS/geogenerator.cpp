@@ -8,8 +8,7 @@
 
 #include <QRgb>
 
-geoGenerator::geoGenerator(int wArea_, int lArea_,
-                           QVector<QVector<int> *>* pHeights):
+geoGenerator::geoGenerator(int wArea_, int lArea_):
     wArea(wArea_), lArea(lArea_)
 {
     idXo = 0;
@@ -17,25 +16,20 @@ geoGenerator::geoGenerator(int wArea_, int lArea_,
 
     //
     map = new Map;
-
-    //heights = QVector<QVector<int> *>;
-    pHeights = &heights;
 }
 
-int geoGenerator::getH(int idX, int idY) const
+int geoGenerator::getH(int idX, int idY, int units) const
 {
-    map->getHeight(idX - idXo, idY - idYo, Map::m);
+    return map->getHeight(idX, idY, units);
 }
 
-Coords* geoGenerator::getCoords(int idX, int idY) const
+Coords geoGenerator::getCoords(int idX, int idY) const
 {
-    int l = map->getLenBlock();
+    int X = /*idXo + */idX;
+    int Y = /*idYo + */idY;
+    int H = getH(idX, idY, Map::id);
 
-    int X = (idXo + idX) * l;
-    int Y = (idYo + idY) * l;
-    int H = getH(idX, idY);
-
-    return new Coords(X, Y, H);
+    return Coords(X, Y, H, map->getLenBlock());
 }
 
 Map* geoGenerator::getMap() const

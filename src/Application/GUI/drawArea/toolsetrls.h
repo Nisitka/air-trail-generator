@@ -3,13 +3,15 @@
 
 #include "GUI/drawArea/drawareatool.h"
 
+#include "backend/GIS/gisinformer.h"
+
 class ToolSetRLS: public drawAreaTool
 {
     Q_OBJECT
 signals:
 
     // Установить РЛС
-    void setCoordRLS(int x, int y);
+    void setCoordRLS(Coords coord);
 
 public slots:
     // Добавить РЛС для отрисовки
@@ -22,7 +24,7 @@ public slots:
     void setCurRLS(int idRLS);
 
 public:
-    ToolSetRLS(int id);
+    ToolSetRLS(int id, GISInformer* gis);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;
@@ -37,6 +39,9 @@ public:
     void setMarkCoordRLS();
 
 private:
+
+    //
+    GISInformer* gis;
 
     // Иконки РЛС
     QPixmap pixRLS;

@@ -37,7 +37,6 @@ signals:
 
 public slots:
 
-
     // Изменить активную область
     void setPosActionArea(int idXmap, int idYmap); // центр области
     void movePosActionArea(int dX, int dY); // в дискретах карты
@@ -51,15 +50,19 @@ public slots:
     void upEarth(int idX, int idY, int R);   // Поднять землю
     void downEarth(int idX, int idY, int R); // Опустить землю
 
+    //
+    void openMap(const QString& dirNameFile);
+
 public:
 
     // Получить интерфейс
     GISInformer* Informer() /* const */;
 
     // Методы-интерфейс по работе с ГИС:
-    int getH(int idX, int idY) const override final;
-    Coords* getCoords(int idX, int idY) const override final;
+    int getH(int idX, int idY, int units = Map::m) const override final;
+    Coords getCoords(int idX, int idY) const override final;
     const QImage& getGeoImage() const override final;
+    void getIdActionArea(int& idXo, int& idYo) const;
 
     ///!!!! ВРЕМЕННО !!!!!!
     Map* getMap();
@@ -74,10 +77,7 @@ public:
     QVector<QVector<int> *>* getHmatrix();
 
     //
-    void setDefaultMap();
-
-    //
-    void openMap(const QString& dirNameFile);
+    void setDefaultMap();   
 
 private slots:
 
@@ -94,12 +94,8 @@ private:
     // Точка, относительно которой формируется
     //  область, не требующая загрузки
     int idXpos, idYpos;       // Левый верхний угол
-    const int currentW = 400; // Размеры области
-    const int currentH = 400; //  в дискретах
-
-    // Матрица высот
-    void buildHmatrix();
-    QVector<QVector<int> *>* Hmatrix;
+    const int currentW = 600; // Размеры области
+    const int currentH = 600; //  в дискретах
 
     // Карта в виде блоков
     int Wmap;

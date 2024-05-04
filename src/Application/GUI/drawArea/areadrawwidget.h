@@ -179,12 +179,12 @@ private:
     // Коофициент приближения
     double kZoom;
 
-    // размеры карты для отрисовки
+    // Размеры карты для отрисовки
     int wightPixMap;
     int heightPixMap;
 
-    // изображение которое отрисовывается
-    QImage* drawImg;
+    // Изображение которое отрисовывается
+    QImage drawImg;
 };
 
 #endif // AREADRAWWIDGET_H

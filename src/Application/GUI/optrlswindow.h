@@ -4,7 +4,6 @@
 #include <QWidget>
 
 #include "backend/GIS/gisinformer.h"
-//#include "backend/gis/paintermapimage.h"
 #include "plotwidget.h"
 
 #include "processtmpwidget.h"
@@ -46,28 +45,28 @@ signals:
                          int countVertVectors, int countPointsDV); // кол-водискрет
 
 public slots:
-    // инициализация новой РЛС завершина
+    // Инициализация новой РЛС завершина
     void buildNewRLSready();
 
-    // установить параметры РЛС
+    // Установить параметры РЛС
     void setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working);
 
-    // начало изменения настроек прогресса
+    // Начало изменения настроек прогресса
     void startSetOptRLS(int sizeP); // кол-во дискрет прогресса
 
-    // обновить полоску прогресса установки настроек РЛС
+    // Обновить полоску прогресса установки настроек РЛС
     void updateProgressSetOptRLS(int id); // номер текущей дискреты
 
-    // перерисовать график ДН
+    // Перерисовать график ДН
     void repaintGraphic(double* x, double* y, int count);
 
-    // обновить координаты РЛС
-    void updateCoordRLS(int x, int y); // индексы блоков карты
+    // Обновить координаты РЛС
+    void updateCoordRLS(Coords);
 
-    // начало моделирования работы РЛС
+    // Начало моделирования работы РЛС
     void startGenerateZD(int countVectors); // кол-во вертикальных сегментов
 
-    // номер готового верт-го сегмента
+    // Номер готового верт-го сегмента
     void readyVector(int numVector);
 
     //
@@ -77,7 +76,7 @@ public slots:
     void readyOptZDvert();
 
 public:
-    explicit optRLSwindow(GISInformer* gis, QWidget *parent = 0);
+    explicit optRLSwindow(QWidget *parent = 0);
     ~optRLSwindow();
 
 private slots:
@@ -98,9 +97,6 @@ private slots:
 
 private:
 
-    //
-    GISInformer* gis;
-
     // Работает ли выбранная РЛС
     bool workingCurRLS;
 
@@ -110,10 +106,8 @@ private:
     // Для графика ДН
     plotWidget* graphicWidget;
 
-    // координаты РЛС
-    int xRLS; // в индексах блоков карты
-    int yRLS;
-    int hRLS;
+    // Координаты РЛС
+    Coords RLScoords;
 
     //
     processTmpWidget* loadingWidget;

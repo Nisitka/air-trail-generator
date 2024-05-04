@@ -25,6 +25,7 @@ areaDrawWidget::areaDrawWidget(GISInformer* gis):
     // инициализация контейнера для изображений
     images = QVector <QImage*> (3);
     //images[geoMap] = mapImg;
+    drawImg = gis->getGeoImage();
     updateSize();
 
     // отправляем данные об координатах курсора
@@ -35,7 +36,7 @@ areaDrawWidget::areaDrawWidget(GISInformer* gis):
 
     drawGeoMap();
 
-    // чтобы moveEvent работал без нажатия
+    // Чтобы moveEvent работал без нажатия
     this->setMouseTracking(true);
 
     this->setCursor(Qt::ArrowCursor);
@@ -49,20 +50,21 @@ areaDrawWidget::areaDrawWidget(GISInformer* gis):
 
 void areaDrawWidget::toPixDrawArea(int &Xid, int &Yid)
 {
-    Xid = (Xid - 0) * kZoom;
-    Yid = (Yid - 0) * kZoom;
+    Xid = (Xid - idXo) * kZoom;
+    Yid = (Yid - idYo) * kZoom;
 }
 
 void areaDrawWidget::toIdMapCoords(int &Xpix, int &Ypix)
 {
-    Xpix = (Xpix / kZoom) + 0;
-    Ypix = (Ypix / kZoom) + 0;
+    Xpix = (Xpix / kZoom) + idXo;
+    Ypix = (Ypix / kZoom) + idYo;
 }
 
 void areaDrawWidget::updateSize()
 {
-//    W = images[geoMap]->width()  * kZoom;
-//    H = images[geoMap]->height() * kZoom;
+    //
+    W = drawImg.width()  * kZoom;
+    H = drawImg.height() * kZoom;
 
     setFixedSize(W, H);
 
@@ -100,31 +102,10 @@ void areaDrawWidget::drawBorder()
 
 void areaDrawWidget::drawMap()
 {
-    // Какое изображение отрисовать
-    switch (curOptRepaint)
-    {
-        case geoMap:
-            drawImg = images[geoMap];
-            break;
+    //
+    drawImg = gis->getGeoImage();
 
-        case netData:
-            drawImg = images[netData];
-            break;
-
-        case QFunction:
-            drawImg = images[QFunction];
-            break;
-    }
-    wightPixMap = drawImg->width() * kZoom;
-    heightPixMap = drawImg->height() * kZoom;
-    pPainter->drawImage(0, 0, drawImg->scaled(wightPixMap, heightPixMap));
-
-    ///!!!!!!!!!!!!!!
-//    drawImg = gis->getGeoImage();
-
-//    wightPixMap = drawImg.width() * kZoom;
-//    heightPixMap = drawImg.height() * kZoom;
-//    pPainter->drawImage(0, 0, drawImg.scaled(wightPixMap, heightPixMap));
+    pPainter->drawImage(0, 0, drawImg.scaled(W, H));
 }
 
 void areaDrawWidget::getSizePixMap(int &W, int &H)
@@ -335,11 +316,11 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
 void areaDrawWidget::updateInfoCoordMap(int idX, int idY)
 {
     toIdMapCoords(idX, idY);
-    Coords* coords = gis->getCoords(idX, idY);
+    Coords coords = gis->getCoords(idX, idY);
 
-    QString strCoords =  "X:" + QString::number(coords->X()) + "м"
-                        " Y:" + QString::number(coords->Y()) + "м"
-                        " H:" + QString::number(coords->H()) + "м";
+    QString strCoords =  "X:" + QString::number(coords.X()) + "м"
+                        " Y:" + QString::number(coords.Y()) + "м"
+                        " H:" + QString::number(coords.H()) + "м";
 
     updateCoord(strCoords);
 }

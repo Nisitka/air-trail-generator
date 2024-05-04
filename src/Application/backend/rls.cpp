@@ -384,7 +384,7 @@ void RLS::getRectPosition(int &idX, int &idY, int &W, int &H)
 
 RLS::~RLS()
 {
-    // очистка блоков от сигнала данной РЛС
+    // Очистка блоков от сигнала данной РЛС
     for (int i=0; i<blocksZD.size(); i++)
     {
         blocksZD[i]->removeZD();
@@ -406,7 +406,7 @@ RLS::~RLS()
     {
         delete [] l_DV[i];
     }
-    // очищаем память от дискретных значений угла
+    // Очищаем память от дискретных значений угла
     delete [] mE;
 
     //

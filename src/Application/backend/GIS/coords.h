@@ -5,18 +5,26 @@
 class Coords
 {
 public:
-    Coords(int x, int y, int h);
+    Coords();
+    Coords(int x, int y, int h,
+           int longId); // В метрах
+
+    enum units {m, id};
 
     // Получить данные
-    int X() const;
-    int Y() const;
-    int H() const;
+    int X(units u = m) const;
+    int Y(units u = m) const;
+    int H(units u = m) const;
+
+    int longStep() const;
 
 private:
 
     int x;
     int y;
     int h;
+
+    int l;
 };
 
 #endif // COORDS_H

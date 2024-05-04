@@ -9,10 +9,30 @@ processTmpWidget::processTmpWidget(QWidget* backgroundWidget_):
                         "   border: 1px solid rgb(55,55,55,0);"
                         "};)");
 
-    gif = new QMovie(":/resurs/victory.gif");
+    gif = new QMovie(":/resurs/loading2.gif"); //victory
+    QSize size = QSize(80, 80);
+    gif->setScaledSize(size);
     this->setMovie(gif);
 
+    textIsShow = false;
+
+    textLabel = new QLabel(this);
+    textLabel->setFixedSize(size);
+    textLabel->setAlignment(Qt::AlignCenter);
+    textLabel->move(5,3);
+
     //this->hide();
+}
+
+void processTmpWidget::setValProgress(int percent)
+{
+    if (!textIsShow)
+    {
+        textIsShow = true;
+        textLabel->show();
+    }
+
+    textLabel->setText(QString::number(percent) + "%");
 }
 
 void processTmpWidget::Show()
@@ -30,6 +50,9 @@ void processTmpWidget::Hide()
 {
     gif->stop();
 
+    textLabel->hide();
+    textIsShow = false;
+
     this->hide();
 }
 
@@ -37,4 +60,5 @@ processTmpWidget::~processTmpWidget()
 {
     gif->stop();
     delete gif;
+    delete textLabel;
 }

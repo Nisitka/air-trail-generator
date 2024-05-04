@@ -19,15 +19,14 @@ signals:
     void buildFinish(int W, int L, int H);
 
 public:
-    geoGenerator(int wArea, int lArea,
-                 QVector<QVector<int> *>* heights);
+    geoGenerator(int wArea, int lArea);
 
     /// !!!! пока так, надо убрать
     Map* getMap() const;
 
     // В дискретах текущей активной зоны
-    int getH(int idX, int idY) const;
-    Coords* getCoords(int idX, int idY) const;
+    int getH(int idX, int idY, int units = Map::m) const;
+    Coords getCoords(int idX, int idY) const;
 
     // Запуск генерации рельефа
     void buildRandomMap(double setBlockP, int countEpochs,

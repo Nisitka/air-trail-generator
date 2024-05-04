@@ -47,7 +47,7 @@ public:
     geoBlock* getBlock(int x, int y, int z) const;
 
     // Высота в координатах X, Y
-    enum typeH{m, id};
+    enum units{m, id};
     int getHeight(int X, int Y, int type = id) const;
 
  /*   Узнать кол-во блоков, находящихся в ЗО

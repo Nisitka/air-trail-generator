@@ -8,6 +8,8 @@ painterMapImage::painterMapImage(Map* map_, int W, int H):
     // Сразу инициализируем изображение
     img = new QImage(W, H, QImage::Format_RGB32);
 
+    //qDebug() << W << H;
+
     //
     numW = W;
     numL = H;

@@ -5,8 +5,7 @@
 
 #include <QDebug>
 
-optRLSwindow::optRLSwindow(GISInformer* gis, QWidget *parent):
-    gis(gis),
+optRLSwindow::optRLSwindow( QWidget *parent):
     QWidget(parent),
     ui(new Ui::optRLSwindow)
 {
@@ -17,17 +16,6 @@ optRLSwindow::optRLSwindow(GISInformer* gis, QWidget *parent):
     //
     connect(ui->setCoordRLSpushButton, SIGNAL(clicked()),
             this,                      SLOT(setNewPosRLS()));
-
-    ui->setRLSprogressBar->setValue(0);
-    ui->setRLSprogressBar->hide(); // изначально прячем загрузку
-
-    ui->setOptRLSProgressBar->setValue(0);
-    ui->setOptRLSProgressBar->hide();
-
-    hRLS = 0;
-
-    ui->on_off_RLS_Button->hide();
-    ui->setCoordRLSpushButton->hide();
 
     //
     connect(ui->setOptZDvertButton, SIGNAL(clicked()),
@@ -94,12 +82,9 @@ void optRLSwindow::addRLS()
     //
     loadingWidget->Show();
 
-    // значения с интерфейса ///!!!!!!!!!!!!!
-    xRLS = ui->xRLSspinBox->value() / 20.0;
-    yRLS = ui->yRLSspinBox->value() / 20.0;//map->getLenBlock();
-
-    // создаем объект и передаем его адрес в менеджер РЛС
-    createRLS(new QPoint(xRLS, yRLS), ui->nameNewRLSLineEdit->text()); //ui->nameNewRLSLineEdit->text()
+    // Передаем исх. данные для создания РЛС в менеджер станций
+    createRLS(new QPoint(RLScoords.X(Coords::id), RLScoords.Y(Coords::id)),
+              ui->nameNewRLSLineEdit->text());
 
     ui->listRLSComboBox->addItem(ui->nameNewRLSLineEdit->text());
     ui->nameNewRLSLineEdit->clear();
@@ -121,7 +106,8 @@ void optRLSwindow::setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working
 {
     loadingWidget->Hide();
 
-    updateCoordRLS(Xpos, Ypos);
+    ///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //updateCoordRLS(Xpos, Ypos);
     ui->RmaxSpinBox->setValue(Rmax);
 
     workingCurRLS = working;
@@ -151,7 +137,17 @@ void optRLSwindow::setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working
 
 void optRLSwindow::setDesine()
 {
-    // настройка визуала GroupBox-ов
+    // Начальное состояние
+    ui->setRLSprogressBar->setValue(0);
+    ui->setRLSprogressBar->hide(); // изначально прячем загрузку
+
+    ui->setOptRLSProgressBar->setValue(0);
+    ui->setOptRLSProgressBar->hide();
+
+    ui->on_off_RLS_Button->hide();
+    ui->setCoordRLSpushButton->hide();
+
+    // Настройка визуала GroupBox-ов
     Designer::setGroupBox(ui->RmaxGroupBox);
     Designer::setGroupBox(ui->ZDvertGroupBox);
     Designer::setGroupBox(ui->coordRLSgroupBox);
@@ -161,20 +157,20 @@ void optRLSwindow::setDesine()
     Designer::setGroupBox(ui->listRLSGroupBox);
     Designer::setGroupBox(ui->optionsGroupBox);
 
-    // настройка визуала кнопок
+    // Настройка визуала кнопок
     Designer::setButton(ui->setCoordRLSpushButton);
     Designer::setButton(ui->setOptZDvertButton);
     Designer::setButton(ui->createRLSButton);
     Designer::setButton(ui->removeRLSButton, Designer::red);
 
-    // настройка визуала полоски прогресса
+    // Настройка визуала полоски прогресса
     Designer::setProgressBar(ui->setRLSprogressBar);
     Designer::setProgressBar(ui->setOptRLSProgressBar);
 
     //
     Designer::setTabWidget(ui->generateDVOptTabWidget);
 
-    // изначально кнопка в таком состоянии
+    // Изначально кнопка в таком состоянии
     Designer::setButton(ui->on_off_RLS_Button, Designer::green);
 }
 
@@ -198,11 +194,12 @@ void optRLSwindow::enablingRLS()
 
 void optRLSwindow::setNewPosRLS()
 {
-    // значения с интерфейса ///!!!!!!!!!!!!!!!!!!!!!!!
-    xRLS = ui->xRLSspinBox->value() / 20.0;
-    yRLS = ui->yRLSspinBox->value() / 20.0;
+    // Значения с интерфейса
+    int l = RLScoords.longStep();
+    int idX = ui->xRLSspinBox->value() / l;
+    int idY = ui->yRLSspinBox->value() / l;
 
-    setPositionRLS(xRLS, yRLS);
+    setPositionRLS(idX, idY);
 }
 
 void optRLSwindow::repaintGraphic(double* x, double* y, int count)
@@ -249,21 +246,14 @@ void optRLSwindow::updateProgressSetOptRLS(int id)
     ui->setOptRLSProgressBar->setValue(id);
 }
 
-void optRLSwindow::updateCoordRLS(int x, int y)
+void optRLSwindow::updateCoordRLS(Coords coords)
 {
-    //qDebug() << "Coord RLS:" << x << y ;
+    RLScoords = coords;
 
-    Coords* coords = gis->getCoords(x, y);
-
-    xRLS = coords->X();
-    yRLS = coords->Y();
-    hRLS = coords->H();
-
-    ui->xRLSspinBox->setValue(xRLS);
-    ui->yRLSspinBox->setValue(yRLS);
-    ui->zValueRLSLabel->setText(QString::number(hRLS));
-
-    delete coords;
+    //
+    ui->xRLSspinBox->setValue(RLScoords.X(Coords::m));
+    ui->yRLSspinBox->setValue(RLScoords.Y(Coords::m));
+    ui->zValueRLSLabel->setText(QString::number(RLScoords.Y(Coords::m)));
 }
 
 void optRLSwindow::readyVector(int numVector)

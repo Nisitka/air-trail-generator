@@ -1,22 +1,54 @@
 #include "coords.h"
 
-Coords::Coords(int x, int y, int h):
-    x(x), y(y), h(h)
+Coords::Coords():
+    x(0), y(0), h(0), l(1)
 {
 
 }
 
-int Coords::X() const
+Coords::Coords(int x, int y, int h, int l):
+    x(x), y(y), h(h), l(l)
 {
-    return x;
+
 }
 
-int Coords::Y() const
+int Coords::longStep() const
 {
-    return y;
+    return l;
 }
 
-int Coords::H() const
+int Coords::X(units u) const
 {
-    return h;
+    switch (u) {
+    case m:
+        return x * l;
+        break;
+    case id:
+        return x;
+        break;
+    }
+}
+
+int Coords::Y(units u) const
+{
+    switch (u) {
+    case m:
+        return y * l;
+        break;
+    case id:
+        return y;
+        break;
+    }
+}
+
+int Coords::H(units u) const
+{
+    switch (u) {
+    case m:
+        return h * l;
+        break;
+    case id:
+        return h;
+        break;
+    }
 }

@@ -2,7 +2,8 @@
 
 #include "areadrawwidget.h"
 
-ToolSetRLS::ToolSetRLS(int id): drawAreaTool(id)
+ToolSetRLS::ToolSetRLS(int id, GISInformer* gis):
+    drawAreaTool(id), gis(gis)
 {
     cursor = Qt::CrossCursor;
 
@@ -98,7 +99,7 @@ void ToolSetRLS::mousePress(QMouseEvent *mouse)
     int xRLS = xPressMouse;
     int yRLS = yPressMouse;
 
-    // Пиксели в индексы клеток карты
+    // Пиксели в индексы клеток текущей активной зоны
     drawArea->toIdMapCoords(xRLS, yRLS);
 
     //
@@ -111,7 +112,7 @@ void ToolSetRLS::mousePress(QMouseEvent *mouse)
 void ToolSetRLS::setMarkCoordRLS()
 {
     // Отправляем координаты потонциальной РЛС
-    setCoordRLS(xPosRLS, yPosRLS);
+    setCoordRLS(gis->getCoords(xPosRLS, yPosRLS));
 
     //
     drawArea->repaint();

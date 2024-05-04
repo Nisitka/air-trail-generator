@@ -5,7 +5,7 @@
 GIS::GIS()
 {
     // Отвечает за работу с рельефом карты
-    geoBuilder = new geoGenerator(currentW, currentH, Hmatrix);
+    geoBuilder = new geoGenerator(currentW, currentH);
     connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
             this,       SLOT(setMapSize(int,int,int)));
     connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
@@ -26,12 +26,18 @@ GISInformer* GIS::Informer() /* const */
     return this;
 }
 
-int GIS::getH(int idX, int idY) const
+void GIS::getIdActionArea(int &idXo, int &idYo) const
 {
-    return geoBuilder->getH(idX, idY);
+    idXo = idXpos;
+    idYo = idYpos;
 }
 
-Coords* GIS::getCoords(int idX, int idY) const
+int GIS::getH(int idX, int idY, int units) const
+{
+    return geoBuilder->getH(idX, idY, units);
+}
+
+Coords GIS::getCoords(int idX, int idY) const
 {
     return geoBuilder->getCoords(idX, idY);
 }
@@ -100,24 +106,6 @@ void GIS::initActionArea()
 
     backPainter->setPosArea(idXpos, idYpos);
     backPainter->updateFull();
-}
-
-void GIS::buildHmatrix()
-{
-    Hmatrix = new QVector<QVector<int>*>;
-    for (int i=0; i<currentH; i++)
-    {
-        Hmatrix->append(new QVector<int>);
-        for (int j=0; j<currentW; j++)
-        {
-            Hmatrix->last()->append(0);
-        }
-    }
-}
-
-QVector<QVector<int> *>* GIS::getHmatrix()
-{
-    return Hmatrix;
 }
 
 void GIS::openMap(const QString &dirNameFile)

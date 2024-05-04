@@ -21,7 +21,7 @@ GUI::GUI(QImage* geoMap,
     // Инструменты для граф.области(какая область, приоритет-ключ задач отрисовки)
     toolPTrail  = new ToolPredTrail(mapAreaMainWindow::predictTrail);
     toolPLine   = new ToolPredRect (mapAreaMainWindow::predictRect);
-    toolRLS     = new ToolSetRLS(   mapAreaMainWindow::setRLS);
+    toolRLS     = new ToolSetRLS(   mapAreaMainWindow::setRLS, gis);
     toolEditTer = new ToolEditMap(  mapAreaMainWindow::editEarth);
     toolVisMap  = new ToolVisMap(   mapAreaMainWindow::mapVis);
     ToolRuler* toolRuler = new ToolRuler(mapAreaMainWindow::Ruler);
@@ -47,10 +47,10 @@ GUI::GUI(QImage* geoMap,
                      "Карта", "Карта");
 
     //
-    optRLSWin = new optRLSwindow(gisInformer);
+    optRLSWin = new optRLSwindow();
     //
-    QObject::connect(toolRLS,   SIGNAL(setCoordRLS(int,int)),
-                     optRLSWin, SLOT(updateCoordRLS(int,int)));
+    QObject::connect(toolRLS,   SIGNAL(setCoordRLS(Coords)),
+                     optRLSWin, SLOT(updateCoordRLS(Coords)));
     mainWin->addTask(optRLSWin, QIcon(":/resurs/rlsIcon"),
                      "РЛС", "Радиолокационная станция");
 

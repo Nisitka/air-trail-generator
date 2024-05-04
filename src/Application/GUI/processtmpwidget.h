@@ -12,12 +12,16 @@ public:
     void Show();
     void Hide();
 
+    void setValProgress(int percent);
+
     ~processTmpWidget();
 
 private:
 
-    QMovie* gif;
+    QLabel* textLabel;
+    bool textIsShow;
 
+    QMovie* gif;
     QWidget* backgroundWidget;
 
 };
