@@ -36,9 +36,9 @@ void DataAccessObjectWindow::connect_dao()
 
 }
 
-void DataAccessObjectWindow::status_connect(bool a)
+void DataAccessObjectWindow::status_connect(bool isConnected)
 {
-    if(a == true)
+    if(isConnected)
     {
         ui->infoLabel->setText("База данных подключена");
         ui->infoLabel->setStyleSheet("color: green;");
@@ -46,7 +46,7 @@ void DataAccessObjectWindow::status_connect(bool a)
         ui->connectButton->setEnabled(true);
         ui->progressBar->hide();
     }
-    if(a == false)
+    else
     {
         ui->infoLabel->setText("База данных не подключена");
         ui->infoLabel->setStyleSheet("color: red;");
@@ -54,6 +54,14 @@ void DataAccessObjectWindow::status_connect(bool a)
         ui->connectButton->setEnabled(true);
         ui->progressBar->hide();
     }
+//    if(a == false)
+//    {
+//        ui->infoLabel->setText("База данных не подключена");
+//        ui->infoLabel->setStyleSheet("color: red;");
+//        ui->infoLabel->show();
+//        ui->connectButton->setEnabled(true);
+//        ui->progressBar->hide();
+//    }
 }
 
 void DataAccessObjectWindow::onTimeout()

@@ -5,7 +5,7 @@
 
 AirObjectFunWindow::AirObjectFunWindow()
 {
-    //AirWin = new AirWindow;
+    AirWin = new AirWindow;
     this->setCentralWidget(AirWin);
 
     QObject::connect(AirWin, SIGNAL(creat_AirObject(QString, double,double,double, QString)),

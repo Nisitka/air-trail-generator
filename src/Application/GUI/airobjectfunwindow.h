@@ -32,11 +32,13 @@ public slots:
 
 private:
 
-    QLabel *photoLabel, *nameLabel, *longLabel, *wigthLabel, *speedLabel;
-    QLineEdit *photoEdit, *nameEdit, *longEdit, *wigthEdit, *speedEdit;
-    QWidget *wid;
-    AirWindow *AirWin = new AirWindow;
-    AirObject *airObj;
+//    QLabel *photoLabel, *nameLabel, *longLabel, *wigthLabel, *speedLabel;
+//    QLineEdit *photoEdit, *nameEdit, *longEdit, *wigthEdit, *speedEdit;
+//    QWidget *wid;
+//    AirWindow *AirWin = new AirWindow;
+//    AirObject *airObj;
+
+    AirWindow *AirWin;
 };
 
 #endif // AIROBJECTFUNWINDOW_H
