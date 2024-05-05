@@ -52,18 +52,21 @@ void geoGenerator::openMap(const QString &dirMapFile)
     // Размер карты, олицитворяющей активную зону
     map->resize(wArea, lArea, Hmap);
 
+    //
+    heights.clear();
+
     int h;
     QColor color;
     for (int x=0; x<Wmap; x++)
     {
-        heights.append(new QVector<int>);
+        heights.append(QVector<int>(Lmap));
         for (int y=0; y<Lmap; y++)
         {
             color = geoData.pixelColor(x, y);
             h = Hmap * ((double) ((double)color.blueF() +
                                           color.redF()  +
                                           color.greenF()) / 1.0);
-            heights.last()->append(h);
+            heights.last()[y] = h;
         }
     }
 
@@ -72,9 +75,12 @@ void geoGenerator::openMap(const QString &dirMapFile)
     buildFinish(Wmap, Lmap, Hmap);
 }
 
-void geoGenerator::editEarth(int idXo, int idYo, int w, int l, int dH, int t)
+void geoGenerator::editEarth(int idX, int idY, int w, int l, int dH, int t)
 {
-    map->editEarth(idXo, idYo, w, l, dH, t);
+    map->editEarth(idX-idXo, idY-idYo, w, l, dH, t);
+
+    //
+    updateHeights(idX, idY, w, l);
 }
 
 void geoGenerator::setPosActionArea(int idXo_, int idYo_)
@@ -90,7 +96,7 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
     {
         for (int y=0; y<lArea; y++)
         {
-            h = heights[idXo + x]->at(idYo + y);
+            h = heights[idXo + x][idYo + y];
             map->setH(x, y, h);
         }
     }
@@ -98,7 +104,17 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
 
 void geoGenerator::updateHeights(int idX, int idY, int W, int L)
 {
+    int idLastX = idX + W;
+    int idLastY = idY + L;
 
+    for (int X=idX; X<=idLastX; X++)
+    {
+        for (int Y=idY; Y<=idLastY; Y++)
+        {
+            heights[X][Y] =
+                    map->getHeight(idXo + X, idYo + Y);
+        }
+    }
 }
 
 void geoGenerator::buildFlatMap(int W, int L, int H)

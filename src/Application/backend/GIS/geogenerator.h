@@ -56,7 +56,7 @@ private:
     Map* map;
 
     // Матрица высот
-    QVector<QVector<int>*> heights;
+    QVector<QVector<int>> heights;
 
     // Активная зона
     int idXo;  // Угол

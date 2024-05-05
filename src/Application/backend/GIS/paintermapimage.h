@@ -43,7 +43,6 @@ public:
     QImage* getImage();
 
 private:
-
     // Область для создания текстуры
     int idXo;
     int idYo;

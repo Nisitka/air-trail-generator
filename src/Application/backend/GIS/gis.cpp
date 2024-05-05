@@ -141,7 +141,7 @@ void GIS::updateFromRect(const QRect &rect)
 
 void GIS::updateFromRect(int idX, int idY, int w, int h)
 {
-    backPainter->runToRect(idX, idY, w, h);
+    backPainter->runToRect(idX-idXpos, idY-idYpos, w, h);
 
     changedMap(idX, idY, w, h);
 }
@@ -159,7 +159,7 @@ void GIS::upEarth(int idX, int idY, int R)
     int idYo = idY - (R / 2);
     geoBuilder->editEarth(idXo, idYo, R, R, 1);
 
-    backPainter->runToRect(QRect(idXo, idYo, R, R));
+    backPainter->runToRect(QRect(idXo-idXpos, idYo-idYpos, R, R));
 
     changedMap(idXo, idYo, R, R);
 }
@@ -170,7 +170,7 @@ void GIS::downEarth(int idX, int idY, int R)
     int idYo = idY - (R / 2);
     geoBuilder->editEarth(idXo, idYo, R, R, 3, Map::down);
 
-    backPainter->runToRect(QRect(idXo, idYo, R, R));
+    backPainter->runToRect(QRect(idXo-idXpos, idYo-idYpos, R, R));
 
     changedMap(idXo, idYo, R, R);
 }

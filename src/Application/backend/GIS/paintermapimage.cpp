@@ -38,6 +38,8 @@ QImage* painterMapImage::getImage()
 void painterMapImage::updateFull()
 {
     Hmap = map->getCountLayers();
+    dHeight = Hmap / colors.size();
+
     run();
 }
 
@@ -118,8 +120,6 @@ void painterMapImage::run()
 QColor painterMapImage::colorHeight(int value)
 {
     int r, g, b;
-
-    dHeight = Hmap / colors.size();
 
     int id = value / dHeight;
     // если предельный цвет
