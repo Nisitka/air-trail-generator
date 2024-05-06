@@ -22,6 +22,7 @@ void AirInfoWindow::showInfo(AirObject *AirObj)
     air->ui->weightEdit->setText(QString::number(AirObj->getWightAir()));
     air->ui->speedEdit->setText(QString::number(AirObj->getSpeedAir()));
     QPixmap pix(":/resurs/"+ AirObj->getPhotoAir() +"");
+
     air->ui->label->setPixmap(QPixmap(pix.scaled(290,150,Qt::KeepAspectRatio)));
 
     addDocks(air);

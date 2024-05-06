@@ -18,6 +18,20 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     map = new Map;
 }
 
+int geoGenerator::absolute(int idX, int idY, Map::units u) const
+{
+    switch (u) {
+    case Map::m:
+
+
+        break;
+    case Map::id:
+
+
+        break;
+    }
+}
+
 int geoGenerator::getH(int idX, int idY, int units) const
 {
     return map->getHeight(idX, idY, units);

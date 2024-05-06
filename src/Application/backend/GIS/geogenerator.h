@@ -3,12 +3,13 @@
 
 #include <QObject>
 
-#include "map.h"
 #include "paintermapimage.h"
+
+#include "heightmeter.h"
 
 #include "coords.h"
 
-class geoGenerator : public QObject
+class geoGenerator: public QObject, public HeightMeter
 {
     Q_OBJECT
 signals:
@@ -20,6 +21,9 @@ signals:
 
 public:
     geoGenerator(int wArea, int lArea);
+
+    //
+    int absolute(int idX, int idY, Map::units u) const override final;
 
     /// !!!! пока так, надо убрать
     Map* getMap() const;

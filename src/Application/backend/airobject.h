@@ -25,6 +25,8 @@ public slots:
     void setSpeedAir(double);
     void setPhotoAir(QString);
 
+    //const QImage& Icon() const;
+
 public:
 
     QString nameAir;
