@@ -24,8 +24,8 @@
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
 #include "backend/airobject.h"
 #include "airobjectfunwindow.h"
-#include "ui/airwindow.h"
-#include "ui/airinfowindow.h"
+#include "airwindow.h"
+#include "airinfowindow.h"
 
 // Интерфейс всей программы
 class GUI

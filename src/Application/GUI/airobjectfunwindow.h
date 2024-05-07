@@ -7,8 +7,8 @@
 
 #include "multiplewindow.h"
 #include "backend/airobject.h"
-#include "UI/airwindow.h"
-#include "ui/airinfowindow.h"
+#include "airwindow.h"
+#include "airinfowindow.h"
 
 
 class AirObjectFunWindow : public MultipleWindow

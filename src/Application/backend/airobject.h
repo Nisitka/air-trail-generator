@@ -2,39 +2,21 @@
 #define AIROBJECT_H
 
 #include <QObject>
+#include <backend/airlableobject.h>
 
-class AirObject : public QObject
+class AirObject : public AirLableObject
 {
-    Q_OBJECT
+
 public:
-    explicit AirObject(QObject *parent = nullptr);
+    explicit AirObject();
 
-signals:
-
-public slots:
+public:
 
     QString getNameAir();
     double getLongAir();
     double getWightAir();
     double getSpeedAir();
     QString getPhotoAir();
-
-    void setNameAir(QString);
-    void setLongAir(double);
-    void setWightAir(double);
-    void setSpeedAir(double);
-    void setPhotoAir(QString);
-
-    //const QImage& Icon() const;
-
-public:
-
-    QString nameAir;
-    double longsAir;
-    double wightAir;
-    double speedAir;
-    QString photoAir;
-
 };
 
 #endif // AIROBJECT_H

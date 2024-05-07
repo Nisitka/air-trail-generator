@@ -1,7 +1,7 @@
 #include "airobject.h"
 #include <QDebug>
 
-AirObject::AirObject(QObject *parent) : QObject(parent)
+AirObject::AirObject()
 {
 
 }
@@ -31,27 +31,27 @@ QString AirObject::getPhotoAir()
     return photoAir;
 }
 
-void AirObject::setNameAir(QString name)
-{
-    nameAir = name;
-}
+//void AirObject::setNameAir(QString name)
+//{
+//    nameAir = name;
+//}
 
-void AirObject::setLongAir(double longs)
-{
-    longsAir = longs;
-}
+//void AirObject::setLongAir(double longs)
+//{
+//    longsAir = longs;
+//}
 
-void AirObject::setWightAir(double wight)
-{
-    wightAir = wight;
-}
+//void AirObject::setWightAir(double wight)
+//{
+//    wightAir = wight;
+//}
 
-void AirObject::setSpeedAir(double speed)
-{
-    speedAir = speed;
-}
+//void AirObject::setSpeedAir(double speed)
+//{
+//    speedAir = speed;
+//}
 
-void AirObject::setPhotoAir(QString photo)
-{
-    photoAir = photo;
-}
+//void AirObject::setPhotoAir(QString photo)
+//{
+//    photoAir = photo;
+//}

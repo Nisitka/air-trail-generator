@@ -83,9 +83,10 @@ SOURCES += main.cpp\
     backend/graphicengine.cpp \
     backend/GIS/gisinformer.cpp \
     backend/GIS/coords.cpp \
-    GUI/UI/airinfowindow.cpp \
-    GUI/UI/airwindow.cpp \
-    backend/GIS/heightmeter.cpp
+    GUI/airinfowindow.cpp \
+    GUI/airwindow.cpp \
+    backend/GIS/heightmeter.cpp \
+    backend/airlableobject.cpp
 
 HEADERS  += \
     core.h \
@@ -147,9 +148,10 @@ HEADERS  += \
     backend/graphicengine.h \
     backend/GIS/gisinformer.h \
     backend/GIS/coords.h \
-    GUI/UI/airinfowindow.h \
-    GUI/UI/airwindow.h \
-    backend/GIS/heightmeter.h
+    GUI/airinfowindow.h \
+    GUI/airwindow.h \
+    backend/GIS/heightmeter.h \
+    backend/airlableobject.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \
