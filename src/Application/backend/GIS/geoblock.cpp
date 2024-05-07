@@ -7,6 +7,35 @@ geoBlock::geoBlock()
     remove();
 }
 
+QDataStream &operator<<(QDataStream &out, const geoBlock &a)
+{
+    out << a.isEarth() << a.isZD();
+
+    return out;
+}
+
+QDataStream &operator>>(QDataStream &in, geoBlock &a)
+{
+    bool earth;
+    bool ZD;
+
+    in >> earth >> ZD;
+
+    a.setEarth(earth);
+    a.setZD(ZD);
+
+    return in;
+}
+
+void geoBlock::setEarth(bool v)
+{
+    earth = v;
+}
+void geoBlock::setZD(bool v)
+{
+    inZD = v;
+}
+
 void geoBlock::removeZD()
 {
     inZD = false;
@@ -33,12 +62,12 @@ void geoBlock::toVoid()
     earth = false;
 }
 
-bool geoBlock::isEarth()
+bool geoBlock::isEarth() const
 {
     return earth;
 }
 
-bool geoBlock::isZD()
+bool geoBlock::isZD() const
 {
     return inZD;
 }
