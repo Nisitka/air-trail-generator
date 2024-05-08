@@ -109,7 +109,7 @@ void Core::run()
 
     init_buildThreads();
     //gis->setDefaultMap();
-    gis->openMap(QApplication::applicationDirPath() + "\\maps\\img2.png");
+    gis->loadTerrain(QApplication::applicationDirPath() + "\\maps\\img2.png");
 
     ready();
 

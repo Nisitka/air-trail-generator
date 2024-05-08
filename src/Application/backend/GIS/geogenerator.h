@@ -40,8 +40,11 @@ public:
     // Создать плоский (пустой) рельеф
     void buildFlatMap(int W = 400, int L = 400, int H = 256);
 
-    // Открыть рельеф
-    void openMap(const QString& dirMapFile);
+    // Открыть карту
+    //void openMap(const QString& dirMapFile);
+
+    // Загрузить рельеф
+    void loadTerrain(const QString& dirNameFile);
 
     // Установить область активных действий
     void setPosActionArea(int idXo, int idYo);
@@ -56,13 +59,17 @@ public:
                    int dH, int t = Map::up); // Дельта изм., поднять/опустить
 
 private:
-    // Карта
-    Map* map;
+    //
+    void initMap(int W, int L, int H);
+    int Wmap, Lmap, Hmap;
+    QFile* map;
+    QString dirNameTmpMap;
 
     // Матрица высот
     QVector<QVector<int>> heights;
 
     // Активная зона
+    Map* actionArea;
     int idXo;  // Угол
     int idYo;
     int wArea; // Размеры

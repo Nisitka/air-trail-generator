@@ -51,6 +51,9 @@ public slots:
     void downEarth(int idX, int idY, int R); // Опустить землю
 
     //
+    void loadTerrain(const QString& dirNameFile);
+
+    //
     void openMap(const QString& dirNameFile);
 
 public:

@@ -15,7 +15,35 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     idYo = 0;
 
     //
-    map = new Map;
+    actionArea = new Map;
+
+    //
+    map = nullptr;
+    dirNameTmpMap = QApplication::applicationDirPath() +
+            "\\blocks\\tmpMap.map";
+
+    //initMap(100, 100, 256);
+}
+
+void geoGenerator::initMap(int W, int L, int H)
+{
+    delete map;
+    QFile::remove(dirNameTmpMap);
+    Wmap = W; Lmap = L; Hmap = H;
+    int countBlocks = Wmap * Lmap * Hmap;
+
+    map = new QFile(dirNameTmpMap);
+    //
+    QByteArray data;
+    QDataStream ds(&data, QIODevice::ReadWrite);
+    geoBlock block;
+    for (int i=0; i<countBlocks; i++)
+    {
+        ds << block;
+    }
+
+    map->open(QIODevice::ReadWrite);
+    map->write(data);
 }
 
 int geoGenerator::absolute(int idX, int idY, Map::units u) const
@@ -34,7 +62,7 @@ int geoGenerator::absolute(int idX, int idY, Map::units u) const
 
 int geoGenerator::getH(int idX, int idY, int units) const
 {
-    return map->getHeight(idX, idY, units);
+    return actionArea->getHeight(idX, idY, units);
 }
 
 Coords geoGenerator::getCoords(int idX, int idY) const
@@ -43,28 +71,28 @@ Coords geoGenerator::getCoords(int idX, int idY) const
     int Y = /*idYo + */idY;
     int H = getH(idX, idY, Map::id);
 
-    return Coords(X, Y, H, map->getLenBlock());
+    return Coords(X, Y, H, actionArea->getLenBlock());
 }
 
 Map* geoGenerator::getMap() const
 {
-    return map;
+    return actionArea;
 }
 
-void geoGenerator::openMap(const QString &dirMapFile)
+void geoGenerator::loadTerrain(const QString& dirNameFile)
 {
     buildStart();
 
     // Источник данных об рельефе
-    QImage geoData(dirMapFile);
+    QImage geoData(dirNameFile);
 
     // Полные размеры карты
     int Wmap = geoData.width();
     int Lmap = geoData.height();
     int Hmap = 256;
 
-    // Размер карты, олицитворяющей активную зону
-    map->resize(wArea, lArea, Hmap);
+    // Размер активной зоны
+    actionArea->resize(wArea, lArea, Hmap);
 
     //
     heights.clear();
@@ -91,7 +119,7 @@ void geoGenerator::openMap(const QString &dirMapFile)
 
 void geoGenerator::editEarth(int idX, int idY, int w, int l, int dH, int t)
 {
-    map->editEarth(idX-idXo, idY-idYo, w, l, dH, t);
+    actionArea->editEarth(idX-idXo, idY-idYo, w, l, dH, t);
 
     //
     updateHeights(idX, idY, w, l);
@@ -103,7 +131,7 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
     idYo = idYo_;
 
     //
-    map->clear();
+    actionArea->clear();
 
     int h;
     for (int x=0; x<wArea; x++)
@@ -111,7 +139,7 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
         for (int y=0; y<lArea; y++)
         {
             h = heights[idXo + x][idYo + y];
-            map->setH(x, y, h);
+            actionArea->setH(x, y, h);
         }
     }
 }
@@ -126,7 +154,7 @@ void geoGenerator::updateHeights(int idX, int idY, int W, int L)
         for (int Y=idY; Y<=idLastY; Y++)
         {
             heights[X][Y] =
-                    map->getHeight(idXo + X, idYo + Y);
+                actionArea->getHeight(idXo + X, idYo + Y);
         }
     }
 }
@@ -135,7 +163,7 @@ void geoGenerator::buildFlatMap(int W, int L, int H)
 {
     buildStart();
 
-    map->resize(W, L, H);
+    actionArea->resize(W, L, H);
 
     buildFinish(W, L, H);
 }
@@ -147,25 +175,25 @@ void geoGenerator::buildRandomMap(double setBlockP, int countEpochs,
     buildStart();
 
     // устанавливаем длину ребра блока
-    map->setLenBlock(lenBlock);
+    actionArea->setLenBlock(lenBlock);
 
     // берем актуальный размер карты
     int Wmap;
     int Lmap;
     int Hmap;
-    map->getSize(Wmap, Lmap, Hmap);
+    actionArea->getSize(Wmap, Lmap, Hmap);
 
     // если размеры необходимо изменить
     if (Wmap != W || Lmap != L || Hmap != H)
     {
         // прежде чем генерировать рельеф, создадим карту
-        map->resize(W, L, H);
-        map->getSize(Wmap, Lmap, Hmap);
+        actionArea->resize(W, L, H);
+        actionArea->getSize(Wmap, Lmap, Hmap);
     }
     else
     {
         // иначе только очищаем карту с предыдущего раза
-        map->clear();
+        actionArea->clear();
     }
 
     int countLayers = H;
@@ -184,9 +212,9 @@ void geoGenerator::buildRandomMap(double setBlockP, int countEpochs,
             int y = 1 + rand()%(L-2);
 
             // если снизу есть блок то с опр. вер-ю ставим блок
-            if (map->getBlock(x, y, h - 1)->isEarth() && P(setBlockP))
+            if (actionArea->getBlock(x, y, h - 1)->isEarth() && P(setBlockP))
             {
-                map->getBlock(x, y, h)->toEarth();
+                actionArea->getBlock(x, y, h)->toEarth();
             }
         }
 
@@ -201,11 +229,11 @@ void geoGenerator::buildRandomMap(double setBlockP, int countEpochs,
                 int y = 1 + rand()%(L-2);
 
                 // если блок существует, то выполняем следующие правила:
-                if (map->getBlock(x, y, h)->isEarth())
+                if (actionArea->getBlock(x, y, h)->isEarth())
                 {
                     // 1)
                     if (sumEarth(x, y, h) >= 3) builtRandBlock(x, y, h);
-                    else map->getBlock(x, y, h)->toVoid();
+                    else actionArea->getBlock(x, y, h)->toVoid();
 
                     // 2)
                     ///if (sumLive(x, y, h) <= 2) map->getBlock(x, y, h)->toVoid();
@@ -222,15 +250,15 @@ void geoGenerator::buildRandomMap(double setBlockP, int countEpochs,
 int geoGenerator::sumEarth(int x, int y, int z)
 {
     int count = 0;
-    if (map->getBlock(x + 1, y    , z)->isEarth()) count++;
-    if (map->getBlock(x - 1, y    , z)->isEarth()) count++;
-    if (map->getBlock(x    , y + 1, z)->isEarth()) count++;
-    if (map->getBlock(x    , y + 1, z)->isEarth()) count++;
+    if (actionArea->getBlock(x + 1, y    , z)->isEarth()) count++;
+    if (actionArea->getBlock(x - 1, y    , z)->isEarth()) count++;
+    if (actionArea->getBlock(x    , y + 1, z)->isEarth()) count++;
+    if (actionArea->getBlock(x    , y + 1, z)->isEarth()) count++;
 
-    if (map->getBlock(x + 1, y + 1, z)->isEarth()) count++;
-    if (map->getBlock(x + 1, y - 1, z)->isEarth()) count++;
-    if (map->getBlock(x - 1, y + 1, z)->isEarth()) count++;
-    if (map->getBlock(x - 1, y - 1, z)->isEarth()) count++;
+    if (actionArea->getBlock(x + 1, y + 1, z)->isEarth()) count++;
+    if (actionArea->getBlock(x + 1, y - 1, z)->isEarth()) count++;
+    if (actionArea->getBlock(x - 1, y + 1, z)->isEarth()) count++;
+    if (actionArea->getBlock(x - 1, y - 1, z)->isEarth()) count++;
 
     return count;
 }
@@ -240,16 +268,16 @@ void geoGenerator::removeRandBlock(int x, int y, int z) // координаты 
     switch (rand()%4)
     {
         case 0:
-            map->getBlock(x + 1, y, z)->toVoid();
+            actionArea->getBlock(x + 1, y, z)->toVoid();
             break;
         case 1:
-            map->getBlock(x - 1, y, z)->toVoid();
+            actionArea->getBlock(x - 1, y, z)->toVoid();
             break;
         case 2:
-            map->getBlock(x, y + 1, z)->toVoid();
+            actionArea->getBlock(x, y + 1, z)->toVoid();
             break;
         case 3:
-            map->getBlock(x, y - 1, z)->toVoid();
+            actionArea->getBlock(x, y - 1, z)->toVoid();
             break;
     }
 }
@@ -261,20 +289,20 @@ void geoGenerator::builtRandBlock(int x, int y, int z)
         switch (rand()%4)
         {
             case 0:
-                if(map->getBlock(x + 1, y, z - 1)->isEarth())
-                    map->getBlock(x + 1, y, z)->toEarth();
+                if(actionArea->getBlock(x + 1, y, z - 1)->isEarth())
+                    actionArea->getBlock(x + 1, y, z)->toEarth();
                 break;
             case 1:
-                if(map->getBlock(x - 1, y, z - 1)->isEarth())
-                    map->getBlock(x - 1, y, z)->toEarth();
+                if(actionArea->getBlock(x - 1, y, z - 1)->isEarth())
+                    actionArea->getBlock(x - 1, y, z)->toEarth();
                 break;
             case 2:
-                if(map->getBlock(x, y + 1, z-1)->isEarth())
-                    map->getBlock(x, y + 1, z)->toEarth();
+                if(actionArea->getBlock(x, y + 1, z-1)->isEarth())
+                    actionArea->getBlock(x, y + 1, z)->toEarth();
                 break;
             case 3:
-                if(map->getBlock(x, y - 1, z - 1)->isEarth())
-                    map->getBlock(x, y - 1, z)->toEarth();
+                if(actionArea->getBlock(x, y - 1, z - 1)->isEarth())
+                    actionArea->getBlock(x, y - 1, z)->toEarth();
                 break;
         }
     }
