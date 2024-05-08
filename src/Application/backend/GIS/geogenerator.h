@@ -65,6 +65,15 @@ private:
     QFile* map;
     QString dirNameTmpMap;
 
+    //
+    qint64 sizeBlock = 2;
+
+    // Заменить блок
+    void updateBlock(int idBlock, const geoBlock& b);
+
+    //
+    const geoBlock& readBlock(int idBlock);
+
     // Матрица высот
     QVector<QVector<int>> heights;
 

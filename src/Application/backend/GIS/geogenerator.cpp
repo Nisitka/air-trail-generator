@@ -22,7 +22,15 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     dirNameTmpMap = QApplication::applicationDirPath() +
             "\\blocks\\tmpMap.map";
 
-    //initMap(100, 100, 256);
+    // Сразу узнаем размер дискреты в байт
+    QByteArray data;
+    QDataStream ds(&data, QIODevice::ReadWrite);
+    geoBlock b;
+    ds << b;
+    sizeBlock = data.size();
+    //qDebug() << sizeBlock << "SIZE block";
+
+    initMap(300, 500, 256);
 }
 
 void geoGenerator::initMap(int W, int L, int H)
@@ -44,6 +52,27 @@ void geoGenerator::initMap(int W, int L, int H)
 
     map->open(QIODevice::ReadWrite);
     map->write(data);
+}
+
+void geoGenerator::updateBlock(int idBlock, const geoBlock& b)
+{
+    QByteArray data;
+    QDataStream ds(&data, QIODevice::WriteOnly);
+    ds << b;
+
+    map->seek(sizeBlock * idBlock);
+    map->write(data, sizeBlock);
+}
+
+const geoBlock& geoGenerator::readBlock(int idBlock)
+{
+    map->seek(sizeBlock * idBlock);
+    QDataStream inData(map->read(sizeBlock));
+
+    geoBlock b;
+    inData >> b;
+
+    return b;
 }
 
 int geoGenerator::absolute(int idX, int idY, Map::units u) const

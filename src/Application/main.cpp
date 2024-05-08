@@ -45,23 +45,23 @@ int main(int argc, char *argv[])
 //    file.write(data, 2);
 
     /// Считывание блока из файла
-    QFile file(QApplication::applicationDirPath() + "\\blocks\\blocks.b");
+//    QFile file(QApplication::applicationDirPath() + "\\blocks\\blocks.b");
 
-    if (file.open(QIODevice::ReadOnly))
-    {
-        // Размер одного блока в памяти
-        int count = 3;
-        int s = file.size() / count;
-        int id = 1; // индекс блока, который ищем
+//    if (file.open(QIODevice::ReadOnly))
+//    {
+//        // Размер одного блока в памяти
+//        int count = 3;
+//        int s = file.size() / count;
+//        int id = 1; // индекс блока, который ищем
 
-        //
-        file.seek(s*id);
-        QDataStream inData(file.read(s));
+//        //
+//        file.seek(s*id);
+//        QDataStream inData(file.read(s));
 
-        geoBlock newBlock;
-        inData >> newBlock;
-        qDebug() << newBlock.isEarth() << newBlock.isZD();
-    }
+//        geoBlock newBlock;
+//        inData >> newBlock;
+//        qDebug() << newBlock.isEarth() << newBlock.isZD();
+//    }
     ///-----------------------------
 
     Core* luckyWay = new Core;
