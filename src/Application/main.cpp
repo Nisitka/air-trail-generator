@@ -13,33 +13,44 @@ int main(int argc, char *argv[])
     runWindow startWin(&a, ":/resurs/backgDemo3");
 
     ///-----------------------------
-    /// Инициализация блока для записи
-/*    geoBlock b1;
-    b1.toEarth();
-    b1.toZD();*/
+    /// Инициализация блоков для записи
+    geoBlock b1, b2, b3;
+    b2.toEarth();
+    b2.toZD();
 
     //data.reserve(data_size_in_bytes);
 
-    /// Записываем блок в файл
-/*    QByteArray data;
-    QDataStream ds(&data, QIODevice::ReadWrite);
-    ds << b1;
+    /// Записываем блоки в файл
+//    QByteArray data;
+//    QDataStream ds(&data, QIODevice::ReadWrite);
+//    ds << b1 << b2 << b3;
 
-    //
-    QSaveFile file(QApplication::applicationDirPath() + "\\blocks\\2.b");
-    file.open(QIODevice::WriteOnly);
-    file.write(data);
-    //
-    file.commit();*/
+//    //
+//    QSaveFile file(QApplication::applicationDirPath() + "\\blocks\\blocks.b");
+//    file.open(QIODevice::WriteOnly);
+//    file.write(data);
+//    //
+//    file.commit();
 
     /// Считывание блока из файла
-/*    QFile file(QApplication::applicationDirPath() + "\\blocks\\2.b");
-    file.open(QIODevice::ReadOnly);
-    QDataStream inData(&file);
+    QFile file(QApplication::applicationDirPath() + "\\blocks\\blocks.b");
 
-    geoBlock b2;
-    inData >> b2;
-    qDebug() << b2.isEarth() << b2.isZD();*/
+    //
+    if (file.open(QIODevice::ReadOnly))
+    {
+        // Размер одного блока в памяти
+        int count = 3;
+        int s = file.size() / count;
+        int id = 1; // индекс блока, который ищем
+
+        //
+        file.seek(s*id);
+        QDataStream inData(file.read(s));
+
+        geoBlock newBlock;
+        inData >> newBlock;
+        qDebug() << newBlock.isEarth() << newBlock.isZD();
+    }
     ///-----------------------------
 
     Core* luckyWay = new Core;
