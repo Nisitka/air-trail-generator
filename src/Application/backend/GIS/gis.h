@@ -74,9 +74,6 @@ public:
     GIS();
 
     //
-    QImage* getBackgroundImg();
-
-    //
     QVector<QVector<int> *>* getHmatrix();
 
     //
@@ -90,9 +87,6 @@ private:
 
     //
     void initActionArea();
-
-    //
-    QImage* backgroundImg;
 
     // Точка, относительно которой формируется
     //  область, не требующая загрузки

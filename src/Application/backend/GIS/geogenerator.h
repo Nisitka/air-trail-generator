@@ -4,10 +4,9 @@
 #include <QObject>
 
 #include "paintermapimage.h"
-
 #include "heightmeter.h"
-
 #include "coords.h"
+#include "mapdata.h"
 
 class geoGenerator: public QObject, public HeightMeter
 {
@@ -58,19 +57,25 @@ public:
                    int w, int l,             // Ширина, длина области
                    int dH, int t = Map::up); // Дельта изм., поднять/опустить
 
+    //
+    void initMap(int W, int L, int H);
+
 private:
 
     //
     int idBlock(int idX, int idY, int idH);
 
-    //
-    void initMap(int W, int L, int H);
+    //  
     int Wmap, Lmap, Hmap;
     QFile* map;
     QString dirNameTmpMap;
 
+    // Кол-во байт в файле карты на:
+    qint64 sizeBlock;   // Одну дискрету
+    qint64 sizeOptData; // Другие данные
+
     //
-    qint64 sizeBlock = 2;
+    MapData mapData;
 
     // Заменить блок
     void updateBlock(int idBlock, const geoBlock& b);

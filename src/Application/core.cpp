@@ -15,7 +15,6 @@ void Core::init_GIS()
 
     gis = new GIS;
     objects.append(gis);
-    backgroundMapImage = gis->getBackgroundImg();
     map = gis->getMap();
     gisInformer = gis->Informer();
 
@@ -49,9 +48,9 @@ void Core::init_allObj()
     trailBuilder = new builderTrailDrones(map);
     objects.append(trailBuilder);
     readyRunProgress(54, "Инициализация интерфейса...");
+
     //
-    gui = new GUI(backgroundMapImage, ///ВРЕМЕННО!
-                  gis);
+    gui = new GUI(gis);
 
     readyRunProgress(65, "Инициализация интерфейса...");
 
@@ -110,7 +109,7 @@ void Core::run()
     init_buildThreads();
     //gis->setDefaultMap();
     //gis->loadTerrain(QApplication::applicationDirPath() + "\\maps\\img2.png");
-    gis->openMap(QApplication::applicationDirPath() + "\\blocks\\test.map");
+    gis->openMap(QApplication::applicationDirPath() + "\\blocks\\test2.map");
 
     ready();
 

@@ -31,8 +31,7 @@
 class GUI
 {
 public:
-    GUI(QImage* geoMap,
-        GISInformer* gisInformer); // установить карту
+    GUI(GISInformer* gisInformer); // установить карту
 
     //
     void connectGIS(GIS* gis);

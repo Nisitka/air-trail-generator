@@ -6,8 +6,7 @@
 
 #include "airobjectfunwindow.h"
 
-GUI::GUI(QImage* geoMap,
-         GISInformer* gis):
+GUI::GUI(GISInformer* gis):
     gisInformer(gis)
 {
     mainWin = new mainWindow;
@@ -66,7 +65,7 @@ GUI::GUI(QImage* geoMap,
                      toolPTrail, SLOT(startPredictTrail()));
 
     //
-    map3DWin = new map3DVisWindow(geoMap);
+    map3DWin = new map3DVisWindow();
     mainWin->addTask(map3DWin, QPixmap(":/resurs/icon3D"),
                      "3D", "Детальная визуализация рельефа");
     QObject::connect(toolVisMap, SIGNAL(updateRect3D(int,int,int,int)),

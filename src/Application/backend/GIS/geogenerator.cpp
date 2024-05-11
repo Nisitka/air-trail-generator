@@ -14,11 +14,11 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     idXo = 0;
     idYo = 0;
 
-    Hmap = 256;
+    //Hmap = 256;
 
     //
     actionArea = new Map;
-    actionArea->build(wArea, lArea, Hmap);
+    //actionArea->build(wArea, lArea, Hmap);
 
     //
     map = nullptr;
@@ -33,15 +33,24 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     sizeBlock = data.size();
     //qDebug() << sizeBlock << "SIZE block";
 
-    //initMap(1000, 1000, 256);
+    //
+    data.clear();
+    ds << mapData;
+    sizeOptData = data.size();
+    data.clear();
 }
 
 void geoGenerator::initMap(int W, int L, int H)
 {
+    buildStart();
+
     delete map;
     QFile::remove(dirNameTmpMap);
     Wmap = W; Lmap = L; Hmap = H;
     int countBlocks = Wmap * Lmap * Hmap;
+
+    //
+    actionArea->build(wArea, lArea, Hmap);
 
     map = new QFile(dirNameTmpMap);
     //
@@ -67,6 +76,15 @@ void geoGenerator::initMap(int W, int L, int H)
 
     map->open(QIODevice::ReadWrite);
 
+    // Записываем служебную информацию
+    QByteArray optData;
+    QDataStream dStream(&optData, QIODevice::ReadWrite);
+    mapData.W = Wmap; mapData.H = Hmap; mapData.L = Lmap;
+    dStream << mapData;
+    //qDebug() << optData.size();
+    map->write(optData);
+
+    // Записываем дискреты
     int countParts = parts.size();
     for (int nP=0; nP<countParts; nP++)
     {
@@ -79,6 +97,8 @@ void geoGenerator::initMap(int W, int L, int H)
         }
             map->write(data);
     }
+
+    buildFinish(Wmap, Lmap, Hmap);
 }
 
 void geoGenerator::openMap(const QString &dirMapFile)
@@ -87,12 +107,21 @@ void geoGenerator::openMap(const QString &dirMapFile)
 
     if (map != nullptr) map->close();
     delete map;
-    QFile::remove(dirNameTmpMap);
+    //QFile::remove(dirNameTmpMap);
 
-    Wmap = 1000; Lmap = 1000; Hmap = 256;
-
+    //
     map = new QFile(dirMapFile);
     map->open(QIODevice::ReadWrite);
+
+    //
+    map->seek(0); // Служеб. инф-я находится вначале
+    QDataStream data(map->read(sizeOptData));
+    data >> mapData;
+    Wmap = mapData.W; Lmap = mapData.L; Hmap = mapData.H;
+    //qDebug() << Wmap << Lmap << Hmap;
+
+    //
+    actionArea->build(wArea, lArea, Hmap);
 
     buildFinish(Wmap, Lmap, Hmap);
 }
@@ -119,17 +148,9 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
             }
         }
     }
-    //qDebug() << "setPosArea!";
+    qDebug() << "setPosArea!";
 
-//    int h;
-//    for (int x=0; x<wArea; x++)
-//    {
-//        for (int y=0; y<lArea; y++)
-//        {
-//            h = heights[idXo + x][idYo + y];
-//            actionArea->setH(x, y, h);
-//        }
-//    }
+//  h = heights[idXo + x][idYo + y];
 }
 
 int geoGenerator::idBlock(int idX, int idY, int idH)
@@ -143,13 +164,13 @@ void geoGenerator::updateBlock(int idBlock, const geoBlock& b)
     QDataStream ds(&data, QIODevice::WriteOnly);
     ds << b;
 
-    map->seek(sizeBlock * idBlock);
+    map->seek(sizeOptData + (sizeBlock * idBlock));
     map->write(data, sizeBlock);
 }
 
 geoBlock geoGenerator::readBlock(int idBlock)
 {
-    map->seek(sizeBlock * idBlock);
+    map->seek(sizeOptData + (sizeBlock * idBlock));
     QDataStream inData(map->read(sizeBlock));
 
     geoBlock b;
@@ -172,18 +193,18 @@ int geoGenerator::absolute(int idX, int idY, Map::units u) const
     }
 }
 
-int geoGenerator::getH(int idX, int idY, int units) const
-{
-    return actionArea->getHeight(idX, idY, units);
-}
-
 Coords geoGenerator::getCoords(int idX, int idY) const
 {
-    int X = /*idXo + */idX;
-    int Y = /*idYo + */idY;
+    int X = idX;
+    int Y = idY;
     int H = getH(idX, idY, Map::id);
 
     return Coords(X, Y, H, actionArea->getLenBlock());
+}
+
+int geoGenerator::getH(int idX, int idY, int units) const
+{
+    return actionArea->getHeight(idX-idXo, idY-idYo, units);
 }
 
 Map* geoGenerator::getMap() const

@@ -15,7 +15,11 @@ GIS::GIS()
 
     // Отвечает за отрисовку подложки
     backPainter = new painterMapImage(map, currentW, currentH);
-    backgroundImg = backPainter->getImage();
+    connect(geoBuilder,  SIGNAL(buildFinish(int,int,int)),
+            backPainter, SLOT(run()));
+
+    /// !!!!!!
+    //geoBuilder->initMap(500, 600, 100);
 
     // По умолчанию находимся в левом верхнем углу
     idXpos = 0; idYpos = 0;
@@ -124,11 +128,6 @@ void GIS::setDefaultMap()
 {
     geoBuilder->buildFlatMap(currentW, currentH);
     initActionArea();
-}
-
-QImage* GIS::getBackgroundImg()
-{
-    return backgroundImg;
 }
 
 ////////// ВРЕМЕННО

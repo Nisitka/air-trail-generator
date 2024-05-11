@@ -113,6 +113,8 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
 
 void painterMapImage::run()
 {
+    qDebug() << "RUN";
+
     //
     runToRect(idXo, idYo, numW, numL);
 }

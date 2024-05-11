@@ -38,7 +38,7 @@ public slots:
     void updatePointsInterZD(QVector <QVector <QVector <QVector3D>>>* pZD, QList <QVector3D>* posRLS);
 
 public:
-    explicit map3DVisWindow(QImage* imgTex);
+    explicit map3DVisWindow();
     ~map3DVisWindow();
 
     mapOpenGLWidget* getGraphicsWidget();
