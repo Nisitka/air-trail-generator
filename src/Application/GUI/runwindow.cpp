@@ -1,5 +1,7 @@
 #include "runwindow.h"
 
+#include <QDebug>
+
 runWindow::runWindow(QApplication* app_, const QString& dirFileImg)
 {
     // инициализация изображения окна

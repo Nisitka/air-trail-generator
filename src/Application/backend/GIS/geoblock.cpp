@@ -7,6 +7,12 @@ geoBlock::geoBlock()
     remove();
 }
 
+void geoBlock::setValues(const geoBlock &b)
+{
+    earth = b.isEarth();
+    inZD  = b.isZD();
+}
+
 QDataStream &operator<<(QDataStream &out, const geoBlock &a)
 {
     out << a.isEarth() << a.isZD();

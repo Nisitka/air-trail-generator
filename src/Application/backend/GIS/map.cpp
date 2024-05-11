@@ -111,16 +111,25 @@ void Map::getSize(int &w, int &l, int &h) const
 }
 
 void Map::build(int W, int L, int H)
-{   // инициализация размеров карты
+{   // Инициализация размеров карты
     setSize(W, L, H);
 
-    // добавление слоев
+    // Очистка
+    if (layers.size() != 0)
+    {
+        for (int i=0; i<layers.size(); i++)
+        {
+            delete [] layers[i];
+        }
+    }
+
+    // Добавление слоев
     for (int i=0; i<Height; i++)
     {
         layers.append(new geoBlock[Width*Length]);
     }
 
-    // покрываем первый слой землей
+    // Покрываем первый слой землей
     geoBlock* pLayer = layers.at(0);
     for (int j=0; j<Width*Length; j++)
     {
@@ -214,7 +223,7 @@ int Map::getHeight(int X, int Y, int type) const
 {
     // Cпускаемся сверху пока не встретим землю
     int h = Height-1;
-    while (!getBlock(X, Y, h)->isEarth()) h--;
+    while (!getBlock(X, Y, h)->isEarth() && h > 0) h--;
 
     switch (type) {
     case m:

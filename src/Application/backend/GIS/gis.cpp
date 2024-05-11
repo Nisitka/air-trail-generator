@@ -110,7 +110,7 @@ void GIS::initActionArea()
 
 void GIS::openMap(const QString &dirNameFile)
 {
-    //geoBuilder->openMap(dirNameFile);
+    geoBuilder->openMap(dirNameFile);
     initActionArea();
 }
 

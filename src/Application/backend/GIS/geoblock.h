@@ -12,6 +12,8 @@ public:
     friend QDataStream & operator<< (QDataStream& stream, const geoBlock& b);
     friend QDataStream & operator>> (QDataStream& stream, geoBlock& b);
 
+    void setValues(const geoBlock& b);
+
     void remove();
 
     bool isZD()    const;

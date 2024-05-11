@@ -41,7 +41,7 @@ public:
     void buildFlatMap(int W = 400, int L = 400, int H = 256);
 
     // Открыть карту
-    //void openMap(const QString& dirMapFile);
+    void openMap(const QString& dirMapFile);
 
     // Загрузить рельеф
     void loadTerrain(const QString& dirNameFile);
@@ -59,6 +59,10 @@ public:
                    int dH, int t = Map::up); // Дельта изм., поднять/опустить
 
 private:
+
+    //
+    int idBlock(int idX, int idY, int idH);
+
     //
     void initMap(int W, int L, int H);
     int Wmap, Lmap, Hmap;
@@ -72,7 +76,7 @@ private:
     void updateBlock(int idBlock, const geoBlock& b);
 
     //
-    const geoBlock& readBlock(int idBlock);
+    geoBlock readBlock(int idBlock);
 
     // Матрица высот
     QVector<QVector<int>> heights;

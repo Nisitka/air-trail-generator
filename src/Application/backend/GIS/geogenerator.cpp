@@ -14,8 +14,11 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     idXo = 0;
     idYo = 0;
 
+    Hmap = 256;
+
     //
     actionArea = new Map;
+    actionArea->build(wArea, lArea, Hmap);
 
     //
     map = nullptr;
@@ -30,7 +33,7 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     sizeBlock = data.size();
     //qDebug() << sizeBlock << "SIZE block";
 
-    initMap(1000, 1000, 256);
+    //initMap(1000, 1000, 256);
 }
 
 void geoGenerator::initMap(int W, int L, int H)
@@ -78,6 +81,62 @@ void geoGenerator::initMap(int W, int L, int H)
     }
 }
 
+void geoGenerator::openMap(const QString &dirMapFile)
+{
+    buildStart();
+
+    if (map != nullptr) map->close();
+    delete map;
+    QFile::remove(dirNameTmpMap);
+
+    Wmap = 1000; Lmap = 1000; Hmap = 256;
+
+    map = new QFile(dirMapFile);
+    map->open(QIODevice::ReadWrite);
+
+    buildFinish(Wmap, Lmap, Hmap);
+}
+
+void geoGenerator::setPosActionArea(int idXo_, int idYo_)
+{
+    idXo = idXo_;
+    idYo = idYo_;
+
+    qDebug() << idXo << idYo;
+
+    //
+    actionArea->clear();
+
+    for (int x=0; x<wArea; x++)
+    {
+        for (int y=0; y<lArea; y++)
+        {
+            for (int h=0; h<Hmap; h++)
+            {
+                actionArea->getBlock(x,y,h)->setValues(readBlock(idBlock(idXo+x,
+                                                                         idYo+y,
+                                                                         h)));
+            }
+        }
+    }
+    //qDebug() << "setPosArea!";
+
+//    int h;
+//    for (int x=0; x<wArea; x++)
+//    {
+//        for (int y=0; y<lArea; y++)
+//        {
+//            h = heights[idXo + x][idYo + y];
+//            actionArea->setH(x, y, h);
+//        }
+//    }
+}
+
+int geoGenerator::idBlock(int idX, int idY, int idH)
+{
+    return Wmap*Lmap*idH + Lmap*idX + idY;
+}
+
 void geoGenerator::updateBlock(int idBlock, const geoBlock& b)
 {
     QByteArray data;
@@ -88,7 +147,7 @@ void geoGenerator::updateBlock(int idBlock, const geoBlock& b)
     map->write(data, sizeBlock);
 }
 
-const geoBlock& geoGenerator::readBlock(int idBlock)
+geoBlock geoGenerator::readBlock(int idBlock)
 {
     map->seek(sizeBlock * idBlock);
     QDataStream inData(map->read(sizeBlock));
@@ -178,25 +237,6 @@ void geoGenerator::editEarth(int idX, int idY, int w, int l, int dH, int t)
     updateHeights(idX, idY, w, l);
 }
 
-void geoGenerator::setPosActionArea(int idXo_, int idYo_)
-{
-    idXo = idXo_;
-    idYo = idYo_;
-
-    //
-    actionArea->clear();
-
-    int h;
-    for (int x=0; x<wArea; x++)
-    {
-        for (int y=0; y<lArea; y++)
-        {
-            h = heights[idXo + x][idYo + y];
-            actionArea->setH(x, y, h);
-        }
-    }
-}
-
 void geoGenerator::updateHeights(int idX, int idY, int W, int L)
 {
     int idLastX = idX + W;
@@ -206,8 +246,15 @@ void geoGenerator::updateHeights(int idX, int idY, int W, int L)
     {
         for (int Y=idY; Y<=idLastY; Y++)
         {
-            heights[X][Y] =
-                actionArea->getHeight(idXo + X, idYo + Y);
+//            heights[X][Y] =
+//                actionArea->getHeight(idXo + X, idYo + Y);
+
+            //
+            for (int H=0; H<Hmap; H++)
+            {
+                updateBlock(idBlock(X, Y, H),
+                            *actionArea->getBlock(X-idXo,Y-idYo,H));
+            }
         }
     }
 }
