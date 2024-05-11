@@ -30,7 +30,7 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     sizeBlock = data.size();
     //qDebug() << sizeBlock << "SIZE block";
 
-    initMap(300, 500, 256);
+    initMap(1000, 1000, 256);
 }
 
 void geoGenerator::initMap(int W, int L, int H)
@@ -42,16 +42,40 @@ void geoGenerator::initMap(int W, int L, int H)
 
     map = new QFile(dirNameTmpMap);
     //
-    QByteArray data;
-    QDataStream ds(&data, QIODevice::ReadWrite);
     geoBlock block;
-    for (int i=0; i<countBlocks; i++)
+
+    // Кол-во сегметов данных
+    int curBlocks = countBlocks;
+    int v = 20000;
+    QVector <int> parts;
+    while (curBlocks > 0)
     {
-        ds << block;
-    }
+        if (curBlocks - v > 0)
+        {
+            parts.append(v);
+        }
+        else
+        {
+            parts.append(curBlocks);
+        }
+
+            curBlocks -= v;
+        }
 
     map->open(QIODevice::ReadWrite);
-    map->write(data);
+
+    int countParts = parts.size();
+    for (int nP=0; nP<countParts; nP++)
+    {
+        QByteArray data;
+        QDataStream ds(&data, QIODevice::ReadWrite);
+
+        for (int i=0; i<parts[nP]; i++)
+        {
+                ds << block;
+        }
+            map->write(data);
+    }
 }
 
 void geoGenerator::updateBlock(int idBlock, const geoBlock& b)
