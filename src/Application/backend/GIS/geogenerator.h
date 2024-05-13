@@ -53,14 +53,23 @@ public:
                        int W, int L);    // Ширина, длина
 
     // Отредакутировать рельеф
-    void editEarth(int idXo, int idYo,       // Левый верхний угол обл.
-                   int w, int l,             // Ширина, длина области
-                   int dH, int t = Map::up); // Дельта изм., поднять/опустить
+    void editEarth(int idXo, int idYo,  // Левый верхний угол обл.
+                   int w, int l,        // Ширина, длина области
+                   int dH, int t = up); // Дельта изм., поднять/опустить
+    enum editH{up, down};
+
+
 
     //
     void initMap(int W, int L, int H);
 
 private:
+
+    // Посыпать землей дискрету
+    void dropEarth(int idX, int idY, int countLayer);
+
+    // Убрать землю с дискреты
+    void removeEarth(int idX, int idY, int countLayer);
 
     //
     int idBlock(int idX, int idY, int idH);
@@ -82,9 +91,6 @@ private:
 
     //
     geoBlock readBlock(int idBlock);
-
-    // Матрица высот
-    QVector<QVector<int>> heights;
 
     // Активная зона
     Map* actionArea;

@@ -24,10 +24,6 @@ public:
     //
     void setH(int idX, int idY, int valH);
 
-    // Отредакутировать рельеф
-    void editEarth(int idXo, int idYo, int w, int l, int dH, int t = up);
-    enum editH{up, down};
-
     // Максимальная высота на карте
     float getMaxH(); // в метрах
 
@@ -69,12 +65,6 @@ private:
 
     // Размеры куба в метрах
     double lenBlock;
-
-    // Посыпать землей дискрету
-    void dropEarth(int idX, int idY, int countLayer);
-
-    // Убрать землю с дискреты
-    void removeEarth(int idX, int idY, int countLayer);
 };
 
 #endif // MAP_H

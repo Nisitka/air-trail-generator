@@ -283,8 +283,6 @@ void areaDrawWidget::setRenderHint(bool smoothing)
 
 void areaDrawWidget::initActionArea(int idXo_, int idYo_)
 {
-    qDebug() << "initActionArea:" << idXo_ << idYo_;
-
     idXo = idXo_;
     idYo = idYo_;
 }

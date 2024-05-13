@@ -173,7 +173,7 @@ void GIS::downEarth(int idX, int idY, int R)
 {
     int idXo = idX - (R / 2);
     int idYo = idY - (R / 2);
-    geoBuilder->editEarth(idXo, idYo, R, R, 3, Map::down);
+    geoBuilder->editEarth(idXo, idYo, R, R, 3, geoGenerator::down);
 
     backPainter->runToRect(QRect(idXo-idXpos, idYo-idYpos, R, R));
 

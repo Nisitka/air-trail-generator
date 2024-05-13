@@ -11,14 +11,8 @@
 geoGenerator::geoGenerator(int wArea_, int lArea_):
     wArea(wArea_), lArea(lArea_)
 {
-    idXo = 0;
-    idYo = 0;
-
-    //Hmap = 256;
-
     //
     actionArea = new Map;
-    //actionArea->build(wArea, lArea, Hmap);
 
     //
     map = nullptr;
@@ -131,26 +125,26 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
     idXo = idXo_;
     idYo = idYo_;
 
-    qDebug() << idXo << idYo;
-
     //
     actionArea->clear();
 
-    for (int x=0; x<wArea; x++)
+    QDataStream inData(map);
+    geoBlock b;
+    for(int h=0; h<Hmap; h++)
     {
-        for (int y=0; y<lArea; y++)
+        map->seek(sizeOptData + (idBlock(idXo, idYo, h)*sizeBlock)); //
+        for(int x=0; x<wArea; x++)
         {
-            for (int h=0; h<Hmap; h++)
+            map->seek(sizeOptData + (idBlock(idXo+x, idYo, h)*sizeBlock)); //
+            for (int y=0; y<lArea; y++)
             {
-                actionArea->getBlock(x,y,h)->setValues(readBlock(idBlock(idXo+x,
-                                                                         idYo+y,
-                                                                         h)));
+                inData >> b;
+                actionArea->getBlock(x,y,h)->setValues(b);
             }
         }
     }
-    qDebug() << "setPosArea!";
 
-//  h = heights[idXo + x][idYo + y];
+    //qDebug() << "setPosArea!";
 }
 
 int geoGenerator::idBlock(int idX, int idY, int idH)
@@ -227,21 +221,17 @@ void geoGenerator::loadTerrain(const QString& dirNameFile)
     // Размер активной зоны
     actionArea->resize(wArea, lArea, Hmap);
 
-    //
-    heights.clear();
-
     int h;
     QColor color;
     for (int x=0; x<Wmap; x++)
     {
-        heights.append(QVector<int>(Lmap));
         for (int y=0; y<Lmap; y++)
         {
             color = geoData.pixelColor(x, y);
             h = Hmap * ((double) ((double)color.blueF() +
                                           color.redF()  +
                                           color.greenF()) / 1.0);
-            heights.last()[y] = h;
+            //heights.last()[y] = h;
         }
     }
 
@@ -252,10 +242,75 @@ void geoGenerator::loadTerrain(const QString& dirNameFile)
 
 void geoGenerator::editEarth(int idX, int idY, int w, int l, int dH, int t)
 {
-    actionArea->editEarth(idX-idXo, idY-idYo, w, l, dH, t);
+    // Перевод в индексы активной зоны
+    int Xo = idX - idXo;
+    int Yo = idY - idYo;
 
     //
-    updateHeights(idX, idY, w, l);
+    int lastX = Xo + w;
+    int lastY = Yo + l;
+
+    //
+    if (Xo < 0) Xo = 0;
+    if (Yo < 0) Yo = 0;
+    if (lastX >= wArea) lastX = wArea - 1;
+    if (lastY >= lArea) lastY = lArea - 1;
+
+    //
+    void (geoGenerator::*f)(int, int, int);
+    switch (t) {
+    case up:
+        f = &geoGenerator::dropEarth;
+        break;
+    case down:
+        f = &geoGenerator::removeEarth;
+        break;
+    }
+
+    // Изменяем высоту по дискретам-столбикам
+    for (int x = Xo; x < lastX; x++)
+    {
+        for (int y = Yo; y < lastY; y++)
+        {
+            (this->*f)(x, y, dH);
+        }
+    }
+}
+
+void geoGenerator::dropEarth(int idX, int idY, int countLayer)
+{
+    int idHo = actionArea->getHeight(idX, idY);
+
+    int maxH = Hmap-1;
+
+    int idLast = idHo + countLayer;
+    if (idLast > maxH) idLast = maxH;
+    geoBlock* block;
+    for (int idH = idHo; idH <= idLast; idH++)
+    {
+        block = actionArea->getBlock(idX, idY, idH);
+        block->toEarth();
+
+        // Сразу обновляем его значения в файле-карте
+        updateBlock(idBlock(idXo+idX, idYo+idY, idH), *block);
+    }
+}
+
+void geoGenerator::removeEarth(int idX, int idY, int countLayer)
+{
+    int idHo = actionArea->getHeight(idX, idY);
+
+    int idLast = idHo - countLayer;
+    if (idLast < 0) idLast = 0;
+    geoBlock* block;
+    for (int idH = idHo; idH > idLast; idH--)
+    {
+        block = actionArea->getBlock(idX, idY, idH);
+        block->remove();
+
+        // Сразу обновляем его значения в файле-карте
+        updateBlock(idBlock(idXo+idX, idYo+idY, idH), *block);
+    }
 }
 
 void geoGenerator::updateHeights(int idX, int idY, int W, int L)
@@ -267,9 +322,6 @@ void geoGenerator::updateHeights(int idX, int idY, int W, int L)
     {
         for (int Y=idY; Y<=idLastY; Y++)
         {
-//            heights[X][Y] =
-//                actionArea->getHeight(idXo + X, idYo + Y);
-
             //
             for (int H=0; H<Hmap; H++)
             {

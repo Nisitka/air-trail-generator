@@ -10,65 +10,6 @@ Map::Map()
     lenBlock = 20;
 }
 
-void Map::editEarth(int idXo, int idYo, int w, int l, int dH, int t)
-{
-    //
-    int lastX = idXo + w;
-    int lastY = idYo + l;
-
-    //
-    if (idXo < 0) idXo = 0;
-    if (idYo < 0) idYo = 0;
-    if (lastX >= Width)  lastX = Width -1;
-    if (lastY >= Length) lastY = Length-1;
-
-    //
-    void (Map::*f)(int, int, int);
-    switch (t) {
-    case up:
-        f = &Map::dropEarth;
-        break;
-    case down:
-        f = &Map::removeEarth;
-        break;
-    }
-
-    //
-    for (int x = idXo; x < lastX; x++)
-    {
-        for (int y = idYo; y < lastY; y++)
-        {
-            (this->*f)(x, y, dH);
-        }
-    }
-}
-
-void Map::dropEarth(int idX, int idY, int countLayer)
-{
-    int idH = getHeight(idX, idY);
-
-    int maxH = Height;
-
-    int idLast = idH + countLayer;
-    if (idLast > maxH-1) idLast = maxH-1;
-    for (int id = idH; id <= idLast; id++)
-    {
-        getBlock(idX, idY, id)->toEarth();
-    }
-}
-
-void Map::removeEarth(int idX, int idY, int countLayer)
-{
-    int idH = getHeight(idX, idY);
-
-    int idLast = idH - countLayer;
-    if (idLast <= 0) idLast = 1;
-    for (int id = idH; id > idLast; id--)
-    {
-        getBlock(idX, idY, id)->remove();
-    }
-}
-
 float Map::getMaxH()
 {
     return getCountLayers() * lenBlock;
