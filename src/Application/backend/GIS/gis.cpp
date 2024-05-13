@@ -113,6 +113,8 @@ void GIS::movePosActionArea(int dX, int dY)
     idXpos = posX;
     idYpos = posY;
 
+    qDebug() << "posActionArea:" << idXpos << idYpos;
+
     // Адоптируем все компоненты под новую область
     initActionArea();
 
@@ -156,7 +158,9 @@ void GIS::updateFromRect(const QRect &rect)
 
 void GIS::updateFromRect(int idX, int idY, int w, int h)
 {
-    backPainter->runToRect(idX-idXpos, idY-idYpos, w, h);
+    backPainter->runToRect(idX, idY, w, h);
+
+    geoBuilder->updateBlocks(idX, idY, w, h);
 
     changedMap(idX, idY, w, h);
 }
@@ -174,7 +178,7 @@ void GIS::upEarth(int idX, int idY, int R)
     int idYo = idY - (R / 2);
     geoBuilder->editEarth(idXo, idYo, R, R, 1);
 
-    backPainter->runToRect(QRect(idXo-idXpos, idYo-idYpos, R, R));
+    backPainter->runToRect(QRect(idXo, idYo, R, R));
 
     changedMap(idXo, idYo, R, R);
 }
@@ -185,7 +189,7 @@ void GIS::downEarth(int idX, int idY, int R)
     int idYo = idY - (R / 2);
     geoBuilder->editEarth(idXo, idYo, R, R, 3, geoGenerator::down);
 
-    backPainter->runToRect(QRect(idXo-idXpos, idYo-idYpos, R, R));
+    backPainter->runToRect(QRect(idXo, idYo, R, R));
 
     changedMap(idXo, idYo, R, R);
 }

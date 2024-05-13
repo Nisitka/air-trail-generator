@@ -94,8 +94,8 @@ private:
     // Точка, относительно которой формируется
     //  область, не требующая загрузки
     int idXpos, idYpos;       // Левый верхний угол
-    const int currentW = 200; // Размеры области
-    const int currentH = 200; //  в дискретах
+    const int currentW = 300; // Размеры области
+    const int currentH = 300; //  в дискретах
 
     // Карта в виде блоков
     int Wmap;

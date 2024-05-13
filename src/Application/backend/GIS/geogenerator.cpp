@@ -49,9 +49,9 @@ void geoGenerator::toZD(const QVector3D &posBlock) const
     }
     else
     {
-        geoBlock b = readBlock(id);
+        geoBlock b; // = readBlock(id);
         b.toZD();
-        //updateBlock(id, b);
+        updateBlock(id, b);
     }
 }
 
@@ -66,13 +66,13 @@ void geoGenerator::clearZD(const QVector3D &posBlock) const
     {
         geoBlock* b = actionArea->getBlock(idX-idXo, idY-idYo, idH);
         b->removeZD();
-        //updateBlock(id, *b);
+        updateBlock(id, *b);
     }
     else
     {
-        geoBlock b = readBlock(id);
+        geoBlock b;// = readBlock(id);
         b.removeZD();
-        //updateBlock(id, b);
+        updateBlock(id, b);
     }
 }
 
@@ -152,7 +152,7 @@ void geoGenerator::initMap(int W, int L, int H)
         {
                 ds << block;
         }
-            map->write(data);
+        map->write(data);
     }
 
     buildFinish(Wmap, Lmap, Hmap);
@@ -228,6 +228,43 @@ void geoGenerator::updateBlock(int idBlock, const geoBlock& b) const
 
     map->seek(sizeOptData + (sizeBlock * idBlock));
     map->write(data, sizeBlock);
+
+    data.clear();
+}
+
+void geoGenerator::updateBlocks(int idX, int idY, int W, int L) const
+{
+    qDebug() << "Update Blocks...";
+    //qDebug() << idX << idY << W << L;
+
+    int Xo = idX - idXo;
+    int Yo = idY - idYo;
+
+    //
+    if (idX + W > lastX) W = lastX - idX - 1;
+    if (idY + L > lastY) L = lastY - idY - 1;
+
+    //qDebug() << lastX << lastY;
+
+    geoBlock b;
+    QDataStream ds(map);
+    for(int h=0; h<Hmap; h++)
+    {
+        map->seek(sizeOptData + (idBlock(idX, idY, h)*sizeBlock)); //
+        for(int x=0; x<W; x++)
+        {
+            map->seek(sizeOptData + (idBlock(idX+x, idY, h)*sizeBlock)); //
+            for (int y=0; y<L; y++)
+            {
+                b = *actionArea->getBlock(Xo + x,
+                                          Yo + y,
+                                          h);
+                ds << b;
+            }
+        }
+    }
+
+    qDebug() << "Update Blocks!";
 }
 
 geoBlock geoGenerator::readBlock(int idBlock) const
@@ -279,7 +316,15 @@ int geoGenerator::max(Map::units u) const
 
 int geoGenerator::countVertZD(int idX, int idY) const
 {
-    return actionArea->countZD(idX, idY);
+    if (inActionArea(idX, idY, 0))
+    {
+        return actionArea->countZD(idX-idXo, idY-idYo);
+    }
+    else
+    {
+        return 0; /// <-- Заглушка
+    }
+
 }
 
 Coords geoGenerator::getCoords(int idX, int idY) const

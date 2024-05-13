@@ -19,8 +19,8 @@ painterMapImage::painterMapImage(HeightMeter* Height,
 void painterMapImage::setPosArea(int idXo_, int idYo_)
 {
     // id левого верхнего угла
-    idXo = 0; //idXo_;
-    idYo = 0; //idYo_;
+    idXo = idXo_;
+    idYo = idYo_;
 
     // id нижнего правого угла
     idXlast = idXo + numW;
@@ -59,7 +59,7 @@ void painterMapImage::runToRect(const QRect &rect)
 void painterMapImage::runToRect(int idX, int idY, int w, int h)
 {
     // Если не попадает в область, то ничего не делаем
-    if (idX > idXlast | idY > idYlast) return;
+    if (idX > idXlast || idY > idYlast) return;
 
     QColor color;
     int cZD;
@@ -80,13 +80,13 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
     if (idY < idYo) idY = idYo;
 
     // Вычисление rgb каждого пикселя
-    for (int i=idX; i<W; i++)
+    for (int X=idX; X<W; X++)
     {
-        for (int j=idY; j<H; j++)
+        for (int Y=idY; Y<H; Y++)
         {
             // Вычисляется цвет по данным
-            cZD = RZ->countVertZD(i, j);
-            color = colorHeight(Height->absolute(i, j, Map::id));
+            cZD = RZ->countVertZD(X, Y);
+            color = colorHeight(Height->absolute(X, Y, Map::id));
             r = color.red();
             g = color.green();
             k = 1 - ((double)cZD / 50);
@@ -102,7 +102,7 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
             color.setBlue(b);
 
             //
-            img->setPixelColor(i - idXo, j - idYo,
+            img->setPixelColor(X - idXo, Y - idYo,
                                color);
         }
     }
@@ -112,6 +112,8 @@ void painterMapImage::run()
 {
     //
     runToRect(idXo, idYo, numW, numL);
+
+    qDebug() << "RUN";
 }
 
 QColor painterMapImage::colorHeight(int value)
