@@ -10,7 +10,7 @@ Map::Map()
     lenBlock = 20;
 }
 
-float Map::getMaxH()
+int Map::getMaxH()
 {
     return getCountLayers() * lenBlock;
 }

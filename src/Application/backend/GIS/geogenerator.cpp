@@ -34,6 +34,69 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     data.clear();
 }
 
+void geoGenerator::toZD(const QVector3D &posBlock) const
+{
+    int idX = posBlock.x();
+    int idY = posBlock.y();
+    int idH = posBlock.z();
+
+    int id = idBlock(idX, idY, idH);
+    if (inActionArea(idX, idY, idH))
+    {
+        geoBlock* b = actionArea->getBlock(idX-idXo, idY-idYo, idH);
+        b->toZD();
+        //updateBlock(id, *b);
+    }
+    else
+    {
+        geoBlock b = readBlock(id);
+        b.toZD();
+        //updateBlock(id, b);
+    }
+}
+
+void geoGenerator::clearZD(const QVector3D &posBlock) const
+{
+    int idX = posBlock.x();
+    int idY = posBlock.y();
+    int idH = posBlock.z();
+
+    int id = idBlock(idX, idY, idH);
+    if (inActionArea(idX, idY, idH))
+    {
+        geoBlock* b = actionArea->getBlock(idX-idXo, idY-idYo, idH);
+        b->removeZD();
+        //updateBlock(id, *b);
+    }
+    else
+    {
+        geoBlock b = readBlock(id);
+        b.removeZD();
+        //updateBlock(id, b);
+    }
+}
+
+bool geoGenerator::inActionArea(int idX, int idY, int idH) const
+{
+    if (idX < idXo  || idY < idYo)  return false;
+    if (idX > lastX || idY > lastY) return false;
+
+    return true;
+}
+
+const geoBlock& geoGenerator::block(int idX, int idY, int idH) const
+{
+    if (inActionArea(idX, idY, idH))
+    {
+        return *actionArea->getBlock(idX-idXo, idY-idYo, idH);
+    }
+    else
+    {
+        cacheBlock = readBlock(idBlock(idX, idY, idH));
+        return cacheBlock;
+    }
+}
+
 void geoGenerator::initMap(int W, int L, int H)
 {
     buildStart();
@@ -122,8 +185,13 @@ void geoGenerator::openMap(const QString &dirMapFile)
 
 void geoGenerator::setPosActionArea(int idXo_, int idYo_)
 {
+    //
     idXo = idXo_;
     idYo = idYo_;
+
+    //
+    lastX = idXo + wArea;
+    lastY = idYo + lArea;
 
     //
     actionArea->clear();
@@ -147,12 +215,12 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
     //qDebug() << "setPosArea!";
 }
 
-int geoGenerator::idBlock(int idX, int idY, int idH)
+int geoGenerator::idBlock(int idX, int idY, int idH) const
 {
     return Wmap*Lmap*idH + Lmap*idX + idY;
 }
 
-void geoGenerator::updateBlock(int idBlock, const geoBlock& b)
+void geoGenerator::updateBlock(int idBlock, const geoBlock& b) const
 {
     QByteArray data;
     QDataStream ds(&data, QIODevice::WriteOnly);
@@ -162,7 +230,7 @@ void geoGenerator::updateBlock(int idBlock, const geoBlock& b)
     map->write(data, sizeBlock);
 }
 
-geoBlock geoGenerator::readBlock(int idBlock)
+geoBlock geoGenerator::readBlock(int idBlock) const
 {
     map->seek(sizeOptData + (sizeBlock * idBlock));
     QDataStream inData(map->read(sizeBlock));
@@ -173,37 +241,54 @@ geoBlock geoGenerator::readBlock(int idBlock)
     return b;
 }
 
-int geoGenerator::absolute(int idX, int idY, Map::units u) const
+int geoGenerator::absolute(int idX, int idY, Map::units units) const
 {
-    switch (u) {
-    case Map::m:
+    int h = -1;
 
+    switch (units) {
+    case Map::m:
+        h = actionArea->getHeight(idX-idXo, idY-idYo, units);
 
         break;
     case Map::id:
-
+        h = actionArea->getHeight(idX-idXo, idY-idYo, units);
 
         break;
     }
+
+    return h;
+}
+
+int geoGenerator::max(Map::units u) const
+{
+    int h = -1;
+
+    switch (u) {
+    case Map::m:
+        h = actionArea->getMaxH();
+
+        break;
+    case Map::id:
+        h = actionArea->getCountLayers();
+
+        break;
+    }
+
+    return h;
+}
+
+int geoGenerator::countVertZD(int idX, int idY) const
+{
+    return actionArea->countZD(idX, idY);
 }
 
 Coords geoGenerator::getCoords(int idX, int idY) const
 {
     int X = idX;
     int Y = idY;
-    int H = getH(idX, idY, Map::id);
+    int H = actionArea->getHeight(idX-idXo, idY-idYo, Map::id);
 
     return Coords(X, Y, H, actionArea->getLenBlock());
-}
-
-int geoGenerator::getH(int idX, int idY, int units) const
-{
-    return actionArea->getHeight(idX-idXo, idY-idYo, units);
-}
-
-Map* geoGenerator::getMap() const
-{
-    return actionArea;
 }
 
 void geoGenerator::loadTerrain(const QString& dirNameFile)

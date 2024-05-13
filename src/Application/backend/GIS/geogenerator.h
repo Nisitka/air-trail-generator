@@ -3,12 +3,18 @@
 
 #include <QObject>
 
-#include "paintermapimage.h"
 #include "heightmeter.h"
+#include "rzinformer.h"
+#include "blockinformer.h"
+
+#include "rzcreator.h"
+
 #include "coords.h"
 #include "mapdata.h"
 
-class geoGenerator: public QObject, public HeightMeter
+class geoGenerator: public QObject,
+        public HeightMeter, public RZInformer, public BlockInformer,
+        public RZCreator
 {
     Q_OBJECT
 signals:
@@ -21,15 +27,22 @@ signals:
 public:
     geoGenerator(int wArea, int lArea);
 
-    //
-    int absolute(int idX, int idY, Map::units u) const override final;
+    // Редактирование дискрет на наличие РЛ сигнала (RZCreator)
+    void toZD(const QVector3D &idBlock) const override final;    //+
+    void clearZD(const QVector3D &idBlock) const override final; //+
 
-    /// !!!! пока так, надо убрать
-    Map* getMap() const;
+    // BlockInformer
+    const geoBlock& block(int idX, int idY, int idH) const override final; //+
 
-    // В дискретах текущей активной зоны
-    int getH(int idX, int idY, int units = Map::m) const;
-    Coords getCoords(int idX, int idY) const;
+    // HeightMeter
+    int absolute(int idX, int idY, Map::units u) const override final; //+
+    int max(Map::units u) const override final; //+
+
+    // RZInformer
+    int countVertZD(int idX, int idY) const override final; //+
+
+    // В индексах всей карты
+    Coords getCoords(int idX, int idY) const; //+
 
     // Запуск генерации рельефа
     void buildRandomMap(double setBlockP, int countEpochs,
@@ -58,12 +71,13 @@ public:
                    int dH, int t = up); // Дельта изм., поднять/опустить
     enum editH{up, down};
 
-
-
     //
     void initMap(int W, int L, int H);
 
 private:
+
+    // Дискрета в зоне событий?
+    bool inActionArea(int idX, int idY, int idH) const;
 
     // Посыпать землей дискрету
     void dropEarth(int idX, int idY, int countLayer);
@@ -72,7 +86,7 @@ private:
     void removeEarth(int idX, int idY, int countLayer);
 
     //
-    int idBlock(int idX, int idY, int idH);
+    int idBlock(int idX, int idY, int idH) const;
 
     //  
     int Wmap, Lmap, Hmap;
@@ -87,10 +101,13 @@ private:
     MapData mapData;
 
     // Заменить блок
-    void updateBlock(int idBlock, const geoBlock& b);
+    void updateBlock(int idBlock, const geoBlock& b) const;
 
     //
-    geoBlock readBlock(int idBlock);
+    geoBlock readBlock(int idBlock) const;
+
+    //
+    mutable geoBlock cacheBlock;
 
     // Активная зона
     Map* actionArea;
@@ -98,6 +115,8 @@ private:
     int idYo;
     int wArea; // Размеры
     int lArea;
+    int lastX;
+    int lastY;
 
     // Действия с блоками около указанного
     int  sumEarth(int x, int y, int z); // кол-во с землей

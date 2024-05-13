@@ -58,23 +58,26 @@ public slots:
 
 public:
 
+    //
+    HeightMeter* getHeightMeter() const;
+
+    //
+    RZCreator* getRZCreator() const;
+
+    //
+    BlockInformer* getBlockInfomer() const;
+
     // Получить интерфейс
     GISInformer* Informer() /* const */;
 
     // Методы-интерфейс по работе с ГИС:
-    int getH(int idX, int idY, int units = Map::m) const override final;
+    int getH(int idX, int idY, Map::units = Map::m) const override final;
     Coords getCoords(int idX, int idY) const override final;
     const QImage& getGeoImage() const override final;
-    void getIdActionArea(int& idXo, int& idYo) const;
-
-    ///!!!! ВРЕМЕННО !!!!!!
-    Map* getMap();
+    void getIdActionArea(int& idXo, int& idYo) const override final;
 
     // При инициализации ГИС системы
     GIS();
-
-    //
-    QVector<QVector<int> *>* getHmatrix();
 
     //
     void setDefaultMap();   

@@ -18,6 +18,7 @@
 #include "backend/dao.h"
 
 #include "backend/GIS/gisinformer.h"
+#include "backend/tracerlight.h"
 
 // ядро приложения
 class Core : public QObject
@@ -49,22 +50,22 @@ private:
 
     void init_buildThreads();
 
-    // объекты приложения
+    // Объекты приложения
     QVector <QObject*> objects;
 
-    // интерфейс приложения
+    // Интерфейс приложения
     GUI* gui;
     QImage* backgroundMapImage;
     QVector <QVector<int>*>* Hmatrix;
-
-    // карта (рельеф)
-    Map* map;
 
     //
     GIS* gis;
     GISInformer* gisInformer;
 
-    // менеджер РЛС
+    //
+    TracerLight* RayTracer;
+
+    // Менеджер РЛС
     managerRLS* mRLS;
 
     //

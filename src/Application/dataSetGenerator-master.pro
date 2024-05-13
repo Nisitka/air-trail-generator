@@ -81,13 +81,12 @@ SOURCES += main.cpp\
     backend/GIS/gis.cpp \
     GUI/processtmpwidget.cpp \
     backend/graphicengine.cpp \
-    backend/GIS/gisinformer.cpp \
     backend/GIS/coords.cpp \
     GUI/airinfowindow.cpp \
     GUI/airwindow.cpp \
-    backend/GIS/heightmeter.cpp \
     backend/airlableobject.cpp \
-    backend/GIS/mapdata.cpp
+    backend/GIS/mapdata.cpp \
+    backend/tracerlight.cpp
 
 HEADERS  += \
     core.h \
@@ -153,7 +152,11 @@ HEADERS  += \
     GUI/airwindow.h \
     backend/GIS/heightmeter.h \
     backend/airlableobject.h \
-    backend/GIS/mapdata.h
+    backend/GIS/mapdata.h \
+    backend/GIS/rzinformer.h \
+    backend/tracerlight.h \
+    backend/GIS/blockinformer.h \
+    backend/GIS/rzcreator.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \

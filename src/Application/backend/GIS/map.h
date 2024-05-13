@@ -25,7 +25,7 @@ public:
     void setH(int idX, int idY, int valH);
 
     // Максимальная высота на карте
-    float getMaxH(); // в метрах
+    int getMaxH(); // в метрах
 
     void setLenBlock(double);
     double getLenBlock() const;

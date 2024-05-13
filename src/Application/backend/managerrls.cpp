@@ -6,10 +6,11 @@
 
 #include <memory>
 
-managerRLS::managerRLS(Map* map_)
+managerRLS::managerRLS(TracerLight* RayTracer,
+                       RZCreator* RZEditor,
+                       HeightMeter* Height):
+    RayTracer(RayTracer), RZEditor(RZEditor), Height(Height)
 {
-    map = map_;
-
     idCurRLS = -1;
 
     pointsInterZD = nullptr;
@@ -18,7 +19,8 @@ managerRLS::managerRLS(Map* map_)
 
 void managerRLS::addRLS(QPoint* posRLS_, const QString& nameRLS)
 {
-    RLS* rls = new RLS(posRLS_, nameRLS);
+    RLS* rls = new RLS(RayTracer, RZEditor, Height,
+                       posRLS_, nameRLS);
     listRLS.append(rls);
 
     // завершение генерации вертикального сегмента
@@ -66,7 +68,7 @@ void managerRLS::updateVisInfoRLS()
 
             if (rls->isWorking())
             {
-                rls->emitSignal(*map);
+                rls->emitSignal();
                 pointsInterZD->push_back(rls->getPointsInterZD());
             }
         }
@@ -167,7 +169,7 @@ void managerRLS::updateSignals()
         {
             rls->off();
             rls->on();
-            rls->emitSignal(*map);
+            rls->emitSignal();
 
             // обновляем визуальную информацию на карте
             int idX, idY, w, h;
@@ -215,7 +217,7 @@ void managerRLS::runRLS(int idX, int idY)
     listRLS.at(idCurRLS)->setPosition(idX, idY);
     for (int i=0; i<listRLS.size(); i++)
     {
-        listRLS.at(i)->emitSignal(*map);
+        listRLS.at(i)->emitSignal();
     }
 
     // обновляем визуальную информацию на карте
@@ -239,7 +241,7 @@ void managerRLS::runRLS()
     listRLS.at(idCurRLS)->on();
     for (int i=0; i<listRLS.size(); i++)
     {
-        listRLS.at(i)->emitSignal(*map);
+        listRLS.at(i)->emitSignal();
     }
 
     // обновляем визуальную информацию на карте

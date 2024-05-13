@@ -6,7 +6,9 @@
 
 #include <cmath>
 
-RLS::RLS(QPoint* position_, const QString& nameRLS):
+RLS::RLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height,
+         QPoint* position_, const QString& nameRLS):
+    RayTracer(RayTracer), RZEditor(RZEditor), Height(Height),
     name(nameRLS), position(position_)
 {
     //Hpos = (double) map->getHeight(position->x(), position->y(), Map::m) + hSender;
@@ -147,7 +149,7 @@ void RLS::setOptZDvert(int Rmax,
     getDataGraphic();
 }
 
-void RLS::emitSignal(const Map& map)
+void RLS::emitSignal()
 {
     // Если РЛС не включена, то ничего не делаем
     if (!working) return;
@@ -155,15 +157,15 @@ void RLS::emitSignal(const Map& map)
     // Кол-во вертикальных сегментов
     int countS_ZD = ZD.size();
 
-    int Wmap = map.getWidth();
-    int Lmap = map.getLength();
-    int Hmap = map.getCountLayers();
-
+    //
     int xRLS = position->x();
     int yRLS = position->y();
-    int hRLS = map.getHeight(xRLS, yRLS);
+    QVector3D posRLS(xRLS, yRLS, Height->absolute(xRLS, yRLS, Map::id)+1);
 
-    interPointsZD.clear();
+    qDebug() << posRLS;
+
+    ///interPointsZD.clear();
+    blocksZD.clear();
     // По вертикальным сегментам
     for (int i=0; i<countS_ZD; i++)
     {   // По лучам в сегменте
@@ -171,75 +173,19 @@ void RLS::emitSignal(const Map& map)
         int countLZD = ZD.at(i)->size();
         for (int j=0; j<countLZD; j++)
         {
-            QVector <int*> way = ZD[i]->at(j)->getWay();
-            int idX;
-            int idY;
-            int idH;
+            // Полет луча
+            QVector <QVector3D> idBlocks = RayTracer->emitRay(ZD[i]->at(j), posRLS);
 
-            // Полет луча:
-            int countDelta = way.size(); // кол-во дискрет одного луча
-            for (int k=1; k<countDelta; k++)
-            {   // В пути луча содержатся относительные индексы
-                int* l = way[k];
-
-                idX = xRLS + l[Ray::X];
-                idY = yRLS + l[Ray::Y];
-                idH = hRLS + l[Ray::Z] + 2;
-
-                //bool isBreak = false;
-
-                // если луч вышел за карту
-                if (idY >= Lmap) {
-                    interPointsZD.last().push_back(QVector3D(idX, Lmap-1, idH));
-                    break;
-                }
-                if (idY < 0) {
-                    interPointsZD.last().push_back(QVector3D(idX, 0, idH));
-                    break;
-                }
-
-                if (idX >= Wmap) {
-                    interPointsZD.last().push_back(QVector3D(Wmap-1, idY, idH));
-                    break;
-                }
-                if (idX < 0) {
-                    interPointsZD.last().push_back(QVector3D(0, idY, idH));
-                    break;
-                }
-
-                if (idH >= Hmap) {
-                    interPointsZD.last().push_back(QVector3D(idX, idY, Hmap-1));
-                    break;
-                }
-                if (idH < 0) {
-                    interPointsZD.last().push_back(QVector3D(idX, idY, 0));
-                    break; /*isBreak = true;*/
-                }
-
-                //if (isBreak) break;
-
-                // Блок, в котором пролетает луч:
-                geoBlock* block = map.getBlock(idX, idY, idH);
-
-                // Если блок на пути, является землей, то
-                if (block->isEarth())
-                {
-                    // луч столкнулся с рельефом
-                    interPointsZD.last().push_back(QVector3D(idX, idY, idH));
-                    break;
-                }
-                else
-                {   // Если блок не в ЗО
-                    if (!block->isZD())
-                    {
-                        block->toZD();
-                        blocksZD.append(block); // в список блоков ЗО
-                    }
-
-                    if (k == countDelta - 1)
-                        interPointsZD.last().push_back(QVector3D(idX, idY, idH));
-                }
+            // Заряжаем дискереты РЛ сигналом
+            int c = idBlocks.size();
+            for (int i=0; i<c; i++)
+            {
+                RZEditor->toZD(idBlocks[i]);
+                blocksZD.append(idBlocks[i]);
             }
+
+            /// blocksZD.append(block); // в список блоков ЗО
+            /// interPointsZD.last().push_back(QVector3D(idX, idY, idH));
         }
         readyVector(i);
     }
@@ -258,8 +204,9 @@ void RLS::clearZD()
 {
     if (blocksZD.size() > 0)
     {
-        for (int i=0; i<blocksZD.size(); i++)
-            blocksZD[i]->removeZD();
+        int count = blocksZD.size();
+        for (int i=0; i<count; i++)
+            RZEditor->clearZD(blocksZD[i]);
         blocksZD.clear();
     }
 }
@@ -385,10 +332,7 @@ void RLS::getRectPosition(int &idX, int &idY, int &W, int &H)
 RLS::~RLS()
 {
     // Очистка блоков от сигнала данной РЛС
-    for (int i=0; i<blocksZD.size(); i++)
-    {
-        blocksZD[i]->removeZD();
-    }
+    clearZD();
 
     sizeZD = ZD.size();
     for (int i=0; i<sizeZD; i++)

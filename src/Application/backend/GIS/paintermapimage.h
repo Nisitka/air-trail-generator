@@ -5,7 +5,8 @@
 #include <QImage>
 #include <QColor>
 
-#include "map.h"
+#include "heightmeter.h"
+#include "rzinformer.h"
 
 class painterMapImage: public QObject
 {
@@ -33,8 +34,9 @@ public slots:
 public:
 
     //
-    painterMapImage(Map* map,      // Для расчета цвета
-                    int W, int H); // Размеры изображения
+    painterMapImage(HeightMeter* Heigt, // Для расчета цвета
+                    RZInformer* RZ,
+                    int W, int H);      // Размеры изображения
 
     //
     void setPosArea(int idXo, int idYo); // Левый верхний угол
@@ -52,7 +54,8 @@ private:
     int idYlast;
 
     QImage* img;
-    Map* map;
+    HeightMeter* Height;
+    RZInformer*  RZ;
 
     //
     int Hmap;

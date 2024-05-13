@@ -10,7 +10,9 @@
 #include <QVector3D>
 
 #include "ray.h"
-#include "gis/map.h"
+#include "./GIS/rzcreator.h"
+#include "./GIS/heightmeter.h"
+#include "tracerlight.h"
 
 // класс РЛС
 class RLS: public QObject
@@ -49,7 +51,7 @@ public slots:
     void setPosition(int idX, int idY);
 
     // Моделирование локации РЛС
-    void emitSignal(const Map&); // перемоделировать по предыдущим значениям (если РЛС вкл.)
+    void emitSignal(); // перемоделировать по предыдущим значениям (если РЛС вкл.)
 
     // Установить пар-ры ЗО в вертикальной плоскости
     void setOptZDvert(int Rmax,  // в метрах
@@ -60,7 +62,8 @@ public slots:
     void off();
 
 public:
-    explicit RLS(QPoint* position, const QString& nameRLS = nullptr);
+    explicit RLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height,
+                 QPoint* position, const QString& nameRLS = nullptr);
 
     // Позиция РЛС в пространстве
     void getPosition(QVector3D& point);
@@ -88,6 +91,12 @@ public:
     ~RLS();
 
 private:
+
+    //
+    TracerLight* RayTracer;
+    RZCreator* RZEditor;
+    HeightMeter* Height;
+
     // Точки соприкосновения ЗО с рельефом
     QVector <QVector <QVector3D>> interPointsZD;
 
@@ -138,8 +147,8 @@ private:
     // Построение каркаса ЗО
     void buildZD();
 
-    // Блоки, которые находятся в ЗО данной РЛС
-    QVector <geoBlock*> blocksZD;
+    // id блоков, которые находятся в ЗО данной РЛС
+    QVector <QVector3D> blocksZD;
 
     // Для отображения прогресса
     int sizeZD;

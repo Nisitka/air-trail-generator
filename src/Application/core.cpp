@@ -15,7 +15,6 @@ void Core::init_GIS()
 
     gis = new GIS;
     objects.append(gis);
-    map = gis->getMap();
     gisInformer = gis->Informer();
 
     readyRunProgress(12);  
@@ -34,8 +33,16 @@ void Core::init_allObj()
 
     readyRunProgress(36, "Загрузка менеджера РЛС...");
 
+    // Испускатель лучей
+    BlockInformer* blockInformer = gis->getBlockInfomer();
+    RayTracer = new TracerLight(blockInformer);
+
+    //
+    RZCreator*   RZEditor  = gis->getRZCreator();
+    HeightMeter* HeightMap = gis->getHeightMeter();
+
     // Инициализация менеджера РЛС
-    mRLS = new managerRLS(map);
+    mRLS = new managerRLS(RayTracer, RZEditor, HeightMap);
     // Отрисовка
     QObject::connect(mRLS, SIGNAL(updateVisInfoMap(int,int,int,int)),
                      gis,  SLOT(updateFromRect(int,int,int,int)));
@@ -44,8 +51,8 @@ void Core::init_allObj()
     objects.append(mRLS);
     readyRunProgress(46, "Загрузка строителя маршрутов...");
 
-    //
-    trailBuilder = new builderTrailDrones(map);
+    /// !!!!!!!!
+    trailBuilder = new builderTrailDrones(new Map); /// <-- Заглушка
     objects.append(trailBuilder);
     readyRunProgress(54, "Инициализация интерфейса...");
 
@@ -109,7 +116,7 @@ void Core::run()
     init_buildThreads();
     //gis->setDefaultMap();
     //gis->loadTerrain(QApplication::applicationDirPath() + "\\maps\\img2.png");
-    gis->openMap(QApplication::applicationDirPath() + "\\blocks\\test2.map");
+    gis->openMap(QApplication::applicationDirPath() + "\\blocks\\test3.map");
 
     ready();
 

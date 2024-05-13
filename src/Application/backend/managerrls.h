@@ -4,7 +4,10 @@
 #include <QObject>
 #include <QRect>
 
-#include "gis/map.h"
+#include "./GIS/heightmeter.h"
+#include "./GIS/rzcreator.h"
+
+#include "tracerlight.h"
 #include "rls.h"
 
 #include <memory>
@@ -72,7 +75,7 @@ public slots:
     void setOptZDvert(int,int,int);
 
 public:
-    managerRLS(Map* map_);
+    managerRLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height);
 
 private slots:
     //
@@ -82,6 +85,11 @@ private:
     //
     void updateVisInfoRLS();
     void emitSignalAllRLS();
+
+    // Для испускания сигнала
+    TracerLight* RayTracer;
+    RZCreator* RZEditor;
+    HeightMeter* Height;
 
     // сколько вертикальных сегментов готово
     int curVecReady;
@@ -94,8 +102,6 @@ private:
     QVector<QVector<QVector<QVector3D>>>* pointsInterZD;
     //
     QList <QVector3D>* posRLS;
-
-    Map* map;
 };
 
 #endif // MANAGERRLS_H

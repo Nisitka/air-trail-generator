@@ -11,18 +11,34 @@ GIS::GIS()
     connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
             this,       SIGNAL(finishBuildMap(int,int,int)));
 
-    Map* map = geoBuilder->getMap();
+    HeightMeter* heigtMeter = this->getHeightMeter();
+    RZInformer*  RZ         = geoBuilder;
 
     // Отвечает за отрисовку подложки
-    backPainter = new painterMapImage(map, currentW, currentH);
+    backPainter = new painterMapImage(heigtMeter, RZ, currentW, currentH);
     connect(geoBuilder,  SIGNAL(buildFinish(int,int,int)),
             backPainter, SLOT(run()));
 
     /// !!!!!!
-    //geoBuilder->initMap(500, 600, 100);
+    //geoBuilder->initMap(1000, 1000, 256);
 
     // По умолчанию находимся в левом верхнем углу
     idXpos = 0; idYpos = 0;
+}
+
+HeightMeter* GIS::getHeightMeter() const
+{
+    return geoBuilder;
+}
+
+RZCreator* GIS::getRZCreator() const
+{
+    return geoBuilder;
+}
+
+BlockInformer* GIS::getBlockInfomer() const
+{
+    return geoBuilder;
 }
 
 GISInformer* GIS::Informer() /* const */
@@ -36,9 +52,9 @@ void GIS::getIdActionArea(int &idXo, int &idYo) const
     idYo = idYpos;
 }
 
-int GIS::getH(int idX, int idY, int units) const
+int GIS::getH(int idX, int idY, Map::units u) const
 {
-    return geoBuilder->getH(idX, idY, units);
+    return geoBuilder->absolute(idX, idY, u);
 }
 
 Coords GIS::getCoords(int idX, int idY) const
@@ -128,12 +144,6 @@ void GIS::setDefaultMap()
 {
     geoBuilder->buildFlatMap(currentW, currentH);
     initActionArea();
-}
-
-////////// ВРЕМЕННО
-Map* GIS::getMap()
-{
-    return geoBuilder->getMap();
 }
 
 void GIS::updateFromRect(const QRect &rect)

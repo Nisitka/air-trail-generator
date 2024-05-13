@@ -2,17 +2,14 @@
 
 #include <QDebug>
 
-painterMapImage::painterMapImage(Map* map_, int W, int H):
-    map(map_)
+painterMapImage::painterMapImage(HeightMeter* Height,
+                                 RZInformer* RZ,
+                                 int W, int H):
+    Height(Height), RZ(RZ),
+    numW(W), numL(H)
 {
     // Сразу инициализируем изображение
-    img = new QImage(W, H, QImage::Format_RGB32);
-
-    //qDebug() << W << H;
-
-    //
-    numW = W;
-    numL = H;
+    img = new QImage(numW, numL, QImage::Format_RGB32);
 
     // По умолчанию
     idXo = 0;
@@ -37,7 +34,7 @@ QImage* painterMapImage::getImage()
 
 void painterMapImage::updateFull()
 {
-    Hmap = map->getCountLayers();
+    Hmap = Height->max(Map::id);
     dHeight = Hmap / colors.size();
 
     run();
@@ -88,8 +85,8 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
         for (int j=idY; j<H; j++)
         {
             // Вычисляется цвет по данным
-            cZD = map->countZD(i, j);
-            color = colorHeight(map->getHeight(i, j));
+            cZD = RZ->countVertZD(i, j);
+            color = colorHeight(Height->absolute(i, j, Map::id));
             r = color.red();
             g = color.green();
             k = 1 - ((double)cZD / 50);
@@ -113,8 +110,6 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
 
 void painterMapImage::run()
 {
-    qDebug() << "RUN";
-
     //
     runToRect(idXo, idYo, numW, numL);
 }
