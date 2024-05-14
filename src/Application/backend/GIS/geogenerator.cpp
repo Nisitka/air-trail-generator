@@ -200,7 +200,6 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
     geoBlock b;
     for(int h=0; h<Hmap; h++)
     {
-        map->seek(sizeOptData + (idBlock(idXo, idYo, h)*sizeBlock)); //
         for(int x=0; x<wArea; x++)
         {
             map->seek(sizeOptData + (idBlock(idXo+x, idYo, h)*sizeBlock)); //
@@ -246,20 +245,20 @@ void geoGenerator::updateBlocks(int idX, int idY, int W, int L) const
 
     //qDebug() << lastX << lastY;
 
+
+
     geoBlock b;
     QDataStream ds(map);
     for(int h=0; h<Hmap; h++)
     {
-        map->seek(sizeOptData + (idBlock(idX, idY, h)*sizeBlock)); //
         for(int x=0; x<W; x++)
         {
             map->seek(sizeOptData + (idBlock(idX+x, idY, h)*sizeBlock)); //
             for (int y=0; y<L; y++)
             {
-                b = *actionArea->getBlock(Xo + x,
-                                          Yo + y,
-                                          h);
-                ds << b;
+                ds << *actionArea->getBlock(Xo + x,
+                                            Yo + y,
+                                            h);
             }
         }
     }
