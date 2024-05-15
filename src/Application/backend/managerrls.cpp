@@ -44,44 +44,6 @@ void managerRLS::addRLS(QPoint* posRLS_, const QString& nameRLS)
    // qDebug() << "create RLS!";
 }
 
-void managerRLS::updateVisInfoRLS()
-{
-    /* В дальнейшем сделать чтоб в зависимости от причины апдейта по
-       разному готовила данные (типа не удалять все и поновой отпр.) */
-
-    delete pointsInterZD;
-    delete posRLS;
-
-    pointsInterZD = new QVector<QVector<QVector<QVector3D>>>;
-    posRLS = new QList <QVector3D>;
-
-    if (listRLS.size() > 0)
-    {
-        RLS* rls;
-        QVector3D pos;
-        for (int i=0; i<listRLS.size(); i++)
-        {
-            rls = listRLS.at(i);
-
-            rls->getPosition(pos);
-            posRLS->append(pos);
-
-            if (rls->isWorking())
-            {
-                rls->emitSignal();
-                pointsInterZD->push_back(rls->getPointsInterZD());
-            }
-        }
-
-    }
-    else
-    {
-
-    }
-
-    sendPointsInterZD(pointsInterZD, posRLS);
-}
-
 void managerRLS::delRLS(int id)
 {
     RLS* rls = listRLS.at(id);
@@ -162,6 +124,8 @@ void managerRLS::offRLS()
 
 void managerRLS::updateSignals()
 {
+    qDebug() << "Run all RLS";
+
     for (int i=0; i<listRLS.size(); i++)
     {
         RLS* rls = listRLS[i];
@@ -177,8 +141,6 @@ void managerRLS::updateSignals()
             updateVisInfoMap(idX, idY, w, h);
         }
     }
-
-    updateVisInfoRLS();
 }
 
 void managerRLS::emitSignalAllRLS()
@@ -198,14 +160,13 @@ void managerRLS::emitSignalAllRLS()
     startGenerateZD(sizeLoading);
     curVecReady = 0;
 
-    //
-    updateVisInfoRLS();
-
     finishGenerateZD();
 }
 
 void managerRLS::runRLS(int idX, int idY)
 {
+    qDebug() << "Run one RLS (coords)";
+
     int sizeLoading = 0;
     for (int i=0; i<listRLS.size(); i++)
         sizeLoading += listRLS.at(i)->getCountHorVectors();
@@ -231,6 +192,8 @@ void managerRLS::runRLS(int idX, int idY)
 
 void managerRLS::runRLS()
 {
+    qDebug() << "Run one RLS";
+
     int sizeLoading = 0;
     for (int i=0; i<listRLS.size(); i++)
         sizeLoading += listRLS.at(i)->getCountHorVectors();
@@ -249,8 +212,6 @@ void managerRLS::runRLS()
     listRLS.at(idCurRLS)->getRectPosition(idX, idY, w, h);
     updateVisInfoMap(idX, idY, w, h);
     finishGenerateZD();
-
-    updateVisInfoRLS();
 }
 
 void managerRLS::readyVecRLS()

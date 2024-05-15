@@ -49,9 +49,6 @@ public:
                         int W, int L, int H,
                         double lenBlock);
 
-    // Актуализировать данные в файле-карте по дискретам
-    void updateBlocks(int idXo, int idYo, int W, int L) const;
-
     // Создать плоский (пустой) рельеф
     void buildFlatMap(int W = 400, int L = 400, int H = 256);
 
@@ -78,6 +75,9 @@ public:
     void initMap(int W, int L, int H);
 
 private:
+
+    // mutex
+     mutable  bool isLocked;
 
     // Дискрета в зоне событий?
     bool inActionArea(int idX, int idY, int idH) const;

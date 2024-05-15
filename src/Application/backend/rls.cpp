@@ -162,7 +162,7 @@ void RLS::emitSignal()
     int yRLS = position->y();
     QVector3D posRLS(xRLS, yRLS, Height->absolute(xRLS, yRLS, Map::id)+1);
 
-    qDebug() << posRLS;
+    //qDebug() << posRLS;
 
     ///interPointsZD.clear();
     blocksZD.clear();
@@ -190,7 +190,7 @@ void RLS::emitSignal()
         readyVector(i);
     }
 
-    //qDebug() << interPointsZD;
+    qDebug() << "RLS: emit signal finish!";
 
     finishGenerateZD();
 }

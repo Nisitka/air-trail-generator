@@ -160,8 +160,6 @@ void GIS::updateFromRect(int idX, int idY, int w, int h)
 {
     backPainter->runToRect(idX, idY, w, h);
 
-    geoBuilder->updateBlocks(idX, idY, w, h);
-
     changedMap(idX, idY, w, h);
 }
 

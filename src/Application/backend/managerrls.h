@@ -17,8 +17,6 @@ class managerRLS : public QObject
 {
     Q_OBJECT
 signals:
-    // отправка данных для отрисовки ЗО в 3D
-    void sendPointsInterZD(QVector<QVector<QVector<QVector3D>>>*, QList <QVector3D>*);
 
     // сообщаем GUI об завершении инициализации РЛС
     void createReadyRLS();
@@ -82,8 +80,8 @@ private slots:
     void readyVecRLS();
 
 private:
+
     //
-    void updateVisInfoRLS();
     void emitSignalAllRLS();
 
     // Для испускания сигнала
