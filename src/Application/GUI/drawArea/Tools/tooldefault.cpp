@@ -1,6 +1,6 @@
 #include "tooldefault.h"
 
-#include "areadrawwidget.h"
+#include "../areadrawwidget.h"
 
 toolDefault::toolDefault(int id): drawAreaTool(id)
 {

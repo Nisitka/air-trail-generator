@@ -1,7 +1,7 @@
 #ifndef TOOLVISMAP_H
 #define TOOLVISMAP_H
 
-#include "GUI/drawArea/drawareatool.h"
+#include "GUI/drawArea/Tools/drawareatool.h"
 
 class ToolVisMap: public drawAreaTool
 {

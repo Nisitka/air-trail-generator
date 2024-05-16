@@ -1,6 +1,6 @@
 #include "drawareatool.h"
 
-#include "areadrawwidget.h"
+#include "../areadrawwidget.h"
 
 #include <QDebug>
 

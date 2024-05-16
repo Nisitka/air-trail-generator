@@ -1,6 +1,6 @@
 #include "toolsetrls.h"
 
-#include "areadrawwidget.h"
+#include "../areadrawwidget.h"
 
 ToolSetRLS::ToolSetRLS(int id, GISInformer* gis):
     drawAreaTool(id), gis(gis)

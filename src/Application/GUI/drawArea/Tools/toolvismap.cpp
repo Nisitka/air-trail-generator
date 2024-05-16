@@ -1,6 +1,6 @@
 #include "toolvismap.h"
 
-#include "areadrawwidget.h"
+#include "../areadrawwidget.h"
 
 ToolVisMap::ToolVisMap(int id): drawAreaTool(id)
 {

@@ -19,16 +19,16 @@
 
 #include <QLabel>
 
-#include "tooldefault.h"
-#include "tooleditmap.h"
-#include "toolmovemap.h"
-#include "toolpredrect.h"
-#include "toolpredtrail.h"
-#include "toolsetrls.h"
-#include "toolvismap.h"
-#include "toolzoommap.h"
-#include "toolruler.h"
-#include "toolsquareter.h"
+#include "./Tools/tooldefault.h"
+#include "./Tools/tooleditmap.h"
+#include "./Tools/toolmovemap.h"
+#include "./Tools/toolpredrect.h"
+#include "./Tools/toolpredtrail.h"
+#include "./Tools/toolsetrls.h"
+#include "./Tools/toolvismap.h"
+#include "./Tools/toolzoommap.h"
+#include "./Tools/toolruler.h"
+#include "./Tools/toolsquareter.h"
 
 #include "drawtask.h"
 

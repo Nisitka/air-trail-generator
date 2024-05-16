@@ -1,6 +1,6 @@
 #include "toolruler.h"
 #include "math.h"
-#include "areadrawwidget.h"
+#include "../areadrawwidget.h"
 
 ToolRuler::ToolRuler(int id): drawAreaTool(id)
 {

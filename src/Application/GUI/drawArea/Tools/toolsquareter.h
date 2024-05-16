@@ -1,7 +1,7 @@
 #ifndef TOOLSQUARETER_H
 #define TOOLSQUARETER_H
 
-#include "GUI/drawArea/drawareatool.h"
+#include "GUI/drawArea/Tools/drawareatool.h"
 
 class ToolSquareTer: public drawAreaTool
 {

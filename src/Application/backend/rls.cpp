@@ -134,14 +134,14 @@ void RLS::setOptZDvert(int Rmax,
     D = Rmax;
 
     sizeZD = ZD.size();
-    // сообщаем GUI об начале применнения настроек
+    // Сообщаем GUI об начале применнения настроек
     startSetOpt(sizeZD + COUNT_VECTORS_vert);
 
-    // построение ЗО в верт. плоскости
+    // Построение ЗО в верт. плоскости
     set_lDV();  // диаграмма направленности
     updateDV(); // ЗО
 
-    // построение всей ЗО (по кругу)
+    // Построение всей ЗО (по кругу)
     removeZD();
     buildZD();
 
@@ -164,28 +164,31 @@ void RLS::emitSignal()
 
     //qDebug() << posRLS;
 
-    ///interPointsZD.clear();
+    // Дискрета РЛС по умолчанию в ЗО
     blocksZD.clear();
+    blocksZD.append(posRLS);
+    RZEditor->toZD(posRLS);
+
+    int idLastBlock;
     // По вертикальным сегментам
     for (int i=0; i<countS_ZD; i++)
-    {   // По лучам в сегменте
-        interPointsZD.append(QVector <QVector3D>()); // добавляем список точек пер-я в сегменте
+    {
+        // По лучам в сегменте
         int countLZD = ZD.at(i)->size();
         for (int j=0; j<countLZD; j++)
         {
+            //
+            idLastBlock = blocksZD.size() - 1;
+
             // Полет луча
-            QVector <QVector3D> idBlocks = RayTracer->emitRay(ZD[i]->at(j), posRLS);
+            RayTracer->emitRay(ZD[i]->at(j), posRLS, blocksZD);
 
             // Заряжаем дискереты РЛ сигналом
-            int c = idBlocks.size();
-            for (int i=0; i<c; i++)
+            int c = blocksZD.size();
+            for (int i=idLastBlock; i<c; i++)
             {
-                RZEditor->toZD(idBlocks[i]);
-                blocksZD.append(idBlocks[i]);
+                RZEditor->toZD(blocksZD[i]);
             }
-
-            /// blocksZD.append(block); // в список блоков ЗО
-            /// interPointsZD.last().push_back(QVector3D(idX, idY, idH));
         }
         readyVector(i);
     }

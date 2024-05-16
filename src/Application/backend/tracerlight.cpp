@@ -6,7 +6,7 @@ TracerLight::TracerLight(BlockInformer* blocks):
 
 }
 
-QVector <QVector3D> TracerLight::emitRay(Ray *ray, const QVector3D &pos)
+void TracerLight::emitRay(Ray *ray, const QVector3D &pos, QVector <QVector3D>& idBlocks)
 {
     QVector <int*> way = ray->getWay();
     int idX;
@@ -19,7 +19,6 @@ QVector <QVector3D> TracerLight::emitRay(Ray *ray, const QVector3D &pos)
     int curZ = pos.z();
 
     // Полет луча
-    QVector <QVector3D> idBlocks;
     int countDelta = way.size(); // кол-во дискрет одного луча
     for (int k=1; k<countDelta; k++)
     {   // в пути луча содержатся относительные индексы
@@ -37,13 +36,15 @@ QVector <QVector3D> TracerLight::emitRay(Ray *ray, const QVector3D &pos)
         if (block.isEarth())
         {
             // луч столкнулся с рельефом
-            return idBlocks;
+            return;
         }
         else
         {
-            idBlocks.append(QVector3D(idX, idY, idH));
+            // Если он еще не в ЗО
+            if (!block.isZD())
+                idBlocks.append(QVector3D(idX, idY, idH));
         }
     }
 
-    return idBlocks;
+    return;
 }

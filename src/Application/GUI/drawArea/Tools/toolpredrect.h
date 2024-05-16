@@ -1,7 +1,7 @@
 #ifndef TOOLPREDRECT_H
 #define TOOLPREDRECT_H
 
-#include "GUI/drawArea/drawareatool.h"
+#include "GUI/drawArea/Tools/drawareatool.h"
 #include "toolpredict.h"
 
 class ToolPredRect: public drawAreaTool, public ToolPredict

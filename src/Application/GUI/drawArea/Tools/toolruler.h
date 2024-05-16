@@ -1,7 +1,7 @@
 #ifndef TOOLRULER_H
 #define TOOLRULER_H
 
-#include "GUI/drawArea/drawareatool.h"
+#include "GUI/drawArea/Tools/drawareatool.h"
 
 class ToolRuler: public drawAreaTool
 {

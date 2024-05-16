@@ -1,7 +1,7 @@
 #ifndef TOOLZOOMMAP_H
 #define TOOLZOOMMAP_H
 
-#include "GUI/drawArea/drawareatool.h"
+#include "GUI/drawArea/Tools/drawareatool.h"
 
 class ToolZoomMap: public drawAreaTool
 {

@@ -1,7 +1,7 @@
 #ifndef TOOLEDITMAP_H
 #define TOOLEDITMAP_H
 
-#include "GUI/drawArea/drawareatool.h"
+#include "GUI/drawArea/Tools/drawareatool.h"
 
 #include <QWheelEvent>
 #include <QPixmap>

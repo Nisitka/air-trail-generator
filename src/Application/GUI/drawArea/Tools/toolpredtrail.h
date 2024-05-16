@@ -1,7 +1,7 @@
 #ifndef TOOLPREDTRAIL_H
 #define TOOLPREDTRAIL_H
 
-#include "GUI/drawArea/drawareatool.h"
+#include "GUI/drawArea/Tools/drawareatool.h"
 #include "toolpredict.h"
 
 class ToolPredTrail: public drawAreaTool, public ToolPredict

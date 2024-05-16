@@ -1,6 +1,6 @@
 #include "toolmovemap.h"
 
-#include "areadrawwidget.h"
+#include "../areadrawwidget.h"
 
 #include <QDebug>
 

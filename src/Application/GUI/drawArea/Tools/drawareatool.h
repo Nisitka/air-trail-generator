@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QToolButton>
 
-#include "drawtask.h"
+#include "../drawtask.h"
 
 class areaDrawWidget;
 

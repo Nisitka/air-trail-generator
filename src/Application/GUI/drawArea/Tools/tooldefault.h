@@ -1,7 +1,7 @@
 #ifndef TOOLDEFAULT_H
 #define TOOLDEFAULT_H
 
-#include "GUI/drawArea/drawareatool.h"
+#include "GUI/drawArea/Tools/drawareatool.h"
 
 class toolDefault: public drawAreaTool
 {

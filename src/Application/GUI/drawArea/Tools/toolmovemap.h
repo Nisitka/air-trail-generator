@@ -1,7 +1,7 @@
 #ifndef TOOLMOVEMAP_H
 #define TOOLMOVEMAP_H
 
-#include "GUI/drawArea/drawareatool.h"
+#include "GUI/drawArea/Tools/drawareatool.h"
 
 class ToolMoveMap: public drawAreaTool
 {

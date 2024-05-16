@@ -1,6 +1,6 @@
 #include "toolzoommap.h"
 
-#include "areadrawwidget.h"
+#include "../areadrawwidget.h"
 
 ToolZoomMap::ToolZoomMap(int id): drawAreaTool(id)
 {

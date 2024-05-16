@@ -40,22 +40,10 @@ SOURCES += main.cpp\
     GUI/runwindow.cpp \
     GUI/visualinfowidget.cpp \
     GUI/drawArea/areadrawwidget.cpp \
-    GUI/drawArea/drawareatool.cpp \
-    GUI/drawArea/toolsetrls.cpp \
-    GUI/drawArea/tooldefault.cpp \
-    GUI/drawArea/toolmovemap.cpp \
-    GUI/drawArea/toolzoommap.cpp \
-    GUI/drawArea/toolpredrect.cpp \
-    GUI/drawArea/toolpredtrail.cpp \
-    GUI/drawArea/toolvismap.cpp \
-    GUI/drawArea/tooleditmap.cpp \
     backend/managerdrones.cpp \
     backend/trail.cpp \
     GUI/plotwidget.cpp \
-    GUI/drawArea/toolruler.cpp \
-    GUI/drawArea/toolsquareter.cpp \
     GUI/3DVisualization/mapopenglwidget.cpp \
-    GUI/drawArea/toolpredict.cpp \
     backend/dao.cpp \
     GUI/dataaccessobjectwindow.cpp \
     GUI/3DVisualization/map3dviswindow.cpp \
@@ -86,7 +74,20 @@ SOURCES += main.cpp\
     GUI/airwindow.cpp \
     backend/airlableobject.cpp \
     backend/GIS/mapdata.cpp \
-    backend/tracerlight.cpp
+    backend/tracerlight.cpp \
+    GUI/drawArea/Tools/drawareatool.cpp \
+    GUI/drawArea/Tools/tooldefault.cpp \
+    GUI/drawArea/Tools/tooleditmap.cpp \
+    GUI/drawArea/Tools/toolmovemap.cpp \
+    GUI/drawArea/Tools/toolpredict.cpp \
+    GUI/drawArea/Tools/toolpredrect.cpp \
+    GUI/drawArea/Tools/toolpredtrail.cpp \
+    GUI/drawArea/Tools/toolruler.cpp \
+    GUI/drawArea/Tools/toolsetrls.cpp \
+    GUI/drawArea/Tools/toolsquareter.cpp \
+    GUI/drawArea/Tools/toolvismap.cpp \
+    GUI/drawArea/Tools/toolzoommap.cpp \
+    GUI/drawArea/minimapwidget.cpp
 
 HEADERS  += \
     core.h \
@@ -156,7 +157,20 @@ HEADERS  += \
     backend/GIS/rzinformer.h \
     backend/tracerlight.h \
     backend/GIS/blockinformer.h \
-    backend/GIS/rzcreator.h
+    backend/GIS/rzcreator.h \
+    GUI/drawArea/Tools/drawareatool.h \
+    GUI/drawArea/Tools/tooldefault.h \
+    GUI/drawArea/Tools/tooleditmap.h \
+    GUI/drawArea/Tools/toolmovemap.h \
+    GUI/drawArea/Tools/toolpredict.h \
+    GUI/drawArea/Tools/toolpredrect.h \
+    GUI/drawArea/Tools/toolpredtrail.h \
+    GUI/drawArea/Tools/toolruler.h \
+    GUI/drawArea/Tools/toolsetrls.h \
+    GUI/drawArea/Tools/toolsquareter.h \
+    GUI/drawArea/Tools/toolvismap.h \
+    GUI/drawArea/Tools/toolzoommap.h \
+    GUI/drawArea/minimapwidget.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \

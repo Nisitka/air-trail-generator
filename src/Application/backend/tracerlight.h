@@ -13,8 +13,9 @@ public:
     TracerLight(BlockInformer* blocks);
 
     // Испустить луч
-    QVector <QVector3D> emitRay(Ray* ray,              // Какой луч
-                                const QVector3D& pos); // От куда
+    void emitRay(Ray* ray,             // Какой луч
+                 const QVector3D& pos, // От куда
+                 QVector <QVector3D>& idBlocks); // Помещаем id дискрет
 
 private:
 

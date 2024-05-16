@@ -1,6 +1,6 @@
 #include "toolpredtrail.h"
 
-#include "areadrawwidget.h"
+#include "../areadrawwidget.h"
 
 ToolPredTrail::ToolPredTrail(int id, QObject *parent): drawAreaTool(id, parent)
 {

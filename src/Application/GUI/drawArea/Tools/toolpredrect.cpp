@@ -1,6 +1,6 @@
 #include "toolpredrect.h"
 
-#include "areadrawwidget.h"
+#include "../areadrawwidget.h"
 
 #include <QDebug>
 
