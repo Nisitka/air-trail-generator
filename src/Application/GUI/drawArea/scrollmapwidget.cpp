@@ -39,9 +39,15 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
                               "   border-radius: 2px;"
                               "};)");
 
+    //
+    miniMap = new miniMapWidget(this, 150, 120);
+    miniMap->setDistEdge(20, 20);
+    miniMap->setSizeLookArea(30, 20);
+
+
     // Чтоб QScrollBar не загараживал
-    connect(this, SIGNAL(resized()),
-            this, SLOT(updatePosCoordLabel()));
+//    connect(this, SIGNAL(resized()),
+//            this, SLOT(updatePosCoordLabel()));
 
     readyActionArea = true;
 
@@ -156,9 +162,37 @@ void ScrollMapWidget::updateCoord(const QString &coordsData)
     coordLabel->setText(coordsData);
 }
 
+void ScrollMapWidget::updatePosMiniMap()
+{
+    if (horizontalScrollBar()->isVisible() ||
+        verticalScrollBar()->isVisible())
+    {
+        int dX = 3;
+        int dY = 3;
+
+        if (horizontalScrollBar()->isVisible()) dY = 23;
+        if (verticalScrollBar()->isVisible())   dX = 23;
+
+        miniMap->setDistEdge(dX, dY);
+        miniMap->updatePos();
+
+        miniMap->Show();
+    }
+    else
+    {
+        miniMap->Hide();
+    }
+}
+
 void ScrollMapWidget::resizeEvent(QResizeEvent *event)
 {
     QScrollArea::resizeEvent(event);
+
+    //
+    updatePosCoordLabel();
+
+    //
+    updatePosMiniMap();
 
     resized();
 }

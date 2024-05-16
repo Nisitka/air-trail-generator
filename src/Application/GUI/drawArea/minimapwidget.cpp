@@ -4,11 +4,12 @@
 
 #include <QDebug>
 
-miniMapWidget::miniMapWidget(QWidget* parent, int maxH, int maxW):
-    QLabel(parent), // Виджет, на котором будет располагаться миникарта
-    maxW(maxW), maxH(maxH)
+miniMapWidget::miniMapWidget(QWidget* parent, int maxW, int maxH, Alignment typePos):
+    QLabel(parent), Parent(parent), // Виджет, на котором будет располагаться миникарта
+    typePos(typePos)
 {
-    kSize = (double) maxW/maxH;
+    dAlign.setX(0);
+    dAlign.setY(0);
 
     //
     this->setMouseTracking(true);
@@ -23,13 +24,57 @@ miniMapWidget::miniMapWidget(QWidget* parent, int maxH, int maxW):
 
     this->move(0,0);
 
-    this->setFixedSize(maxW, maxH);
+    //this->setFixedSize(maxW, maxH);
+    setMaxSize(maxW, maxH);
     this->setStyleSheet("QWidget{"
                         "   background: rgb(128,128,128,25);"
                         "   border-radius: 5px;"
                         "   border: 1px solid rgb(0,0,0);"
                         "}");
+}
+
+void miniMapWidget::Show()
+{
     this->show();
+}
+
+void miniMapWidget::Hide()
+{
+    this->hide();
+}
+
+void miniMapWidget::setDistEdge(int dXpx, int dYpx)
+{
+    dAlign.setX(dXpx);
+    dAlign.setY(dYpx);
+}
+
+void miniMapWidget::updatePos()
+{
+    QPoint pos;
+
+    switch (typePos) {
+    case topRight:
+
+        break;
+    case topLeft:
+
+        break;
+
+    case bottomLeft:
+
+        break;
+    case bottomRight:
+        pos.setX(Parent->width()  - this->width());
+        pos.setY(Parent->height() - this->height());
+
+        pos -= dAlign;
+        break;
+    }
+
+    this->move(pos);
+
+    //qDebug() << "miniMap: " << pos;
 }
 
 void miniMapWidget::setPosLookArea(int idX, int idY)
@@ -63,6 +108,7 @@ void miniMapWidget::setSizeLookArea(int W, int H)
 void miniMapWidget::setMaxSize(int W, int H)
 {
     maxW = W; maxH = H;
+    kSize = (double) maxW/maxH;
 
     // Одоптируем размеры под текущую карту
     setSizeActionArea(sizeActionArea);
@@ -103,7 +149,7 @@ void miniMapWidget::mousePressEvent(QMouseEvent *mouse)
 
         pointPress = posMouse - lookArea->topLeft();
 
-        this->setCursor(Qt::CrossCursor);
+        this->setCursor(Qt::SizeAllCursor);
     }
 }
 
@@ -123,7 +169,7 @@ void miniMapWidget::mouseMoveEvent(QMouseEvent *mouse)
             {
                 inLookRect = true;
 
-                this->setCursor(Qt::OpenHandCursor);
+                this->setCursor(Qt::PointingHandCursor);
             }
         }
     }
@@ -148,7 +194,7 @@ void miniMapWidget::mouseReleaseEvent(QMouseEvent *mouse)
     {
         inLookRect = true;
 
-        this->setCursor(Qt::OpenHandCursor);
+        this->setCursor(Qt::PointingHandCursor);
     }
 }
 

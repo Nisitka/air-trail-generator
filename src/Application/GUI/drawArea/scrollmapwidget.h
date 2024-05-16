@@ -7,6 +7,7 @@
 
 #include "areadrawwidget.h"
 #include "GUI/processtmpwidget.h"
+#include "minimapwidget.h"
 
 #include <QPushButton>
 
@@ -72,6 +73,9 @@ private:
     //
     QLabel* coordLabel;
 
+    //
+    miniMapWidget* miniMap;
+    void updatePosMiniMap();
 
     QWidget* backWidget;
 

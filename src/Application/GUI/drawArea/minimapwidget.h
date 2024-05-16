@@ -18,14 +18,25 @@ public slots:
     void setSizeLookArea(int W, int H);
 
 public:
+    enum Alignment{topLeft, topRight, bottomLeft, bottomRight};
+
     explicit miniMapWidget(QWidget* parent,
-                           int H = 300, int W = 400);
+                           int W = 400, int H= 300,
+                           Alignment pos = miniMapWidget::bottomRight);
 
     //
     void setSizeActionArea(const QSize& sizeMap);
 
     //
     void setMaxSize(int W, int H);
+
+    //
+    void updatePos();
+    void setDistEdge(int dXpx, int dYpx);
+
+    //
+    void Show();
+    void Hide();
 
 protected:
 
@@ -41,7 +52,20 @@ protected:
     //
     void mouseReleaseEvent(QMouseEvent* mouse) override final;
 
+private slots:
+
+
+
 private:
+
+    //
+    QPoint dAlign;
+
+    //
+    Alignment typePos;
+
+    //
+    QWidget* Parent;
 
     //
     enum statusMouse{press, release};
