@@ -147,7 +147,7 @@ void miniMapWidget::mousePressEvent(QMouseEvent *mouse)
     {
         inLookRect = true;
 
-        pointPress = posMouse - lookArea->topLeft();
+        pointPressArea = posMouse - lookArea->topLeft();
 
         this->setCursor(Qt::SizeAllCursor);
     }
@@ -160,8 +160,21 @@ void miniMapWidget::mouseMoveEvent(QMouseEvent *mouse)
     {
         if (statMouse == press)
         {
-            QPoint p = mouse->pos() - pointPress;
+            QPoint p = posMouse - pointPressArea;
             setPosLookArea(p.x(), p.y());
+
+            //
+            QPoint pointPressWidget = pointPressArea + lookArea->topLeft();
+
+            //qDebug() << pointPressWidget;
+
+            QPoint dPoints = pointPressWidget - posMouse;
+            double dX = (double) dPoints.x() / sizeActionArea.width();
+            double dY = (double) dPoints.y() / sizeActionArea.height();
+
+            //qDebug() << dX << dY;
+
+            movedLookArea(dX, dY);
         }
         else
         {

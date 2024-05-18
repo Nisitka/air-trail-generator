@@ -45,11 +45,11 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
     // Обычный курсор без дейсвий
     appendTool(new toolDefault(def));
 
-    // Перетаскивание карты без лишнего
+    // Перетаскивание карты
     ToolMoveMap* toolMoveMap = new ToolMoveMap(moveImg);
-    connect(toolMoveMap, SIGNAL(movedMap(double,double)),
+    connect(toolMoveMap, SIGNAL(movedLookArea(double,double)),
             scrollArea,  SLOT(movePosLookMap(double,double)));
-    connect(toolMoveMap, SIGNAL(changedRelease()),
+    connect(toolMoveMap, SIGNAL(mouseReleaseSignal()),
             scrollArea,  SLOT(checkShowNewActionArea()));
     appendTool(toolMoveMap);
 

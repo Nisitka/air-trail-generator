@@ -84,7 +84,7 @@ public:
 
 private slots:
 
-    void setMapSize(int W, int L, int H);
+
 
 private:
 

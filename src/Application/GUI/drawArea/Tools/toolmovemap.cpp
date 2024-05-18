@@ -43,7 +43,7 @@ void ToolMoveMap::mouseRelease(QMouseEvent *mouse)
     yMouse = mouse->y();
 
     //
-    changedRelease();
+    mouseReleaseSignal();
 }
 
 void ToolMoveMap::mouseMove(QMouseEvent *mouse)
@@ -63,7 +63,7 @@ void ToolMoveMap::mouseMove(QMouseEvent *mouse)
 
         //qDebug() << dX << dY;
 
-        movedMap((double) dX / W, (double) dY / H);
+        movedLookArea((double) dX / W, (double) dY / H);
     }
     else
     {

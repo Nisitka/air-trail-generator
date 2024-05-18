@@ -44,10 +44,9 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
     miniMap->setDistEdge(20, 20);
     miniMap->setSizeLookArea(30, 20);
 
-
-    // Чтоб QScrollBar не загараживал
-//    connect(this, SIGNAL(resized()),
-//            this, SLOT(updatePosCoordLabel()));
+    //
+    connect(miniMap, SIGNAL(movedLookArea(double,double)),
+            this,    SLOT(movePosLookMap(double,double)));
 
     readyActionArea = true;
 
@@ -188,10 +187,8 @@ void ScrollMapWidget::resizeEvent(QResizeEvent *event)
 {
     QScrollArea::resizeEvent(event);
 
-    //
+    // Чтоб QScrollBar не загараживал
     updatePosCoordLabel();
-
-    //
     updatePosMiniMap();
 
     resized();

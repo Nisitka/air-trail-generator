@@ -16,7 +16,7 @@ class drawAreaTool: public QObject
 signals:
 
     //
-    void changedRelease();
+    void mouseReleaseSignal();
 
     // Выдает вспомогательную информацию при работе
     void info(const QString& info);

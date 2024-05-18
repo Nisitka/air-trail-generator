@@ -90,13 +90,6 @@ void GIS::setPosActionArea(int idXmap, int idYmap)
     changedActionArea(idXpos, idYpos);
 }
 
-void GIS::setMapSize(int W, int L, int H)
-{
-    Wmap = W;
-    Lmap = L;
-    Hmap = H;
-}
-
 void GIS::movePosActionArea(int dX, int dY)
 {
     int posX, posY;

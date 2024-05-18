@@ -5,11 +5,14 @@
 
 #include <QMouseEvent>
 
-class miniMapWidget: private QLabel
+class miniMapWidget: public QLabel
 {
     Q_OBJECT
 
 signals:
+
+    //
+    void movedLookArea(double dX, double dY);
 
 public slots:
 
@@ -78,7 +81,7 @@ private:
     QPoint posCursor;
 
     //
-    QPoint pointPress;
+    QPoint pointPressArea;
 
     //
     QSize sizeActionArea;

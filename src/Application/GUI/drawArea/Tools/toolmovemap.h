@@ -9,7 +9,7 @@ class ToolMoveMap: public drawAreaTool
 signals:
 
     //
-    void movedMap(double dX, double dY);
+    void movedLookArea(double dX, double dY);
 
 public:
     ToolMoveMap(int id);
