@@ -22,15 +22,23 @@ miniMapWidget::miniMapWidget(QWidget* parent, int maxW, int maxH, Alignment type
     //
     lookArea = new QRect(0, 0, 15, 10);
 
-    this->move(0,0);
-
-    //this->setFixedSize(maxW, maxH);
     setMaxSize(maxW, maxH);
     this->setStyleSheet("QWidget{"
                         "   background: rgb(128,128,128,25);"
                         "   border-radius: 5px;"
                         "   border: 1px solid rgb(0,0,0);"
                         "}");
+}
+
+void miniMapWidget::setPaternSizeLookArea(double pW, double pH)
+{
+
+//    qDebug() << pW * sizeActionArea.width();
+//    qDebug() << pH * sizeActionArea.height();
+
+    //
+    setSizeLookArea(pW * sizeActionArea.width(),
+                    pH * sizeActionArea.height());
 }
 
 void miniMapWidget::Show()
@@ -111,16 +119,14 @@ void miniMapWidget::setMaxSize(int W, int H)
     kSize = (double) maxW/maxH;
 
     // Одоптируем размеры под текущую карту
-    setSizeActionArea(sizeActionArea);
+    //setSizeActionArea(sizeActionArea);
 }
 
 void miniMapWidget::setSizeActionArea(const QSize& size)
 {
     //
-    sizeActionArea = size;
-
-    double kW = (double)sizeActionArea.width()  / maxW;
-    double kH = (double)sizeActionArea.height() / maxH;
+    double kW = (double)size.width()  / maxW;
+    double kH = (double)size.height() / maxH;
 
     int W, H;
 
@@ -135,7 +141,10 @@ void miniMapWidget::setSizeActionArea(const QSize& size)
         W = H * kSize;
     }
 
-    this->setFixedSize(W, H);
+    // Применяем вычесленные размеры
+    sizeActionArea.setWidth(W);
+    sizeActionArea.setHeight(H);
+    this->setFixedSize(sizeActionArea);
 }
 
 void miniMapWidget::mousePressEvent(QMouseEvent *mouse)
@@ -168,7 +177,7 @@ void miniMapWidget::mouseMoveEvent(QMouseEvent *mouse)
 
             //qDebug() << pointPressWidget;
 
-            QPoint dPoints = pointPressWidget - posMouse;
+            QPoint dPoints = posMouse - pointPressWidget;
             double dX = (double) dPoints.x() / sizeActionArea.width();
             double dY = (double) dPoints.y() / sizeActionArea.height();
 

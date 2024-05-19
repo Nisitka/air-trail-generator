@@ -51,6 +51,9 @@ private slots:
     //
     void updatePosCoordLabel();
 
+    //
+    void updateMiniMap();
+
 private:
 
     // Последние значения передвижения карты

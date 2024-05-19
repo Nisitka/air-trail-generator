@@ -18,7 +18,9 @@ public slots:
 
     //
     void setPosLookArea(int idX, int idY);
-    void setSizeLookArea(int W, int H);
+
+    // Установить относительные размера области обзора
+    void setPaternSizeLookArea(double pW, double pH);
 
 public:
     enum Alignment{topLeft, topRight, bottomLeft, bottomRight};
@@ -60,6 +62,10 @@ private slots:
 
 
 private:
+
+    //
+    void setSizeLookArea(int W, int H);
+
 
     //
     QPoint dAlign;

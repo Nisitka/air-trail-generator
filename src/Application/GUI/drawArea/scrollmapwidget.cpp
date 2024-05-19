@@ -42,7 +42,12 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
     //
     miniMap = new miniMapWidget(this, 150, 120);
     miniMap->setDistEdge(20, 20);
-    miniMap->setSizeLookArea(30, 20);
+    miniMap->setSizeActionArea(drawArea->size());
+
+    connect(verticalScrollBar(), SIGNAL(rangeChanged(int,int)),
+            this,                SLOT(updateMiniMap()));
+    connect(horizontalScrollBar(), SIGNAL(rangeChanged(int,int)),
+            this,                  SLOT(updateMiniMap()));
 
     //
     connect(miniMap, SIGNAL(movedLookArea(double,double)),
@@ -56,6 +61,20 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
 
     // Гифка загрузки новой области
     loadingWidget = new processTmpWidget(this);
+}
+
+void ScrollMapWidget::updateMiniMap()
+{
+//    qDebug() << this->width()     << this->height();
+//    qDebug() << drawArea->width() << drawArea->height();
+
+    double pW = (double)this->width()  / drawArea->width();
+    double pH = (double)this->height() / drawArea->height();
+
+    //qDebug() << pW << pH;
+
+    miniMap->setSizeActionArea(drawArea->size());
+    miniMap->setPaternSizeLookArea(pW,pH);
 }
 
 void ScrollMapWidget::setMoveMapEnabled(bool val)
