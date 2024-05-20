@@ -26,6 +26,13 @@ GIS::GIS()
     idXpos = 0; idYpos = 0;
 }
 
+void GIS::setMapSize(int W, int L, int H)
+{
+    Wmap = W;
+    Lmap = L;
+    Hmap = H;
+}
+
 HeightMeter* GIS::getHeightMeter() const
 {
     return geoBuilder;

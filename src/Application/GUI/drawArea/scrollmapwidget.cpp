@@ -51,7 +51,7 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
 
     //
     connect(miniMap, SIGNAL(movedLookArea(double,double)),
-            this,    SLOT(movePosLookMap(double,double)));
+            this,    SLOT(setPosLookMap(double,double)));
 
     readyActionArea = true;
 
@@ -65,13 +65,8 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
 
 void ScrollMapWidget::updateMiniMap()
 {
-//    qDebug() << this->width()     << this->height();
-//    qDebug() << drawArea->width() << drawArea->height();
-
     double pW = (double)this->width()  / drawArea->width();
     double pH = (double)this->height() / drawArea->height();
-
-    //qDebug() << pW << pH;
 
     miniMap->setSizeActionArea(drawArea->size());
     miniMap->setPaternSizeLookArea(pW,pH);
@@ -95,10 +90,25 @@ void ScrollMapWidget::movePosLookMap(double dX, double dY)
     if (readyActionArea)
     {
         lastCurY = verScroll->value();
-        verScroll->setValue(lastCurY + (dY * drawArea->height()));
+        int posY = lastCurY + (dY * drawArea->height());
+        verScroll->setValue(posY);
 
         lastCurX = horScroll->value();
-        horScroll->setValue(lastCurX + (dX * drawArea->width()));
+        int posX = lastCurX + (dX * drawArea->width());
+        horScroll->setValue(posX);
+
+        // Перемещаем область на миникарте соответсвенно
+        miniMap->setPosLookArea((double)posX/drawArea->height(),
+                                (double)posY/drawArea->width());
+    }
+}
+
+void ScrollMapWidget::setPosLookMap(double pX, double pY)
+{
+    if (readyActionArea)
+    {
+        verScroll->setValue(pY * (drawArea->height()));
+        horScroll->setValue(pX * (drawArea->width()));
     }
 }
 
@@ -157,6 +167,8 @@ void ScrollMapWidget::checkShowNewActionArea()
             //drawArea->setDrawEnabled(false);
             loadingWidget->Show();
 
+            //qDebug() << dXmove << dYmove;
+
             moveActionArea(dXmove, dYmove);
             return;
         }
@@ -188,8 +200,8 @@ void ScrollMapWidget::updatePosMiniMap()
         int dX = 3;
         int dY = 3;
 
-        if (horizontalScrollBar()->isVisible()) dY = 23;
-        if (verticalScrollBar()->isVisible())   dX = 23;
+        if (horScroll->isVisible()) dY = 23;
+        if (verScroll->isVisible())   dX = 23;
 
         miniMap->setDistEdge(dX, dY);
         miniMap->updatePos();

@@ -21,6 +21,9 @@ signals:
     void moveActionArea(int dX, int dY);
 
     //
+    void movedLookArea(double dX, double dY);
+
+    //
     void resized();
 
 public slots:
@@ -30,6 +33,7 @@ public slots:
 
     //
     void movePosLookMap(double dX, double dY); // в долях от макс.
+    void setPosLookMap(double pX, double pY);
 
     // Проверить, надо ли изменить активную область
     void checkShowNewActionArea();
@@ -47,6 +51,9 @@ protected:
     void resizeEvent(QResizeEvent* event) override final;
 
 private slots:
+
+    //
+
 
     //
     void updatePosCoordLabel();

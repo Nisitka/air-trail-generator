@@ -18,6 +18,7 @@ public slots:
 
     //
     void setPosLookArea(int idX, int idY);
+    void setPosLookArea(double partX, double partY);
 
     // Установить относительные размера области обзора
     void setPaternSizeLookArea(double pW, double pH);
@@ -88,6 +89,7 @@ private:
 
     //
     QPoint pointPressArea;
+    QPoint pointPressWidget;
 
     //
     QSize sizeActionArea;
