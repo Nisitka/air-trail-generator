@@ -38,10 +38,6 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
     // Игнорируем колесико (оставим его для инструментов)
     scrollArea->viewport()->installEventFilter(this);
 
-    //
-    connect(area,        SIGNAL(updateCoord(QString)),
-            scrollArea , SLOT(updateCoord(QString)));
-
     // Обычный курсор без дейсвий
     appendTool(new toolDefault(def));
 
@@ -55,7 +51,6 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
 
     // Изменение масштаба через мышь
     appendTool(new ToolZoomMap(zoomImg));
-
 
     //
     keyCurTool = def;

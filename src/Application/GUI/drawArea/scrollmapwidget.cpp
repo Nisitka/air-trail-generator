@@ -12,7 +12,10 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
     this->setWidget(backWidget);
     this->setWidgetResizable(true);
 
+    //
     horLayout->addWidget(drawArea);
+    connect(drawArea, SIGNAL(updateCoord(QString)),
+            this,     SLOT(updateCoord(QString)));
 
     backWidget->setStyleSheet("QWidget{"
                      "   background-color:transparent;"
@@ -44,10 +47,18 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
     miniMap->setDistEdge(20, 20);
     miniMap->setSizeActionArea(drawArea->size());
 
-    connect(verticalScrollBar(), SIGNAL(rangeChanged(int,int)),
-            this,                SLOT(updateMiniMap()));
-    connect(horizontalScrollBar(), SIGNAL(rangeChanged(int,int)),
-            this,                  SLOT(updateMiniMap()));
+    //
+    verScroll = verticalScrollBar();
+    horScroll = horizontalScrollBar();
+
+    connect(verScroll, SIGNAL(rangeChanged(int,int)),
+            this,      SLOT(updateMiniMap()));
+    connect(horScroll, SIGNAL(rangeChanged(int,int)),
+            this,      SLOT(updateMiniMap()));
+    connect(verScroll, SIGNAL(valueChanged(int)),
+            this,      SLOT(updateMiniMap()));
+    connect(horScroll, SIGNAL(valueChanged(int)),
+            this,      SLOT(updateMiniMap()));
 
     //
     connect(miniMap, SIGNAL(movedLookArea(double,double)),
@@ -55,21 +66,37 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
 
     readyActionArea = true;
 
-    //
-    verScroll = verticalScrollBar();
-    horScroll = horizontalScrollBar();
+
 
     // Гифка загрузки новой области
     loadingWidget = new processTmpWidget(this);
 }
 
+void ScrollMapWidget::CreateItems()
+{
+
+}
+
+void ScrollMapWidget::ItemChanged(ScrollItem *item)
+{
+
+}
+
+
 void ScrollMapWidget::updateMiniMap()
 {
+
+    //
     double pW = (double)this->width()  / drawArea->width();
     double pH = (double)this->height() / drawArea->height();
-
     miniMap->setSizeActionArea(drawArea->size());
     miniMap->setPaternSizeLookArea(pW,pH);
+
+    //
+    double pY = (double)verScroll->value() / drawArea->height();
+    double pX = (double)horScroll->value() / drawArea->width();
+    miniMap->setPosLookArea(pX, pY);
+    //qDebug() << pX << pY;
 }
 
 void ScrollMapWidget::setMoveMapEnabled(bool val)

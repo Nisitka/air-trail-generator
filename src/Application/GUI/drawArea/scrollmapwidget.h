@@ -7,11 +7,13 @@
 
 #include "areadrawwidget.h"
 #include "GUI/processtmpwidget.h"
-#include "minimapwidget.h"
+#include "./DecktopItems/minimapwidget.h"
+
+#include "./DecktopItems/scrolldirector.h"
 
 #include <QPushButton>
 
-class ScrollMapWidget: public QScrollArea
+class ScrollMapWidget: public QScrollArea, public ScrollDirector
 {
     Q_OBJECT
 
@@ -45,10 +47,16 @@ public:
     //
     ScrollMapWidget(areaDrawWidget* drawArea);
 
+    //
+    void ItemChanged(ScrollItem* item) override final;
+
 protected:
 
     //
     void resizeEvent(QResizeEvent* event) override final;
+
+    //
+    void CreateItems() override final;
 
 private slots:
 

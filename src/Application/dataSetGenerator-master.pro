@@ -87,7 +87,8 @@ SOURCES += main.cpp\
     GUI/drawArea/Tools/toolsquareter.cpp \
     GUI/drawArea/Tools/toolvismap.cpp \
     GUI/drawArea/Tools/toolzoommap.cpp \
-    GUI/drawArea/minimapwidget.cpp
+    GUI/drawArea/DecktopItems/minimapwidget.cpp \
+    GUI/drawArea/DecktopItems/scrollitem.cpp
 
 HEADERS  += \
     core.h \
@@ -170,7 +171,9 @@ HEADERS  += \
     GUI/drawArea/Tools/toolsquareter.h \
     GUI/drawArea/Tools/toolvismap.h \
     GUI/drawArea/Tools/toolzoommap.h \
-    GUI/drawArea/minimapwidget.h
+    GUI/drawArea/DecktopItems/minimapwidget.h \
+    GUI/drawArea/DecktopItems/scrolldirector.h \
+    GUI/drawArea/DecktopItems/scrollitem.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \
