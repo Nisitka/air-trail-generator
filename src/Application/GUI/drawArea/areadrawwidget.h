@@ -42,7 +42,8 @@ signals:
     void updateSignals();
 
     // Обновить информацию об координатах курсора
-    void updateCoord(const QString& textdataCoords);
+    //void updateCoord(const QString& textdataCoords);
+    void updateCoord(const Coords coords);
 
     // Изменился размер
     void resized();

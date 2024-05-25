@@ -88,7 +88,8 @@ SOURCES += main.cpp\
     GUI/drawArea/Tools/toolvismap.cpp \
     GUI/drawArea/Tools/toolzoommap.cpp \
     GUI/drawArea/DecktopItems/minimapwidget.cpp \
-    GUI/drawArea/DecktopItems/scrollitem.cpp
+    GUI/drawArea/DecktopItems/scrollitem.cpp \
+    GUI/drawArea/DecktopItems/coordsinfoform.cpp
 
 HEADERS  += \
     core.h \
@@ -173,7 +174,8 @@ HEADERS  += \
     GUI/drawArea/Tools/toolzoommap.h \
     GUI/drawArea/DecktopItems/minimapwidget.h \
     GUI/drawArea/DecktopItems/scrolldirector.h \
-    GUI/drawArea/DecktopItems/scrollitem.h
+    GUI/drawArea/DecktopItems/scrollitem.h \
+    GUI/drawArea/DecktopItems/coordsinfoform.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \
@@ -186,7 +188,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/drawArea/mapareamainwindow.ui \
     backend/airobject.ui \
     GUI/UI/airinfowindow.ui \
-    GUI/UI/airwindow.ui
+    GUI/UI/airwindow.ui \
+    GUI/drawArea/DecktopItems/coordsinfoform.ui
 
 DISTFILES += \
     resurs/earchIcon.png \

@@ -316,13 +316,8 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
 void areaDrawWidget::updateInfoCoordMap(int idX, int idY)
 {
     toIdMapCoords(idX, idY);
-    Coords coords = gis->getCoords(idX, idY);
 
-    QString strCoords =  "X:" + QString::number(coords.X()) + "м"
-                        " Y:" + QString::number(coords.Y()) + "м"
-                        " H:" + QString::number(coords.H()) + "м";
-
-    updateCoord(strCoords);
+    updateCoord(gis->getCoords(idX, idY));
 }
 
 void areaDrawWidget::zoom(double dK)

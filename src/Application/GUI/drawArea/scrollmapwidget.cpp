@@ -14,8 +14,8 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
 
     //
     horLayout->addWidget(drawArea);
-    connect(drawArea, SIGNAL(updateCoord(QString)),
-            this,     SLOT(updateCoord(QString)));
+    connect(drawArea, SIGNAL(updateCoord(const Coords)),
+            this,     SLOT(updateCoord(const Coords)));
 
     backWidget->setStyleSheet("QWidget{"
                      "   background-color:transparent;"
@@ -33,19 +33,15 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
                               "   border: 1px solid rgb(55,55,55,0);"
                               "};)");
 
-    //
-    coordLabel = new QLabel(this);
-    coordLabel->setFixedSize(135, 20);
-    coordLabel->setStyleSheet("QLabel{"
-                              "   background-color: rgb(255,255,255,140);"
-                              "   border: 1px solid rgb(55,55,55);"
-                              "   border-radius: 2px;"
-                              "};)");
+    // Табличка с координатами
+    coordLabel = new CoordsInfoForm(this);
 
-    //
+    // Миникарта
     miniMap = new miniMapWidget(this, 150, 120);
     miniMap->setDistEdge(20, 20);
     miniMap->setSizeActionArea(drawArea->size());
+    connect(miniMap, SIGNAL(movedLookArea(double,double)),
+            this,    SLOT(setPosLookMap(double,double)));
 
     //
     verScroll = verticalScrollBar();
@@ -60,13 +56,7 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
     connect(horScroll, SIGNAL(valueChanged(int)),
             this,      SLOT(updateMiniMap()));
 
-    //
-    connect(miniMap, SIGNAL(movedLookArea(double,double)),
-            this,    SLOT(setPosLookMap(double,double)));
-
     readyActionArea = true;
-
-
 
     // Гифка загрузки новой области
     loadingWidget = new processTmpWidget(this);
@@ -108,7 +98,6 @@ void ScrollMapWidget::setMoveMapEnabled(bool val)
     readyActionArea = val;
     loadingWidget->Hide();
 
-    //drawArea->setDrawEnabled();
     drawArea->repaint();
 }
 
@@ -190,11 +179,7 @@ void ScrollMapWidget::checkShowNewActionArea()
         if (isMoveArea)
         {
             readyActionArea = false;
-
-            //drawArea->setDrawEnabled(false);
             loadingWidget->Show();
-
-            //qDebug() << dXmove << dYmove;
 
             moveActionArea(dXmove, dYmove);
             return;
@@ -206,17 +191,17 @@ void ScrollMapWidget::updatePosCoordLabel()
 {
     if (horizontalScrollBar()->isVisible())
     {
-        coordLabel->move(5, this->size().height() - 45);
+        coordLabel->move(0, this->size().height() - 55);
     }
     else
     {
-        coordLabel->move(5, this->size().height() - 25);
+        coordLabel->move(0, this->size().height() - 35);
     }
 }
 
-void ScrollMapWidget::updateCoord(const QString &coordsData)
+void ScrollMapWidget::updateCoord(const Coords coords)
 {
-    coordLabel->setText(coordsData);
+    coordLabel->setData(coords);
 }
 
 void ScrollMapWidget::updatePosMiniMap()
@@ -227,8 +212,8 @@ void ScrollMapWidget::updatePosMiniMap()
         int dX = 3;
         int dY = 3;
 
+        if (verScroll->isVisible()) dX = 23;
         if (horScroll->isVisible()) dY = 23;
-        if (verScroll->isVisible())   dX = 23;
 
         miniMap->setDistEdge(dX, dY);
         miniMap->updatePos();

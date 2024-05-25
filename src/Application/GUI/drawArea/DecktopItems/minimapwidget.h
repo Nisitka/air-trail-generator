@@ -33,12 +33,12 @@ public:
     //
     void setSizeActionArea(const QSize& sizeMap);
 
-    //
+    // Предельные размеры
     void setMaxSize(int W, int H);
 
-    //
+    // Расположение на родительском виджете
     void updatePos();
-    void setDistEdge(int dXpx, int dYpx);
+    void setDistEdge(int dXpx, int dYpx); // Расстояния до бортиков в пикселях
 
     //
     void Show();
@@ -85,11 +85,7 @@ private:
     QPoint posMouse;
 
     //
-    QPoint posCursor;
-
-    //
     QPoint pointPressArea;
-    QPoint pointPressWidget;
 
     //
     QSize sizeActionArea;

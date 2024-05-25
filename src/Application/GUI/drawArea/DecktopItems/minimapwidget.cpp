@@ -32,10 +32,6 @@ miniMapWidget::miniMapWidget(QWidget* parent, int maxW, int maxH, Alignment type
 
 void miniMapWidget::setPaternSizeLookArea(double pW, double pH)
 {
-
-//    qDebug() << pW * sizeActionArea.width();
-//    qDebug() << pH * sizeActionArea.height();
-
     //
     setSizeLookArea(pW * sizeActionArea.width(),
                     pH * sizeActionArea.height());
@@ -81,27 +77,15 @@ void miniMapWidget::updatePos()
     }
 
     this->move(pos);
-
-    //qDebug() << "miniMap: " << pos;
 }
 
 void miniMapWidget::setPosLookArea(int idX, int idY)
 {
-    bool lX = false;
-    bool lY = false;
-
-    if (idX < 0) {idX = 0; lX = true;}
-    if (idY < 0) {idY = 0; lY = true;}
-
-    if (idX + lookArea->width()  >= maxW) {idX = maxW - lookArea->width()  - 1;
-                                           lX = true;}
-    if (idY + lookArea->height() >= maxH) {idY = maxH - lookArea->height() - 1;
-                                           lY = true;}
-
-//    //
-//    if (lX) QCursor::setPos(posCursor.x(), QCursor::pos().y());
-//    if (lY) QCursor::setPos(QCursor::pos().x(), posCursor.y());
-
+    // Остаемся в зоне активных действий
+    if (idX < 0) idX = 0;
+    if (idY < 0) idY = 0;
+    if (idX + lookArea->width()  >= maxW) idX = maxW - lookArea->width()  - 1;
+    if (idY + lookArea->height() >= maxH) idY = maxH - lookArea->height() - 1;
 
     lookArea->moveTo(idX, idY);
 
@@ -125,9 +109,6 @@ void miniMapWidget::setMaxSize(int W, int H)
 {
     maxW = W; maxH = H;
     kSize = (double) maxW/maxH;
-
-    // Одоптируем размеры под текущую карту
-    //setSizeActionArea(sizeActionArea);
 }
 
 void miniMapWidget::setSizeActionArea(const QSize& size)
@@ -158,9 +139,8 @@ void miniMapWidget::setSizeActionArea(const QSize& size)
 void miniMapWidget::mousePressEvent(QMouseEvent *mouse)
 {
     statMouse = press;
-
     posMouse = mouse->pos();
-    pointPressWidget = posMouse;
+
     if (lookArea->contains(posMouse))
     {
         inLookRect = true;
@@ -185,8 +165,6 @@ void miniMapWidget::mouseMoveEvent(QMouseEvent *mouse)
             double dX = (double) lookArea->topLeft().x() / sizeActionArea.width();
             double dY = (double) lookArea->topLeft().y() / sizeActionArea.height();
 
-            //qDebug() << dX << dY;
-
             movedLookArea(dX, dY);
         }
         else
@@ -208,15 +186,14 @@ void miniMapWidget::mouseMoveEvent(QMouseEvent *mouse)
             this->setCursor(Qt::ArrowCursor);
         }
     }
-
-    posCursor = QCursor::pos();
 }
 
 void miniMapWidget::mouseReleaseEvent(QMouseEvent *mouse)
 {
     statMouse = release;
+    posMouse = mouse->pos();
 
-    if (lookArea->contains(mouse->pos()))
+    if (lookArea->contains(posMouse))
     {
         inLookRect = true;
 
@@ -226,6 +203,8 @@ void miniMapWidget::mouseReleaseEvent(QMouseEvent *mouse)
 
 void miniMapWidget::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
+
     QPainter painter(this);
 
     //

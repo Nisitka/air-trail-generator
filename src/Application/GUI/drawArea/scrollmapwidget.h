@@ -8,7 +8,7 @@
 #include "areadrawwidget.h"
 #include "GUI/processtmpwidget.h"
 #include "./DecktopItems/minimapwidget.h"
-
+#include "./DecktopItems/coordsinfoform.h"
 #include "./DecktopItems/scrolldirector.h"
 
 #include <QPushButton>
@@ -31,7 +31,7 @@ signals:
 public slots:
 
     // Обновляем значения координат
-    void updateCoord(const QString& coordsData);
+    void updateCoord(const Coords coords);
 
     //
     void movePosLookMap(double dX, double dY); // в долях от макс.
@@ -61,15 +61,15 @@ protected:
 private slots:
 
     //
-
-
-    //
     void updatePosCoordLabel();
 
     //
     void updateMiniMap();
 
 private:
+
+    //
+    //void
 
     // Последние значения передвижения карты
     int lastCurY;
@@ -89,7 +89,7 @@ private:
     QSlider* zoomSlider;
 
     //
-    QLabel* coordLabel;
+    CoordsInfoForm* coordLabel;
 
     //
     miniMapWidget* miniMap;
