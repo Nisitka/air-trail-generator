@@ -1,17 +1,16 @@
 #include "rls.h"
-
 #include "gis/geoblock.h"
-
-#include <QDebug>
 
 #include <cmath>
 
+#include <QDebug>
+
 RLS::RLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height,
-         QPoint* position_, const QString& nameRLS):
+         QPoint* position, const QString& nameRLS):
     RayTracer(RayTracer), RZEditor(RZEditor), Height(Height),
-    name(nameRLS), position(position_)
+    name(nameRLS)
 {
-    //Hpos = (double) map->getHeight(position->x(), position->y(), Map::m) + hSender;
+    setPosition(*position);
 
     mE = new double [2];
 
@@ -23,51 +22,31 @@ RLS::RLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height,
     working = false;
 }
 
-void RLS::getPosition(QVector3D &point)
+void RLS::setPosition(int idX, int idY)
 {
-    // в индексах
-    point.setX(position->x());
-    point.setY(position->y());
-    point.setZ(1234);
+    pos.setX(idX);
+    pos.setY(idY);
+
+    // Cразу считаем высоту, для этой позиции
+    pos.setZ(Height->absolute(idX, idY, Map::id));
 }
 
-int RLS::getCountMaxBlocksZD()
+void RLS::setPosition(const QPoint &p)
 {
-    int maxCountBlocks = 0;
+    int idX = p.x();
+    int idY = p.y();
 
-    // кол-во вертикальных сегментов
-    int countS_ZD = ZD.size();
+    pos.setX(idX);
+    pos.setY(idY);
 
-    // по вертикальным сегментам
-    for (int i=0; i<countS_ZD; i++)
-    {
-        // по лучам в сегменте
-        int countLZD = ZD.at(i)->size(); // кол-во лучей
-        for (int j=0; j<countLZD; j++)
-        {
-            QVector <int*> way = ZD[i]->at(j)->getWay();
+    // Cразу считаем высоту, для этой позиции
+    pos.setZ(Height->absolute(idX, idY, Map::id));
+}
 
-            // полет луча
-            int idX, idY, idH;
-            int countDelta = way.size(); // кол-во дискрет одного луча
-            for (int k=1; k<countDelta; k++)
-            {   // в пути луча содержатся относительные индексы
-                int* l = way[k];
-
-                // если индексы пренадлежат отличному от предыдущего блока
-                if (idX!=l[Ray::X] || idY!=l[Ray::Y] || idH!=l[Ray::Z])
-                {
-                    idX = l[Ray::X];
-                    idY = l[Ray::Y];
-                    idH = l[Ray::Z];
-
-                    maxCountBlocks++;
-                }
-            }
-        }
-    }
-
-    return maxCountBlocks;
+void RLS::getPosition(QVector3D &point)
+{
+    // В индексах
+    point = pos;
 }
 
 bool RLS::isWorking()
@@ -95,20 +74,10 @@ void RLS::off()
 void RLS::getOpt(int &Rmax, int &Xpos, int &Ypos, int &Hzd, bool &working_)
 {
     Rmax = D;
-    Xpos = position->x();
-    Ypos = position->y();
+    Xpos = pos.x();
+    Ypos = pos.y();
     Hzd = 99999; //map->getLenBlock();
     working_ = working;
-}
-
-void RLS::setPosition(int X, int Y)
-{
-    position->setX(X);
-    position->setY(Y);
-
-    // сразу считаем высоту, на которую ставим РЛС в этой позиции
-    //Hpos = (double) map->getHeight(position->x(), position->y()) * Ray::mH + hSender;
-    //Hpos = (double) map->getHeight(X, Y, Map::m) + hSender;
 }
 
 void RLS::removeZD()
@@ -158,8 +127,8 @@ void RLS::emitSignal()
     int countS_ZD = ZD.size();
 
     //
-    int xRLS = position->x();
-    int yRLS = position->y();
+    int xRLS = pos.x();
+    int yRLS = pos.y();
     QVector3D posRLS(xRLS, yRLS, Height->absolute(xRLS, yRLS, Map::id)+1);
 
     //qDebug() << posRLS;
@@ -325,8 +294,8 @@ void RLS::getRectPosition(int &idX, int &idY, int &W, int &H)
 {
     int w = D / 20.0; //map->getLenBlock();
 
-    idX = position->x() - w;
-    idY = position->y() - w;
+    idX = pos.x() - w;
+    idY = pos.y() - w;
 
     W = w * 2;
     H = W;
@@ -355,7 +324,4 @@ RLS::~RLS()
     }
     // Очищаем память от дискретных значений угла
     delete [] mE;
-
-    //
-    delete position;
 }

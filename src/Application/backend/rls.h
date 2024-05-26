@@ -49,6 +49,7 @@ public slots:
 
     // Установка точки стояния РЛС
     void setPosition(int idX, int idY);
+    void setPosition(const QPoint& pos);
 
     // Моделирование локации РЛС
     void emitSignal(); // перемоделировать по предыдущим значениям (если РЛС вкл.)
@@ -70,9 +71,6 @@ public:
 
     // Получить точки пересечения сигнала с рельефом
     const QVector <QVector <QVector3D>>& getPointsInterZD();
-
-    // Узнать максимальное кол-во дискрет ЗО, которое может дать эта РЛС
-    int getCountMaxBlocksZD();
 
     // Узнать, работает ли РЛС
     bool isWorking();
@@ -119,7 +117,8 @@ private:
     void updateDV();
 
     // Точка стояния РЛС
-    QPoint* position;
+    QVector3D pos;
+    //QPoint* position;
     double Hpos; // высота(координата Z) метры
 
     const double hSender = 3.1; // высота антены
