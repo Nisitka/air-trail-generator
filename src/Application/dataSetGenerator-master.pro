@@ -26,11 +26,7 @@ LIBS += -lOpengl32 -lglu32
 
 SOURCES += main.cpp\
     core.cpp \
-    backend/buildertraildrones.cpp \
-    backend/drone.cpp \
-    backend/managerrls.cpp \
     backend/ray.cpp \
-    backend/rls.cpp \
     GUI/designer.cpp \
     GUI/gui.cpp \
     GUI/mainwindow.cpp \
@@ -40,11 +36,8 @@ SOURCES += main.cpp\
     GUI/runwindow.cpp \
     GUI/visualinfowidget.cpp \
     GUI/drawArea/areadrawwidget.cpp \
-    backend/managerdrones.cpp \
-    backend/trail.cpp \
     GUI/plotwidget.cpp \
     GUI/3DVisualization/mapopenglwidget.cpp \
-    backend/dao.cpp \
     GUI/dataaccessobjectwindow.cpp \
     GUI/3DVisualization/map3dviswindow.cpp \
     GUI/algorithmPredict/glyph.cpp \
@@ -60,7 +53,6 @@ SOURCES += main.cpp\
     GUI/drawArea/mapareamainwindow.cpp \
     GUI/drawArea/scrollmapwidget.cpp \
     GUI/multiplewindow.cpp \
-    backend/airobject.cpp \
     GUI/airobjectfunwindow.cpp \
     backend/GIS/geoblock.cpp \
     backend/GIS/geogenerator.cpp \
@@ -72,7 +64,6 @@ SOURCES += main.cpp\
     backend/GIS/coords.cpp \
     GUI/airinfowindow.cpp \
     GUI/airwindow.cpp \
-    backend/airlableobject.cpp \
     backend/GIS/mapdata.cpp \
     backend/tracerlight.cpp \
     GUI/drawArea/Tools/drawareatool.cpp \
@@ -89,12 +80,15 @@ SOURCES += main.cpp\
     GUI/drawArea/Tools/toolzoommap.cpp \
     GUI/drawArea/DecktopItems/minimapwidget.cpp \
     GUI/drawArea/DecktopItems/scrollitem.cpp \
-    GUI/drawArea/DecktopItems/coordsinfoform.cpp
+    GUI/drawArea/DecktopItems/coordsinfoform.cpp \
+    backend/RLS/managerrls.cpp \
+    backend/RLS/rls.cpp \
+    backend/Trail/buildertraildrones.cpp \
+    backend/Trail/trail.cpp
 
 HEADERS  += \
     core.h \
     backend/buildertraildrones.h \
-    backend/drone.h \
     backend/managerrls.h \
     backend/ray.h \
     backend/rls.h \
@@ -116,7 +110,6 @@ HEADERS  += \
     GUI/drawArea/toolpredtrail.h \
     GUI/drawArea/toolvismap.h \
     GUI/drawArea/tooleditmap.h \
-    backend/managerdrones.h \
     backend/trail.h \
     GUI/plotwidget.h \
     GUI/drawArea/drawtask.h \
@@ -124,7 +117,6 @@ HEADERS  += \
     GUI/drawArea/toolsquareter.h \
     GUI/3DVisualization/mapopenglwidget.h \
     GUI/drawArea/toolpredict.h \
-    backend/dao.h \
     GUI/dataaccessobjectwindow.h \
     GUI/3DVisualization/map3dviswindow.h \
     GUI/algorithmPredict/glyph.h \
@@ -140,7 +132,6 @@ HEADERS  += \
     GUI/drawArea/mapareamainwindow.h \
     GUI/drawArea/scrollmapwidget.h \
     GUI/multiplewindow.h \
-    backend/airobject.h \
     GUI/airobjectfunwindow.h \
     backend/GIS/geoblock.h \
     backend/GIS/geogenerator.h \
@@ -154,7 +145,6 @@ HEADERS  += \
     GUI/airinfowindow.h \
     GUI/airwindow.h \
     backend/GIS/heightmeter.h \
-    backend/airlableobject.h \
     backend/GIS/mapdata.h \
     backend/GIS/rzinformer.h \
     backend/tracerlight.h \
@@ -175,7 +165,11 @@ HEADERS  += \
     GUI/drawArea/DecktopItems/minimapwidget.h \
     GUI/drawArea/DecktopItems/scrolldirector.h \
     GUI/drawArea/DecktopItems/scrollitem.h \
-    GUI/drawArea/DecktopItems/coordsinfoform.h
+    GUI/drawArea/DecktopItems/coordsinfoform.h \
+    backend/RLS/managerrls.h \
+    backend/RLS/rls.h \
+    backend/Trail/buildertraildrones.h \
+    backend/Trail/trail.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \
@@ -186,7 +180,6 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \
     GUI/algorithmPredict/setalgpredictwindow.ui \
     GUI/drawArea/mapareamainwindow.ui \
-    backend/airobject.ui \
     GUI/UI/airinfowindow.ui \
     GUI/UI/airwindow.ui \
     GUI/drawArea/DecktopItems/coordsinfoform.ui

@@ -4,7 +4,7 @@
 #include <QDebug>
 
 #include <cmath>
-#include "ray.h"
+#include "../ray.h"
 
 builderTrailDrones::builderTrailDrones(Map* map): map(map)
 { 

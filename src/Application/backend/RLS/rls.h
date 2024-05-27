@@ -9,10 +9,10 @@
 #include <QVector>
 #include <QVector3D>
 
-#include "ray.h"
-#include "./GIS/rzcreator.h"
-#include "./GIS/heightmeter.h"
-#include "tracerlight.h"
+#include "../ray.h"
+#include "../GIS/rzcreator.h"
+#include "../GIS/heightmeter.h"
+#include "../tracerlight.h"
 
 // класс РЛС
 class RLS: public QObject

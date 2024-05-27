@@ -1,5 +1,5 @@
 #include "rls.h"
-#include "gis/geoblock.h"
+#include "../gis/geoblock.h"
 
 #include <cmath>
 
@@ -131,8 +131,6 @@ void RLS::emitSignal()
     int yRLS = pos.y();
     QVector3D posRLS(xRLS, yRLS, Height->absolute(xRLS, yRLS, Map::id)+1);
 
-    //qDebug() << posRLS;
-
     // Дискрета РЛС по умолчанию в ЗО
     blocksZD.clear();
     blocksZD.append(posRLS);
@@ -162,7 +160,7 @@ void RLS::emitSignal()
         readyVector(i);
     }
 
-    qDebug() << "RLS: emit signal finish!";
+    //qDebug() << "RLS: emit signal finish!";
 
     finishGenerateZD();
 }
@@ -222,7 +220,7 @@ void RLS::set_lDV()
         delete [] l_DV[i];
     }
     l_DV.clear();
-    // очищаем память от дискретных значений угла
+    // Очищаем память от дискретных значений угла
     delete [] mE;
 
     // Создание массива дискретных значений угла
@@ -240,13 +238,13 @@ void RLS::set_lDV()
         l_DV.at(i)[L] = functionDV(mE[i]) * cos(mE[i]); //
     }
 
-    // сразу же считаем проекции будущих лучей
+    // Сразу же считаем проекции будущих лучей
     buildDV();
 }
 
 void RLS::buildDV()
 {
-    // очищаем память от предыдущей ДН
+    // Очищаем память от предыдущей ДН
     for (int i=0; i<DV.size(); i++)
     {
         delete [] DV[i];
@@ -255,7 +253,7 @@ void RLS::buildDV()
 
     int count_PointsDV = l_DV.size();
 
-    // расчет проекций лучей в ДН
+    // Расчет проекций лучей в ДН
     for (int i=0; i<count_PointsDV; i++)
     {
         DV.append(new double[2]);
@@ -268,7 +266,7 @@ void RLS::updateDV()
 {
     int count_PointsDV = l_DV.size();
 
-    // расчет проекций лучей в верт. ЗО
+    // Расчет проекций лучей в верт. ЗО
     for (int i=0; i<count_PointsDV; i++)
     {
         DV.at(i)[L] = l_DV.at(i)[L] * D;

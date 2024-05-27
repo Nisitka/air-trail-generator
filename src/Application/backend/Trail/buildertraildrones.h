@@ -6,9 +6,9 @@
 #include <QPoint>
 #include <QVector>
 
-#include "ray.h"
+#include "../ray.h"
 #include "trail.h"
-#include "gis/map.h"
+#include "../gis/map.h"
 
 // генерирует скртный маршрут
 class builderTrailDrones : public QObject

@@ -14,15 +14,12 @@
 #include "visualinfowidget.h"
 #include "optmapgeneratorwindow.h"
 #include "optrlswindow.h"
-#include "backend/buildertraildrones.h"
+#include "backend/Trail/buildertraildrones.h"
 #include "optdronewindow.h"
-#include "backend/managerdrones.h"
-#include "backend/managerrls.h"
+#include "backend/RLS/managerrls.h"
 #include "3DVisualization/map3dviswindow.h"
 #include "dataaccessobjectwindow.h"
-#include "backend/dao.h"
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
-#include "backend/airobject.h"
 #include "airobjectfunwindow.h"
 #include "airwindow.h"
 #include "airinfowindow.h"
@@ -42,11 +39,6 @@ public:
     //
     void connectBuilderTrail(builderTrailDrones*);
 
-    //
-    void connectMDrones(managerDrones*);
-
-    //
-    void connectDataBase(DAO* database);
 
     void showMainWin();
 

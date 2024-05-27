@@ -6,8 +6,6 @@
 
 #include "designer.h"
 
-#include "backend/buildertraildrones.h"
-
 visualInfoWidget::visualInfoWidget(GISInformer* gis):
     gis(gis)
 {

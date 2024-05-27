@@ -6,7 +6,6 @@
 #include <QLineEdit>
 
 #include "multiplewindow.h"
-#include "backend/airobject.h"
 #include "airwindow.h"
 #include "airinfowindow.h"
 

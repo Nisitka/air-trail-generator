@@ -24,9 +24,6 @@ void Core::init_allObj()
 {
     readyRunProgress(3, "Инициализация менеджера ЛА...");
 
-    // Менеджер БПЛА
-    mDrones = new managerDrones;
-
     readyRunProgress(19, "Загрузка модуля по работе с рельефом...");
 
     /* ... */
@@ -60,9 +57,6 @@ void Core::init_allObj()
     gui = new GUI(gis);
 
     readyRunProgress(65, "Инициализация интерфейса...");
-
-    database = new DAO;
-    objects.append(database);
 }
 
 void Core::init_GUI()
@@ -81,12 +75,8 @@ void Core::init_GUI()
 
     //
     gui->connectBuilderTrail(trailBuilder);
-    //
-    gui->connectMDrones(mDrones);
 
     readyRunProgress(90);
-
-    gui->connectDataBase(database);
 }
 
 void Core::init_buildThreads()

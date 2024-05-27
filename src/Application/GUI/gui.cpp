@@ -89,41 +89,6 @@ GUI::GUI(GISInformer* gis):
                      "База данных", "Подключение базы данных");
 }
 
-void GUI::connectMDrones(managerDrones* mDrones)
-{
-
-}
-
-void GUI::connectDataBase(DAO *database)
-{
-    QObject::connect(daoWin,   SIGNAL(connection(QString)),
-                     database, SLOT(test_query(QString))
-            );
-    QObject::connect(database, SIGNAL(update_status(bool)),
-                     daoWin, SLOT(status_connect(bool))
-            );
-
-    QObject::connect(airObjWin, SIGNAL(show_AirObject(QString)),
-                     database, SLOT(show_airInfo(QString))
-            );
-    QObject::connect(airObjWin, SIGNAL(creat_AirObject(QString, double,double,double, QString)),
-                     database, SLOT(creat_airInfo(QString, double,double,double, QString))
-            );
-    QObject::connect(database, SIGNAL(loading_AirInfo(QString, QString)),
-                     airObjWin, SLOT(loading_AirObject(QString, QString))
-            );
-    QObject::connect(database, SIGNAL(clearBoxs()),
-                     airObjWin, SLOT(clearBoxs())
-            );
-    QObject::connect(database, SIGNAL(show_AirObject(AirObject*)),
-                     AirInfo, SLOT(showInfo(AirObject*))
-            );
-
-    QObject::connect(AirInfo, SIGNAL(addDocks(AirInfoWindow*)),
-                     airObjWin, SLOT(show_AirObject(AirInfoWindow*))
-            );
-}
-
 void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
 {
     // Инструменты
@@ -235,7 +200,7 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      optRLSWin,  SLOT(repaintGraphic(double*, double*, int)));
     //optRLSWin->getDataGraphic(); // сразу же отображаем ДН
 
-    // установка пар-ов сигнала и его моделирования в пространстве
+    // Установка пар-ов сигнала и его моделирования в пространстве
     QObject::connect(optRLSWin,  SIGNAL(updateOptZDvert(int,int,int)),
                      mRLS,       SLOT(setOptZDvert(int,int,int)));
     //
@@ -253,7 +218,7 @@ void GUI::connectMRLS(managerRLS* mRLS)
     QObject::connect(visInfoWin->getManDrawArea()->getDrawArea(), SIGNAL(updateSignals()),
                      mRLS, SLOT(updateSignals()));
 
-    // обновление визуализации сигнала
+    // Обновление визуализации сигнала
     QObject::connect(mRLS,     SIGNAL(sendPointsInterZD(QVector<QVector<QVector<QVector3D>>>*, QList <QVector3D>*)),
                      map3DWin, SLOT(updatePointsInterZD(QVector<QVector<QVector<QVector3D>>>*, QList <QVector3D>*)));
 }

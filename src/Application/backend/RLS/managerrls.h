@@ -4,10 +4,10 @@
 #include <QObject>
 #include <QRect>
 
-#include "./GIS/heightmeter.h"
-#include "./GIS/rzcreator.h"
+#include "../GIS/heightmeter.h"
+#include "../GIS/rzcreator.h"
 
-#include "tracerlight.h"
+#include "../tracerlight.h"
 #include "rls.h"
 
 #include <memory>

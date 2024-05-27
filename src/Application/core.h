@@ -12,10 +12,8 @@
 #include "backend/GIS/paintermapimage.h"
 
 #include "backend/GIS/gis.h"
-#include "backend/managerrls.h"
-#include "backend/buildertraildrones.h"
-#include "backend/managerdrones.h"
-#include "backend/dao.h"
+#include "backend/RLS/managerrls.h"
+#include "backend/Trail/buildertraildrones.h"
 
 #include "backend/GIS/gisinformer.h"
 #include "backend/tracerlight.h"
@@ -70,13 +68,6 @@ private:
 
     //
     builderTrailDrones* trailBuilder;
-
-    // ПБЛА
-    managerDrones* mDrones;
-
-    //База данных
-    DAO* database;
-
 
 };
 

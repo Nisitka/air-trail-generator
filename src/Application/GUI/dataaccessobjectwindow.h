@@ -2,7 +2,6 @@
 #define DATAACCESSOBJECTWINDOW_H
 
 #include <QWidget>
-#include "backend/dao.h"
 
 namespace Ui {
 class DataAccessObjectWindow;
