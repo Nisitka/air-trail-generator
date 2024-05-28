@@ -11,6 +11,7 @@
 #include <QDockWidget>
 #include <QMenu>
 #include <QScrollArea>
+#include <QToolButton>
 
 class Designer
 {
@@ -36,6 +37,7 @@ public:
 
     //
     static void setToolBar(QToolBar* toolBar, int style = tool);
+    static void setColorToolButton(QToolButton* toolButton, const QColor& color);
     enum styleToolBox{tool, whiteToolBox};
 
     //

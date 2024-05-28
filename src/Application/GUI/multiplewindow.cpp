@@ -1,5 +1,7 @@
 #include "multiplewindow.h"
 
+#include "designer.h"
+
 #include <QDebug>
 
 MultipleWindow::MultipleWindow()
@@ -7,6 +9,12 @@ MultipleWindow::MultipleWindow()
     toolBar = new QToolBar;
     addToolBar(Qt::TopToolBarArea, toolBar);
     toolBar->setMovable(false);
+    toolBar->setStyleSheet(
+                "QToolBar {"
+                "    border: 1px solid rgb(34,69,157);"
+                "    background-color: rgb(255,255,255);"
+                "}"
+                );
 }
 
 void MultipleWindow::addFunWindow(QWidget *window, const QIcon &iconButton, const QString &nameWin,
@@ -16,7 +24,7 @@ void MultipleWindow::addFunWindow(QWidget *window, const QIcon &iconButton, cons
     QToolButton* button = new QToolButton;
     button->setIcon(iconButton);
     button->setToolTip(nameWin);
-    //setButtonStyle(button, on);
+    setStyleToolButton(button, close);
 
     toolBar->addWidget(button);
 
@@ -83,12 +91,68 @@ void MultipleWindow::showFunWindow()
     QDockWidget* dock = windows[button];
     if (dock->isVisible())
     {
+        setStyleToolButton(button, close);
         dock->hide();
     }
     else
     {
+        setStyleToolButton(button, open);
         dock->show();
     }
+}
+
+void MultipleWindow::setStyleToolButton(QToolButton *button, MultipleWindow::styleButton s)
+{
+    QString strStyle;
+    switch (s) {
+    case close:
+        strStyle =
+                "QToolButton{"
+                "   background-color: rgb(255,255,255);"
+                "}"
+                "QToolButton:hover{"
+                "    background-color : rgb(255,251,230); color: rgb(0,0,0);"
+                "    border-color: rgb(0,0,0);"
+                "    border-style: outset;"
+                "    border-radius: 3px;"
+                "    border-width: 1px;"
+                "}"
+                "QToolButton:pressed{"
+                "    background-color : rgb(255,251,230); color: rgb(0,0,0);"
+                "    border-color: rgb(0,0,0);"
+                "    border-style: outset;"
+                "    border-radius: 3px;"
+                "    border-width: 1px;"
+                "};";
+        break;
+    case open:
+        strStyle =
+                "QToolButton{"
+                "   background-color: rgb(255,251,230);"
+                "    background-color : rgb(255,251,230); color: rgb(0,0,0);"
+                "    border-color: rgb(0,0,0);"
+                "    border-style: outset;"
+                "    border-radius: 3px;"
+                "    border-width: 1px;"
+                "}"
+                "QToolButton:hover{"
+                "    background-color : rgb(255,251,230); color: rgb(0,0,0);"
+                "    border-color: rgb(100,0,0);"
+                "    border-style: outset;"
+                "    border-radius: 3px;"
+                "    border-width: 1px;"
+                "}"
+                "QToolButton:pressed{"
+                "    background-color : rgb(255,251,230); color: rgb(0,0,0);"
+                "    border-color: rgb(0,0,0);"
+                "    border-style: outset;"
+                "    border-radius: 3px;"
+                "    border-width: 1px;"
+                "};";
+        break;
+    }
+
+    button->setStyleSheet(strStyle);
 }
 
 void MultipleWindow::contextMenuEvent(QContextMenuEvent *event)

@@ -26,6 +26,38 @@ void Designer::setProgressBar(QProgressBar* pb)
             );
 }
 
+void Designer::setColorToolButton(QToolButton *toolButton, const QColor& color)
+{
+    QString strStyle;
+
+    QString strColor = "rgb(" + QString::number(color.red())   + "," +
+                                QString::number(color.green()) + "," +
+                                QString::number(color.blue())  + ")";
+
+    strStyle =
+            "QToolButton{"
+            "   background-color: " + strColor + ";"
+            "}"
+            "QToolButton:hover{"
+            "    background-color : rgb(255,251,230); color: rgb(0,0,0);"
+            "    border-color: rgb(0,0,0);"
+            "    border-style: outset;"
+            "    border-radius: 3px;"
+            "    border-width: 1px;"
+            "    border-color: rgb(0,0,0);"
+            "}"
+            "QToolButton:pressed{"
+            "    background-color : rgb(255,251,230); color: rgb(0,0,0);"
+            "    border-color: rgb(0,0,0);"
+            "    border-style: outset;"
+            "    border-radius: 3px;"
+            "    border-width: 1px;"
+            "    border-color: rgb(0,0,0);"
+            "};";
+
+    toolButton->setStyleSheet(strStyle);
+}
+
 void Designer::setButton(QPushButton* button, int style)
 {
     QString strStyle;

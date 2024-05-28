@@ -43,6 +43,10 @@ private slots:
 
 private:
 
+    //
+    enum styleButton{open, close};
+    void setStyleToolButton(QToolButton* button, MultipleWindow::styleButton s);
+
     QMap <QToolButton*, QDockWidget*> windows;
 
     QDockWidget* splitDock = new QDockWidget;
