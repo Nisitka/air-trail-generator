@@ -10,6 +10,7 @@
 #include "./DecktopItems/minimapwidget.h"
 #include "./DecktopItems/coordsinfoform.h"
 #include "./DecktopItems/scrolldirector.h"
+#include "./zoomcontrollerwidget.h"
 
 #include <QPushButton>
 
@@ -66,10 +67,10 @@ private slots:
     //
     void updateMiniMap();
 
-private:
-
     //
-    //void
+    void updateZoomContr();
+
+private:
 
     // Последние значения передвижения карты
     int lastCurY;
@@ -86,7 +87,7 @@ private:
     areaDrawWidget* drawArea;
 
     //
-    QSlider* zoomSlider;
+    ZoomControllerWidget* zoomSlider;
 
     //
     CoordsInfoForm* coordLabel;

@@ -48,6 +48,11 @@ signals:
     // Изменился размер
     void resized();
 
+public slots:
+
+    //
+    void setZoom(double k);
+
 public:
     areaDrawWidget(GISInformer* gis);
 
@@ -80,7 +85,7 @@ public:
     //
     int curTool();
 
-    // изменить коофициент приближения на dK
+    // Изменить коофициент приближения на dK
     void zoom(double dK);
 
 

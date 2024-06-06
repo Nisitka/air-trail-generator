@@ -20,8 +20,10 @@ void Designer::setProgressBar(QProgressBar* pb)
             "   border-width: 1px;"
             "}"
             "QProgressBar::chunk{"
-            "   border-radius: 3px;"
+            "   border-radius: 1px;"
             "   background-color: rgb(155,238,100);"
+            "   width: 10px;"
+            "   margin: 0.5px;"
             "}"
             );
 }

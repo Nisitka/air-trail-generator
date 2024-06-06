@@ -329,6 +329,15 @@ void areaDrawWidget::zoom(double dK)
     updateSize();
 }
 
+void areaDrawWidget::setZoom(double k)
+{
+    kZoom = k;
+
+    if (kZoom < 0.2) kZoom = 0.2;
+
+    updateSize();
+}
+
 void areaDrawWidget::drawGeoMap()
 {
     curOptRepaint = geoMap;

@@ -84,7 +84,8 @@ SOURCES += main.cpp\
     backend/RLS/managerrls.cpp \
     backend/RLS/rls.cpp \
     backend/Trail/buildertraildrones.cpp \
-    backend/Trail/trail.cpp
+    backend/Trail/trail.cpp \
+    GUI/drawArea/zoomcontrollerwidget.cpp
 
 HEADERS  += \
     core.h \
@@ -169,7 +170,8 @@ HEADERS  += \
     backend/RLS/managerrls.h \
     backend/RLS/rls.h \
     backend/Trail/buildertraildrones.h \
-    backend/Trail/trail.h
+    backend/Trail/trail.h \
+    GUI/drawArea/zoomcontrollerwidget.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \
@@ -182,7 +184,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/drawArea/mapareamainwindow.ui \
     GUI/UI/airinfowindow.ui \
     GUI/UI/airwindow.ui \
-    GUI/drawArea/DecktopItems/coordsinfoform.ui
+    GUI/drawArea/DecktopItems/coordsinfoform.ui \
+    GUI/drawArea/zoomcontrollerwidget.ui
 
 DISTFILES += \
     resurs/earchIcon.png \
