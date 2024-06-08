@@ -109,15 +109,31 @@ void ZoomControllerWidget::setDesine()
                              "   border: 1px solid rgb(0,0,0);"
                              "}");
 
-    ui->verticalSlider->setStyleSheet("QSlider::handle:vertical {"
-                                      "   height: 10px;"
-                                      "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "
-                                      "                                     stop: 0 rgb(255,252,254), "
-                                      "                                     stop: 0.3 rgb(209,226,248), "
-                                      "                                     stop: 1 rgb(251,252,254));"
-                                      "   border: 1px solid rgb(150,183,227);"
-                                      "   border-radius: 3px;"
-                                      "}");
+    ui->verticalSlider->setStyleSheet(
+                "QSlider::handle:vertical {"
+                "   height: 10px;"
+                "   background-color: rgb(255,255,255,75);"
+                "   border-radius: 3px;"
+                "   border: 1px solid rgb(0,0,0);"
+                "}"
+                "QSlider::handle:vertical:hover {"
+                "   height: 10px;"
+                "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "
+                "                                     stop: 0 rgb(255,252,254), "
+                "                                     stop: 0.3 rgb(209,226,248), "
+                "                                     stop: 1 rgb(251,252,254));"
+                "   border: 1px solid rgb(150,183,227);"
+                "   border-radius: 3px;"
+                "}"
+                "QSlider::handle:vertical:pressed{"
+                "   height: 10px;"
+                "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "
+                "                                     stop: 0 rgb(255,252,254), "
+                "                                     stop: 0.4 rgb(255,204,60), "
+                "                                     stop: 1 rgb(255,251,230));"
+                "   border: 1px solid rgb(255,165,0);"
+                "   border-radius: 3px;"
+                "}");
 }
 
 ZoomControllerWidget::~ZoomControllerWidget()
