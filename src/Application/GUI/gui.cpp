@@ -47,7 +47,6 @@ GUI::GUI(GISInformer* gis):
 
     //
     optRLSWin = new optRLSwindow();
-    //
     QObject::connect(toolRLS,   SIGNAL(setCoordRLS(Coords)),
                      optRLSWin, SLOT(updateCoordRLS(Coords)));
     mainWin->addTask(optRLSWin, QIcon(":/resurs/rlsIcon"),
@@ -186,7 +185,7 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      mRLS,       SLOT(runRLS()));
     //
     QObject::connect(mRLS,       SIGNAL(startGenerateZD(int)),
-                     optRLSWin,  SLOT(startGenerateZD(int)));
+                     optRLSWin,  SLOT(startProcessing());
     //
     QObject::connect(mRLS,       SIGNAL(readyVector(int)),
                      optRLSWin,  SLOT(readyVector(int)));

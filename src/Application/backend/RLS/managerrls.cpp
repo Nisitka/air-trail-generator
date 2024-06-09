@@ -23,21 +23,19 @@ void managerRLS::addRLS(QPoint* posRLS_, const QString& nameRLS)
                        posRLS_, nameRLS);
     listRLS.append(rls);
 
-    // завершение генерации вертикального сегмента
-    connect(rls,  SIGNAL(readyVector(int)), // номер сегмента
-            this, SLOT(readyVecRLS()));
-
     // запрос данных ЗО графика
-    connect(rls,  SIGNAL(exportGraphicData(double*, double*, int)),
-            this, SIGNAL(exportGraphicData(double*, double*, int)));
+//    connect(rls,  SIGNAL(exportGraphicData(double*, double*, int)),
+//            this, SIGNAL(exportGraphicData(double*, double*, int)));
 
-    // настройка пар-ов моделирования сигнала
+    // Настройка пар-ов моделирования сигнала
     connect(rls,  SIGNAL(startSetOpt(int)),
             this, SIGNAL(startSetOpt(int)));
     connect(rls,  SIGNAL(readySetRay(int)),
             this, SIGNAL(readySetRay(int)));
     connect(rls,  SIGNAL(readyOptZDvert()),
             this, SIGNAL(readyOptZDvert()));
+    connect(rls,  SIGNAL(startGenerateZD(int)),
+            this, SIGNAL(startGenerateZD(int)));
 
     createReadyRLS();
 
@@ -51,21 +49,19 @@ void managerRLS::delRLS(int id)
     int idX, idY, w, h;
     rls->getRectPosition(idX, idY, w, h);
 
-    // завершение генерации вертикального сегмента
-    disconnect(rls,  SIGNAL(readyVector(int)), // номер сегмента
-               this, SLOT(readyVecRLS()));
-
     // запрос данных ЗО графика
-    disconnect(rls,  SIGNAL(exportGraphicData(double*, double*, int)),
-               this, SIGNAL(exportGraphicData(double*, double*, int)));
+//    disconnect(rls,  SIGNAL(exportGraphicData(double*, double*, int)),
+//               this, SIGNAL(exportGraphicData(double*, double*, int)));
 
-    // настройка пар-ов моделирования сигнала
+    // Настройка пар-ов моделирования сигнала
     disconnect(rls,  SIGNAL(startSetOpt(int)),
                this, SIGNAL(startSetOpt(int)));
     disconnect(rls,  SIGNAL(readySetRay(int)),
                this, SIGNAL(readySetRay(int)));
     disconnect(rls,  SIGNAL(readyOptZDvert()),
                this, SIGNAL(readyOptZDvert()));
+    disconnect(rls,  SIGNAL(startGenerateZD(int)),
+               this, SIGNAL(startGenerateZD(int)));
 
     delete rls;
     listRLS.removeAt(id);
@@ -212,12 +208,6 @@ void managerRLS::runRLS()
     listRLS.at(idCurRLS)->getRectPosition(idX, idY, w, h);
     updateVisInfoMap(idX, idY, w, h);
     finishGenerateZD();
-}
-
-void managerRLS::readyVecRLS()
-{
-    curVecReady++;
-    readyVector(curVecReady);
 }
 
 void managerRLS::getDataGraphic()

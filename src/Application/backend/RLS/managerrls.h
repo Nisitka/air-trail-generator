@@ -37,7 +37,7 @@ signals:
     void readySetRay(int);
 
     //
-    //void
+    void changeStatProcessing(int percent); // В процентах
 
     // сообщаем об начале поиска лучшей позиции РЛС
     void startSearchBestPos(int numW, int numL, int sizeProgress);
@@ -74,10 +74,6 @@ public slots:
 
 public:
     managerRLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height);
-
-private slots:
-    //
-    void readyVecRLS();
 
 private:
 

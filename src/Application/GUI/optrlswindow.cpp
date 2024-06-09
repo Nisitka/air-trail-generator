@@ -48,6 +48,24 @@ optRLSwindow::optRLSwindow( QWidget *parent):
     setDesine();
 }
 
+void optRLSwindow::startProcessing()
+{
+    ui->setOptRLSProgressBar->show();
+    ui->setOptRLSProgressBar->setRange(0,0);
+
+}
+
+void optRLSwindow::updateStatProcessing(int percent)
+{
+    ui->setOptRLSProgressBar->setMaximum(100);
+    ui->setOptRLSProgressBar->setValue(percent);
+}
+
+void optRLSwindow::finishProcessing()
+{
+    ui->setOptRLSProgressBar->hide();
+}
+
 void optRLSwindow::runSearchBestPos()
 {
     sendDataForSearchBestPos(0, 0, 100, 100, 200);

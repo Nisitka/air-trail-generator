@@ -45,6 +45,12 @@ signals:
                          int countVertVectors, int countPointsDV); // кол-водискрет
 
 public slots:
+
+    // Отображение выполнения процессов
+    void startProcessing();
+    void updateStatProcessing(int percent); // В процентах
+    void finishProcessing();
+
     // Инициализация новой РЛС завершина
     void buildNewRLSready();
 
@@ -52,7 +58,7 @@ public slots:
     void setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working);
 
     // Начало изменения настроек прогресса
-    void startSetOptRLS(int sizeP); // кол-во дискрет прогресса
+    void startSetOptRLS(int sizeP);
 
     // Обновить полоску прогресса установки настроек РЛС
     void updateProgressSetOptRLS(int id); // номер текущей дискреты

@@ -27,6 +27,7 @@ signals:
 
     //
     void readySetRay(int numRay); // номер луча
+    void changeStatProcessing(int percent);
 
     // Зона обнаружения начала расчитываться
     void startGenerateZD(int countM);
