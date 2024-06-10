@@ -30,12 +30,21 @@ void managerRLS::addRLS(QPoint* posRLS_, const QString& nameRLS)
     // Настройка пар-ов моделирования сигнала
     connect(rls,  SIGNAL(startSetOpt(int)),
             this, SIGNAL(startSetOpt(int)));
-    connect(rls,  SIGNAL(readySetRay(int)),
-            this, SIGNAL(readySetRay(int)));
+    connect(rls,  SIGNAL(changeStatProcessing(int)),
+            this, SIGNAL(changeStatProcessing(int)));
     connect(rls,  SIGNAL(readyOptZDvert()),
             this, SIGNAL(readyOptZDvert()));
-    connect(rls,  SIGNAL(startGenerateZD(int)),
-            this, SIGNAL(startGenerateZD(int)));
+    connect(rls,  SIGNAL(readyClearZD()),
+            this, SIGNAL(clearZD()));
+
+    connect(rls,  SIGNAL(startClearZD()),
+            this, SIGNAL(startClearZD()));
+
+    //
+    connect(rls,  SIGNAL(startEmitSignal()),
+            this, SIGNAL(startEmitSignal()));
+    connect(rls,  SIGNAL(finishGenerateZD()),
+            this, SIGNAL(finishGenerateZD()));
 
     createReadyRLS();
 
@@ -54,14 +63,12 @@ void managerRLS::delRLS(int id)
 //               this, SIGNAL(exportGraphicData(double*, double*, int)));
 
     // Настройка пар-ов моделирования сигнала
-    disconnect(rls,  SIGNAL(startSetOpt(int)),
-               this, SIGNAL(startSetOpt(int)));
-    disconnect(rls,  SIGNAL(readySetRay(int)),
-               this, SIGNAL(readySetRay(int)));
-    disconnect(rls,  SIGNAL(readyOptZDvert()),
-               this, SIGNAL(readyOptZDvert()));
-    disconnect(rls,  SIGNAL(startGenerateZD(int)),
-               this, SIGNAL(startGenerateZD(int)));
+//    disconnect(rls,  SIGNAL(startSetOpt(int)),
+//               this, SIGNAL(startSetOpt(int)));
+//    disconnect(rls,  SIGNAL(readyOptZDvert()),
+//               this, SIGNAL(readyOptZDvert()));
+//    disconnect(rls,  SIGNAL(startEmitSignal()),
+//               this, SIGNAL(startGenerateZD(int)));
 
     delete rls;
     listRLS.removeAt(id);
@@ -153,7 +160,7 @@ void managerRLS::emitSignalAllRLS()
 
     }
 
-    startGenerateZD(sizeLoading);
+    startEmitSignal();
     curVecReady = 0;
 
     finishGenerateZD();
@@ -167,7 +174,7 @@ void managerRLS::runRLS(int idX, int idY)
     for (int i=0; i<listRLS.size(); i++)
         sizeLoading += listRLS.at(i)->getCountHorVectors();
 
-    startGenerateZD(sizeLoading);
+    startEmitSignal();
     curVecReady = 0;
 
     listRLS.at(idCurRLS)->on();
@@ -194,7 +201,7 @@ void managerRLS::runRLS()
     for (int i=0; i<listRLS.size(); i++)
         sizeLoading += listRLS.at(i)->getCountHorVectors();
 
-    startGenerateZD(sizeLoading);
+    startEmitSignal();
     curVecReady = 0;
 
     listRLS.at(idCurRLS)->on();

@@ -50,20 +50,22 @@ optRLSwindow::optRLSwindow( QWidget *parent):
 
 void optRLSwindow::startProcessing()
 {
-    ui->setOptRLSProgressBar->show();
-    ui->setOptRLSProgressBar->setRange(0,0);
+    ui->setRLSprogressBar->show();
+    ui->setRLSprogressBar->setRange(0,0);
 
 }
 
 void optRLSwindow::updateStatProcessing(int percent)
 {
-    ui->setOptRLSProgressBar->setMaximum(100);
-    ui->setOptRLSProgressBar->setValue(percent);
+    //qDebug() << percent;
+
+    ui->setRLSprogressBar->setMaximum(100);
+    ui->setRLSprogressBar->setValue(percent);
 }
 
 void optRLSwindow::finishProcessing()
 {
-    ui->setOptRLSProgressBar->hide();
+    ui->setRLSprogressBar->hide();
 }
 
 void optRLSwindow::runSearchBestPos()
@@ -234,14 +236,6 @@ void optRLSwindow::repaintGraphic(double* x, double* y, int count)
     graphicWidget->setData(X, Y);
 }
 
-void optRLSwindow::readyOptZDvert()
-{
-    ui->setOptZDvertButton->setEnabled(true);
-    ui->setCoordRLSpushButton->setEnabled(true);
-
-    ui->setOptRLSProgressBar->hide();
-}
-
 void optRLSwindow::setOptZDvert()
 {
     ui->setOptZDvertButton->setEnabled(false);
@@ -272,23 +266,6 @@ void optRLSwindow::updateCoordRLS(Coords coords)
     ui->xRLSspinBox->setValue(RLScoords.X(Coords::m));
     ui->yRLSspinBox->setValue(RLScoords.Y(Coords::m));
     ui->zValueRLSLabel->setText(QString::number(RLScoords.Y(Coords::m)));
-}
-
-void optRLSwindow::readyVector(int numVector)
-{
-    ui->setRLSprogressBar->setValue(numVector);
-}
-
-void optRLSwindow::finishGenerateZD()
-{
-    ui->setRLSprogressBar->setValue(0);
-    ui->setRLSprogressBar->hide();
-}
-
-void optRLSwindow::startGenerateZD(int countVectors)
-{
-    ui->setRLSprogressBar->setMaximum(countVectors);
-    ui->setRLSprogressBar->show();
 }
 
 optRLSwindow::~optRLSwindow()

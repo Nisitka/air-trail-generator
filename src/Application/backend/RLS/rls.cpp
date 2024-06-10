@@ -90,7 +90,6 @@ void RLS::removeZD()
             delete rays->at(j);
         }
         delete rays;
-        readySetRay(i);
     }
     ZD.clear();
 }
@@ -104,7 +103,7 @@ void RLS::setOptZDvert(int Rmax,
 
     sizeZD = ZD.size();
     // Сообщаем GUI об начале применнения настроек
-    startSetOpt(sizeZD + COUNT_VECTORS_vert);
+    startSetOpt();
 
     // Построение ЗО в верт. плоскости
     set_lDV();  // диаграмма направленности
@@ -120,11 +119,20 @@ void RLS::setOptZDvert(int Rmax,
 
 void RLS::emitSignal()
 {
+    //qDebug() << "Emit Signal!";
+
     // Если РЛС не включена, то ничего не делаем
     if (!working) return;
 
+    //
+    startEmitSignal();
+
     // Кол-во вертикальных сегментов
     int countS_ZD = ZD.size();
+
+    // Через какое кол-во сегментов уведомлять об состоянии
+    int dV = countS_ZD / 100;
+    int iV = 0;
 
     //
     int xRLS = pos.x();
@@ -157,7 +165,11 @@ void RLS::emitSignal()
                 RZEditor->toZD(blocksZD[i]);
             }
         }
-        readyVector(i);
+
+        // Уведомляем, если изменение > 1%
+        if (iV<dV) iV++;
+        else
+            changeStatProcessing(((double) i/countS_ZD) * 100);
     }
 
     //qDebug() << "RLS: emit signal finish!";
@@ -172,12 +184,27 @@ const QVector <QVector <QVector3D>>& RLS::getPointsInterZD()
 
 void RLS::clearZD()
 {
-    if (blocksZD.size() > 0)
+    int count = blocksZD.size();
+    if (count > 0)
     {
-        int count = blocksZD.size();
+        startClearZD();
+
+        // Через какое кол-во блоков уведомлять об состоянии
+        int dB = count / 100;
+        int iB = 0;
+
         for (int i=0; i<count; i++)
+        {
             RZEditor->clearZD(blocksZD[i]);
+
+            // Уведомляем, если изменение > 1%
+            if (iB<dB) iB++;
+            else
+                changeStatProcessing(((double) i/count) * 100);
+        }
         blocksZD.clear();
+
+        readyClearZD();
     }
 }
 
@@ -198,7 +225,6 @@ void RLS::buildZD()
 
             ZD.last()->append(new Ray(d, angleB, angleE));
         }
-        readySetRay(sizeZD + i);
     }   
 }
 

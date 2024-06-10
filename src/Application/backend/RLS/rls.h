@@ -19,27 +19,27 @@ class RLS: public QObject
 {
     Q_OBJECT
 signals:
+
+    // Уведомление об статусе завершения внут. процесса
+    void changeStatProcessing(int percent);
+
+    // Запущена очистка пространства РЛ сигнала
+    void startClearZD();
+
     // Завершение очистки карты от ЗО
     void readyClearZD();
 
-    // Начата установка настроек РЛС
-    void startSetOpt(int countRay);
-
-    //
-    void readySetRay(int numRay); // номер луча
-    void changeStatProcessing(int percent);
-
     // Зона обнаружения начала расчитываться
-    void startGenerateZD(int countM);
-
-    // Вертикальный сегмент готов
-    void readyVector(int numVector);
+    void startEmitSignal();
 
     // Зона обнаружения сгенерирована
     void finishGenerateZD();
 
     // Отправка графика ДН антены
     void exportGraphicData(double* x, double* y, int count);
+
+    // Начата установка настроек РЛС
+    void startSetOpt();
 
     // Информируем завершении настройки РЛС
     void readyOptZDvert();

@@ -27,23 +27,17 @@ signals:
     // обновить данные об РЛС в интерфейсе
     void updateOptGui(int Rmax, int Xpos, int Ypos, int Hzd, bool working);
 
-    /* Сигналы только для РЛС */
-    void startGenerateZD(int);
-    void readyVector(int);
+    //
+    void startEmitSignal();
     void finishGenerateZD();
     void exportGraphicData(double*, double*, int);
     void readyOptZDvert();
+    void clearZD();
     void startSetOpt(int);
-    void readySetRay(int);
+    void startClearZD();
 
     //
     void changeStatProcessing(int percent); // В процентах
-
-    // сообщаем об начале поиска лучшей позиции РЛС
-    void startSearchBestPos(int numW, int numL, int sizeProgress);
-
-    // отправляем результаты поиска наилучшей позиции
-    void readySearchBestPos(int idX, int idY, double* K);
 
 public slots:
     // перемоделировать сигналы всех РЛС

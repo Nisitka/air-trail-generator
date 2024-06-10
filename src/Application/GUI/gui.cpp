@@ -184,14 +184,11 @@ void GUI::connectMRLS(managerRLS* mRLS)
     QObject::connect(optRLSWin,  SIGNAL(signalRunRLS()),
                      mRLS,       SLOT(runRLS()));
     //
-    QObject::connect(mRLS,       SIGNAL(startGenerateZD(int)),
-                     optRLSWin,  SLOT(startProcessing());
-    //
-    QObject::connect(mRLS,       SIGNAL(readyVector(int)),
-                     optRLSWin,  SLOT(readyVector(int)));
+    QObject::connect(mRLS,       SIGNAL(startEmitSignal()),
+                     optRLSWin,  SLOT(startProcessing()));
     //
     QObject::connect(mRLS,       SIGNAL(finishGenerateZD()),
-                     optRLSWin,  SLOT(finishGenerateZD()));
+                     optRLSWin,  SLOT(finishProcessing()));
     // обмен данными для отрисовки графика ДН
     QObject::connect(optRLSWin,  SIGNAL(getDataGraphic()),
                      mRLS,       SLOT(getDataGraphic()));
@@ -207,11 +204,17 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      optRLSWin,  SLOT(readyOptZDvert()));
 
     //
+    QObject::connect(mRLS,      SIGNAL(startClearZD()),
+                     optRLSWin, SLOT(startProcessing()));
+    QObject::connect(mRLS,      SIGNAL(clearZD()),
+                     optRLSWin, SLOT(finishProcessing()));
+
+    //
     QObject::connect(mRLS,       SIGNAL(startSetOpt(int)),
                      optRLSWin,  SLOT(startSetOptRLS(int)));
     //
-    QObject::connect(mRLS,       SIGNAL(readySetRay(int)),
-                     optRLSWin,  SLOT(updateProgressSetOptRLS(int)));
+    QObject::connect(mRLS,       SIGNAL(changeStatProcessing(int)),
+                     optRLSWin,  SLOT(updateStatProcessing(int)));
 
     /// !!!!!!!!!!!!!!!!!!!!!!!!!!
     QObject::connect(visInfoWin->getManDrawArea()->getDrawArea(), SIGNAL(updateSignals()),

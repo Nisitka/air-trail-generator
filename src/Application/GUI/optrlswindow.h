@@ -69,18 +69,6 @@ public slots:
     // Обновить координаты РЛС
     void updateCoordRLS(Coords);
 
-    // Начало моделирования работы РЛС
-    void startGenerateZD(int countVectors); // кол-во вертикальных сегментов
-
-    // Номер готового верт-го сегмента
-    void readyVector(int numVector);
-
-    //
-    void finishGenerateZD();
-
-    //
-    void readyOptZDvert();
-
 public:
     explicit optRLSwindow(QWidget *parent = 0);
     ~optRLSwindow();
