@@ -14,8 +14,10 @@
 #include "../GIS/heightmeter.h"
 #include "../tracerlight.h"
 
+#include "informerrls.h"
+
 // класс РЛС
-class RLS: public QObject
+class RLS: public QObject, public InformerRLS
 {
     Q_OBJECT
 signals:
@@ -67,22 +69,17 @@ public:
     explicit RLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height,
                  QPoint* position, const QString& nameRLS = nullptr);
 
-    // Позиция РЛС в пространстве
-    void getPosition(QVector3D& point);
-
     // Получить точки пересечения сигнала с рельефом
     const QVector <QVector <QVector3D>>& getPointsInterZD();
 
-    // Узнать, работает ли РЛС
-    bool isWorking();
 
-    void getRectPosition(int& idX, int& idY, int& W, int& H);
+    void getRectPosition(int& idX, int& idY, int& W, int& H) const;
 
     double functionDV(double nL);
 
-    void getOpt(int& Rmax, int& Xpos, int& Ypos, int& Hzd, bool& working);
+    void getOpt(int& Rmax, int& Xpos, int& Ypos, int& Hzd, bool& working) const;
 
-    int getCountHorVectors();
+    int getCountHorVectors() const;
 
     // очистка карты от сигнала данной РЛС
     void clearZD();
@@ -99,8 +96,7 @@ private:
     // Точки соприкосновения ЗО с рельефом
     QVector <QVector <QVector3D>> interPointsZD;
 
-    // Включена ли РЛС
-    bool working;
+
 
     // Дискретность ЗО
     // по вертикали
@@ -117,9 +113,6 @@ private:
     // Обновить значения ЗО в вертю плоскости
     void updateDV();
 
-    // Точка стояния РЛС
-    QVector3D pos;
-    //QPoint* position;
     double Hpos; // высота(координата Z) метры
 
     const double hSender = 3.1; // высота антены

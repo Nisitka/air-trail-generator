@@ -24,12 +24,12 @@ void managerRLS::addRLS(QPoint* posRLS_, const QString& nameRLS)
     listRLS.append(rls);
 
     // запрос данных ЗО графика
-//    connect(rls,  SIGNAL(exportGraphicData(double*, double*, int)),
-//            this, SIGNAL(exportGraphicData(double*, double*, int)));
+    connect(rls,  SIGNAL(exportGraphicData(double*, double*, int)),
+            this, SIGNAL(exportGraphicData(double*, double*, int)));
 
     // Настройка пар-ов моделирования сигнала
-    connect(rls,  SIGNAL(startSetOpt(int)),
-            this, SIGNAL(startSetOpt(int)));
+    connect(rls,  SIGNAL(startSetOpt()),
+            this, SIGNAL(startSetOpt()));
     connect(rls,  SIGNAL(changeStatProcessing(int)),
             this, SIGNAL(changeStatProcessing(int)));
     connect(rls,  SIGNAL(readyOptZDvert()),
@@ -58,18 +58,10 @@ void managerRLS::delRLS(int id)
     int idX, idY, w, h;
     rls->getRectPosition(idX, idY, w, h);
 
-    // запрос данных ЗО графика
-//    disconnect(rls,  SIGNAL(exportGraphicData(double*, double*, int)),
-//               this, SIGNAL(exportGraphicData(double*, double*, int)));
+    //
+    rls->clearZD();
 
-    // Настройка пар-ов моделирования сигнала
-//    disconnect(rls,  SIGNAL(startSetOpt(int)),
-//               this, SIGNAL(startSetOpt(int)));
-//    disconnect(rls,  SIGNAL(readyOptZDvert()),
-//               this, SIGNAL(readyOptZDvert()));
-//    disconnect(rls,  SIGNAL(startEmitSignal()),
-//               this, SIGNAL(startGenerateZD(int)));
-
+    //
     delete rls;
     listRLS.removeAt(id);
 

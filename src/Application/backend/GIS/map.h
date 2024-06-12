@@ -25,10 +25,15 @@ public:
     void setH(int idX, int idY, int valH);
 
     // Максимальная высота на карте
-    int getMaxH(); // в метрах
+    int getMaxH() const; // в метрах
 
-    void setLenBlock(double);
-    double getLenBlock() const;
+    // Ширина/Длина дискрет (блоков)
+    void setLenBlock(int);
+    int getLenBlock() const;
+
+    // Высота дискрет (блоков)
+    void setHeightBlock(int); // в метрах
+    int getHeightBlock() const;
 
     // Получить размеры карты
     void getSize(int &w, int &l, int &h) const;
@@ -64,7 +69,8 @@ private:
     int Length;
 
     // Размеры куба в метрах
-    double lenBlock;
+    int lenBlock;
+    int heightBlock;
 };
 
 #endif // MAP_H

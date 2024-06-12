@@ -4,8 +4,6 @@
 
 #include "drawArea/mapareamainwindow.h"
 
-#include "airobjectfunwindow.h"
-
 GUI::GUI(GISInformer* gis):
     gisInformer(gis)
 {
@@ -74,18 +72,6 @@ GUI::GUI(GISInformer* gis):
     algPredWin = new setAlgPredictWindow;
     mainWin->addTask(algPredWin,         QPixmap(":/resurs/qFunIcon"),
                      "Функция прогноза", "Функция прогноза");
-
-    // Окно по работе с ТТХ воздушными объектами
-    airObjWin = new AirObjectFunWindow;
-    AirWin = new AirWindow;
-    AirInfo = new AirInfoWindow;
-    mainWin->addTask(airObjWin,         QPixmap(":/resurs/a"),
-                     "ТТХ воздушных объектов", "ТТХ воздушных объектов");
-
-    // Окно по работе с Базой данных
-    daoWin = new DataAccessObjectWindow;
-    mainWin->addTask(daoWin,        QPixmap(":/resurs/base1"),
-                     "База данных", "Подключение базы данных");
 }
 
 void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
@@ -194,14 +180,13 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      mRLS,       SLOT(getDataGraphic()));
     QObject::connect(mRLS,       SIGNAL(exportGraphicData(double*, double*, int)),
                      optRLSWin,  SLOT(repaintGraphic(double*, double*, int)));
-    //optRLSWin->getDataGraphic(); // сразу же отображаем ДН
 
     // Установка пар-ов сигнала и его моделирования в пространстве
     QObject::connect(optRLSWin,  SIGNAL(updateOptZDvert(int,int,int)),
                      mRLS,       SLOT(setOptZDvert(int,int,int)));
     //
     QObject::connect(mRLS,       SIGNAL(readyOptZDvert()),
-                     optRLSWin,  SLOT(readyOptZDvert()));
+                     optRLSWin,  SLOT(finishProcessing()));
 
     //
     QObject::connect(mRLS,      SIGNAL(startClearZD()),
@@ -210,8 +195,8 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      optRLSWin, SLOT(finishProcessing()));
 
     //
-    QObject::connect(mRLS,       SIGNAL(startSetOpt(int)),
-                     optRLSWin,  SLOT(startSetOptRLS(int)));
+    QObject::connect(mRLS,       SIGNAL(startSetOpt()),
+                     optRLSWin,  SLOT(startProcessing()));
     //
     QObject::connect(mRLS,       SIGNAL(changeStatProcessing(int)),
                      optRLSWin,  SLOT(updateStatProcessing(int)));

@@ -8,11 +8,12 @@ Map::Map()
 {
     // Длина ребра блока по умолчанию
     lenBlock = 20;
+    heightBlock = 20;
 }
 
-int Map::getMaxH()
+int Map::getMaxH() const
 {
-    return getCountLayers() * lenBlock;
+    return getCountLayers() * heightBlock;
 }
 
 void Map::setH(int idX, int idY, int valH)
@@ -23,9 +24,24 @@ void Map::setH(int idX, int idY, int valH)
     }
 }
 
-void Map::setLenBlock(double len)
+void Map::setLenBlock(int len)
 {
     lenBlock = len;
+}
+
+int Map::getLenBlock() const
+{
+    return lenBlock;
+}
+
+void Map::setHeightBlock(int hBlocks)
+{
+    heightBlock = hBlocks;
+}
+
+int Map::getHeightBlock() const
+{
+    return heightBlock;
 }
 
 void Map::resize(int W, int L, int H)
@@ -114,11 +130,6 @@ void Map::clear()
 void Map::setSize(int w, int l, int h)
 {
     Width = w; Length = l; Height = h;
-}
-
-double Map::getLenBlock() const
-{
-    return lenBlock;
 }
 
 int Map::getWidth(int type) const

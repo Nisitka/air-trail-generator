@@ -38,7 +38,6 @@ SOURCES += main.cpp\
     GUI/drawArea/areadrawwidget.cpp \
     GUI/plotwidget.cpp \
     GUI/3DVisualization/mapopenglwidget.cpp \
-    GUI/dataaccessobjectwindow.cpp \
     GUI/3DVisualization/map3dviswindow.cpp \
     GUI/algorithmPredict/glyph.cpp \
     GUI/algorithmPredict/setalgpredictwindow.cpp \
@@ -53,7 +52,6 @@ SOURCES += main.cpp\
     GUI/drawArea/mapareamainwindow.cpp \
     GUI/drawArea/scrollmapwidget.cpp \
     GUI/multiplewindow.cpp \
-    GUI/airobjectfunwindow.cpp \
     backend/GIS/geoblock.cpp \
     backend/GIS/geogenerator.cpp \
     backend/GIS/map.cpp \
@@ -62,8 +60,6 @@ SOURCES += main.cpp\
     GUI/processtmpwidget.cpp \
     backend/graphicengine.cpp \
     backend/GIS/coords.cpp \
-    GUI/airinfowindow.cpp \
-    GUI/airwindow.cpp \
     backend/GIS/mapdata.cpp \
     backend/tracerlight.cpp \
     GUI/drawArea/Tools/drawareatool.cpp \
@@ -85,7 +81,8 @@ SOURCES += main.cpp\
     backend/RLS/rls.cpp \
     backend/Trail/buildertraildrones.cpp \
     backend/Trail/trail.cpp \
-    GUI/drawArea/zoomcontrollerwidget.cpp
+    GUI/drawArea/zoomcontrollerwidget.cpp \
+    backend/RLS/informerrls.cpp
 
 HEADERS  += \
     core.h \
@@ -118,7 +115,6 @@ HEADERS  += \
     GUI/drawArea/toolsquareter.h \
     GUI/3DVisualization/mapopenglwidget.h \
     GUI/drawArea/toolpredict.h \
-    GUI/dataaccessobjectwindow.h \
     GUI/3DVisualization/map3dviswindow.h \
     GUI/algorithmPredict/glyph.h \
     GUI/algorithmPredict/setalgpredictwindow.h \
@@ -133,7 +129,6 @@ HEADERS  += \
     GUI/drawArea/mapareamainwindow.h \
     GUI/drawArea/scrollmapwidget.h \
     GUI/multiplewindow.h \
-    GUI/airobjectfunwindow.h \
     backend/GIS/geoblock.h \
     backend/GIS/geogenerator.h \
     backend/GIS/map.h \
@@ -143,8 +138,6 @@ HEADERS  += \
     backend/graphicengine.h \
     backend/GIS/gisinformer.h \
     backend/GIS/coords.h \
-    GUI/airinfowindow.h \
-    GUI/airwindow.h \
     backend/GIS/heightmeter.h \
     backend/GIS/mapdata.h \
     backend/GIS/rzinformer.h \
@@ -171,7 +164,8 @@ HEADERS  += \
     backend/RLS/rls.h \
     backend/Trail/buildertraildrones.h \
     backend/Trail/trail.h \
-    GUI/drawArea/zoomcontrollerwidget.h
+    GUI/drawArea/zoomcontrollerwidget.h \
+    backend/RLS/informerrls.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \

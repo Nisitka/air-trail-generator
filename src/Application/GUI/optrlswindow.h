@@ -57,12 +57,6 @@ public slots:
     // Установить параметры РЛС
     void setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working);
 
-    // Начало изменения настроек прогресса
-    void startSetOptRLS(int sizeP);
-
-    // Обновить полоску прогресса установки настроек РЛС
-    void updateProgressSetOptRLS(int id); // номер текущей дискреты
-
     // Перерисовать график ДН
     void repaintGraphic(double* x, double* y, int count);
 

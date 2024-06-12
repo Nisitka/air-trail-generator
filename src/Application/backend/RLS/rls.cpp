@@ -23,7 +23,7 @@ RLS::RLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height,
 }
 
 void RLS::setPosition(int idX, int idY)
-{
+{ 
     pos.setX(idX);
     pos.setY(idY);
 
@@ -43,18 +43,7 @@ void RLS::setPosition(const QPoint &p)
     pos.setZ(Height->absolute(idX, idY, Map::id));
 }
 
-void RLS::getPosition(QVector3D &point)
-{
-    // В индексах
-    point = pos;
-}
-
-bool RLS::isWorking()
-{
-    return working;
-}
-
-int RLS::getCountHorVectors()
+int RLS::getCountHorVectors() const
 {
     return COUNT_VECTORS_vert;
 }
@@ -71,12 +60,12 @@ void RLS::off()
     clearZD();
 }
 
-void RLS::getOpt(int &Rmax, int &Xpos, int &Ypos, int &Hzd, bool &working_)
+void RLS::getOpt(int &Rmax, int &Xpos, int &Ypos, int &Hzd, bool &working_) const
 {
     Rmax = D;
     Xpos = pos.x();
     Ypos = pos.y();
-    Hzd = 99999; //map->getLenBlock();
+    Hzd = 99999; /// !!!!!!!!
     working_ = working;
 }
 
@@ -97,13 +86,17 @@ void RLS::removeZD()
 void RLS::setOptZDvert(int Rmax,
                        int countVertVectors, int countPointsDV)
 {
+    //qDebug() << "Set new option RLS!";
+
+    // Сообщаем GUI об начале применнения настроек
+    startSetOpt();
+
     count_PointsDV = countPointsDV;
     COUNT_VECTORS_vert = countVertVectors;
     D = Rmax;
 
     sizeZD = ZD.size();
-    // Сообщаем GUI об начале применнения настроек
-    startSetOpt();
+
 
     // Построение ЗО в верт. плоскости
     set_lDV();  // диаграмма направленности
@@ -113,8 +106,10 @@ void RLS::setOptZDvert(int Rmax,
     removeZD();
     buildZD();
 
-    readyOptZDvert();
     getDataGraphic();
+
+    //
+    readyOptZDvert();
 }
 
 void RLS::emitSignal()
@@ -314,9 +309,10 @@ void RLS::getDataGraphic()
     exportGraphicData(x, y, countPoint);
 }
 
-void RLS::getRectPosition(int &idX, int &idY, int &W, int &H)
+void RLS::getRectPosition(int &idX, int &idY, int &W, int &H) const
 {
-    int w = D / 20.0; //map->getLenBlock();
+    // Кол-во дискрет в ширину
+    int w = D / Height->lenghtBlock();
 
     idX = pos.x() - w;
     idY = pos.y() - w;
@@ -327,9 +323,6 @@ void RLS::getRectPosition(int &idX, int &idY, int &W, int &H)
 
 RLS::~RLS()
 {
-    // Очистка блоков от сигнала данной РЛС
-    clearZD();
-
     sizeZD = ZD.size();
     for (int i=0; i<sizeZD; i++)
     {

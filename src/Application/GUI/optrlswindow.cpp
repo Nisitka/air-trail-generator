@@ -161,9 +161,6 @@ void optRLSwindow::setDesine()
     ui->setRLSprogressBar->setValue(0);
     ui->setRLSprogressBar->hide(); // изначально прячем загрузку
 
-    ui->setOptRLSProgressBar->setValue(0);
-    ui->setOptRLSProgressBar->hide();
-
     ui->on_off_RLS_Button->hide();
     ui->setCoordRLSpushButton->hide();
 
@@ -185,7 +182,6 @@ void optRLSwindow::setDesine()
 
     // Настройка визуала полоски прогресса
     Designer::setProgressBar(ui->setRLSprogressBar);
-    Designer::setProgressBar(ui->setOptRLSProgressBar);
 
     //
     Designer::setTabWidget(ui->generateDVOptTabWidget);
@@ -238,24 +234,12 @@ void optRLSwindow::repaintGraphic(double* x, double* y, int count)
 
 void optRLSwindow::setOptZDvert()
 {
-    ui->setOptZDvertButton->setEnabled(false);
+    //ui->setOptZDvertButton->setEnabled(false);
     updateOptZDvert(ui->RmaxSpinBox->value(),
-                    ui->countHorVecZDSpinBox->value(), ui->countPointsDVSpinBox->value());
+                    ui->countHorVecZDSpinBox->value(),
+                    ui->countPointsDVSpinBox->value());
 
-    ui->setCoordRLSpushButton->setEnabled(false);
-
-    ui->setOptRLSProgressBar->show();
-}
-
-void optRLSwindow::startSetOptRLS(int sizeP)
-{
-    ui->setOptRLSProgressBar->setValue(0);
-    ui->setOptRLSProgressBar->setMaximum(sizeP);
-}
-
-void optRLSwindow::updateProgressSetOptRLS(int id)
-{
-    ui->setOptRLSProgressBar->setValue(id);
+    //ui->setCoordRLSpushButton->setEnabled(false);
 }
 
 void optRLSwindow::updateCoordRLS(Coords coords)

@@ -18,11 +18,7 @@
 #include "optdronewindow.h"
 #include "backend/RLS/managerrls.h"
 #include "3DVisualization/map3dviswindow.h"
-#include "dataaccessobjectwindow.h"
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
-#include "airobjectfunwindow.h"
-#include "airwindow.h"
-#include "airinfowindow.h"
 
 // Интерфейс всей программы
 class GUI
@@ -62,19 +58,11 @@ private:
     //
     optDroneWindow* droneWin;
 
-    // окно для 3D отображения рельефа
+    // Окно для 3D отображения рельефа
     map3DVisWindow* map3DWin;
-
-    // окно для работы с БД
-    DataAccessObjectWindow* daoWin;
 
     //
     setAlgPredictWindow* algPredWin;
-
-    //ТТХ возудшных объектов
-    AirObjectFunWindow* airObjWin;
-    AirWindow *AirWin;
-    AirInfoWindow *AirInfo;
 
     // Инструменты
     ToolPredTrail* toolPTrail;

@@ -27,13 +27,22 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     geoBlock b;
     ds << b;
     sizeBlock = data.size();
-    //qDebug() << sizeBlock << "SIZE block";
 
     //
     data.clear();
     ds << mapData;
     sizeOptData = data.size();
     data.clear();
+}
+
+int geoGenerator::lenghtBlock() const
+{
+    return actionArea->getLenBlock();
+}
+
+int geoGenerator::heightBlock() const
+{
+    return actionArea->getHeightBlock();
 }
 
 void geoGenerator::toZD(const QVector3D &posBlock) const
@@ -43,7 +52,7 @@ void geoGenerator::toZD(const QVector3D &posBlock) const
     int idH = posBlock.z();
 
     int id = idBlock(idX, idY, idH);
-    if (inActionArea(idX, idY, idH))
+    if (inActionArea(idX, idY))
     {
         geoBlock* b = actionArea->getBlock(idX-idXo, idY-idYo, idH);
         b->toZD();
@@ -64,7 +73,7 @@ void geoGenerator::clearZD(const QVector3D &posBlock) const
     int idH = posBlock.z();
 
     int id = idBlock(idX, idY, idH);
-    if (inActionArea(idX, idY, idH))
+    if (inActionArea(idX, idY))
     {
         geoBlock* b = actionArea->getBlock(idX-idXo, idY-idYo, idH);
         b->removeZD();
@@ -78,7 +87,7 @@ void geoGenerator::clearZD(const QVector3D &posBlock) const
     }
 }
 
-bool geoGenerator::inActionArea(int idX, int idY, int idH) const
+bool geoGenerator::inActionArea(int idX, int idY) const
 {
     if (idX < idXo  || idY < idYo)  return false;
     if (idX > lastX || idY > lastY) return false;
@@ -88,7 +97,7 @@ bool geoGenerator::inActionArea(int idX, int idY, int idH) const
 
 const geoBlock& geoGenerator::block(int idX, int idY, int idH) const
 {
-    if (inActionArea(idX, idY, idH))
+    if (inActionArea(idX, idY))
     {
         return *actionArea->getBlock(idX-idXo, idY-idYo, idH);
     }
@@ -282,7 +291,7 @@ int geoGenerator::max(Map::units u) const
 
 int geoGenerator::countVertZD(int idX, int idY) const
 {
-    if (inActionArea(idX, idY, 0))
+    if (inActionArea(idX, idY))
     {
         return actionArea->countZD(idX-idXo, idY-idYo);
     }

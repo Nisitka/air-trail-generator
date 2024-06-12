@@ -28,21 +28,23 @@ public:
     geoGenerator(int wArea, int lArea);
 
     // Редактирование дискрет на наличие РЛ сигнала (RZCreator)
-    void toZD(const QVector3D &idBlock) const override final;    //+
-    void clearZD(const QVector3D &idBlock) const override final; //+
+    void toZD(const QVector3D &idBlock) const override final;
+    void clearZD(const QVector3D &idBlock) const override final;
 
     // BlockInformer
-    const geoBlock& block(int idX, int idY, int idH) const override final; //+
+    const geoBlock& block(int idX, int idY, int idH) const override final;
 
     // HeightMeter
-    int absolute(int idX, int idY, Map::units u) const override final; //+
-    int max(Map::units u) const override final; //+
+    int absolute(int idX, int idY, Map::units u) const override final;
+    int max(Map::units u) const override final;
+    int heightBlock() const override final;
+    int lenghtBlock() const override final;
 
     // RZInformer
-    int countVertZD(int idX, int idY) const override final; //+
+    int countVertZD(int idX, int idY) const override final;
 
     // В индексах всей карты
-    Coords getCoords(int idX, int idY) const; //+
+    Coords getCoords(int idX, int idY) const;
 
     // Запуск генерации рельефа
     void buildRandomMap(double setBlockP, int countEpochs,
@@ -80,7 +82,7 @@ private:
      mutable  bool isLocked;
 
     // Дискрета в зоне событий?
-    bool inActionArea(int idX, int idY, int idH) const;
+    bool inActionArea(int idX, int idY) const;
 
     // Посыпать землей дискрету
     void dropEarth(int idX, int idY, int countLayer);

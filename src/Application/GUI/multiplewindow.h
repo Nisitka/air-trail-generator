@@ -6,7 +6,6 @@
 
 #include <QToolBar>
 #include <QToolButton>
-#include "airwindow.h"
 #include <QMap>
 
 class MultipleWindow: public QMainWindow

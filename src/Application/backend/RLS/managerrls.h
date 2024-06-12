@@ -30,10 +30,10 @@ signals:
     //
     void startEmitSignal();
     void finishGenerateZD();
-    void exportGraphicData(double*, double*, int);
+    void exportGraphicData(double* X, double* Y, int countPoint);
     void readyOptZDvert();
     void clearZD();
-    void startSetOpt(int);
+    void startSetOpt();
     void startClearZD();
 
     //

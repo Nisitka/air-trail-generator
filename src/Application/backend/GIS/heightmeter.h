@@ -15,6 +15,10 @@ public:
     // Максимально возможная высота
     virtual int max(Map::units u = Map::m) const = 0;
 
+
+    virtual int lenghtBlock() const = 0;
+    virtual int heightBlock() const = 0;
+
 };
 
 #endif // HEIGHTMETER_H
