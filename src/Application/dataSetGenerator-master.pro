@@ -82,7 +82,9 @@ SOURCES += main.cpp\
     backend/Trail/buildertraildrones.cpp \
     backend/Trail/trail.cpp \
     GUI/drawArea/zoomcontrollerwidget.cpp \
-    backend/RLS/informerrls.cpp
+    backend/RLS/informerrls.cpp \
+    backend/GIS/geocolumn.cpp \
+    backend/GIS/geoarea.cpp
 
 HEADERS  += \
     core.h \
@@ -165,7 +167,9 @@ HEADERS  += \
     backend/Trail/buildertraildrones.h \
     backend/Trail/trail.h \
     GUI/drawArea/zoomcontrollerwidget.h \
-    backend/RLS/informerrls.h
+    backend/RLS/informerrls.h \
+    backend/GIS/geocolumn.h \
+    backend/GIS/geoarea.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optdronewindow.ui \
