@@ -3,13 +3,20 @@
 
 #include <QDataStream>
 
+#include "./geogenerator.h"
+
+class geoGenerator;
+
 // Столб-дискрета пространства
 class GeoColumn
 {
+    friend class geoGenerator;
 public:
-    GeoColumn(int countUnit, int Height = 0);
+    GeoColumn(int Height);
     GeoColumn();
     ~GeoColumn();
+
+    static int getCountUnit();
 
     friend QDataStream & operator<< (QDataStream& stream, const GeoColumn& c);
     friend QDataStream & operator>> (QDataStream& stream, GeoColumn& c);
@@ -30,8 +37,11 @@ public:
 private:
 
     //
+    static void setCountUnit(int);
+
+    //
     int height;
-    int maxHeight;
+    static int maxHeight;
 
     //
     bool* isUnitZD;

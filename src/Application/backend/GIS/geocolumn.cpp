@@ -1,10 +1,16 @@
 #include "geocolumn.h"
 
-GeoColumn::GeoColumn(): maxHeight(200), height(0){ /* ... */}
+int GeoColumn::maxHeight;
+
+GeoColumn::GeoColumn(): height(0){ /* ... */}
 
 QDataStream &operator<<(QDataStream &out, const GeoColumn &c)
 {
     out << c.getHeight();
+
+    int count = GeoColumn::getCountUnit();
+    for (int i=0; i<count; i++)
+        out << c.isZD(i);
 
     return out;
 }
@@ -15,17 +21,34 @@ QDataStream &operator>>(QDataStream &in, GeoColumn &c)
 
     in >> height;
 
+    int count = GeoColumn::getCountUnit();
+    bool zd;
+    for (int i=0; i<count; i++)
+    {
+        in >> zd;
+        if (zd) c.toZD(i);
+    }
+
     c.setHeight(height);
 
     return in;
 }
 
-GeoColumn::GeoColumn(int countUnit, int Height): height(Height)
+void GeoColumn::setCountUnit(int count)
+{
+    maxHeight = count;
+}
+
+int GeoColumn::getCountUnit()
+{
+    return maxHeight;
+}
+
+GeoColumn::GeoColumn(int Height): height(Height)
 {
     //
-    isUnitZD = new bool[countUnit];
-
-    maxHeight = countUnit;
+    isUnitZD = new bool[maxHeight];
+    removeAllZD();
 }
 
 void GeoColumn::removeAllZD()

@@ -7,6 +7,8 @@
 #include "rzinformer.h"
 #include "blockinformer.h"
 
+#include "geocolumn.h"
+
 #include "rzcreator.h"
 
 #include "coords.h"

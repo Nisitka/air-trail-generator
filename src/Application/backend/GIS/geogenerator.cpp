@@ -13,6 +13,8 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
 {
     isLocked = false;
 
+    GeoColumn::setCountUnit(200);
+
     //
     actionArea = new Map;
 
