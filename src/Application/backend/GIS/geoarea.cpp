@@ -1,19 +1,55 @@
 #include "geoarea.h"
 
-GeoArea::GeoArea(int Width_, int Length_, int Height_,
-                 int lenBlock_, int heightBlock_):
-    Width(Width_), Length(Length_), Height(Height_),
-    lenBlock(lenBlock_), heightBlock(heightBlock_)
+GeoArea::GeoArea(int W, int L)
 {
+    //
+    this->resize(W, L);
+}
+
+int GeoArea::getHeight(int idX, int idY) const
+{
+    return Columns[idX][idY]->getHeight();
+}
+
+void GeoArea::setHeight(int idX, int idY, int valH) const
+{
+    Columns[idX][idY]->setHeight(valH);
+}
+
+void GeoArea::resize(int W, int L)
+{
+    // Если область не очищена, то сделать это
+    if (Columns.size() != 0) clear();
+
+    // Новые размеры области
+    Width = W; Length = L;
 
     //
-    for (int i=0; i<Length; i++)
+    Columns.resize(Width);
+    for (int x=0; x<Width; x++)
     {
-        Columns.append(new QVector<GeoColumn*>);
+        Columns[x].resize(Length);
 
-        for (int j=0; j<Width; j++)
+        for (int y=0; y<Length; y++)
         {
-            Columns.last()->append(new GeoColumn(Height));
+            Columns[x][y] = new GeoColumn();
         }
     }
+}
+
+void GeoArea::clear()
+{
+    for (int x=0; x<Width; x++)
+    {
+        for (int y=0; y<Length; y++)
+        {
+            // Удаляем GeoColumn
+            delete Columns[x][y];
+        }
+
+        // Очищаем контейнер, который их хранил
+        Columns[x].clear();
+    }
+
+    Columns.clear();
 }

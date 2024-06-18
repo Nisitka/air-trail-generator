@@ -80,6 +80,14 @@ public:
 
 private:
 
+    // Ширина/Длина блоков в столбцах
+    void setLenBlock(int);
+    int getLenBlock() const;
+
+    // Высота блоков в столбцах
+    void setHeightBlock(int); // в метрах
+    int getHeightBlock() const;
+
     // mutex
      mutable  bool isLocked;
 
@@ -99,6 +107,10 @@ private:
     int Wmap, Lmap, Hmap;
     QFile* map;
     QString dirNameTmpMap;
+
+    // Размеры блоков в метрах
+    //int lenBlock;
+    //int heightBlock;
 
     // Кол-во байт в файле карты на:
     qint64 sizeBlock;   // Одну дискрету
