@@ -13,10 +13,15 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
 {
     isLocked = false;
 
+    //
     GeoColumn::setCountUnit(200);
 
+    // Размеры дискретпространства
+    lenghtUnit = 20;
+    heightUnit = 20;
+
     //
-    actionArea = new Map;
+    actionArea = new GeoArea(wArea, lArea); //Map;
 
     //
     map = nullptr;
@@ -26,9 +31,9 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     // Сразу узнаем размер дискреты в байт
     QByteArray data;
     QDataStream ds(&data, QIODevice::ReadWrite);
-    geoBlock b;
-    ds << b;
-    sizeBlock = data.size();
+    GeoColumn column;
+    ds << column;
+    sizeColumn = data.size();
 
     //
     data.clear();
@@ -39,12 +44,14 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
 
 int geoGenerator::lenghtBlock() const
 {
-    return actionArea->getLenBlock();
+    //return actionArea->getLenBlock();
+    return lenghtUnit;
 }
 
 int geoGenerator::heightBlock() const
 {
-    return actionArea->getHeightBlock();
+    //return actionArea->getHeightBlock();
+    return heightUnit;
 }
 
 void geoGenerator::toZD(const QVector3D &posBlock) const
@@ -53,18 +60,14 @@ void geoGenerator::toZD(const QVector3D &posBlock) const
     int idY = posBlock.y();
     int idH = posBlock.z();
 
-    int id = idBlock(idX, idY, idH);
+    //
     if (inActionArea(idX, idY))
     {
-        geoBlock* b = actionArea->getBlock(idX-idXo, idY-idYo, idH);
-        b->toZD();
-        updateBlock(id, *b);
+        actionArea->getColumn(idX, idY)->toZD(idH);
     }
     else
     {
-        geoBlock b; // = readBlock(id);
-        b.toZD();
-        updateBlock(id, b);
+        /* Изменяется соответствующая ячейка данных */
     }
 }
 
@@ -74,18 +77,14 @@ void geoGenerator::clearZD(const QVector3D &posBlock) const
     int idY = posBlock.y();
     int idH = posBlock.z();
 
-    int id = idBlock(idX, idY, idH);
+    //
     if (inActionArea(idX, idY))
     {
-        geoBlock* b = actionArea->getBlock(idX-idXo, idY-idYo, idH);
-        b->removeZD();
-        updateBlock(id, *b);
+        actionArea->getColumn(idX, idY)->removeZD(idH);
     }
     else
     {
-        geoBlock b;// = readBlock(id);
-        b.removeZD();
-        updateBlock(id, b);
+        /* Изменяется соответствующая ячейка данных */
     }
 }
 
@@ -97,19 +96,6 @@ bool geoGenerator::inActionArea(int idX, int idY) const
     return true;
 }
 
-const geoBlock& geoGenerator::block(int idX, int idY, int idH) const
-{
-    if (inActionArea(idX, idY))
-    {
-        return *actionArea->getBlock(idX-idXo, idY-idYo, idH);
-    }
-    else
-    {
-        cacheBlock = readBlock(idBlock(idX, idY, idH));
-        return cacheBlock;
-    }
-}
-
 void geoGenerator::initMap(int W, int L, int H)
 {
     buildStart();
@@ -117,31 +103,31 @@ void geoGenerator::initMap(int W, int L, int H)
     delete map;
     QFile::remove(dirNameTmpMap);
     Wmap = W; Lmap = L; Hmap = H;
-    int countBlocks = Wmap * Lmap * Hmap;
+    int countColumns = Wmap * Lmap;
 
     //
-    actionArea->build(wArea, lArea, Hmap);
+    //actionArea->build(wArea, lArea, Hmap);
+    actionArea->resize(wArea, lArea);
 
+    //
     map = new QFile(dirNameTmpMap);
-    //
-    geoBlock block;
 
     // Кол-во сегметов данных
-    int curBlocks = countBlocks;
+    int curColumns = countColumns;
     int v = 20000;
     QVector <int> parts;
-    while (curBlocks > 0)
+    while (curColumns > 0)
     {
-        if (curBlocks - v > 0)
+        if (curColumns - v > 0)
         {
             parts.append(v);
         }
         else
         {
-            parts.append(curBlocks);
+            parts.append(curColumns);
         }
 
-            curBlocks -= v;
+            curColumns -= v;
         }
 
     map->open(QIODevice::ReadWrite);
@@ -156,6 +142,7 @@ void geoGenerator::initMap(int W, int L, int H)
 
     // Записываем дискреты
     int countParts = parts.size();
+    GeoColumn column; //
     for (int nP=0; nP<countParts; nP++)
     {
         QByteArray data;
@@ -163,7 +150,7 @@ void geoGenerator::initMap(int W, int L, int H)
 
         for (int i=0; i<parts[nP]; i++)
         {
-                ds << block;
+                ds << column;
         }
         map->write(data);
     }
@@ -191,7 +178,9 @@ void geoGenerator::openMap(const QString &dirMapFile)
     //qDebug() << Wmap << Lmap << Hmap;
 
     //
-    actionArea->build(wArea, lArea, Hmap);
+    GeoColumn::setCountUnit(Hmap);
+    actionArea->resize(wArea, lArea);
+    //actionArea->build(wArea, lArea, Hmap);
 
     buildFinish(Wmap, Lmap, Hmap);
 }
@@ -206,85 +195,82 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
     lastX = idXo + wArea;
     lastY = idYo + lArea;
 
-    //
-    actionArea->clear();
+    /// !!!!!!!!!!!
+    //actionArea->clear();
 
     QDataStream inData(map);
-    geoBlock b;
-    for(int h=0; h<Hmap; h++)
-    {
-        for(int x=0; x<wArea; x++)
-        {
-            map->seek(sizeOptData + (idBlock(idXo+x, idYo, h)*sizeBlock)); //
-            for (int y=0; y<lArea; y++)
-            {
-                inData >> b;
-                actionArea->getBlock(x,y,h)->setValues(b);
-            }
-        }
-    }
+//    for(int h=0; h<Hmap; h++)
+//    {
+//        for(int x=0; x<wArea; x++)
+//        {
+//            map->seek(sizeOptData + (idBlock(idXo+x, idYo, h)*sizeBlock)); //
+//            for (int y=0; y<lArea; y++)
+//            {
+//                inData >> b;
+//                actionArea->getBlock(x,y,h)->setValues(b);
+//            }
+//        }
+//    }
 
     //qDebug() << "setPosArea!";
 }
 
-int geoGenerator::idBlock(int idX, int idY, int idH) const
+int geoGenerator::idColumn(int idX, int idY) const
 {
-    return Wmap*Lmap*idH + Lmap*idX + idY;
+    return Lmap*idX + idY;
 }
 
-void geoGenerator::updateBlock(int idBlock, const geoBlock& b) const
-{
-    QByteArray data;
-    QDataStream ds(&data, QIODevice::WriteOnly);
-    ds << b;
+//void geoGenerator::updateBlock(int idColumn, const geoBlock& b) const
+//{
+//    QByteArray data;
+//    QDataStream ds(&data, QIODevice::WriteOnly);
+//    ds << b;
 
-    map->seek(sizeOptData + (sizeBlock * idBlock));
-    map->write(data, sizeBlock);
+//    map->seek(sizeOptData + (sizeColumn * idColumn));
+//    map->write(data, sizeColumn);
 
-    data.clear();
-}
+//    data.clear();
+//}
 
-geoBlock geoGenerator::readBlock(int idBlock) const
-{
-    map->seek(sizeOptData + (sizeBlock * idBlock));
-    QDataStream inData(map->read(sizeBlock));
+//geoBlock geoGenerator::readBlock(int idColumn) const
+//{
+//    map->seek(sizeOptData + (sizeColumn * idColumn));
+//    QDataStream inData(map->read(sizeColumn));
 
-    geoBlock b;
-    inData >> b;
+//    geoBlock b;
+//    inData >> b;
 
-    return b;
-}
+//    return b;
+//}
 
-int geoGenerator::absolute(int idX, int idY, Map::units units) const
+int geoGenerator::absolute(int idX, int idY, Coords::units units) const
 {
     int h = -1;
 
+    h = actionArea->getHeight(idX-idXo, idY-idYo);
     switch (units) {
-    case Map::m:
-        h = actionArea->getHeight(idX-idXo, idY-idYo, units);
-
+    case Coords::m:
+        h *= heightUnit;
         break;
-    case Map::id:
-        h = actionArea->getHeight(idX-idXo, idY-idYo, units);
-
+    case Coords::id:
+        /* ... */
         break;
     }
 
     return h;
 }
 
-int geoGenerator::max(Map::units u) const
+int geoGenerator::max(Coords::units u) const
 {
     int h = -1;
 
+    h = Hmap;
     switch (u) {
-    case Map::m:
-        h = actionArea->getMaxH();
-
+    case Coords::m:
+        h *= heightUnit;
         break;
-    case Map::id:
-        h = actionArea->getCountLayers();
-
+    case Coords::id:
+        /* ... */
         break;
     }
 
@@ -295,7 +281,7 @@ int geoGenerator::countVertZD(int idX, int idY) const
 {
     if (inActionArea(idX, idY))
     {
-        return actionArea->countZD(idX-idXo, idY-idYo);
+        return actionArea->getColumn(idX-idXo, idY-idYo)->countUnitZD();
     }
     else
     {
@@ -304,13 +290,25 @@ int geoGenerator::countVertZD(int idX, int idY) const
 
 }
 
+bool geoGenerator::isZD(int idX, int idY, int idH) const
+{
+    if (inActionArea(idX, idY))
+    {
+        return actionArea->getColumn(idX-idXo, idY-idYo)->isZD(idH);
+    }
+    else
+    {
+        return 0; /// <-- Заглушка
+    }
+}
+
 Coords geoGenerator::getCoords(int idX, int idY) const
 {
     int X = idX;
     int Y = idY;
-    int H = actionArea->getHeight(idX-idXo, idY-idYo, Map::id);
+    int H = actionArea->getHeight(idX-idXo, idY-idYo);
 
-    return Coords(X, Y, H, actionArea->getLenBlock());
+    return Coords(X, Y, H, lenghtUnit);
 }
 
 void geoGenerator::loadTerrain(const QString& dirNameFile)
@@ -326,7 +324,8 @@ void geoGenerator::loadTerrain(const QString& dirNameFile)
     int Hmap = 256;
 
     // Размер активной зоны
-    actionArea->resize(wArea, lArea, Hmap);
+    GeoColumn::setCountUnit(Hmap);
+    actionArea->resize(wArea, lArea);
 
     int h;
     QColor color;
@@ -390,34 +389,27 @@ void geoGenerator::dropEarth(int idX, int idY, int countLayer)
 
     int maxH = Hmap-1;
 
-    int idLast = idHo + countLayer;
-    if (idLast > maxH) idLast = maxH;
-    geoBlock* block;
-    for (int idH = idHo; idH <= idLast; idH++)
-    {
-        block = actionArea->getBlock(idX, idY, idH);
-        block->toEarth();
+    int height = idHo + countLayer;
+    if (height > maxH) height = maxH;
+    actionArea->getColumn(idX, idY)->setHeight(height);
 
-        // Сразу обновляем его значения в файле-карте
-        updateBlock(idBlock(idXo+idX, idYo+idY, idH), *block);
-    }
+    /// !!!!!
+    // Сразу обновляем его значения в файле-карте
+
 }
 
 void geoGenerator::removeEarth(int idX, int idY, int countLayer)
 {
     int idHo = actionArea->getHeight(idX, idY);
 
-    int idLast = idHo - countLayer;
-    if (idLast < 0) idLast = 0;
-    geoBlock* block;
-    for (int idH = idHo; idH > idLast; idH--)
-    {
-        block = actionArea->getBlock(idX, idY, idH);
-        block->remove();
+    int height = idHo - countLayer;
+    if (height < 0) height = 0;
+    actionArea->getColumn(idX, idY)->setHeight(height);
 
-        // Сразу обновляем его значения в файле-карте
-        updateBlock(idBlock(idXo+idX, idYo+idY, idH), *block);
-    }
+    /// !!!!!
+    // Сразу обновляем его значения в файле-карте
+
+
 }
 
 void geoGenerator::updateHeights(int idX, int idY, int W, int L)
@@ -429,12 +421,8 @@ void geoGenerator::updateHeights(int idX, int idY, int W, int L)
     {
         for (int Y=idY; Y<=idLastY; Y++)
         {
-            //
-            for (int H=0; H<Hmap; H++)
-            {
-                updateBlock(idBlock(X, Y, H),
-                            *actionArea->getBlock(X-idXo,Y-idYo,H));
-            }
+            // Присваеваем каждому(ой) столбцу(дискрете) новую высоту
+
         }
     }
 }
@@ -443,149 +431,10 @@ void geoGenerator::buildFlatMap(int W, int L, int H)
 {
     buildStart();
 
-    actionArea->resize(W, L, H);
+    GeoColumn::setCountUnit(H);
+    actionArea->resize(W, L);
 
     buildFinish(W, L, H);
-}
-
-void geoGenerator::buildRandomMap(double setBlockP, int countEpochs,
-                                  int W, int L, int H,
-                                  double lenBlock)
-{
-    buildStart();
-
-    // устанавливаем длину ребра блока
-    actionArea->setLenBlock(lenBlock);
-
-    // берем актуальный размер карты
-    int Wmap;
-    int Lmap;
-    int Hmap;
-    actionArea->getSize(Wmap, Lmap, Hmap);
-
-    // если размеры необходимо изменить
-    if (Wmap != W || Lmap != L || Hmap != H)
-    {
-        // прежде чем генерировать рельеф, создадим карту
-        actionArea->resize(W, L, H);
-        actionArea->getSize(Wmap, Lmap, Hmap);
-    }
-    else
-    {
-        // иначе только очищаем карту с предыдущего раза
-        actionArea->clear();
-    }
-
-    int countLayers = H;
-    int countBlockLayer = W * L;
-
-    int epochs = countEpochs;
-
-    // начинаем с 1-го слоя (0-й всегда заполнен)
-    for (int h=1; h<countLayers; h++)
-    {
-        //
-        for (int i=0; i<countBlockLayer; i++)
-        {
-            // выбираем случайный блок
-            int x = 1 + rand()%(W-2);
-            int y = 1 + rand()%(L-2);
-
-            // если снизу есть блок то с опр. вер-ю ставим блок
-            if (actionArea->getBlock(x, y, h - 1)->isEarth() && P(setBlockP))
-            {
-                actionArea->getBlock(x, y, h)->toEarth();
-            }
-        }
-
-        // выполняем все правила каждую эпоху
-        for (int j=0; j<epochs + h/3; j++)
-        {
-            // для случанйых живых клеток
-            for (int k=0; k<countBlockLayer; k++)
-            {
-                // выбираем случайный блок
-                int x = 1 + rand()%(W-2);
-                int y = 1 + rand()%(L-2);
-
-                // если блок существует, то выполняем следующие правила:
-                if (actionArea->getBlock(x, y, h)->isEarth())
-                {
-                    // 1)
-                    if (sumEarth(x, y, h) >= 3) builtRandBlock(x, y, h);
-                    else actionArea->getBlock(x, y, h)->toVoid();
-
-                    // 2)
-                    ///if (sumLive(x, y, h) <= 2) map->getBlock(x, y, h)->toVoid();
-                }
-            }
-        }
-
-        changedProcessBuild(100 * ((double) h / countBlockLayer));
-    }
-
-    buildFinish(Wmap, Lmap, Hmap);
-}
-
-int geoGenerator::sumEarth(int x, int y, int z)
-{
-    int count = 0;
-    if (actionArea->getBlock(x + 1, y    , z)->isEarth()) count++;
-    if (actionArea->getBlock(x - 1, y    , z)->isEarth()) count++;
-    if (actionArea->getBlock(x    , y + 1, z)->isEarth()) count++;
-    if (actionArea->getBlock(x    , y + 1, z)->isEarth()) count++;
-
-    if (actionArea->getBlock(x + 1, y + 1, z)->isEarth()) count++;
-    if (actionArea->getBlock(x + 1, y - 1, z)->isEarth()) count++;
-    if (actionArea->getBlock(x - 1, y + 1, z)->isEarth()) count++;
-    if (actionArea->getBlock(x - 1, y - 1, z)->isEarth()) count++;
-
-    return count;
-}
-
-void geoGenerator::removeRandBlock(int x, int y, int z) // координаты относительно которого удаляем
-{
-    switch (rand()%4)
-    {
-        case 0:
-            actionArea->getBlock(x + 1, y, z)->toVoid();
-            break;
-        case 1:
-            actionArea->getBlock(x - 1, y, z)->toVoid();
-            break;
-        case 2:
-            actionArea->getBlock(x, y + 1, z)->toVoid();
-            break;
-        case 3:
-            actionArea->getBlock(x, y - 1, z)->toVoid();
-            break;
-    }
-}
-
-void geoGenerator::builtRandBlock(int x, int y, int z)
-{
-    if (P(0.850))
-    {
-        switch (rand()%4)
-        {
-            case 0:
-                if(actionArea->getBlock(x + 1, y, z - 1)->isEarth())
-                    actionArea->getBlock(x + 1, y, z)->toEarth();
-                break;
-            case 1:
-                if(actionArea->getBlock(x - 1, y, z - 1)->isEarth())
-                    actionArea->getBlock(x - 1, y, z)->toEarth();
-                break;
-            case 2:
-                if(actionArea->getBlock(x, y + 1, z-1)->isEarth())
-                    actionArea->getBlock(x, y + 1, z)->toEarth();
-                break;
-            case 3:
-                if(actionArea->getBlock(x, y - 1, z - 1)->isEarth())
-                    actionArea->getBlock(x, y - 1, z)->toEarth();
-                break;
-        }
-    }
 }
 
 bool geoGenerator::P(double p)

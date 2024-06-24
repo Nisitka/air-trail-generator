@@ -26,6 +26,11 @@ GIS::GIS()
     idXpos = 0; idYpos = 0;
 }
 
+RZInformer* GIS::getRZInformer() const
+{
+    return geoBuilder;
+}
+
 void GIS::setMapSize(int W, int L, int H)
 {
     Wmap = W;
@@ -43,11 +48,6 @@ RZCreator* GIS::getRZCreator() const
     return geoBuilder;
 }
 
-BlockInformer* GIS::getBlockInfomer() const
-{
-    return geoBuilder;
-}
-
 GISInformer* GIS::Informer() /* const */
 {
     return this;
@@ -59,7 +59,7 @@ void GIS::getIdActionArea(int &idXo, int &idYo) const
     idYo = idYpos;
 }
 
-int GIS::getH(int idX, int idY, Map::units u) const
+int GIS::getH(int idX, int idY, Coords::units u) const
 {
     return geoBuilder->absolute(idX, idY, u);
 }

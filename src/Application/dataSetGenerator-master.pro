@@ -52,9 +52,7 @@ SOURCES += main.cpp\
     GUI/drawArea/mapareamainwindow.cpp \
     GUI/drawArea/scrollmapwidget.cpp \
     GUI/multiplewindow.cpp \
-    backend/GIS/geoblock.cpp \
     backend/GIS/geogenerator.cpp \
-    backend/GIS/map.cpp \
     backend/GIS/paintermapimage.cpp \
     backend/GIS/gis.cpp \
     GUI/processtmpwidget.cpp \
@@ -131,9 +129,7 @@ HEADERS  += \
     GUI/drawArea/mapareamainwindow.h \
     GUI/drawArea/scrollmapwidget.h \
     GUI/multiplewindow.h \
-    backend/GIS/geoblock.h \
     backend/GIS/geogenerator.h \
-    backend/GIS/map.h \
     backend/GIS/paintermapimage.h \
     backend/GIS/gis.h \
     GUI/processtmpwidget.h \
@@ -144,7 +140,6 @@ HEADERS  += \
     backend/GIS/mapdata.h \
     backend/GIS/rzinformer.h \
     backend/tracerlight.h \
-    backend/GIS/blockinformer.h \
     backend/GIS/rzcreator.h \
     GUI/drawArea/Tools/drawareatool.h \
     GUI/drawArea/Tools/tooldefault.h \

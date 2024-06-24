@@ -8,7 +8,8 @@
 
 #include "../ray.h"
 #include "trail.h"
-#include "../gis/map.h"
+
+#include "../tracerlight.h"
 
 // генерирует скртный маршрут
 class builderTrailDrones : public QObject
@@ -41,7 +42,7 @@ public slots:
     void setRpredict(int countDiscretes);
 
 public:
-    builderTrailDrones(Map* map);
+    builderTrailDrones(TracerLight* tracer);
 
     // Типы точек траектории
     enum typePoint{mainP, midP}; // опорные, промежуточные
@@ -89,7 +90,7 @@ private:
     // Длина лучей
     double longRay;
     //
-    Map* map;
+    TracerLight* Tracer;
 };
 
 #endif // BUILDERTRAILDRONES_H

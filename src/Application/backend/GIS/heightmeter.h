@@ -1,7 +1,7 @@
 #ifndef HEIGHTMETER_H
 #define HEIGHTMETER_H
 
-#include "map.h"
+#include "coords.h"
 
 class HeightMeter
 {
@@ -10,10 +10,10 @@ public:
 
     // Обсолютная высота
     virtual int absolute(int idX, int idY,
-                         Map::units u = Map::m) const = 0;
+                         Coords::units u = Coords::m) const = 0;
 
     // Максимально возможная высота
-    virtual int max(Map::units u = Map::m) const = 0;
+    virtual int max(Coords::units u = Coords::m) const = 0;
 
 
     virtual int lenghtBlock() const = 0;

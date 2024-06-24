@@ -32,7 +32,7 @@ public:
 
     //
     bool isZD(int idH) const;
-    int countUnitZD() const;
+    int  countUnitZD() const;
 
 private:
 

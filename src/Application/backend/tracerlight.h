@@ -4,13 +4,15 @@
 #include <QVector3D>
 
 #include "ray.h"
-#include "./GIS/blockinformer.h"
+
+#include "./GIS/heightmeter.h"
+#include "./GIS/rzinformer.h"
 
 // Пускает лучи по карте
 class TracerLight
 {
 public:
-    TracerLight(BlockInformer* blocks);
+    TracerLight(HeightMeter* height, RZInformer* radioZone);
 
     // Испустить луч
     void emitRay(Ray* ray,             // Какой луч
@@ -20,7 +22,10 @@ public:
 private:
 
     //
-    BlockInformer* blocks;
+    HeightMeter* Height;
+
+    //
+    RZInformer* radioZone;
 };
 
 #endif // TRACERLIGHT_H

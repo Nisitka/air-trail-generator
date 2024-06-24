@@ -2,7 +2,7 @@
 
 int GeoColumn::maxHeight;
 
-GeoColumn::GeoColumn(): height(0){ /* ... */}
+GeoColumn::GeoColumn(): height(0){ isUnitZD = new bool[maxHeight]; }
 
 QDataStream &operator<<(QDataStream &out, const GeoColumn &c)
 {

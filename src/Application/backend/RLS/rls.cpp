@@ -1,5 +1,4 @@
 #include "rls.h"
-#include "../gis/geoblock.h"
 
 #include <cmath>
 
@@ -28,7 +27,7 @@ void RLS::setPosition(int idX, int idY)
     pos.setY(idY);
 
     // Cразу считаем высоту, для этой позиции
-    pos.setZ(Height->absolute(idX, idY, Map::id));
+    pos.setZ(Height->absolute(idX, idY, Coords::id));
 }
 
 void RLS::setPosition(const QPoint &p)
@@ -40,7 +39,7 @@ void RLS::setPosition(const QPoint &p)
     pos.setY(idY);
 
     // Cразу считаем высоту, для этой позиции
-    pos.setZ(Height->absolute(idX, idY, Map::id));
+    pos.setZ(Height->absolute(idX, idY, Coords::id));
 }
 
 int RLS::getCountHorVectors() const
@@ -132,7 +131,7 @@ void RLS::emitSignal()
     //
     int xRLS = pos.x();
     int yRLS = pos.y();
-    QVector3D posRLS(xRLS, yRLS, Height->absolute(xRLS, yRLS, Map::id)+1);
+    QVector3D posRLS(xRLS, yRLS, Height->absolute(xRLS, yRLS, Coords::id)+1);
 
     // Дискрета РЛС по умолчанию в ЗО
     blocksZD.clear();

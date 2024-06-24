@@ -30,13 +30,15 @@ void Core::init_allObj()
 
     readyRunProgress(36, "Загрузка менеджера РЛС...");
 
-    // Испускатель лучей
-    BlockInformer* blockInformer = gis->getBlockInfomer();
-    RayTracer = new TracerLight(blockInformer);
-
     //
+    RZInformer*  RZInfo    = gis->getRZInformer();
     RZCreator*   RZEditor  = gis->getRZCreator();
     HeightMeter* HeightMap = gis->getHeightMeter();
+
+
+    // Испускатель лучей
+    RayTracer = new TracerLight(HeightMap,
+                                RZInfo);
 
     // Инициализация менеджера РЛС
     mRLS = new managerRLS(RayTracer, RZEditor, HeightMap);
@@ -48,8 +50,8 @@ void Core::init_allObj()
     objects.append(mRLS);
     readyRunProgress(46, "Загрузка строителя маршрутов...");
 
-    /// !!!!!!!!
-    trailBuilder = new builderTrailDrones(new Map); /// <-- Заглушка
+    //
+    trailBuilder = new builderTrailDrones(RayTracer); //
     objects.append(trailBuilder);
     readyRunProgress(54, "Инициализация интерфейса...");
 

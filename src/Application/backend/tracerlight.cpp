@@ -1,7 +1,7 @@
 #include "tracerlight.h"
 
-TracerLight::TracerLight(BlockInformer* blocks):
-    blocks(blocks)
+TracerLight::TracerLight(HeightMeter* height, RZInformer* rZone):
+    Height(height), radioZone(rZone)
 {
 
 }
@@ -29,11 +29,8 @@ void TracerLight::emitRay(Ray *ray, const QVector3D &pos, QVector <QVector3D>& i
         idY = curY + l[Ray::Y];
         idH = curZ + l[Ray::Z];
 
-        // Дискрета, в которой пролетает луч
-        const geoBlock& block = blocks->block(idX, idY, idH);
-
-        // Если блок на пути, является землей, то
-        if (block.isEarth())
+        // Если столбец этой дискреты выше луча, то
+        if (Height->absolute(idX, idY) >= idH)
         {
             // луч столкнулся с рельефом
             return;
@@ -41,7 +38,7 @@ void TracerLight::emitRay(Ray *ray, const QVector3D &pos, QVector <QVector3D>& i
         else
         {
             // Если он еще не в ЗО
-            if (!block.isZD())
+            if (!radioZone->isZD(idX, idY, idH))
                 idBlocks.append(QVector3D(idX, idY, idH));
         }
     }

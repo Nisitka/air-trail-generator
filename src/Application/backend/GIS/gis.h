@@ -6,7 +6,6 @@
 #include <QImage>
 #include <QVector>
 
-#include "map.h"
 #include "paintermapimage.h"
 #include "geogenerator.h"
 
@@ -65,13 +64,13 @@ public:
     RZCreator* getRZCreator() const;
 
     //
-    BlockInformer* getBlockInfomer() const;
+    RZInformer* getRZInformer() const;
 
     // Получить интерфейс
     GISInformer* Informer() /* const */;
 
     // Методы-интерфейс по работе с ГИС:
-    int getH(int idX, int idY, Map::units = Map::m) const override final;
+    int getH(int idX, int idY, Coords::units = Coords::m) const override final;
     Coords getCoords(int idX, int idY) const override final;
     const QImage& getGeoImage() const override final;
     void getIdActionArea(int& idXo, int& idYo) const override final;

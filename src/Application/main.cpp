@@ -11,7 +11,6 @@ int main(int argc, char *argv[])
     QApplication::setAttribute(Qt::AA_ForceRasterWidgets, false);
 
     //
-    qRegisterMetaTypeStreamOperators<geoBlock>("geoBlock");
     qRegisterMetaTypeStreamOperators<GeoColumn>("GeoColumn");
     qRegisterMetaTypeStreamOperators<MapData>("MapData");
 

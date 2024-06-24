@@ -4,7 +4,6 @@
 #include <QPushButton>
 #include <QVector3D>
 
-#include "backend/gis/map.h"
 #include "mapopenglwidget.h"
 
 #include "GUI/designer.h"
@@ -53,7 +52,6 @@ private:
     processTmpWidget* loadingLabel;
 
     //
-    Map* map;
     mapOpenGLWidget* visMap;
 
     Ui::map3DVisWindow *ui;

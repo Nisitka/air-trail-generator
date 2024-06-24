@@ -5,11 +5,16 @@
 
 #include "./geocolumn.h"
 
+class GeoColumn;
+
 // Область гео-пространства (совокупность дискрет-столбцов)
 class GeoArea
 {
 public:
     GeoArea(int Width, int Length);
+
+    //
+    GeoColumn* getColumn(int idX, int idY);
 
     // Высота в координатах X, Y
     int getHeight(int idX, int idY) const;

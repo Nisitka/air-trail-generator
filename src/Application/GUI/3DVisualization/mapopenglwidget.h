@@ -12,8 +12,6 @@
 #include <QVector3D>
 #include <QMap>
 
-#include "backend/gis/map.h"
-
 class mapOpenGLWidget: public QOpenGLWidget
 {
     Q_OBJECT
@@ -125,7 +123,6 @@ private:
 //    float R;
 //    float kSCALE = 1.2;
 
-    Map* map;
 //    int Hmap;
 
 //    //

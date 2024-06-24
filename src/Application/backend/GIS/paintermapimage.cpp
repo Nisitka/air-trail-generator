@@ -34,7 +34,7 @@ QImage* painterMapImage::getImage()
 
 void painterMapImage::updateFull()
 {
-    Hmap = Height->max(Map::id);
+    Hmap = Height->max(Coords::id);
     dHeight = Hmap / colors.size();
 
     run();
@@ -86,7 +86,7 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
         {
             // Вычисляется цвет по данным
             cZD = RZ->countVertZD(X, Y);
-            color = colorHeight(Height->absolute(X, Y, Map::id));
+            color = colorHeight(Height->absolute(X, Y, Coords::id));
             r = color.red();
             g = color.green();
             k = 1 - ((double)cZD / 50);

@@ -3,9 +3,10 @@
 
 #include <QObject>
 
+#include <QFile>
+
 #include "heightmeter.h"
 #include "rzinformer.h"
-#include "blockinformer.h"
 
 #include "geocolumn.h"
 
@@ -14,9 +15,12 @@
 #include "coords.h"
 #include "mapdata.h"
 
+#include "geoarea.h"
+
+class GeoArea;
+
 class geoGenerator: public QObject,
-        public HeightMeter, public RZInformer, public BlockInformer,
-        public RZCreator
+        public HeightMeter, public RZInformer, public RZCreator
 {
     Q_OBJECT
 signals:
@@ -33,25 +37,18 @@ public:
     void toZD(const QVector3D &idBlock) const override final;
     void clearZD(const QVector3D &idBlock) const override final;
 
-    // BlockInformer
-    const geoBlock& block(int idX, int idY, int idH) const override final;
-
     // HeightMeter
-    int absolute(int idX, int idY, Map::units u) const override final;
-    int max(Map::units u) const override final;
+    int absolute(int idX, int idY, Coords::units u) const override final;
+    int max(Coords::units u) const override final;
     int heightBlock() const override final;
     int lenghtBlock() const override final;
 
     // RZInformer
     int countVertZD(int idX, int idY) const override final;
+    bool isZD(int idX, int idY, int idH) const override final;
 
     // В индексах всей карты
     Coords getCoords(int idX, int idY) const;
-
-    // Запуск генерации рельефа
-    void buildRandomMap(double setBlockP, int countEpochs,
-                        int W, int L, int H,
-                        double lenBlock);
 
     // Создать плоский (пустой) рельеф
     void buildFlatMap(int W = 400, int L = 400, int H = 256);
@@ -101,7 +98,7 @@ private:
     void removeEarth(int idX, int idY, int countLayer);
 
     //
-    int idBlock(int idX, int idY, int idH) const;
+    int idColumn(int idX, int idY) const;
 
     //  
     int Wmap, Lmap, Hmap;
@@ -109,38 +106,24 @@ private:
     QString dirNameTmpMap;
 
     // Размеры блоков в метрах
-    //int lenBlock;
-    //int heightBlock;
+    int lenghtUnit;
+    int heightUnit;
 
     // Кол-во байт в файле карты на:
-    qint64 sizeBlock;   // Одну дискрету
+    qint64 sizeColumn;  // Одну дискрету
     qint64 sizeOptData; // Другие данные
 
     //
     MapData mapData;
 
-    // Заменить блок
-    void updateBlock(int idBlock, const geoBlock& b) const;
-
-    //
-    geoBlock readBlock(int idBlock) const;
-
-    //
-    mutable geoBlock cacheBlock;
-
     // Активная зона
-    Map* actionArea;
+    GeoArea* actionArea;
     int idXo;  // Угол
     int idYo;
     int wArea; // Размеры
     int lArea;
     int lastX;
     int lastY;
-
-    // Действия с блоками около указанного
-    int  sumEarth(int x, int y, int z); // кол-во с землей
-    void builtRandBlock(int x, int y, int z);  // сделать землей случ-й блок
-    void removeRandBlock(int x, int y, int z); // удалить случ-й блок
 
     // Вернуть значение true c указанной вероятностью
     bool P(double p = 0.5);

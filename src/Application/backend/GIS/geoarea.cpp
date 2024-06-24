@@ -37,6 +37,11 @@ void GeoArea::resize(int W, int L)
     }
 }
 
+GeoColumn* GeoArea::getColumn(int idX, int idY)
+{
+    return Columns[idX][idY];
+}
+
 void GeoArea::clear()
 {
     for (int x=0; x<Width; x++)

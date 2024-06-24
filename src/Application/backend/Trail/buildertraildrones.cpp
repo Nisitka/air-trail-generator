@@ -6,7 +6,7 @@
 #include <cmath>
 #include "../ray.h"
 
-builderTrailDrones::builderTrailDrones(Map* map): map(map)
+builderTrailDrones::builderTrailDrones(TracerLight* tracer): Tracer(tracer)
 { 
     countHorPart = 360;
     countVerRay  = 180;
@@ -20,7 +20,8 @@ builderTrailDrones::builderTrailDrones(Map* map): map(map)
 
 void builderTrailDrones::setRpredict(int countDiscretes)
 {
-    longRay = (double)countDiscretes * map->getLenBlock();
+    /// !!!!!
+    longRay = (double)countDiscretes * 20.0; ///map->getLenBlock();
 
     isEditOptPred = true;
 }
@@ -52,38 +53,6 @@ void builderTrailDrones::startPredictTrail(int idXa, int idYa, int idXb, int idY
     if (isEditOptPred)
         setOptPredict();
 
-    Wmap = map->getWidth();
-    Lmap = map->getLength();
-    Hmap = map->getCountLayers();
-
-    //
-    delete trail;
-    trail = new Trail;
-
-    Xb = idXb;
-    Yb = idYb;
-
-    curX = idXa;
-    curY = idYa;
-    curZ = map->getHeight(curX, curY) + 1;
-    trail->addPoint(curX, curY, curZ);
-    nextPointTrail(curX, curY, curZ);
-
-    //double l = map->getLenBlock();
-
-    while (getDistance(curX, curY, idXb, idYb) > 10) {
-        predictFromRect(curX, curY, curZ, Xb, Yb, -1, curX, curY, curZ);
-        trail->addPoint(curX, curY, curZ);
-
-        nextPointTrail(curX, curY, curZ);
-    }
-
-    // Последняя точка всегда точка задачи
-    curX = Xb;
-    curY = Yb;
-    curZ = map->getHeight(Xb, Yb);
-    trail->addPoint(curX, curY, curZ);
-    nextPointTrail(curX, curY, curZ);
 }
 
 void builderTrailDrones::predictFromRect(int  idXa,   int idYa,    int idZa,
@@ -97,91 +66,6 @@ void builderTrailDrones::predictFromRect(int  idXa,   int idYa,    int idZa,
 
     // Лучшее оставшееся расстояние до финиша
     double minD = getDistance(Xp, Yp, idXb, idYb);
-
-    // По вертикальным сегментам
-    double D;
-    for (int i=0; i<countHorPart; i++)
-    {
-        for (int j=0; j<countVerRay; j++)
-        {
-            QVector <int*> way = ZD[i]->at(j)->getWay();
-            int idX;
-            int idY;
-            int idH;
-
-            // Полет луча
-            int countDelta = way.size(); // кол-во дискрет одного луча
-            int k=1;
-            for (; k<countDelta; k++)
-            {   // в пути луча содержатся относительные индексы
-                int* l = way[k];
-
-                idX = curX + l[Ray::X];
-                idY = curY + l[Ray::Y];
-                idH = curZ + l[Ray::Z];
-
-                // если луч вышел за карту
-                if (idY >= Lmap) {
-
-                    break;
-                }
-                if (idY < 0) {
-
-                    break;
-                }
-
-                if (idX >= Wmap) {
-
-                    break;
-                }
-                if (idX < 0) {
-
-                    break;
-                }
-
-                if (idH >= Hmap) {
-
-                    break;
-                }
-                if (idH < 0) {
-
-                    break;
-                }
-
-                // блок, в котором пролетает луч
-                geoBlock* block = map->getBlock(idX, idY, idH);
-
-                // Если блок на пути, является землей, то
-                if (block->isEarth())
-                {
-                    // луч столкнулся с рельефом
-
-                    break;
-                }
-                else
-                {   // если блок в ЗО
-                    if (block->isZD())
-                    {
-                        break;
-                    }
-                }
-            }
-
-            // Если луч прогноза дошел до конца
-            if (k == countDelta)
-            {
-                D = getDistance(idX, idY, Xb, Yb);
-                //
-                if (D < minD)
-                {
-                    minD = D;
-                    Xp = idX;
-                    Yp = idY;
-                    Zp = idH;
-                }
-            }
-        }
-    }
 
     idXres = Xp;
     idYres = Yp;
