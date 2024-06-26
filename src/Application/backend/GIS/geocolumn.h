@@ -20,6 +20,7 @@ public:
 
     friend QDataStream & operator<< (QDataStream& stream, const GeoColumn& c);
     friend QDataStream & operator>> (QDataStream& stream, GeoColumn& c);
+    friend QDataStream & operator>> (QDataStream& stream, GeoColumn* c);
 
     // Работа с высотой дискреты
     void setHeight(int height);

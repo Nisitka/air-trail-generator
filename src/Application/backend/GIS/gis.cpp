@@ -2,8 +2,12 @@
 
 #include <QDebug>
 
-GIS::GIS()
+GIS::GIS():
+    // По умолчанию находимся в левом верхнем углу
+    idXpos(0), idYpos(0)
 {
+
+
     // Отвечает за работу с рельефом карты
     geoBuilder = new geoGenerator(currentW, currentH);
     connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
@@ -18,12 +22,11 @@ GIS::GIS()
     backPainter = new painterMapImage(heigtMeter, RZ, currentW, currentH);
     connect(geoBuilder,  SIGNAL(buildFinish(int,int,int)),
             backPainter, SLOT(run()));
+    connect(geoBuilder,  SIGNAL(buildFinish(int,int,int)),
+            this,        SLOT(initActionArea()));
 
     /// !!!!!!
-    //geoBuilder->initMap(1000, 1000, 256);
-
-    // По умолчанию находимся в левом верхнем углу
-    idXpos = 0; idYpos = 0;
+    geoBuilder->initMap(1000, 1000, 256);
 }
 
 RZInformer* GIS::getRZInformer() const

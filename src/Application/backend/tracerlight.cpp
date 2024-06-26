@@ -30,7 +30,7 @@ void TracerLight::emitRay(Ray *ray, const QVector3D &pos, QVector <QVector3D>& i
         idH = curZ + l[Ray::Z];
 
         // Если столбец этой дискреты выше луча, то
-        if (Height->absolute(idX, idY) >= idH)
+        if (Height->absolute(idX, idY, Coords::id) >= idH)
         {
             // луч столкнулся с рельефом
             return;

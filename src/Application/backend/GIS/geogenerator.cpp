@@ -106,8 +106,15 @@ void geoGenerator::initMap(int W, int L, int H)
     int countColumns = Wmap * Lmap;
 
     //
-    //actionArea->build(wArea, lArea, Hmap);
+    GeoColumn::setCountUnit(Hmap);
     actionArea->resize(wArea, lArea);
+
+    // Сразу узнаем размер дискреты в байт
+    QByteArray data;
+    QDataStream ds(&data, QIODevice::ReadWrite);
+    GeoColumn column;
+    ds << column;
+    sizeColumn = data.size();
 
     //
     map = new QFile(dirNameTmpMap);
@@ -142,7 +149,6 @@ void geoGenerator::initMap(int W, int L, int H)
 
     // Записываем дискреты
     int countParts = parts.size();
-    GeoColumn column; //
     for (int nP=0; nP<countParts; nP++)
     {
         QByteArray data;
@@ -150,11 +156,12 @@ void geoGenerator::initMap(int W, int L, int H)
 
         for (int i=0; i<parts[nP]; i++)
         {
-                ds << column;
+            ds << column;
         }
         map->write(data);
     }
 
+    // Сообщаем об завершении инициализации карты
     buildFinish(Wmap, Lmap, Hmap);
 }
 
@@ -187,6 +194,8 @@ void geoGenerator::openMap(const QString &dirMapFile)
 
 void geoGenerator::setPosActionArea(int idXo_, int idYo_)
 {
+    //qDebug() << "set position actions area!";
+
     //
     idXo = idXo_;
     idYo = idYo_;
@@ -195,22 +204,16 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
     lastX = idXo + wArea;
     lastY = idYo + lArea;
 
-    /// !!!!!!!!!!!
-    //actionArea->clear();
-
+    //
     QDataStream inData(map);
-//    for(int h=0; h<Hmap; h++)
-//    {
-//        for(int x=0; x<wArea; x++)
-//        {
-//            map->seek(sizeOptData + (idBlock(idXo+x, idYo, h)*sizeBlock)); //
-//            for (int y=0; y<lArea; y++)
-//            {
-//                inData >> b;
-//                actionArea->getBlock(x,y,h)->setValues(b);
-//            }
-//        }
-//    }
+    for (int x=0; x<wArea; x++)
+    {
+        map->seek(sizeOptData + (idColumn(idXo+x, idYo)*sizeColumn));
+        for (int y=0; y<lArea; y++)
+        {
+            inData >> actionArea->getColumn(x, y);
+        }
+    }
 
     //qDebug() << "setPosArea!";
 }
@@ -416,6 +419,8 @@ void geoGenerator::updateHeights(int idX, int idY, int W, int L)
 {
     int idLastX = idX + W;
     int idLastY = idY + L;
+
+    qDebug() << "update heights!";
 
     for (int X=idX; X<=idLastX; X++)
     {

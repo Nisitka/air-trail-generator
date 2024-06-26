@@ -108,7 +108,8 @@ void Core::run()
     init_buildThreads();
     //gis->setDefaultMap();
     //gis->loadTerrain(QApplication::applicationDirPath() + "\\maps\\img2.png");
-    gis->openMap(QApplication::applicationDirPath() + "\\blocks\\test3.map");
+    /// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //gis->openMap(QApplication::applicationDirPath() + "\\blocks\\test3.map");
 
     ready();
 

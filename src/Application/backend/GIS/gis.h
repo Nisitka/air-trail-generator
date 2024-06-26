@@ -86,10 +86,10 @@ private slots:
     //
     void setMapSize(int W, int L, int H);
 
-private:
-
     //
     void initActionArea();
+
+private:
 
     // Точка, относительно которой формируется
     //  область, не требующая загрузки
