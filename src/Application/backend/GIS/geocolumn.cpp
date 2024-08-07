@@ -8,6 +8,11 @@ GeoColumn::GeoColumn(): height(0)
     removeAllZD();
 }
 
+int GeoColumn::getDataSize()
+{
+    return maxHeight + 4;
+}
+
 QDataStream &operator<<(QDataStream &out, const GeoColumn &c)
 {
     out << c.getHeight();
@@ -45,6 +50,7 @@ QDataStream &operator>>(QDataStream &in, GeoColumn* c)
 
     int count = GeoColumn::getCountUnit();
     bool zd;
+    c->removeAllZD();
     for (int i=0; i<count; i++)
     {
         in >> zd;

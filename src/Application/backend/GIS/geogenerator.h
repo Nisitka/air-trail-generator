@@ -77,6 +77,17 @@ public:
 
 private:
 
+    // Назначить высоту в Action Area
+    void setHeight(int idX, int idY, // относительно Action Area
+                   int height);
+
+    //
+    void setZD(int idX, int idY, int idH,
+               bool statZD) const;
+
+    // Кол-во байтов до столбца
+    int idColumnToNumByte(int idX, int idY) const;
+
     // Ширина/Длина блоков в столбцах
     void setLenBlock(int);
     int getLenBlock() const;
@@ -91,9 +102,8 @@ private:
     // Дискрета в зоне событий?
     bool inActionArea(int idX, int idY) const;
 
-    // Посыпать землей дискрету
+    // Посыпать землей дискрету (id относительно Action Area)
     void dropEarth(int idX, int idY, int countLayer);
-
     // Убрать землю с дискреты
     void removeEarth(int idX, int idY, int countLayer);
 

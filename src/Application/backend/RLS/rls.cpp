@@ -150,7 +150,9 @@ void RLS::emitSignal()
             idLastBlock = blocksZD.size() - 1;
 
             // Полет луча
+            ///qDebug() << "111111111111111111";
             RayTracer->emitRay(ZD[i]->at(j), posRLS, blocksZD);
+            ///qDebug() << "444444444444444444";
 
             // Заряжаем дискереты РЛ сигналом
             int c = blocksZD.size();
@@ -158,6 +160,7 @@ void RLS::emitSignal()
             {
                 RZEditor->toZD(blocksZD[i]);
             }
+            ///qDebug() << "555555555555555555";
         }
 
         // Уведомляем, если изменение > 1%

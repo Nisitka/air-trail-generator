@@ -111,6 +111,9 @@ void Core::run()
     /// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //gis->openMap(QApplication::applicationDirPath() + "\\blocks\\test3.map");
 
+    gis->openMap(QApplication::applicationDirPath() +
+                 "\\blocks\\tmpMap.map");
+
     ready();
 
     // Открываем главное окно

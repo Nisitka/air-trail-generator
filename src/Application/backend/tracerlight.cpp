@@ -1,5 +1,7 @@
 #include "tracerlight.h"
 
+#include <QDebug>
+
 TracerLight::TracerLight(HeightMeter* height, RZInformer* rZone):
     Height(height), radioZone(rZone)
 {

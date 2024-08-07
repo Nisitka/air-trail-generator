@@ -1,5 +1,7 @@
 #include "geoarea.h"
 
+#include <QDebug>
+
 GeoArea::GeoArea(int W, int L)
 {
     //
@@ -18,6 +20,8 @@ void GeoArea::setHeight(int idX, int idY, int valH) const
 
 void GeoArea::resize(int W, int L)
 {
+    qDebug() << "resize geo area!";
+
     // Если область не очищена, то сделать это
     if (Columns.size() != 0) clear();
 
@@ -44,6 +48,8 @@ GeoColumn* GeoArea::getColumn(int idX, int idY)
 
 void GeoArea::clear()
 {
+    qDebug() << "clear geo area!";
+
     for (int x=0; x<Width; x++)
     {
         for (int y=0; y<Length; y++)

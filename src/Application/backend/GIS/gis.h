@@ -84,6 +84,9 @@ public:
 private slots:
 
     //
+    void initMap(int W, int L, int H);
+
+    //
     void setMapSize(int W, int L, int H);
 
     //

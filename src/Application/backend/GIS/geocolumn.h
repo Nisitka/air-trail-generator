@@ -18,6 +18,9 @@ public:
 
     static int getCountUnit();
 
+    // Размер объекта класса в байтах
+    static int getDataSize();
+
     friend QDataStream & operator<< (QDataStream& stream, const GeoColumn& c);
     friend QDataStream & operator>> (QDataStream& stream, GeoColumn& c);
     friend QDataStream & operator>> (QDataStream& stream, GeoColumn* c);

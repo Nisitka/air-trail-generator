@@ -15,6 +15,7 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
 
     //
     GeoColumn::setCountUnit(200);
+    sizeColumn = GeoColumn::getDataSize();
 
     // Размеры дискретпространства
     lenghtUnit = 20;
@@ -28,15 +29,9 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     dirNameTmpMap = QApplication::applicationDirPath() +
             "\\blocks\\tmpMap.map";
 
-    // Сразу узнаем размер дискреты в байт
+    // Сразу узнаем размер служебной информации карты в байт
     QByteArray data;
     QDataStream ds(&data, QIODevice::ReadWrite);
-    GeoColumn column;
-    ds << column;
-    sizeColumn = data.size();
-
-    //
-    data.clear();
     ds << mapData;
     sizeOptData = data.size();
     data.clear();
@@ -44,13 +39,11 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
 
 int geoGenerator::lenghtBlock() const
 {
-    //return actionArea->getLenBlock();
     return lenghtUnit;
 }
 
 int geoGenerator::heightBlock() const
 {
-    //return actionArea->getHeightBlock();
     return heightUnit;
 }
 
@@ -63,12 +56,10 @@ void geoGenerator::toZD(const QVector3D &posBlock) const
     //
     if (inActionArea(idX, idY))
     {
-        actionArea->getColumn(idX, idY)->toZD(idH);
+        actionArea->getColumn(idX-idXo, idY-idYo)->toZD(idH);
     }
-    else
-    {
-        /* Изменяется соответствующая ячейка данных */
-    }
+    // Изменяется соответствующая ячейка данных
+    setZD(idX, idY, idH, true);
 }
 
 void geoGenerator::clearZD(const QVector3D &posBlock) const
@@ -80,12 +71,20 @@ void geoGenerator::clearZD(const QVector3D &posBlock) const
     //
     if (inActionArea(idX, idY))
     {
-        actionArea->getColumn(idX, idY)->removeZD(idH);
+        actionArea->getColumn(idX-idXo, idY-idYo)->removeZD(idH);
     }
-    else
-    {
-        /* Изменяется соответствующая ячейка данных */
-    }
+    // Изменяется соответствующая ячейка данных
+    setZD(idX, idY, idH, false);
+}
+
+void geoGenerator::setZD(int idX, int idY, int idH,
+                         bool statZD) const
+{
+    map->seek(idColumnToNumByte(idX, idY) + 4 + idH);
+    QByteArray data;
+    QDataStream ds(&data, QIODevice::WriteOnly);
+    ds << statZD;
+    map->write(data);
 }
 
 bool geoGenerator::inActionArea(int idX, int idY) const
@@ -109,12 +108,8 @@ void geoGenerator::initMap(int W, int L, int H)
     GeoColumn::setCountUnit(Hmap);
     actionArea->resize(wArea, lArea);
 
-    // Сразу узнаем размер дискреты в байт
-    QByteArray data;
-    QDataStream ds(&data, QIODevice::ReadWrite);
-    GeoColumn column;
-    ds << column;
-    sizeColumn = data.size();
+    // Размер дискреты в байт
+    sizeColumn = GeoColumn::getDataSize();
 
     //
     map = new QFile(dirNameTmpMap);
@@ -148,6 +143,7 @@ void geoGenerator::initMap(int W, int L, int H)
     map->write(optData);
 
     // Записываем дискреты
+    GeoColumn column;
     int countParts = parts.size();
     for (int nP=0; nP<countParts; nP++)
     {
@@ -182,40 +178,20 @@ void geoGenerator::openMap(const QString &dirMapFile)
     QDataStream data(map->read(sizeOptData));
     data >> mapData;
     Wmap = mapData.W; Lmap = mapData.L; Hmap = mapData.H;
-    //qDebug() << Wmap << Lmap << Hmap;
+    qDebug() << "MapData: " << Wmap << Lmap << Hmap;
 
     //
     GeoColumn::setCountUnit(Hmap);
+    sizeColumn = GeoColumn::getDataSize();
     actionArea->resize(wArea, lArea);
-    //actionArea->build(wArea, lArea, Hmap);
 
+    //
     buildFinish(Wmap, Lmap, Hmap);
 }
 
-void geoGenerator::setPosActionArea(int idXo_, int idYo_)
+int geoGenerator::idColumnToNumByte(int idX, int idY) const
 {
-    //qDebug() << "set position actions area!";
-
-    //
-    idXo = idXo_;
-    idYo = idYo_;
-
-    //
-    lastX = idXo + wArea;
-    lastY = idYo + lArea;
-
-    //
-    QDataStream inData(map);
-    for (int x=0; x<wArea; x++)
-    {
-        map->seek(sizeOptData + (idColumn(idXo+x, idYo)*sizeColumn));
-        for (int y=0; y<lArea; y++)
-        {
-            inData >> actionArea->getColumn(x, y);
-        }
-    }
-
-    //qDebug() << "setPosArea!";
+    return sizeOptData + (idColumn(idX, idY)*sizeColumn);
 }
 
 int geoGenerator::idColumn(int idX, int idY) const
@@ -223,34 +199,47 @@ int geoGenerator::idColumn(int idX, int idY) const
     return Lmap*idX + idY;
 }
 
-//void geoGenerator::updateBlock(int idColumn, const geoBlock& b) const
-//{
-//    QByteArray data;
-//    QDataStream ds(&data, QIODevice::WriteOnly);
-//    ds << b;
+void geoGenerator::setPosActionArea(int idXo_, int idYo_)
+{
+    qDebug() << "set position actions area...";
 
-//    map->seek(sizeOptData + (sizeColumn * idColumn));
-//    map->write(data, sizeColumn);
+    //
+    idXo = idXo_;
+    idYo = idYo_;
 
-//    data.clear();
-//}
+    //
+    lastX = idXo + wArea - 1;
+    lastY = idYo + lArea - 1;
 
-//geoBlock geoGenerator::readBlock(int idColumn) const
-//{
-//    map->seek(sizeOptData + (sizeColumn * idColumn));
-//    QDataStream inData(map->read(sizeColumn));
+    //
+    QDataStream inData(map);
+    for (int x=0; x<wArea; x++)
+    {
+        map->seek(idColumnToNumByte(idXo+x, idYo));
+        for (int y=0; y<lArea; y++)
+        {
+            inData >> actionArea->getColumn(x, y);
+        }
+    }
 
-//    geoBlock b;
-//    inData >> b;
-
-//    return b;
-//}
+    qDebug() << "setPosArea: " << idXo << idYo;
+}
 
 int geoGenerator::absolute(int idX, int idY, Coords::units units) const
 {
     int h = -1;
 
-    h = actionArea->getHeight(idX-idXo, idY-idYo);
+    if (inActionArea(idX, idY))
+    {
+        h = actionArea->getHeight(idX-idXo, idY-idYo);
+    }
+    else
+    {
+        map->seek(idColumnToNumByte(idX, idY));
+        QDataStream data(map->read(4));
+        data >> h;
+    }
+
     switch (units) {
     case Coords::m:
         h *= heightUnit;
@@ -288,21 +277,29 @@ int geoGenerator::countVertZD(int idX, int idY) const
     }
     else
     {
-        return 0; /// <-- Заглушка
+        return 0; /// <-- Заглушка !!!!!!!!!!!!!!!!!!!
     }
 
 }
 
 bool geoGenerator::isZD(int idX, int idY, int idH) const
 {
+    bool statZD = false;
+
     if (inActionArea(idX, idY))
     {
-        return actionArea->getColumn(idX-idXo, idY-idYo)->isZD(idH);
+        statZD = actionArea->getColumn(idX-idXo, idY-idYo)->isZD(idH);
     }
     else
     {
-        return 0; /// <-- Заглушка
+        map->seek(idColumnToNumByte(idX, idY) + 4 + idH);
+        QDataStream data(map->read(sizeof(bool)));
+        data >> statZD;
+
+        //return false; /// <-- Заглушка !!!!!!!!!!!!!!!!
     }
+
+    return statZD;
 }
 
 Coords geoGenerator::getCoords(int idX, int idY) const
@@ -394,11 +391,8 @@ void geoGenerator::dropEarth(int idX, int idY, int countLayer)
 
     int height = idHo + countLayer;
     if (height > maxH) height = maxH;
-    actionArea->getColumn(idX, idY)->setHeight(height);
 
-    /// !!!!!
-    // Сразу обновляем его значения в файле-карте
-
+     setHeight(idX, idY, height);
 }
 
 void geoGenerator::removeEarth(int idX, int idY, int countLayer)
@@ -407,12 +401,20 @@ void geoGenerator::removeEarth(int idX, int idY, int countLayer)
 
     int height = idHo - countLayer;
     if (height < 0) height = 0;
+
+    setHeight(idX, idY, height);
+}
+
+void geoGenerator::setHeight(int idX, int idY, int height)
+{
+    //
     actionArea->getColumn(idX, idY)->setHeight(height);
 
-    /// !!!!!
-    // Сразу обновляем его значения в файле-карте
-
-
+    map->seek(idColumnToNumByte(idX+idXo, idY+idYo));
+    QByteArray data;
+    QDataStream ds(&data, QIODevice::WriteOnly);
+    ds << height;
+    map->write(data);
 }
 
 void geoGenerator::updateHeights(int idX, int idY, int W, int L)

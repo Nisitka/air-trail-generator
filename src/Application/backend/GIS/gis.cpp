@@ -22,11 +22,11 @@ GIS::GIS():
     backPainter = new painterMapImage(heigtMeter, RZ, currentW, currentH);
     connect(geoBuilder,  SIGNAL(buildFinish(int,int,int)),
             backPainter, SLOT(run()));
-    connect(geoBuilder,  SIGNAL(buildFinish(int,int,int)),
-            this,        SLOT(initActionArea()));
+    connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
+            this,       SLOT(initMap(int,int,int)));
 
     /// !!!!!!
-    geoBuilder->initMap(1000, 1000, 256);
+    //geoBuilder->initMap(1000, 1000, 256);
 }
 
 RZInformer* GIS::getRZInformer() const
@@ -39,6 +39,8 @@ void GIS::setMapSize(int W, int L, int H)
     Wmap = W;
     Lmap = L;
     Hmap = H;
+
+    qDebug() << "setMapSize: " << Wmap << Lmap << Hmap;
 }
 
 HeightMeter* GIS::getHeightMeter() const
@@ -84,7 +86,7 @@ void GIS::setPosActionArea(int idXmap, int idYmap)
     posX = idXmap - (currentW / 2);
     posY = idYmap - (currentH / 2);
 
-    // Крайнее положения
+    // Крайние положения
     if (posX < 0) posX = 0;
     if (posY < 0) posY = 0;
     if (posX + currentW > Wmap) posX = Wmap - currentW;
@@ -95,6 +97,8 @@ void GIS::setPosActionArea(int idXmap, int idYmap)
 
     // Адоптируем все компоненты под новую область
     initActionArea();
+
+    qDebug() << "POS: " << idXpos << idYpos;
 
     // Сигнализируем об готовности новой области
     changedActionArea(idXpos, idYpos);
@@ -136,7 +140,14 @@ void GIS::initActionArea()
 void GIS::openMap(const QString &dirNameFile)
 {
     geoBuilder->openMap(dirNameFile);
-    initActionArea();
+}
+
+void GIS::initMap(int W, int L, int H)
+{
+    setMapSize(W, L, H);
+
+    // Сдвигаем область активных действий в крайнее левое верхнее положение
+    setPosActionArea(0,0);
 }
 
 void GIS::loadTerrain(const QString &dirNameFile)
