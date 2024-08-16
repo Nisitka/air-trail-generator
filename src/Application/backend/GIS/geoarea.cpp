@@ -4,63 +4,46 @@
 
 GeoArea::GeoArea(int W, int L)
 {
+    Columns = nullptr;
+
     //
     this->resize(W, L);
 }
 
 int GeoArea::getHeight(int idX, int idY) const
 {
-    return Columns[idX][idY]->getHeight();
+    return Columns[idX*Length + idY].getHeight();
 }
 
 void GeoArea::setHeight(int idX, int idY, int valH) const
 {
-    Columns[idX][idY]->setHeight(valH);
+    return Columns[idX*Length + idY].setHeight(valH);
 }
 
 void GeoArea::resize(int W, int L)
 {
-    qDebug() << "resize geo area!";
+    qDebug() << "resize geo area...";
 
     // Если область не очищена, то сделать это
-    if (Columns.size() != 0) clear();
+    if (Columns != nullptr) clear();
 
     // Новые размеры области
     Width = W; Length = L;
 
     //
-    Columns.resize(Width);
-    for (int x=0; x<Width; x++)
-    {
-        Columns[x].resize(Length);
+    Columns = new GeoColumn [Width*Length];
 
-        for (int y=0; y<Length; y++)
-        {
-            Columns[x][y] = new GeoColumn();
-        }
-    }
+    qDebug() << "size geo area: " << Width << Length;
 }
 
 GeoColumn* GeoArea::getColumn(int idX, int idY)
 {
-    return Columns[idX][idY];
+    return Columns + (idX*Length) + idY;
 }
 
 void GeoArea::clear()
 {
     qDebug() << "clear geo area!";
 
-    for (int x=0; x<Width; x++)
-    {
-        for (int y=0; y<Length; y++)
-        {
-            // Удаляем GeoColumn
-            delete Columns[x][y];
-        }
-
-        // Очищаем контейнер, который их хранил
-        Columns[x].clear();
-    }
-
-    Columns.clear();
+    delete [] Columns;
 }

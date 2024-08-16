@@ -110,10 +110,10 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
 
 void painterMapImage::run()
 {
+    qDebug() << "RUN map-Painter ";
+
     //
     runToRect(idXo, idYo, numW, numL);
-
-    qDebug() << "RUN";
 }
 
 QColor painterMapImage::colorHeight(int value)

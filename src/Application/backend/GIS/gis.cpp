@@ -86,22 +86,8 @@ void GIS::setPosActionArea(int idXmap, int idYmap)
     posX = idXmap - (currentW / 2);
     posY = idYmap - (currentH / 2);
 
-    // Крайние положения
-    if (posX < 0) posX = 0;
-    if (posY < 0) posY = 0;
-    if (posX + currentW > Wmap) posX = Wmap - currentW;
-    if (posY + currentH > Lmap) posY = Lmap - currentH;
-
-    idXpos = posX;
-    idYpos = posY;
-
     // Адоптируем все компоненты под новую область
-    initActionArea();
-
-    qDebug() << "POS: " << idXpos << idYpos;
-
-    // Сигнализируем об готовности новой области
-    changedActionArea(idXpos, idYpos);
+    initActionArea(posX, posY);
 }
 
 void GIS::movePosActionArea(int dX, int dY)
@@ -111,6 +97,14 @@ void GIS::movePosActionArea(int dX, int dY)
     posX = idXpos + dX;
     posY = idYpos + dY;
 
+    // Адоптируем все компоненты под новую область
+    initActionArea(posX, posY);
+}
+
+void GIS::initActionArea(int posX, int posY)
+{
+    qDebug() << "Start set pos action area: " << posX << posY;
+
     // Крайние положения
     if (posX < 0) posX = 0;
     if (posY < 0) posY = 0;
@@ -120,21 +114,15 @@ void GIS::movePosActionArea(int dX, int dY)
     idXpos = posX;
     idYpos = posY;
 
-    qDebug() << "posActionArea:" << idXpos << idYpos;
+    //
+    geoBuilder->setPosActionArea(idXpos, idYpos);
 
-    // Адоптируем все компоненты под новую область
-    initActionArea();
+    //
+    backPainter->setPosArea(idXpos, idYpos);
+    backPainter->updateFull();
 
     // Сигнализируем об готовности новой области
     changedActionArea(idXpos, idYpos);
-}
-
-void GIS::initActionArea()
-{
-    geoBuilder->setPosActionArea(idXpos, idYpos);
-
-    backPainter->setPosArea(idXpos, idYpos);
-    backPainter->updateFull();
 }
 
 void GIS::openMap(const QString &dirNameFile)
@@ -153,13 +141,13 @@ void GIS::initMap(int W, int L, int H)
 void GIS::loadTerrain(const QString &dirNameFile)
 {
     geoBuilder->loadTerrain(dirNameFile);
-    initActionArea();
+    initActionArea(0, 0);
 }
 
 void GIS::setDefaultMap()
 {
     geoBuilder->buildFlatMap(currentW, currentH);
-    initActionArea();
+    initActionArea(0, 0);
 }
 
 void GIS::updateFromRect(const QRect &rect)

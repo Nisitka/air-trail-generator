@@ -201,7 +201,7 @@ int geoGenerator::idColumn(int idX, int idY) const
 
 void geoGenerator::setPosActionArea(int idXo_, int idYo_)
 {
-    qDebug() << "set position actions area...";
+    qDebug() << "Set position actions area: " << idXo_ << idYo_;
 
     //
     idXo = idXo_;
@@ -222,7 +222,7 @@ void geoGenerator::setPosActionArea(int idXo_, int idYo_)
         }
     }
 
-    qDebug() << "setPosArea: " << idXo << idYo;
+    qDebug() << "Ready position action area!" << idXo << idYo;
 }
 
 int geoGenerator::absolute(int idX, int idY, Coords::units units) const
