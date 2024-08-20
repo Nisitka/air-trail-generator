@@ -56,6 +56,9 @@ public slots:
 public:
     areaDrawWidget(GISInformer* gis);
 
+    //
+    bool eventFilter(QObject *watched, QEvent *event);
+
     enum unit{pix, idMap};
 
     //

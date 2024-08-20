@@ -19,6 +19,8 @@ public:
 
     void setData(const Coords& coords);
 
+    bool eventFilter(QObject *watched, QEvent *event);
+
 private:
     Ui::CoordsInfoForm *ui;
 };

@@ -30,8 +30,6 @@ SOURCES += main.cpp\
     GUI/designer.cpp \
     GUI/gui.cpp \
     GUI/mainwindow.cpp \
-    GUI/optdronewindow.cpp \
-    GUI/optmapgeneratorwindow.cpp \
     GUI/optrlswindow.cpp \
     GUI/runwindow.cpp \
     GUI/visualinfowidget.cpp \
@@ -80,9 +78,9 @@ SOURCES += main.cpp\
     backend/Trail/buildertraildrones.cpp \
     backend/Trail/trail.cpp \
     GUI/drawArea/zoomcontrollerwidget.cpp \
-    backend/RLS/informerrls.cpp \
     backend/GIS/geocolumn.cpp \
-    backend/GIS/geoarea.cpp
+    backend/GIS/geoarea.cpp \
+    backend/RLS/labelrls.cpp
 
 HEADERS  += \
     core.h \
@@ -93,8 +91,6 @@ HEADERS  += \
     GUI/designer.h \
     GUI/gui.h \
     GUI/mainwindow.h \
-    GUI/optdronewindow.h \
-    GUI/optmapgeneratorwindow.h \
     GUI/optrlswindow.h \
     GUI/runwindow.h \
     GUI/visualinfowidget.h \
@@ -164,11 +160,10 @@ HEADERS  += \
     GUI/drawArea/zoomcontrollerwidget.h \
     backend/RLS/informerrls.h \
     backend/GIS/geocolumn.h \
-    backend/GIS/geoarea.h
+    backend/GIS/geoarea.h \
+    backend/RLS/labelrls.h
 
 FORMS    += GUI/UI/mainwindow.ui \
-    GUI/UI/optdronewindow.ui \
-    GUI/UI/optmapgeneratorwindow.ui \
     GUI/UI/optqfunwindow.ui \
     GUI/UI/optrlswindow.ui \
     GUI/UI/dataaccessobjectwindow.ui \

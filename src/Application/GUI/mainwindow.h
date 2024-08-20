@@ -7,7 +7,6 @@
 #include <QDockWidget>
 
 #include "visualinfowidget.h"
-#include "optmapgeneratorwindow.h"
 
 namespace Ui {
 class mainWindow;

@@ -29,7 +29,6 @@ private:
     void clear();
 
     // Дискреты
-    //QVector <QVector <GeoColumn*>> Columns;
     GeoColumn* Columns;
 
     // Размеры области

@@ -14,10 +14,10 @@
 #include "../GIS/heightmeter.h"
 #include "../tracerlight.h"
 
-#include "informerrls.h"
+#include "labelrls.h"
 
 // класс РЛС
-class RLS: public QObject, public InformerRLS
+class RLS: public QObject, public LabelRLS
 {
     Q_OBJECT
 signals:
@@ -96,15 +96,11 @@ private:
     // Точки соприкосновения ЗО с рельефом
     QVector <QVector <QVector3D>> interPointsZD;
 
-
-
     // Дискретность ЗО
     // по вертикали
     int count_PointsDV = 120; //275
     // по горизонали
     int COUNT_VECTORS_vert = 1080;//2000;
-
-    QString name;
 
     const double Pi = 3.1415926;
 

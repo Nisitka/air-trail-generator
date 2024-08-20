@@ -12,14 +12,19 @@
 
 #include <memory>
 
+#include "informerrls.h"
+
 // класс для управления всеми РЛС
-class managerRLS : public QObject
+class managerRLS : public QObject, public InformerRLS
 {
     Q_OBJECT
 signals:
 
     // сообщаем GUI об завершении инициализации РЛС
     void createReadyRLS();
+
+    //
+    void deleteReadyRLS();
 
     void updateVisInfoMap(int idX, int idY, int w, int h);
     void updateVisInfoMap(QRect*, int count);
@@ -68,6 +73,12 @@ public slots:
 
 public:
     managerRLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height);
+
+    // Узнать общее кол-во РЛС
+    int countRLS() const;
+
+    //
+    const LabelRLS* getInfoRLS(int idRLS) const;
 
 private:
 

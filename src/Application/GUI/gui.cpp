@@ -4,7 +4,8 @@
 
 #include "drawArea/mapareamainwindow.h"
 
-GUI::GUI(GISInformer* gis):
+GUI::GUI(GISInformer* gis,
+         InformerRLS* infoRLS):
     gisInformer(gis)
 {
     mainWin = new mainWindow;
@@ -18,7 +19,7 @@ GUI::GUI(GISInformer* gis):
     // Инструменты для граф.области(какая область, приоритет-ключ задач отрисовки)
     toolPTrail  = new ToolPredTrail(mapAreaMainWindow::predictTrail);
     toolPLine   = new ToolPredRect (mapAreaMainWindow::predictRect);
-    toolRLS     = new ToolSetRLS(   mapAreaMainWindow::setRLS, gis);
+    toolRLS     = new ToolSetRLS(   mapAreaMainWindow::setRLS, gis, infoRLS);
     toolEditTer = new ToolEditMap(  mapAreaMainWindow::editEarth);
     toolVisMap  = new ToolVisMap(   mapAreaMainWindow::mapVis);
     ToolRuler* toolRuler = new ToolRuler(mapAreaMainWindow::Ruler);
@@ -39,27 +40,11 @@ GUI::GUI(GISInformer* gis):
                      "Визуализатор", "Графическое представление");
 
     //
-    optGenMapWin = new optMapGeneratorWindow;
-    mainWin->addTask(optGenMapWin, QIcon(":/resurs/earchIcon"),
-                     "Карта", "Карта");
-
-    //
-    optRLSWin = new optRLSwindow();
+    optRLSWin = new optRLSwindow(infoRLS);
     QObject::connect(toolRLS,   SIGNAL(setCoordRLS(Coords)),
                      optRLSWin, SLOT(updateCoordRLS(Coords)));
     mainWin->addTask(optRLSWin, QIcon(":/resurs/rlsIcon"),
                      "РЛС", "Радиолокационная станция");
-
-    //
-    droneWin = new optDroneWindow;
-    mainWin->addTask(droneWin, QIcon(":/resurs/plane"),
-                     "БПЛА", "Беспилотный летательный аппарат");
-
-    //
-    QObject::connect(toolPTrail, SIGNAL(sendPointsTrail(int,int,int,int)),
-                     droneWin,   SLOT(setPredictPoints(int,int,int,int)));
-    QObject::connect(droneWin,   SIGNAL(runPredictTrail(int,int,int,int)),
-                     toolPTrail, SLOT(startPredictTrail()));
 
     //
     map3DWin = new map3DVisWindow();
@@ -83,24 +68,8 @@ void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
                      builderTrail, SLOT(setRpredict(int)));
 
     //
-    QObject::connect(droneWin,     SIGNAL(runPredictTrail(int,int,int,int)),
-                     builderTrail, SLOT(startPredictTrail(int,int,int,int)));
     QObject::connect(builderTrail, SIGNAL(nextPointTrail(int,int,int)),
                      toolPTrail,   SLOT(addPointTrail(int,int,int)));
-
-    //
-    QObject::connect(droneWin,                      SIGNAL(runPredictTrail(int,int,int,int)),
-                     map3DWin->getGraphicsWidget(), SLOT(startPredictTrail()));
-    QObject::connect(builderTrail,                  SIGNAL(nextPointTrail(int,int,int)),
-                     map3DWin->getGraphicsWidget(), SLOT(addTrailPoint(int,int,int)));
-
-    //
-    QObject::connect(builderTrail, SIGNAL(startSetOptPredict()),
-                     droneWin,     SLOT(startSetOptPredict()));
-    QObject::connect(builderTrail, SIGNAL(finishSetOptPredict()),
-                     droneWin,     SLOT(finishSetOptPredict()));
-    QObject::connect(builderTrail, SIGNAL(procSetOptPred(int)),
-                     droneWin,     SLOT(updateProgSetOptPred(int)));
 }
 
 void GUI::connectGIS(GIS *gis)
@@ -136,7 +105,9 @@ void GUI::connectMRLS(managerRLS* mRLS)
 {
     //
     QObject::connect(mRLS,      SIGNAL(createReadyRLS()),
-                     optRLSWin, SLOT(buildNewRLSready()));
+                     optRLSWin, SLOT(updateListRLS()));
+    QObject::connect(mRLS,      SIGNAL(deleteReadyRLS()),
+                     optRLSWin, SLOT(updateListRLS()));
     //
     QObject::connect(optRLSWin, SIGNAL(signalOffRLS()),
                      mRLS,      SLOT(offRLS()));
@@ -148,10 +119,10 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      optRLSWin, SLOT(setOptRLS(int,int,int,int,bool)));
 
     // добавление/удаление РЛС
-    QObject::connect(optRLSWin,  SIGNAL(createRLS(QPoint*,const QString&)),
-                     toolRLS,    SLOT(addRLS(QPoint*,const QString&)));
-    QObject::connect(optRLSWin,  SIGNAL(delRLS(int)),
-                     toolRLS,    SLOT(delRLS(int)));
+    QObject::connect(mRLS,    SIGNAL(createReadyRLS()),
+                     toolRLS, SLOT(updateInfoRLS()));
+    QObject::connect(mRLS,    SIGNAL(deleteReadyRLS()),
+                     toolRLS, SLOT(updateInfoRLS()));
 
     //
     QObject::connect(optRLSWin, SIGNAL(createRLS(QPoint*,const QString&)),
@@ -204,10 +175,6 @@ void GUI::connectMRLS(managerRLS* mRLS)
     /// !!!!!!!!!!!!!!!!!!!!!!!!!!
     QObject::connect(visInfoWin->getManDrawArea()->getDrawArea(), SIGNAL(updateSignals()),
                      mRLS, SLOT(updateSignals()));
-
-    // Обновление визуализации сигнала
-    QObject::connect(mRLS,     SIGNAL(sendPointsInterZD(QVector<QVector<QVector<QVector3D>>>*, QList <QVector3D>*)),
-                     map3DWin, SLOT(updatePointsInterZD(QVector<QVector<QVector<QVector3D>>>*, QList <QVector3D>*)));
 }
 
 void GUI::showMainWin()

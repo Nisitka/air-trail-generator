@@ -2,8 +2,8 @@
 #define TOOLSETRLS_H
 
 #include "GUI/drawArea/Tools/drawareatool.h"
-
 #include "backend/GIS/gisinformer.h"
+#include "backend/RLS/informerrls.h"
 
 class ToolSetRLS: public drawAreaTool
 {
@@ -14,17 +14,17 @@ signals:
     void setCoordRLS(Coords coord);
 
 public slots:
-    // Добавить РЛС для отрисовки
-    void addRLS(QPoint* posRLS, const QString& nameNewRLS);
 
-    // удалить РЛС с отрисовки
-    void delRLS(int indexRLS);
+    //
+    void updateInfoRLS();
 
     // Установить выбранную РЛС
     void setCurRLS(int idRLS);
 
 public:
-    ToolSetRLS(int id, GISInformer* gis);
+    ToolSetRLS(int id,
+               GISInformer* gis,
+               InformerRLS* infoRLS);
 
     void mousePress(QMouseEvent* mouse) override;
     void mouseRelease(QMouseEvent* mouse) override;
@@ -40,19 +40,19 @@ public:
 
 private:
 
+    // Интерфейс для получения инфы об РЛС
+    InformerRLS* infoRLS;
+
     //
     GISInformer* gis;
 
     // Иконки РЛС
     QPixmap pixRLS;
     QPixmap pixCurRLS;
+
     // Выбранная РЛС
     int idCurRLS; // индекс выбранной РЛС
 
-    // Координаты поставленных РЛС
-    QList <QPoint*> coordsRLS;
-    //
-    QStringList namesRLS;
     //
     QColor curRLScolor;
     QColor RLScolor;

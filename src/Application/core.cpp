@@ -56,7 +56,8 @@ void Core::init_allObj()
     readyRunProgress(54, "Инициализация интерфейса...");
 
     //
-    gui = new GUI(gis);
+    InformerRLS* infoRLS = mRLS;
+    gui = new GUI(gis, infoRLS);
 
     readyRunProgress(65, "Инициализация интерфейса...");
 }

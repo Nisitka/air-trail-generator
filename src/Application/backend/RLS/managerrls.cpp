@@ -48,7 +48,17 @@ void managerRLS::addRLS(QPoint* posRLS_, const QString& nameRLS)
 
     createReadyRLS();
 
-   // qDebug() << "create RLS!";
+    qDebug() << "create RLS!";
+}
+
+int managerRLS::countRLS() const
+{
+    return listRLS.size();
+}
+
+const LabelRLS* managerRLS::getInfoRLS(int idRLS) const
+{
+    return (LabelRLS*)listRLS.at(idRLS);
 }
 
 void managerRLS::delRLS(int id)
@@ -67,6 +77,8 @@ void managerRLS::delRLS(int id)
 
     emitSignalAllRLS();
     updateVisInfoMap(idX, idY, w, h);
+
+    deleteReadyRLS();
 }
 
 void managerRLS::setPositionRLS(int idX, int idY)

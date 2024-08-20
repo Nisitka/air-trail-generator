@@ -14,6 +14,8 @@ CoordsInfoForm::CoordsInfoForm(QWidget *parent) :
                                        "   border: 1px solid rgb(55,55,55);"
                                        "   border-radius: 2px;"
                                        "};)");
+
+    installEventFilter(this);
 }
 
 void CoordsInfoForm::setData(const Coords &coords)
@@ -23,6 +25,14 @@ void CoordsInfoForm::setData(const Coords &coords)
                         " Y:" + QString::number(coords.Y()) + "м"
                         " H:" + QString::number(coords.H()) + "м";
     ui->LabelCoordsInfo->setText(dataCoords);
+}
+
+bool CoordsInfoForm::eventFilter(QObject *watched, QEvent *event)
+{
+    //qDebug() << "Coords label: "  << watched->objectName() << event->type();
+    event->ignore();
+
+    return true;
 }
 
 CoordsInfoForm::~CoordsInfoForm()

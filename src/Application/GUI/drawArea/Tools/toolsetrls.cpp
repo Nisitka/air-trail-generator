@@ -2,8 +2,10 @@
 
 #include "../areadrawwidget.h"
 
-ToolSetRLS::ToolSetRLS(int id, GISInformer* gis):
-    drawAreaTool(id), gis(gis)
+ToolSetRLS::ToolSetRLS(int id,
+                       GISInformer* gis,
+                       InformerRLS* infoRLS):
+    drawAreaTool(id), gis(gis), infoRLS(infoRLS)
 {
     cursor = Qt::CrossCursor;
 
@@ -18,24 +20,16 @@ ToolSetRLS::ToolSetRLS(int id, GISInformer* gis):
     dTask = new drawTask<ToolSetRLS>(this, &ToolSetRLS::procDrawTask);
 }
 
-void ToolSetRLS::addRLS(QPoint *posRLS, const QString& nameNewRLS)
+void ToolSetRLS::updateInfoRLS()
 {
-    coordsRLS.append(posRLS);
-    namesRLS.append(nameNewRLS);
-}
-
-void ToolSetRLS::delRLS(int indexRLS)
-{
-    coordsRLS.removeAt(indexRLS);
-    namesRLS.removeAt(indexRLS);
-
     drawArea->repaint();
 }
 
 void ToolSetRLS::setCurRLS(int idRLS)
 {
     idCurRLS = idRLS;
-    drawArea->repaint();
+
+    updateInfoRLS();
 }
 
 void ToolSetRLS::init()
@@ -52,10 +46,15 @@ void ToolSetRLS::procDrawTask()
     // Отрисовка станций
     QPixmap icon;
     QColor textColor;
-    for (int i=0; i<coordsRLS.size(); i++)
+
+    QVector3D pos;
+    int countRLS = infoRLS->countRLS();
+    for (int id=0; id<countRLS; id++)
     {
+        const LabelRLS* station = infoRLS->getInfoRLS(id);
+
         //
-        if (i == idCurRLS) // В юудущем можно будет проверять выделенность нескольких РЛС
+        if (id == idCurRLS) // В юудущем можно будет проверять выделенность нескольких РЛС
         {
             icon = pixCurRLS ;
             textColor = curRLScolor;
@@ -66,12 +65,16 @@ void ToolSetRLS::procDrawTask()
             textColor = RLScolor;
         }
 
+        //
+        station->getPosition(pos);
+
         // Рисуем условное обозначение РЛС
-        drawArea->drawPixmap(coordsRLS[i]->x(), coordsRLS[i]->y(),
-                                           -16,               -18,
+        drawArea->drawPixmap(pos.x(), pos.y(),
+                                 -16,     -18,
                              icon);
 
-        drawArea->drawText(QRect(coordsRLS[i]->x(), coordsRLS[i]->y(), 36, 12), namesRLS[i],
+        // Позывной под РЛС
+        drawArea->drawText(QRect(pos.x(), pos.y(), 36, 12), station->getName(),
                            areaDrawWidget::idMap,
                            -16, 15,
                            QColor(0, 0, 0,30), textColor);

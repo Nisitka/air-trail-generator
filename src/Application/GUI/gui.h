@@ -5,17 +5,13 @@
 #include <QImage>
 
 
-//#include "backend/gis/geogenerator.h"
-//#include "backend/gis/paintermapimage.h"
 #include "backend/GIS/gis.h"
 
 #include "mainwindow.h"
 
 #include "visualinfowidget.h"
-#include "optmapgeneratorwindow.h"
 #include "optrlswindow.h"
 #include "backend/Trail/buildertraildrones.h"
-#include "optdronewindow.h"
 #include "backend/RLS/managerrls.h"
 #include "3DVisualization/map3dviswindow.h"
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
@@ -24,7 +20,8 @@
 class GUI
 {
 public:
-    GUI(GISInformer* gisInformer); // установить карту
+    GUI(GISInformer* gisInformer,
+        InformerRLS* infoRLS);
 
     //
     void connectGIS(GIS* gis);
@@ -50,13 +47,7 @@ private:
     visualInfoWidget* visInfoWin;
 
     //
-    optMapGeneratorWindow* optGenMapWin;
-
-    //
     optRLSwindow* optRLSWin;
-
-    //
-    optDroneWindow* droneWin;
 
     // Окно для 3D отображения рельефа
     map3DVisWindow* map3DWin;

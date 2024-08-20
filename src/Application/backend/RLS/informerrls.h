@@ -1,26 +1,19 @@
 #ifndef INFORMERRLS_H
 #define INFORMERRLS_H
 
-#include <QVector3D>
+#include <QList>
+
+#include "labelrls.h"
 
 class InformerRLS
 {
 public:
-    InformerRLS();
 
-    // Позиция РЛС в пространстве
-    void getPosition(QVector3D& Point3D) const;
+    // Узнать общее кол-во РЛС
+    virtual int countRLS() const = 0;
 
-    // Узнать, работает ли РЛС
-    bool isWorking() const;
-
-protected:
-
-    // Включена ли РЛС
-    bool working;
-
-    // Точка стояния РЛС
-    QVector3D pos;
+    // Получить интерфейс РЛС по id
+    virtual const LabelRLS* getInfoRLS(int idRLS) const = 0;
 };
 
 #endif // INFORMERRLS_H

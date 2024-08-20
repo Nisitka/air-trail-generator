@@ -6,10 +6,12 @@
 
 RLS::RLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height,
          QPoint* position, const QString& nameRLS):
-    RayTracer(RayTracer), RZEditor(RZEditor), Height(Height),
-    name(nameRLS)
+    RayTracer(RayTracer), RZEditor(RZEditor), Height(Height)
 {
     setPosition(*position);
+
+    //
+    name = nameRLS;
 
     mE = new double [2];
 

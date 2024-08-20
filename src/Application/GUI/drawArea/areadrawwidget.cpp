@@ -15,6 +15,8 @@
 #include <QPixmap>
 #include <QTextOption>
 
+#include <QApplication>
+
 #include "../designer.h"
 
 areaDrawWidget::areaDrawWidget(GISInformer* gis):
@@ -46,6 +48,8 @@ areaDrawWidget::areaDrawWidget(GISInformer* gis):
     appendDrawTask(terImg,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawMap));
     //appendDrawTask(iconRLS,    new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawRLS));
     appendDrawTask(border,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBorder));
+
+    installEventFilter(this);
 }
 
 void areaDrawWidget::toPixDrawArea(int &Xid, int &Yid)
@@ -252,9 +256,19 @@ void areaDrawWidget::setDrawEnabled(bool isDrawEvent)
     drawEnable = isDrawEvent;
 }
 
+bool areaDrawWidget::eventFilter(QObject *obj, QEvent *event)
+{
+    //qDebug() << obj->objectName() << event->type();
+
+    return false;
+}
+
 void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
 {
     Q_UNUSED(pEvent);
+
+//    qDebug() << "paintEvent: " <<
+//                pEvent->registerEventType();
 
     if (drawEnable)
     {
@@ -273,6 +287,8 @@ void areaDrawWidget::paintEvent(QPaintEvent *pEvent)
         }
 
         painter.end();
+
+        //qDebug() << "draw";
     }
 }
 

@@ -4,6 +4,9 @@
 #include <QWidget>
 
 #include "backend/GIS/gisinformer.h"
+#include "backend/RLS/informerrls.h"
+
+//
 #include "plotwidget.h"
 
 #include "processtmpwidget.h"
@@ -46,13 +49,13 @@ signals:
 
 public slots:
 
+    //
+    void updateListRLS();
+
     // Отображение выполнения процессов
     void startProcessing();
     void updateStatProcessing(int percent); // В процентах
     void finishProcessing();
-
-    // Инициализация новой РЛС завершина
-    void buildNewRLSready();
 
     // Установить параметры РЛС
     void setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working);
@@ -64,12 +67,13 @@ public slots:
     void updateCoordRLS(Coords);
 
 public:
-    explicit optRLSwindow(QWidget *parent = 0);
+    explicit optRLSwindow(InformerRLS* infoRLS, QWidget *parent = 0);
     ~optRLSwindow();
 
 private slots:
+
     //
-    void runSearchBestPos();
+    void setIdCurRLS();
 
     // изменить точку постановки выбранной РЛС
     void setNewPosRLS();
@@ -85,8 +89,18 @@ private slots:
 
 private:
 
+    //
+    QStringList columnNames = {"Наименование", "Статус", "Координаты"};
+
+    //
+    InformerRLS* infoRLS;
+    QList <LabelRLS*> listRLS;
+
     // Работает ли выбранная РЛС
     bool workingCurRLS;
+
+    //
+    int idCurRLS;
 
     // Названия всех РЛС
     QStringList namesRLS;

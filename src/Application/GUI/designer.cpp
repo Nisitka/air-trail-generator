@@ -26,6 +26,8 @@ void Designer::setProgressBar(QProgressBar* pb)
             "   margin: 0.5px;"
             "}"
             );
+
+    pb->setMaximumHeight(15);
 }
 
 void Designer::setColorToolButton(QToolButton *toolButton, const QColor& color)

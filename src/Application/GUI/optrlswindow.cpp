@@ -5,8 +5,10 @@
 
 #include <QDebug>
 
-optRLSwindow::optRLSwindow( QWidget *parent):
-    QWidget(parent),
+#include <QTableWidgetItem>
+
+optRLSwindow::optRLSwindow(InformerRLS* infoRLS, QWidget *parent):
+    infoRLS(infoRLS), QWidget(parent),
     ui(new Ui::optRLSwindow)
 {
     ui->setupUi(this);
@@ -31,21 +33,70 @@ optRLSwindow::optRLSwindow( QWidget *parent):
             this,                SLOT(removeRLS()));
 
     //
-    connect(ui->listRLSComboBox, SIGNAL(currentIndexChanged(int)),
-            this,                SIGNAL(setRLS(int)));
-
-    //
     connect(ui->on_off_RLS_Button, SIGNAL(clicked()),
             this,                  SLOT(enablingRLS()));
+
+    //
+    connect(ui->listRLSTableWidget, SIGNAL(cellClicked(int,int)),
+            this,                   SLOT(setIdCurRLS()));
+
 
     // Виджет для отрисорвки графика ЗО РЛС
     graphicWidget = new plotWidget;
     ui->plotZDLayout->addWidget(graphicWidget);
 
+    // Таблица-список РЛС, поставленных на карту
+    ui->listRLSTableWidget->setColumnCount(columnNames.size());
+    ui->listRLSTableWidget->setHorizontalHeaderLabels(columnNames);
+
     //
     loadingWidget = new processTmpWidget(this);
 
     setDesine();
+}
+
+void optRLSwindow::setIdCurRLS()
+{
+    idCurRLS = ui->listRLSTableWidget->currentRow();
+
+    qDebug() << "Id current RLS: " << idCurRLS;
+
+    setRLS(idCurRLS);
+}
+
+void optRLSwindow::updateListRLS()
+{
+    // Очищаем все от устаревших строк
+    ui->listRLSTableWidget->setRowCount(0);
+
+    // Кол-во новых строк
+    int countRLS = infoRLS->countRLS();
+    ui->listRLSTableWidget->setRowCount(countRLS);
+
+    QTableWidgetItem* item;
+    QColor stat;
+    QVector3D pos;
+    for (int r=0; r<countRLS; r++)
+    {
+        const LabelRLS* rls = infoRLS->getInfoRLS(r);
+
+        //
+        ui->listRLSTableWidget->setItem(r, 0, new QTableWidgetItem(rls->getName()));
+
+        //
+        if (rls->isWorking()) stat = Qt::green;
+        else stat = Qt::red;
+
+        item = new QTableWidgetItem;
+        item->setBackgroundColor(stat);
+        ui->listRLSTableWidget->setItem(r, 1, item);
+
+        rls->getPosition(pos);
+        QString coords = QString::number(pos.x()) + "; " + QString::number(pos.y());
+        ui->listRLSTableWidget->setItem(r, 2, new QTableWidgetItem(coords));
+    }
+
+    finishProcessing();
 }
 
 void optRLSwindow::startProcessing()
@@ -66,32 +117,18 @@ void optRLSwindow::updateStatProcessing(int percent)
 void optRLSwindow::finishProcessing()
 {
     ui->setRLSprogressBar->hide();
-}
 
-void optRLSwindow::runSearchBestPos()
-{
-    sendDataForSearchBestPos(0, 0, 100, 100, 200);
+    // Разблокируем кнопку добавления РЛС
+    ui->createRLSButton->setEnabled(true);
 }
 
 void optRLSwindow::removeRLS()
 {
-    if (ui->listRLSComboBox->count() > 0)
-    {
-        int id = ui->listRLSComboBox->currentIndex();
+    //
+    setIdCurRLS();
 
-        delRLS(id);
-        ui->listRLSComboBox->removeItem(id);
-
-        if (ui->listRLSComboBox->count() == 0)
-        {
-            ui->removeRLSButton->setEnabled(false);
-            ui->on_off_RLS_Button->setEnabled(false);
-            ui->setCoordRLSpushButton->setEnabled(false);
-
-            ui->on_off_RLS_Button->hide();
-            ui->setCoordRLSpushButton->hide();
-        }
-    }
+    //
+    delRLS(idCurRLS);
 
     // Очищаем виджет от графика удаленной РЛС
     graphicWidget->clear();
@@ -99,14 +136,13 @@ void optRLSwindow::removeRLS()
 
 void optRLSwindow::addRLS()
 {   
-    //
-    loadingWidget->Show();
+    startProcessing();
 
     // Передаем исх. данные для создания РЛС в менеджер станций
     createRLS(new QPoint(RLScoords.X(Coords::id), RLScoords.Y(Coords::id)),
               ui->nameNewRLSLineEdit->text());
 
-    ui->listRLSComboBox->addItem(ui->nameNewRLSLineEdit->text());
+    //
     ui->nameNewRLSLineEdit->clear();
 
     // разблокируем кнопку удаления РЛС
@@ -114,12 +150,6 @@ void optRLSwindow::addRLS()
 
     // блокируем кнопку добавления РЛС пока не пройдет инициализация этой
     ui->createRLSButton->setEnabled(false);
-}
-
-void optRLSwindow::buildNewRLSready()
-{
-    // выбираем помледнию РЛС
-    ui->listRLSComboBox->setCurrentIndex(ui->listRLSComboBox->count() - 1);
 }
 
 void optRLSwindow::setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working)
@@ -143,16 +173,6 @@ void optRLSwindow::setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working
     }
 
     ui->createRLSButton->setEnabled(true);
-
-    //
-    if (ui->listRLSComboBox->count() == 1)
-    {
-        ui->on_off_RLS_Button->setEnabled(true);
-        ui->setCoordRLSpushButton->setEnabled(true);
-
-        ui->on_off_RLS_Button->show();
-        ui->setCoordRLSpushButton->show();
-    }
 }
 
 void optRLSwindow::setDesine()
@@ -169,10 +189,10 @@ void optRLSwindow::setDesine()
     Designer::setGroupBox(ui->ZDvertGroupBox);
     Designer::setGroupBox(ui->coordRLSgroupBox);
     Designer::setGroupBox(ui->mainGroupBox, Designer::lightBlue);
-    Designer::setGroupBox(ui->addRLSGroupBox);
     Designer::setGroupBox(ui->nameNewRLSGroupBox);
     Designer::setGroupBox(ui->listRLSGroupBox);
     Designer::setGroupBox(ui->optionsGroupBox);
+    Designer::setGroupBox(ui->manRLSGroupBox);
 
     // Настройка визуала кнопок
     Designer::setButton(ui->setCoordRLSpushButton);
@@ -185,6 +205,7 @@ void optRLSwindow::setDesine()
 
     //
     Designer::setTabWidget(ui->generateDVOptTabWidget);
+    Designer::setTabWidget(ui->mainTabWidget);
 
     // Изначально кнопка в таком состоянии
     Designer::setButton(ui->on_off_RLS_Button, Designer::green);
