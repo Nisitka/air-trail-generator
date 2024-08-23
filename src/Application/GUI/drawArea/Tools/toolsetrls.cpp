@@ -12,7 +12,7 @@ ToolSetRLS::ToolSetRLS(int id,
     setParButton(QPixmap(":/resurs/radarBlue"), "Постановка РЛС");
 
     //
-    pixRLS = QPixmap(":/resurs/offRLS").scaled(36, 36, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);;
+    pixRLS    = QPixmap(":/resurs/offRLS").scaled(36, 36, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);;
     pixCurRLS = QPixmap(":/resurs/onRLS").scaled(36, 36, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);;
     curRLScolor.setRgb(0,255,255);
     RLScolor = Qt::black;
@@ -23,13 +23,6 @@ ToolSetRLS::ToolSetRLS(int id,
 void ToolSetRLS::updateInfoRLS()
 {
     drawArea->repaint();
-}
-
-void ToolSetRLS::setCurRLS(int idRLS)
-{
-    idCurRLS = idRLS;
-
-    updateInfoRLS();
 }
 
 void ToolSetRLS::init()
@@ -44,40 +37,17 @@ void ToolSetRLS::procDrawTask()
     drawArea->setRenderHint();
 
     // Отрисовка станций
-    QPixmap icon;
-    QColor textColor;
-
-    QVector3D pos;
     int countRLS = infoRLS->countRLS();
+    int idCurRLS = infoRLS->idCurrentRLS();
     for (int id=0; id<countRLS; id++)
     {
         const LabelRLS* station = infoRLS->getInfoRLS(id);
 
-        //
-        if (id == idCurRLS) // В юудущем можно будет проверять выделенность нескольких РЛС
-        {
-            icon = pixCurRLS ;
-            textColor = curRLScolor;
-        }
+        // Выбранная РЛС рисуется иначе
+        if (id == idCurRLS)
+            drawRLS(station, pixCurRLS, curRLScolor);
         else
-        {
-            icon = pixRLS;
-            textColor = RLScolor;
-        }
-
-        //
-        station->getPosition(pos);
-
-        // Рисуем условное обозначение РЛС
-        drawArea->drawPixmap(pos.x(), pos.y(),
-                                 -16,     -18,
-                             icon);
-
-        // Позывной под РЛС
-        drawArea->drawText(QRect(pos.x(), pos.y(), 36, 12), station->getName(),
-                           areaDrawWidget::idMap,
-                           -16, 15,
-                           QColor(0, 0, 0,30), textColor);
+            drawRLS(station, pixRLS, RLScolor);
     }
 
     // Если инструмент выбран, то рисуем метку управления станциями
@@ -88,6 +58,26 @@ void ToolSetRLS::procDrawTask()
     }
 
     drawArea->setRenderHint(false);
+}
+
+void ToolSetRLS::drawRLS(const LabelRLS *station,
+                         const QPixmap &icon,
+                         const QColor& textColor) const
+{
+    //
+    QVector3D pos;
+    station->getPosition(pos);
+
+    // Рисуем условное обозначение РЛС
+    drawArea->drawPixmap(pos.x(), pos.y(),
+                             -16,     -18,
+                         icon);
+
+    // Позывной под РЛС
+    drawArea->drawText(QRect(pos.x(), pos.y(), 36, 12), station->getName(),
+                       areaDrawWidget::idMap,
+                       -16, 15,
+                       QColor(0, 0, 0,30), textColor);
 }
 
 void ToolSetRLS::mousePress(QMouseEvent *mouse)

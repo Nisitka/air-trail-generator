@@ -18,9 +18,6 @@ public slots:
     //
     void updateInfoRLS();
 
-    // Установить выбранную РЛС
-    void setCurRLS(int idRLS);
-
 public:
     ToolSetRLS(int id,
                GISInformer* gis,
@@ -40,6 +37,11 @@ public:
 
 private:
 
+    // Отрисовка иконки одной станции (РЛС)
+    void drawRLS(const LabelRLS* station,
+                 const QPixmap&  icon,
+                 const QColor& textColor) const;
+
     // Интерфейс для получения инфы об РЛС
     InformerRLS* infoRLS;
 
@@ -49,9 +51,6 @@ private:
     // Иконки РЛС
     QPixmap pixRLS;
     QPixmap pixCurRLS;
-
-    // Выбранная РЛС
-    int idCurRLS; // индекс выбранной РЛС
 
     //
     QColor curRLScolor;

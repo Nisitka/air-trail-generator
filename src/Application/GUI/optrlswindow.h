@@ -19,8 +19,6 @@ class optRLSwindow : public QWidget
 {
     Q_OBJECT
 signals:
-    // Запустить поиск оптимальной позиции РЛС
-    void sendDataForSearchBestPos(int idXo, int idYo, int W, int L, int idMaxH);
 
     // Создать новую РЛС
     void createRLS(QPoint* posRLS, const QString& nameNewRLS);
@@ -29,7 +27,7 @@ signals:
     void delRLS(int id);
 
     // Выбрать РЛС
-    void setRLS(int id);
+    void setCurrentRLS(int id);
 
     // Установить новую позицию РЛС
     void setPositionRLS(int idX, int idY);
@@ -40,14 +38,14 @@ signals:
     // Выключить РЛС(т.е. очистить от РЛ поля)
     void signalOffRLS();
 
-    // запросить данные для графика ДН антены
-    void getDataGraphic();
-
     // обновить пар-ры ЗО в вертикальной плоскости
     void updateOptZDvert(int Rmax, // в метрах
                          int countVertVectors, int countPointsDV); // кол-водискрет
 
 public slots:
+
+    // Отобразить информацию об выбранной РЛС
+    void showInfoCurRLS();
 
     //
     void updateListRLS();
@@ -56,12 +54,6 @@ public slots:
     void startProcessing();
     void updateStatProcessing(int percent); // В процентах
     void finishProcessing();
-
-    // Установить параметры РЛС
-    void setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working);
-
-    // Перерисовать график ДН
-    void repaintGraphic(double* x, double* y, int count);
 
     // Обновить координаты РЛС
     void updateCoordRLS(Coords);
@@ -92,18 +84,15 @@ private:
     //
     QStringList columnNames = {"Наименование", "Статус", "Координаты"};
 
+    // Перерисовать график ДН
+    void repaintGraphic();
+
     //
     InformerRLS* infoRLS;
     QList <LabelRLS*> listRLS;
 
-    // Работает ли выбранная РЛС
-    bool workingCurRLS;
-
     //
     int idCurRLS;
-
-    // Названия всех РЛС
-    QStringList namesRLS;
 
     // Для графика ДН
     plotWidget* graphicWidget;

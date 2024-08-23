@@ -23,10 +23,6 @@ void managerRLS::addRLS(QPoint* posRLS_, const QString& nameRLS)
                        posRLS_, nameRLS);
     listRLS.append(rls);
 
-    // запрос данных ЗО графика
-    connect(rls,  SIGNAL(exportGraphicData(double*, double*, int)),
-            this, SIGNAL(exportGraphicData(double*, double*, int)));
-
     // Настройка пар-ов моделирования сигнала
     connect(rls,  SIGNAL(startSetOpt()),
             this, SIGNAL(startSetOpt()));
@@ -99,20 +95,28 @@ void managerRLS::setPositionRLS(int idX, int idY)
     updateVisInfoMap(rects, 2); // обновляем визуальную информацию на карте
 }
 
-void managerRLS::setRLS(int id)
+int managerRLS::idCurrentRLS() const
 {
-    if (id >= 0)
+    return idCurRLS;
+}
+
+const LabelRLS* managerRLS::currentRLS() const
+{
+    if (countRLS() > 0)
+        return (LabelRLS*)listRLS.at(idCurRLS);
+    else
+        return nullptr;
+}
+
+void managerRLS::setCurrentRLS(int id)
+{
+    if (id >= 0 &&
+        id <  countRLS())
     {
         idCurRLS = id;
 
-        // обновляем график
-        listRLS.at(idCurRLS)->getDataGraphic();
-
-        // обновляем остальные данные об РЛС
-        int Rmax, Xpos, Ypos, Hzd;
-        bool working;
-        listRLS.at(idCurRLS)->getOpt(Rmax, Xpos, Ypos, Hzd, working);
-        updateOptGui(Rmax, Xpos, Ypos, Hzd, working);
+        // Сообщаем об этом всем, кому нужно
+        changeCurrentRLS();
     }
 }
 
@@ -219,11 +223,6 @@ void managerRLS::runRLS()
     listRLS.at(idCurRLS)->getRectPosition(idX, idY, w, h);
     updateVisInfoMap(idX, idY, w, h);
     finishGenerateZD();
-}
-
-void managerRLS::getDataGraphic()
-{
-    listRLS.at(idCurRLS)->getDataGraphic();
 }
 
 void managerRLS::setOptZDvert(int Rmax, int countVertVectors, int countPointsDV)

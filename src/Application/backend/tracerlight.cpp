@@ -8,7 +8,9 @@ TracerLight::TracerLight(HeightMeter* height, RZInformer* rZone):
 
 }
 
-void TracerLight::emitRay(Ray *ray, const QVector3D &pos, QVector <QVector3D>& idBlocks)
+void TracerLight::emitRay(Ray *ray,
+                          const QVector3D &pos,
+                          QList <QVector3D>& idBlocks)
 {
     QVector <int*> way = ray->getWay();
     int idX;

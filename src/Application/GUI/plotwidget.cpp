@@ -151,12 +151,14 @@ void plotWidget::clear()
 {
     isData = false;
 
-    qDebug() << "Clear!";
+    qDebug() << "Clear graphic!";
     repaint();
 }
 
-void plotWidget::setData(QVector<float> X, QVector<float> Y)
+void plotWidget::setData(QVector<double> X, QVector<double> Y)
 {
+    qDebug() << "set data graphic!";
+
     delete [] points;
     delete [] drawPoints;
 

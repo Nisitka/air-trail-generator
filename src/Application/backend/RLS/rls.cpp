@@ -23,6 +23,29 @@ RLS::RLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height,
     working = false;
 }
 
+double RLS::Rmax() const
+{
+    return D;
+}
+
+void RLS::getGraphicData(QVector<double> &X, QVector<double> &Y) const
+{
+    // Защита от дурака
+    X.clear();
+    Y.clear();
+
+    //
+    int countPoint = DV.size();
+    X.resize(countPoint);
+    Y.resize(countPoint);
+
+    for (int i=0; i<countPoint; i++)
+    {
+        X[i] = DV.at(i)[L];
+        Y[i] = DV.at(i)[H];
+    }
+}
+
 void RLS::setPosition(int idX, int idY)
 { 
     pos.setX(idX);
@@ -107,8 +130,6 @@ void RLS::setOptZDvert(int Rmax,
     removeZD();
     buildZD();
 
-    getDataGraphic();
-
     //
     readyOptZDvert();
 }
@@ -153,7 +174,8 @@ void RLS::emitSignal()
 
             // Полет луча
             ///qDebug() << "111111111111111111";
-            RayTracer->emitRay(ZD[i]->at(j), posRLS, blocksZD);
+            RayTracer->emitRay(ZD[i]->at(j), posRLS,
+                               blocksZD);
             ///qDebug() << "444444444444444444";
 
             // Заряжаем дискереты РЛ сигналом
@@ -297,20 +319,6 @@ void RLS::updateDV()
         DV.at(i)[L] = l_DV.at(i)[L] * D;
         DV.at(i)[H] = l_DV.at(i)[H] * D;
     }
-}
-
-void RLS::getDataGraphic()
-{
-    int countPoint = DV.size();
-    double* x = new double[countPoint];
-    double* y = new double[countPoint];
-    for (int i=0; i<countPoint; i++)
-    {
-        x[i] = DV.at(i)[L];
-        y[i] = DV.at(i)[H];
-    }
-
-    exportGraphicData(x, y, countPoint);
 }
 
 void RLS::getRectPosition(int &idX, int &idY, int &W, int &H) const

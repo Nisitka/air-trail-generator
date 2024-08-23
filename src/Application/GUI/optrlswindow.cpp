@@ -13,8 +13,6 @@ optRLSwindow::optRLSwindow(InformerRLS* infoRLS, QWidget *parent):
 {
     ui->setupUi(this);
 
-    workingCurRLS = false;
-
     //
     connect(ui->setCoordRLSpushButton, SIGNAL(clicked()),
             this,                      SLOT(setNewPosRLS()));
@@ -57,11 +55,19 @@ optRLSwindow::optRLSwindow(InformerRLS* infoRLS, QWidget *parent):
 
 void optRLSwindow::setIdCurRLS()
 {
-    idCurRLS = ui->listRLSTableWidget->currentRow();
+    setCurrentRLS(ui->listRLSTableWidget->currentRow());
+}
 
-    qDebug() << "Id current RLS: " << idCurRLS;
+void optRLSwindow::showInfoCurRLS()
+{
+    if (infoRLS->countRLS() > 0)
+    {
+        // График ДН антены
+        repaintGraphic();
 
-    setRLS(idCurRLS);
+        //
+        ui->on_off_RLS_Button->show();
+    }
 }
 
 void optRLSwindow::updateListRLS()
@@ -73,27 +79,34 @@ void optRLSwindow::updateListRLS()
     int countRLS = infoRLS->countRLS();
     ui->listRLSTableWidget->setRowCount(countRLS);
 
-    QTableWidgetItem* item;
-    QColor stat;
-    QVector3D pos;
-    for (int r=0; r<countRLS; r++)
+    if (countRLS > 0)
     {
-        const LabelRLS* rls = infoRLS->getInfoRLS(r);
+        QTableWidgetItem* item;
+        QColor stat;
+        QVector3D pos;
+        for (int r=0; r<countRLS; r++)
+        {
+            const LabelRLS* rls = infoRLS->getInfoRLS(r);
 
-        //
-        ui->listRLSTableWidget->setItem(r, 0, new QTableWidgetItem(rls->getName()));
+            //
+            ui->listRLSTableWidget->setItem(r, 0, new QTableWidgetItem(rls->getName()));
 
-        //
-        if (rls->isWorking()) stat = Qt::green;
-        else stat = Qt::red;
+            //
+            if (rls->isWorking()) stat = Qt::green;
+            else stat = Qt::red;
 
-        item = new QTableWidgetItem;
-        item->setBackgroundColor(stat);
-        ui->listRLSTableWidget->setItem(r, 1, item);
+            item = new QTableWidgetItem;
+            item->setBackgroundColor(stat);
+            ui->listRLSTableWidget->setItem(r, 1, item);
 
-        rls->getPosition(pos);
-        QString coords = QString::number(pos.x()) + "; " + QString::number(pos.y());
-        ui->listRLSTableWidget->setItem(r, 2, new QTableWidgetItem(coords));
+            rls->getPosition(pos);
+            QString coords = QString::number(pos.x()) + "; " + QString::number(pos.y());
+            ui->listRLSTableWidget->setItem(r, 2, new QTableWidgetItem(coords));
+        }
+    }
+    else
+    {
+        ui->on_off_RLS_Button->hide();
     }
 
     finishProcessing();
@@ -103,7 +116,6 @@ void optRLSwindow::startProcessing()
 {
     ui->setRLSprogressBar->show();
     ui->setRLSprogressBar->setRange(0,0);
-
 }
 
 void optRLSwindow::updateStatProcessing(int percent)
@@ -125,10 +137,7 @@ void optRLSwindow::finishProcessing()
 void optRLSwindow::removeRLS()
 {
     //
-    setIdCurRLS();
-
-    //
-    delRLS(idCurRLS);
+    delRLS(ui->listRLSTableWidget->currentRow());
 
     // Очищаем виджет от графика удаленной РЛС
     graphicWidget->clear();
@@ -152,27 +161,60 @@ void optRLSwindow::addRLS()
     ui->createRLSButton->setEnabled(false);
 }
 
-void optRLSwindow::setOptRLS(int Rmax, int Xpos, int Ypos, int Hzd, bool working)
+void optRLSwindow::enablingRLS()
 {
-    loadingWidget->Hide();
-
-    ///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //updateCoordRLS(Xpos, Ypos);
-    ui->RmaxSpinBox->setValue(Rmax);
-
-    workingCurRLS = working;
-    if (workingCurRLS)
+    if (infoRLS->currentRLS()->isWorking())
     {
-        Designer::setButton(ui->on_off_RLS_Button, Designer::red);
-        ui->on_off_RLS_Button->setText("Выключить");
-    }
-    else
-    {
+        signalOffRLS();
         Designer::setButton(ui->on_off_RLS_Button, Designer::green);
         ui->on_off_RLS_Button->setText("Включить");
     }
+    else
+    {
+        signalRunRLS();
+        Designer::setButton(ui->on_off_RLS_Button, Designer::red);
+        ui->on_off_RLS_Button->setText("Выключить");
+    }
+}
 
-    ui->createRLSButton->setEnabled(true);
+void optRLSwindow::setNewPosRLS()
+{
+    // Значения с интерфейса
+    int l = RLScoords.longStep();
+    int idX = ui->xRLSspinBox->value() / l;
+    int idY = ui->yRLSspinBox->value() / l;
+
+    setPositionRLS(idX, idY);
+}
+
+void optRLSwindow::repaintGraphic()
+{
+    QVector <double> X;
+    QVector <double> Y;
+    infoRLS->currentRLS()->getGraphicData(X, Y);
+
+    //
+    graphicWidget->setData(X, Y);
+}
+
+void optRLSwindow::setOptZDvert()
+{
+    //ui->setOptZDvertButton->setEnabled(false);
+    updateOptZDvert(ui->RmaxSpinBox->value(),
+                    ui->countHorVecZDSpinBox->value(),
+                    ui->countPointsDVSpinBox->value());
+
+    //ui->setCoordRLSpushButton->setEnabled(false);
+}
+
+void optRLSwindow::updateCoordRLS(Coords coords)
+{
+    RLScoords = coords;
+
+    //
+    ui->xRLSspinBox->setValue(RLScoords.X(Coords::m));
+    ui->yRLSspinBox->setValue(RLScoords.Y(Coords::m));
+    ui->zValueRLSLabel->setText(QString::number(RLScoords.Y(Coords::m)));
 }
 
 void optRLSwindow::setDesine()
@@ -205,72 +247,9 @@ void optRLSwindow::setDesine()
 
     //
     Designer::setTabWidget(ui->generateDVOptTabWidget);
-    Designer::setTabWidget(ui->mainTabWidget);
 
     // Изначально кнопка в таком состоянии
     Designer::setButton(ui->on_off_RLS_Button, Designer::green);
-}
-
-void optRLSwindow::enablingRLS()
-{
-    if (workingCurRLS)
-    {
-        signalOffRLS();
-        workingCurRLS = false;
-        Designer::setButton(ui->on_off_RLS_Button, Designer::green);
-        ui->on_off_RLS_Button->setText("Включить");
-    }
-    else
-    {
-        signalRunRLS();
-        workingCurRLS = true;
-        Designer::setButton(ui->on_off_RLS_Button, Designer::red);
-        ui->on_off_RLS_Button->setText("Выключить");
-    }
-}
-
-void optRLSwindow::setNewPosRLS()
-{
-    // Значения с интерфейса
-    int l = RLScoords.longStep();
-    int idX = ui->xRLSspinBox->value() / l;
-    int idY = ui->yRLSspinBox->value() / l;
-
-    setPositionRLS(idX, idY);
-}
-
-void optRLSwindow::repaintGraphic(double* x, double* y, int count)
-{
-    QVector <float> X(count), Y(count);
-    for (int i=0; i<count; i++)
-    {
-        X[i] = x[i];
-        Y[i] = y[i];
-    }
-    delete [] x;
-    delete [] y;
-
-    graphicWidget->setData(X, Y);
-}
-
-void optRLSwindow::setOptZDvert()
-{
-    //ui->setOptZDvertButton->setEnabled(false);
-    updateOptZDvert(ui->RmaxSpinBox->value(),
-                    ui->countHorVecZDSpinBox->value(),
-                    ui->countPointsDVSpinBox->value());
-
-    //ui->setCoordRLSpushButton->setEnabled(false);
-}
-
-void optRLSwindow::updateCoordRLS(Coords coords)
-{
-    RLScoords = coords;
-
-    //
-    ui->xRLSspinBox->setValue(RLScoords.X(Coords::m));
-    ui->yRLSspinBox->setValue(RLScoords.Y(Coords::m));
-    ui->zValueRLSLabel->setText(QString::number(RLScoords.Y(Coords::m)));
 }
 
 optRLSwindow::~optRLSwindow()

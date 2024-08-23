@@ -17,7 +17,8 @@
 #include "labelrls.h"
 
 // класс РЛС
-class RLS: public QObject, public LabelRLS
+class RLS: public QObject,
+           public LabelRLS // Интерфейс для получения данных об РЛС
 {
     Q_OBJECT
 signals:
@@ -37,9 +38,6 @@ signals:
     // Зона обнаружения сгенерирована
     void finishGenerateZD();
 
-    // Отправка графика ДН антены
-    void exportGraphicData(double* x, double* y, int count);
-
     // Начата установка настроек РЛС
     void startSetOpt();
 
@@ -47,8 +45,6 @@ signals:
     void readyOptZDvert();
     
 public slots:
-    // Запрос данных для отрисовки графика ДН антены
-    void getDataGraphic();
 
     // Установка точки стояния РЛС
     void setPosition(int idX, int idY);
@@ -69,10 +65,17 @@ public:
     explicit RLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height,
                  QPoint* position, const QString& nameRLS = nullptr);
 
+    // Получить данные об ДН антены
+    void getGraphicData(QVector <double>& X,
+                        QVector <double>& Y) const;
+
+    // Максимальная дальность
+    double Rmax() const; // В метрах
+
     // Получить точки пересечения сигнала с рельефом
     const QVector <QVector <QVector3D>>& getPointsInterZD();
 
-
+    //
     void getRectPosition(int& idX, int& idY, int& W, int& H) const;
 
     double functionDV(double nL);
@@ -137,7 +140,7 @@ private:
     void buildZD();
 
     // id блоков, которые находятся в ЗО данной РЛС
-    QVector <QVector3D> blocksZD;
+    QList <QVector3D> blocksZD;
 
     // Для отображения прогресса
     int sizeZD;

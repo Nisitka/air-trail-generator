@@ -114,9 +114,6 @@ void GUI::connectMRLS(managerRLS* mRLS)
     //
     QObject::connect(optRLSWin, SIGNAL(setPositionRLS(int,int)),
                      mRLS,      SLOT(setPositionRLS(int,int)));
-    //
-    QObject::connect(mRLS,      SIGNAL(updateOptGui(int,int,int,int,bool)),
-                     optRLSWin, SLOT(setOptRLS(int,int,int,int,bool)));
 
     // добавление/удаление РЛС
     QObject::connect(mRLS,    SIGNAL(createReadyRLS()),
@@ -132,10 +129,12 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      mRLS,      SLOT(delRLS(int)));
 
     // установка выбранной РЛС
-    QObject::connect(optRLSWin, SIGNAL(setRLS(int)),
-                     mRLS,      SLOT(setRLS(int)));
-    QObject::connect(optRLSWin,  SIGNAL(setRLS(int)),
-                     toolRLS,    SLOT(setCurRLS(int)));
+    QObject::connect(optRLSWin, SIGNAL(setCurrentRLS(int)),
+                     mRLS,      SLOT(setCurrentRLS(int)));
+    QObject::connect(mRLS,    SIGNAL(changeCurrentRLS()),
+                     toolRLS, SLOT(updateInfoRLS()));
+    QObject::connect(mRLS, SIGNAL(changeCurrentRLS()),
+                     optRLSWin, SLOT(showInfoCurRLS()));
 
     //
     QObject::connect(optRLSWin,  SIGNAL(signalRunRLS()),
@@ -146,11 +145,6 @@ void GUI::connectMRLS(managerRLS* mRLS)
     //
     QObject::connect(mRLS,       SIGNAL(finishGenerateZD()),
                      optRLSWin,  SLOT(finishProcessing()));
-    // обмен данными для отрисовки графика ДН
-    QObject::connect(optRLSWin,  SIGNAL(getDataGraphic()),
-                     mRLS,       SLOT(getDataGraphic()));
-    QObject::connect(mRLS,       SIGNAL(exportGraphicData(double*, double*, int)),
-                     optRLSWin,  SLOT(repaintGraphic(double*, double*, int)));
 
     // Установка пар-ов сигнала и его моделирования в пространстве
     QObject::connect(optRLSWin,  SIGNAL(updateOptZDvert(int,int,int)),

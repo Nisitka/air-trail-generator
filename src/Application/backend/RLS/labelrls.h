@@ -19,6 +19,13 @@ public:
     // Узнать позывной
     QString getName() const;
 
+    // Получить данные об ДН антены
+    virtual void getGraphicData(QVector <double>& X,
+                        QVector <double>& Y) const = 0;
+
+    // Максимальная дальность
+    virtual double Rmax() const = 0;
+
 protected:
 
     // Включена ли РЛС

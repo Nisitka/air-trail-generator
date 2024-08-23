@@ -17,7 +17,7 @@ public:
     // Испустить луч
     void emitRay(Ray* ray,             // Какой луч
                  const QVector3D& pos, // От куда
-                 QVector <QVector3D>& idBlocks); // Помещаем id дискрет
+                 QList <QVector3D>& idBlocks); // Помещаем id дискрет
 
 private:
 

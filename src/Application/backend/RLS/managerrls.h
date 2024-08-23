@@ -20,17 +20,18 @@ class managerRLS : public QObject, public InformerRLS
     Q_OBJECT
 signals:
 
-    // сообщаем GUI об завершении инициализации РЛС
+    // Завершена инициализация РЛС
     void createReadyRLS();
 
-    //
+    // Завершено удаление РЛС
     void deleteReadyRLS();
 
+    // Выбрана другая РЛС
+    void changeCurrentRLS();
+
+    /// Заменить на changeSignal() !!!!
     void updateVisInfoMap(int idX, int idY, int w, int h);
     void updateVisInfoMap(QRect*, int count);
-
-    // обновить данные об РЛС в интерфейсе
-    void updateOptGui(int Rmax, int Xpos, int Ypos, int Hzd, bool working);
 
     //
     void startEmitSignal();
@@ -55,7 +56,7 @@ public slots:
     void delRLS(int id); // индекс в листе, которую удаляем
 
     // выбрать РЛС
-    void setRLS(int id); // индекс в листе
+    void setCurrentRLS(int id); // индекс в листе
 
     /* Слоты только для РЛС */
     void setPositionRLS(int idX, int idY);
@@ -68,16 +69,24 @@ public slots:
     // установить поз. РЛС и смод-ть сигнал
     void runRLS(int, int); // индексы дискрет гор. координат
 
-    void getDataGraphic();
+    //
     void setOptZDvert(int,int,int);
 
 public:
-    managerRLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height);
+    managerRLS(TracerLight* RayTracer, //
+               RZCreator* RZEditor,    //
+               HeightMeter* Height);   //
+
+    // Узнать индекс выбранной РЛС
+    int idCurrentRLS() const;
+
+    // Получить интерфейс выбранной РЛС
+    const LabelRLS* currentRLS() const;
 
     // Узнать общее кол-во РЛС
     int countRLS() const;
 
-    //
+    // Получить интерфейс РЛС по id
     const LabelRLS* getInfoRLS(int idRLS) const;
 
 private:

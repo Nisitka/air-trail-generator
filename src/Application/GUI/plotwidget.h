@@ -9,7 +9,7 @@ class plotWidget: public QWidget
 
 public slots:
     //
-    void setData(QVector<float> X, QVector<float> Y);
+    void setData(QVector<double> X, QVector<double> Y);
 
 public:
     plotWidget();
