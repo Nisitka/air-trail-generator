@@ -22,11 +22,12 @@ void ToolZoomMap::mousePress(QMouseEvent *mouse)
     xPressMouse = mouse->x();
     yPressMouse = mouse->y();
 
-    switch (mouse->button() - 1) {
-    case left:
+    lastKeyMouse = mouse->button();
+    switch (lastKeyMouse) {
+    case Qt::LeftButton:
         drawArea->zoom(dK);
         break;
-    case right:
+    case Qt::RightButton:
         drawArea->zoom(-dK);
         break;
     }

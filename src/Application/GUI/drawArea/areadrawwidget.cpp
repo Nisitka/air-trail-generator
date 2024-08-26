@@ -50,6 +50,8 @@ areaDrawWidget::areaDrawWidget(GISInformer* gis):
     appendDrawTask(border,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBorder));
 
     installEventFilter(this);
+
+    angle = 0;
 }
 
 void areaDrawWidget::toPixDrawArea(int &Xid, int &Yid)
@@ -62,18 +64,6 @@ void areaDrawWidget::toIdMapCoords(int &Xpix, int &Ypix)
 {
     Xpix = (Xpix / kZoom) + idXo;
     Ypix = (Ypix / kZoom) + idYo;
-}
-
-void areaDrawWidget::updateSize()
-{
-    //
-    W = drawImg.width()  * kZoom;
-    H = drawImg.height() * kZoom;
-
-    setFixedSize(W, H);
-
-    // Сообщаем об этом кому это нужно
-    resized();
 }
 
 void areaDrawWidget::appendDrawTask(int priorityKey, taskPainter* task)
@@ -99,17 +89,48 @@ void areaDrawWidget::drawBackground()
 
 void areaDrawWidget::drawBorder()
 {
-    pPainter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
+    pPainter->setPen(Qt::NoPen); //QPen(Qt::black, 1, Qt::SolidLine)
     pPainter->setBrush(Qt::NoBrush);
     pPainter->drawRect(0, 0, this->geometry().width()-1, this->geometry().height()-1);
 }
 
 void areaDrawWidget::drawMap()
 {
-    //
+    // Берем текущую подложку
     drawImg = gis->getGeoImage();
 
+    //
     pPainter->drawImage(0, 0, drawImg.scaled(W, H));
+}
+
+void areaDrawWidget::setAngleRotate(qreal angle_)
+{
+    angle = angle_;
+}
+
+void areaDrawWidget::changeAngleRotate(qreal dAngle)
+{
+    angle += dAngle;
+    repaint();
+
+    qDebug() << angle;
+}
+
+void areaDrawWidget::rotate(qreal a)
+{
+    pPainter->rotate(a);
+}
+
+void areaDrawWidget::updateSize()
+{
+    //
+    W = drawImg.width()  * kZoom;
+    H = drawImg.height() * kZoom;
+
+    setFixedSize(W, H);
+
+    // Сообщаем об этом кому это нужно
+    resized();
 }
 
 void areaDrawWidget::getSizePixMap(int &W, int &H)

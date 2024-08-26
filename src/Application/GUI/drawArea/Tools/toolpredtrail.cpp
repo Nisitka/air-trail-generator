@@ -131,12 +131,13 @@ void ToolPredTrail::mousePress(QMouseEvent *mouse)
     idY = yPressMouse;
     drawArea->toIdMapCoords(idX, idY);
 
-    switch (mouse->button() - 1) {
-    case left:
+    lastKeyMouse = mouse->button();
+    switch (lastKeyMouse) {
+    case Qt::LeftButton:
         beginPoint.setX(idX);
         beginPoint.setY(idY);
         break;
-    case right:
+    case Qt::RightButton:
         lastPoint.setX(idX);
         lastPoint.setY(idY);
         break;

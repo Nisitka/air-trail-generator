@@ -24,9 +24,9 @@ void ToolSquareTer::mousePress(QMouseEvent *mouse)
     yPressMouse = mouse->y();
 
     //
-    lastKeyMouse = mouse->button() - 1;
+    lastKeyMouse = mouse->button();
     switch (lastKeyMouse) {
-    case left: // Добавляем новую точку
+    case Qt::LeftButton: // Добавляем новую точку
         {
 
         int x = xPressMouse;
@@ -40,7 +40,7 @@ void ToolSquareTer::mousePress(QMouseEvent *mouse)
 
         break;
         }
-    case right: // Удаляем последнюю
+    case Qt::RightButton: // Удаляем последнюю
         {
         if (polygon.size() > 0)
             polygon.removeLast();

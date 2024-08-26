@@ -126,6 +126,9 @@ void ScrollMapWidget::movePosLookMap(double dX, double dY)
         // Перемещаем область на миникарте соответсвенно
         miniMap->setPosLookArea((double)posX/drawArea->height(),
                                 (double)posY/drawArea->width());
+
+        ///
+        //drawArea->movePosCamera(dX, dY);
     }
 }
 
@@ -135,6 +138,8 @@ void ScrollMapWidget::setPosLookMap(double pX, double pY)
     {
         verScroll->setValue(pY * (drawArea->height()));
         horScroll->setValue(pX * (drawArea->width()));
+
+        //drawArea->setPosCamera(pX, pY);
     }
 }
 

@@ -30,7 +30,6 @@ public:
 
     int getId() const;
 
-    enum keyMouse{left, right, mid};
     enum statusMouse{press, release};
 
     virtual void mousePress(QMouseEvent* mouse) = 0;

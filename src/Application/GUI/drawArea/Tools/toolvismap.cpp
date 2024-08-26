@@ -67,7 +67,7 @@ void ToolVisMap::mouseRelease(QMouseEvent *mouse)
 }
 
 void ToolVisMap::mouseMove(QMouseEvent *mouse)
-{
+{ 
     // Текущие координаты
     xMouse = mouse->x();
     yMouse = mouse->y();

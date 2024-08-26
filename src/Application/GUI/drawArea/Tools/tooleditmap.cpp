@@ -48,12 +48,12 @@ void ToolEditMap::mousePress(QMouseEvent *mouse)
     drawArea->toIdMapCoords(idX, idY);
 
     //
-    lastKeyMouse = mouse->button() - 1;
+    lastKeyMouse = mouse->button();
     switch (lastKeyMouse) {
-    case left:
+    case Qt::LeftButton:
         cursor = QCursor(upCurPixmap.scaled(R,R));
         break;
-    case right:
+    case Qt::RightButton:
         cursor = QCursor(downCurPixmap.scaled(R,R));
         break;
     }
@@ -66,10 +66,10 @@ void ToolEditMap::mousePress(QMouseEvent *mouse)
 void ToolEditMap::editEarth()
 {
     switch (lastKeyMouse) {
-    case left:
+    case Qt::LeftButton:
         upEarth(idX, idY, r);
         break;
-    case right:
+    case Qt::RightButton:
         downEarth(idX, idY, r);
         break;
     }

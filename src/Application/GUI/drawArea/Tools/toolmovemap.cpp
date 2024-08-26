@@ -19,6 +19,7 @@ void ToolMoveMap::init()
 void ToolMoveMap::mousePress(QMouseEvent *mouse)
 {
     statMouse = press;
+    lastKeyMouse = mouse->button();
 
     cursor = Qt::ClosedHandCursor;
     setCursor();
@@ -58,12 +59,23 @@ void ToolMoveMap::mouseMove(QMouseEvent *mouse)
         int W = drawArea->width();
         int H = drawArea->height();
 
+        //
         dX = xPressMouse - xMouse;
         dY = yPressMouse - yMouse;
 
-        //qDebug() << dX << dY;
+        switch (lastKeyMouse) {
+        case Qt::LeftButton:
+            movedLookArea((double) dX / W, (double) dY / H);
 
-        movedLookArea((double) dX / W, (double) dY / H);
+            break;
+        case Qt::RightButton:
+            drawArea->changeAngleRotate((double)dY / H);
+
+            break;
+        default:
+            break;
+        }
+
     }
     else
     {

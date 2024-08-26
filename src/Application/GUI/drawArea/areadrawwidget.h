@@ -57,6 +57,13 @@ public:
     areaDrawWidget(GISInformer* gis);
 
     //
+    void setAngleRotate(qreal Angle);
+    void changeAngleRotate(qreal dAngle);
+
+    //
+    void rotate(qreal a);
+
+    //
     bool eventFilter(QObject *watched, QEvent *event);
 
     enum unit{pix, idMap};
@@ -147,6 +154,9 @@ protected:
     virtual void wheelEvent(QWheelEvent *event)             override;
 
 private:
+
+    //
+    qreal angle;
 
     //
     GISInformer* gis;
