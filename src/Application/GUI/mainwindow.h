@@ -2,11 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
 #include <QToolBar>
-
+#include <QToolButton>
 #include <QDockWidget>
-
-#include "visualinfowidget.h"
 
 namespace Ui {
 class mainWindow;
@@ -28,6 +27,8 @@ public:
                  const QString& nameWindow,
                  Qt::DockWidgetArea showPosition = Qt::TopDockWidgetArea);
 
+
+
     ~mainWindow();
 
 private slots:
@@ -35,12 +36,13 @@ private slots:
     //
     void showFunWindow();
 
-private:
-    // панели окон
-    QToolBar* toolBar; //
+    //
 
-    // окно визулизатора данных
-    QDockWidget* dockVisualInfo;
+
+private:
+
+    //
+    QToolBar* toolBar; //
 
     QMap <QToolButton*, QDockWidget*> windows;
 

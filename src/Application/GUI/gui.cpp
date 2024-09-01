@@ -8,6 +8,10 @@ GUI::GUI(GISInformer* gis,
          InformerRLS* infoRLS):
     gisInformer(gis)
 {
+    //
+    switcherWindow = new mainSwitcherWindow;
+
+
     mainWin = new mainWindow;
 
     // Задача для работы с графической информацией
@@ -57,6 +61,19 @@ GUI::GUI(GISInformer* gis,
     algPredWin = new setAlgPredictWindow;
     mainWin->addTask(algPredWin,         QPixmap(":/resurs/qFunIcon"),
                      "Функция прогноза", "Функция прогноза");
+
+    //
+    helloWin = new helloWindow;
+
+        /*       */
+    //
+    switcherWindow->addWindow(helloWin,
+                              QIcon(":/resurs/genFiles"),
+                              "Начало");
+    //
+    switcherWindow->addWindow(mainWin,
+                              QIcon(":/resurs/earchIcon"),
+                              "Редактор");
 }
 
 void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
@@ -173,5 +190,6 @@ void GUI::connectMRLS(managerRLS* mRLS)
 
 void GUI::showMainWin()
 {
-    mainWin->show();
+    switcherWindow->setCurrentWindow(helloWin);
+    switcherWindow->show();
 }

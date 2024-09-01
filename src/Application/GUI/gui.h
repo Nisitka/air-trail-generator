@@ -7,7 +7,10 @@
 
 #include "backend/GIS/gis.h"
 
+#include "gui/mainswitcherwindow.h"
+
 #include "mainwindow.h"
+#include "hellowindow.h"
 
 #include "visualinfowidget.h"
 #include "optrlswindow.h"
@@ -37,11 +40,17 @@ public:
 
 private:
 
+    // Самое главное окно
+    mainSwitcherWindow* switcherWindow;
+
+    // Окно приветсвия
+    helloWindow* helloWin;
+
+    // Основное окно приложения
+    mainWindow* mainWin;
+
     // Получаем необходимые данные об карте через него
     GISInformer* gisInformer;
-
-    // основное окно приложения
-    mainWindow* mainWin;
 
     //
     visualInfoWidget* visInfoWin;

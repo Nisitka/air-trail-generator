@@ -80,7 +80,9 @@ SOURCES += main.cpp\
     GUI/drawArea/zoomcontrollerwidget.cpp \
     backend/GIS/geocolumn.cpp \
     backend/GIS/geoarea.cpp \
-    backend/RLS/labelrls.cpp
+    backend/RLS/labelrls.cpp \
+    GUI/hellowindow.cpp \
+    GUI/mainswitcherwindow.cpp
 
 HEADERS  += \
     core.h \
@@ -161,7 +163,9 @@ HEADERS  += \
     backend/RLS/informerrls.h \
     backend/GIS/geocolumn.h \
     backend/GIS/geoarea.h \
-    backend/RLS/labelrls.h
+    backend/RLS/labelrls.h \
+    GUI/hellowindow.h \
+    GUI/mainswitcherwindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optqfunwindow.ui \
@@ -173,7 +177,9 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/airinfowindow.ui \
     GUI/UI/airwindow.ui \
     GUI/drawArea/DecktopItems/coordsinfoform.ui \
-    GUI/drawArea/zoomcontrollerwidget.ui
+    GUI/drawArea/zoomcontrollerwidget.ui \
+    GUI/hellowindow.ui \
+    GUI/mainswitcherwindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \

@@ -16,13 +16,13 @@ mainWindow::mainWindow(QWidget *parent) :
 
     // Настройка визуала
     Designer::setMainWindow(this);
-    this->setWindowTitle("Система прогнозирования маршрутов скрытного пролета БПЛА");
 
     // Кнопки вызова основных окон
     toolBar = new QToolBar("Панель задач");
     toolBar->setMovable(false);  // Чтоб пользователь не потерял его :)
     Designer::setToolBar(toolBar, Designer::whiteToolBox);
-    addToolBar(Qt::TopToolBarArea, toolBar);
+    addToolBar(Qt::TopToolBarArea, toolBar); //LeftToolBarArea
+
 }
 
 void mainWindow::showFunWindow()

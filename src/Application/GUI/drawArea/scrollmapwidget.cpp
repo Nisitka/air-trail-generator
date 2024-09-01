@@ -20,7 +20,7 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
             this,     SLOT(updateCoord(const Coords)));
 
     backWidget->setStyleSheet("QWidget{"
-                     "   background-color:transparent;"
+                     "   background-color: transparent;" //black
                      "};)");
 
     this->setStyleSheet("QScrollArea{"
@@ -93,7 +93,6 @@ void ScrollMapWidget::updateMiniMap()
     double pY = (double)verScroll->value() / drawArea->height();
     double pX = (double)horScroll->value() / drawArea->width();
     miniMap->setPosLookArea(pX, pY);
-    //qDebug() << pX << pY;
 }
 
 void ScrollMapWidget::setMoveMapEnabled(bool val)

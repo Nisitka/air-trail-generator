@@ -326,9 +326,13 @@ void Designer::setMainWindow(QMainWindow *mainWin, int style)
     switch (style) {
     case def:
         strStyle =
-        "QMainWindow{"
+        /*"QMainWindow{"
         "    background-color: rgb(209,226,248);"
         "    border: 1px solid rgb(150,183,227);"
+        "    color: rgb(34,69,157);}";*/
+        "QMainWindow{"
+        "    background-color: white;"
+        "    border: 1px solid transparent;"
         "    color: rgb(34,69,157);}";
         break;
     }
