@@ -5,8 +5,6 @@
 
 #include "./geocolumn.h"
 
-class GeoColumn;
-
 // Область гео-пространства (совокупность дискрет-столбцов)
 class GeoArea
 {

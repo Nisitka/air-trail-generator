@@ -3,9 +3,7 @@
 
 #include <QDataStream>
 
-#include "./geogenerator.h"
-
-class geoGenerator;
+//class geoGenerator;
 
 // Столб-дискрета пространства
 class GeoColumn
@@ -38,10 +36,10 @@ public:
     bool isZD(int idH) const;
     int  countUnitZD() const;
 
-private:
-
     //
     static void setCountUnit(int);
+
+private:
 
     //
     int height;

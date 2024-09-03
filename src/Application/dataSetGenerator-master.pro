@@ -82,7 +82,8 @@ SOURCES += main.cpp\
     backend/GIS/geoarea.cpp \
     backend/RLS/labelrls.cpp \
     GUI/hellowindow.cpp \
-    GUI/mainswitcherwindow.cpp
+    GUI/mainswitcherwindow.cpp \
+    backend/MapFile/mapfile.cpp
 
 HEADERS  += \
     core.h \
@@ -165,7 +166,11 @@ HEADERS  += \
     backend/GIS/geoarea.h \
     backend/RLS/labelrls.h \
     GUI/hellowindow.h \
-    GUI/mainswitcherwindow.h
+    GUI/mainswitcherwindow.h \
+    backend/mapfile.h \
+    backend/MapFile/mapfile.h \
+    backend/MapFile/datamapgis.h \
+    backend/MapFile/datamaprls.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optqfunwindow.ui \

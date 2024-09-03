@@ -8,14 +8,15 @@
 #include "heightmeter.h"
 #include "rzinformer.h"
 
-#include "geocolumn.h"
-
 #include "rzcreator.h"
 
 #include "coords.h"
 #include "mapdata.h"
 
 #include "geoarea.h"
+
+//
+#include "../MapFile/mapfile.h"
 
 class GeoArea;
 
@@ -85,9 +86,6 @@ private:
     void setZD(int idX, int idY, int idH,
                bool statZD) const;
 
-    // Кол-во байтов до столбца
-    int idColumnToNumByte(int idX, int idY) const;
-
     // Ширина/Длина блоков в столбцах
     void setLenBlock(int);
     int getLenBlock() const;
@@ -107,24 +105,25 @@ private:
     // Убрать землю с дискреты
     void removeEarth(int idX, int idY, int countLayer);
 
-    //
-    int idColumn(int idX, int idY) const;
+    ///
+    MapFile* mapFile;
+    int Hmap;
 
-    //  
-    int Wmap, Lmap, Hmap;
-    QFile* map;
+//    //
+//    int Wmap, Lmap, Hmap;
+//    QFile* map;
     QString dirNameTmpMap;
 
-    // Размеры блоков в метрах
-    int lenghtUnit;
-    int heightUnit;
+//    // Размеры блоков в метрах
+//    int lenghtUnit;
+//    int heightUnit;
 
-    // Кол-во байт в файле карты на:
-    qint64 sizeColumn;  // Одну дискрету
-    qint64 sizeOptData; // Другие данные
+//    // Кол-во байт в файле карты на:
+//    qint64 sizeColumn;  // Одну дискрету
+//    qint64 sizeOptData; // Другие данные
 
     //
-    MapData mapData;
+//    MapData mapData;
 
     // Активная зона
     GeoArea* actionArea;
@@ -135,8 +134,6 @@ private:
     int lastX;
     int lastY;
 
-    // Вернуть значение true c указанной вероятностью
-    bool P(double p = 0.5);
 };
 
 #endif // GEOGENERATOR_H
