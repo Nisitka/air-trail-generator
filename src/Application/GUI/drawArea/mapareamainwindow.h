@@ -5,6 +5,8 @@
 
 #include <QSlider>
 
+#include "../3DVisualization/map3dviswindow.h"
+
 #include "../designer.h"
 #include "areadrawwidget.h"
 #include "scrollmapwidget.h"
@@ -36,7 +38,6 @@ public:
     // Добавить грппу инструментов
     void appendToolGroup(const QVector <drawAreaTool*>&,
                          const QString& nameGroup);
-
 
     // Инструменты
     int curTool();
@@ -78,9 +79,6 @@ protected:
 private slots:
 
     //
-    void updateInfoStatusBar(const QString& info);
-
-    //
     void changeTool();
     void changeToolGroup();
 
@@ -92,14 +90,13 @@ private:
     GISInformer* gis;
 
     //
-    QStatusBar* statusBar;
-    QLabel* infoLabel;
-
-    //
     ScrollMapWidget* scrollArea;
 
     //
     areaDrawWidget* area;
+
+    //
+    map3DVisWindow* map3DWin;
 
     QToolButton* lastToolButton;
     void setButtonStyle(QToolButton*, StyleButtonTool style);

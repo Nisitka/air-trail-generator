@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QDockWidget>
+#include <QStatusBar>
 
 #include <QToolBar>
 #include <QToolButton>
@@ -31,6 +32,9 @@ protected:
 
     // Переопределяем метод, чтоб не вылазило меню при нажатии лев.клавиши мыши
     void contextMenuEvent(QContextMenuEvent* event) override;
+
+    //
+    QStatusBar* statusBar;
 
 private slots:
 

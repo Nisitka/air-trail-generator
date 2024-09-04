@@ -30,7 +30,6 @@ SOURCES += main.cpp\
     GUI/designer.cpp \
     GUI/gui.cpp \
     GUI/mainwindow.cpp \
-    GUI/optrlswindow.cpp \
     GUI/runwindow.cpp \
     GUI/visualinfowidget.cpp \
     GUI/drawArea/areadrawwidget.cpp \
@@ -83,7 +82,8 @@ SOURCES += main.cpp\
     backend/RLS/labelrls.cpp \
     GUI/hellowindow.cpp \
     GUI/mainswitcherwindow.cpp \
-    backend/MapFile/mapfile.cpp
+    backend/MapFile/mapfile.cpp \
+    GUI/manrlswindow.cpp
 
 HEADERS  += \
     core.h \
@@ -94,7 +94,6 @@ HEADERS  += \
     GUI/designer.h \
     GUI/gui.h \
     GUI/mainwindow.h \
-    GUI/optrlswindow.h \
     GUI/runwindow.h \
     GUI/visualinfowidget.h \
     GUI/drawArea/areadrawwidget.h \
@@ -170,11 +169,11 @@ HEADERS  += \
     backend/mapfile.h \
     backend/MapFile/mapfile.h \
     backend/MapFile/datamapgis.h \
-    backend/MapFile/datamaprls.h
+    backend/MapFile/datamaprls.h \
+    GUI/manrlswindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optqfunwindow.ui \
-    GUI/UI/optrlswindow.ui \
     GUI/UI/dataaccessobjectwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \
     GUI/algorithmPredict/setalgpredictwindow.ui \
@@ -184,7 +183,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/drawArea/DecktopItems/coordsinfoform.ui \
     GUI/drawArea/zoomcontrollerwidget.ui \
     GUI/hellowindow.ui \
-    GUI/mainswitcherwindow.ui
+    GUI/mainswitcherwindow.ui \
+    GUI/manrlswindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \

@@ -17,19 +17,32 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
 
     toolBar = new QToolBar("Панель инструментов");
     toolBar->setStyleSheet("QToolBar {"
-                           "   border: 1px solid gray;"
-                           "   padding: 2px 0px;"
+                           "   border: 1px solid grey;"
+                           "   padding: 20px 0px;"
                            "   border-radius: 2px;"
-                           "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-                           "                                     stop: 0 #E0E0E0, stop: 1 #FFFFFF);"
+                           "   background-color: rgb(255,255,255);"
                            "};");
     addToolBar(Qt::TopToolBarArea, toolBar); // добавляем в панель инструментов
 
     area = new areaDrawWidget(gis);
 
-    //
+    setCentralWidget(nullptr);
+
+    // Карта в 2D
     scrollArea = new ScrollMapWidget(area);
-    setCentralWidget(scrollArea);
+    QDockWidget* dock = new QDockWidget("Топографическая обстановка");
+    this->addDockWidget(Qt::LeftDockWidgetArea, dock);
+    dock->setFeatures(QDockWidget::DockWidgetMovable);
+    dock->setWidget(scrollArea);
+    dock->show();
+
+    // Карта в 3D
+    map3DWin = new map3DVisWindow();
+    dock = new QDockWidget("Трехмерная визуализация");
+    this->addDockWidget(Qt::RightDockWidgetArea, dock);
+    dock->setFeatures(QDockWidget::DockWidgetMovable);
+    dock->setWidget(map3DWin);
+    dock->show();
 
     //
     connect(scrollArea, SIGNAL(moveActionArea(int,int)),
@@ -59,29 +72,10 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
     area->setTool(Tool);
 
     // Настройка визуала
-    this->setStyleSheet("QMainWindow{"
-                        "   background-color: rgb(244,248,253);"
-                        "   border: 1px solid gray;"
-                        "   border-radius: 3px;"
-                        "};");
+    Designer::setMainWindow(this);
 
-    //
-    infoLabel = new QLabel;
-    statusBar = new QStatusBar;
-    statusBar->setFixedHeight(25);
-    statusBar->addWidget(infoLabel);
-    //
-    this->setStatusBar(statusBar);
-    statusBar->setStyleSheet("QStatusBar{"
-                             "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-                             "                                     stop: 0    #E0E0E0,"
-                             "                                     stop: 0.35 rgb(251,252,254), "
-                             "                                     stop: 1    rgb(231,232,234));"
-                             "   border: 1px solid gray;"
-                             "   padding: 1px 0px;"
-                             "   border-radius: 2px;"
-                             "};)");
-    statusBar->show();
+    // Убираем статус бар
+    setStatusBar(nullptr);
 }
 
 void mapAreaMainWindow::updateGeoMapImage()
@@ -105,23 +99,19 @@ void mapAreaMainWindow::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
 
-    QPainter painter(this);
+//    QPainter painter(this);
 
-    // Отрисовка подложки
-    painter.setBrush(QBrush(Qt::black, Qt::Dense7Pattern));
-    painter.drawRect(0, 0, this->geometry().width(), this->geometry().height());
+//    // Отрисовка подложки
+//    painter.setPen(Qt::transparent);
+//    painter.setBrush(QBrush(QColor(150,183,227), Qt::Dense7Pattern));
+//    painter.drawRect(0, 0, this->geometry().width(), this->geometry().height());
 
-    painter.end();
+//    painter.end();
 }
 
 void mapAreaMainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
-}
-
-void mapAreaMainWindow::updateInfoStatusBar(const QString& info)
-{
-    infoLabel->setText(info);
 }
 
 areaDrawWidget* mapAreaMainWindow::getDrawArea()
@@ -178,10 +168,6 @@ void mapAreaMainWindow::appendTool(drawAreaTool *tool)
         // Для реакции инструмента
         objToKeyTool[action] = idPriority;
     }
-
-    //
-    connect(tool, SIGNAL(info(QString)),
-            this, SLOT(updateInfoStatusBar(QString)));
 }
 
 void mapAreaMainWindow::appendToolGroup(const QVector<drawAreaTool *> &boxTools, const QString &nameGroup)
@@ -218,10 +204,6 @@ void mapAreaMainWindow::appendToolGroup(const QVector<drawAreaTool *> &boxTools,
 
         // Для реакции инструмента
         objToKeyTool[action] = idPriority;
-
-        //
-        connect(tool, SIGNAL(info(QString)),
-                this, SLOT(updateInfoStatusBar(QString)));
     }
 
     //

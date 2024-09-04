@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStatusBar>
 
 #include <QToolBar>
 #include <QToolButton>
@@ -43,6 +44,9 @@ private:
 
     //
     QToolBar* toolBar; //
+
+    //
+    QStatusBar* statusBar;
 
     QMap <QToolButton*, QDockWidget*> windows;
 

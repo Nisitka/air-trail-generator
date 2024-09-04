@@ -13,7 +13,7 @@
 #include "hellowindow.h"
 
 #include "visualinfowidget.h"
-#include "optrlswindow.h"
+#include "manrlswindow.h"
 #include "backend/Trail/buildertraildrones.h"
 #include "backend/RLS/managerrls.h"
 #include "3DVisualization/map3dviswindow.h"
@@ -56,7 +56,7 @@ private:
     visualInfoWidget* visInfoWin;
 
     //
-    optRLSwindow* optRLSWin;
+    manRLSWindow* optRLSWin;
 
     // Окно для 3D отображения рельефа
     map3DVisWindow* map3DWin;

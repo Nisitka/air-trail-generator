@@ -9,12 +9,21 @@ MultipleWindow::MultipleWindow()
     toolBar = new QToolBar;
     addToolBar(Qt::TopToolBarArea, toolBar);
     toolBar->setMovable(false);
+    toolBar->setFixedHeight(30);
     toolBar->setStyleSheet(
                 "QToolBar {"
-                "    border: 1px solid rgb(34,69,157);"
-                "    background-color: rgb(255,255,255);"
+                "    border: 1px solid rgb(140,140,140);"
+                "    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                "                                     stop: 0    #E0E0E0,"
+                "                                     stop: 0.35 rgb(251,252,254), "
+                "                                     stop: 1    rgb(231,232,234));"
+                "    border: 1px solid gray;"
                 "}"
                 );
+
+    statusBar = new QStatusBar;
+    statusBar->setFixedHeight(25);
+    Designer::setStatusBar(statusBar);
 }
 
 void MultipleWindow::addFunWindow(QWidget *window, const QIcon &iconButton, const QString &nameWin,
@@ -108,7 +117,10 @@ void MultipleWindow::setStyleToolButton(QToolButton *button, MultipleWindow::sty
     case close:
         strStyle =
                 "QToolButton{"
-                "   background-color: rgb(255,255,255);"
+                "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                "                                     stop: 0    #E0E0E0,"
+                "                                     stop: 0.35 rgb(251,252,254), "
+                "                                     stop: 1    rgb(231,232,234));"
                 "}"
                 "QToolButton:hover{"
                 "    background-color : rgb(255,251,230); color: rgb(0,0,0);"

@@ -5,6 +5,8 @@
 #include <QSlider>
 #include <QWidget>
 
+#include <QPaintEvent>
+
 #include "areadrawwidget.h"
 #include "GUI/processtmpwidget.h"
 #include "./DecktopItems/minimapwidget.h"

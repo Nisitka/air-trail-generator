@@ -21,11 +21,28 @@ mainSwitcherWindow::mainSwitcherWindow(QWidget *parent) :
     // Кнопки вызова основных окон
     toolBar = new QToolBar("Панель задач");
     toolBar->setMovable(false);  // Чтоб пользователь не потерял его :)
-    //Designer::setToolBar(toolBar, Designer::whiteToolBox);
+    Designer::setToolBar(toolBar, Designer::whiteToolBox);
     addToolBar(Qt::LeftToolBarArea, toolBar);
 
     //
+    toolBar->setStyleSheet(
+                "QToolBar {"
+                "    border: 1px solid rgb(70,70,70);"
+                "    background-color: rgb(75,75,80);"
+                "}");
+
+    //
     createMenus();
+
+    //
+    setStatusBar(nullptr);
+
+    //
+    this->setStyleSheet(
+                "QMainWindow{"
+                "    background-color: rgb(255,255,255);"
+                "    border: 1px solid rgb(140,140,140);}");
+
 }
 
 void mainSwitcherWindow::addWindow(QWidget *window,
@@ -43,24 +60,26 @@ void mainSwitcherWindow::addWindow(QWidget *window,
     //
     windows[button] = window;
 
+    /*
     QWidget* backWidget = new QWidget;
     QVBoxLayout* verLayout = new QVBoxLayout(backWidget);
     QHBoxLayout* horLayout = new QHBoxLayout;
 
-    horLayout->addSpacerItem(new QSpacerItem(20, 20));
+    horLayout->addSpacerItem(new QSpacerItem(10, 10));
     horLayout->addWidget(button);
-    horLayout->addSpacerItem(new QSpacerItem(20, 20));
+    horLayout->addSpacerItem(new QSpacerItem(10, 10));
 
     verLayout->addLayout(horLayout);
     QLabel* text = new QLabel(nameButton);
     text->setAlignment(Qt::AlignHCenter);
-    verLayout->addWidget(text);
+    verLayout->addWidget(text);*/
 
     //
     connect(button, SIGNAL(clicked(bool)),
             this,   SLOT(showWindow()));
 
-    toolBar->addWidget(backWidget);
+    //toolBar->addWidget(backWidget);
+    toolBar->addWidget(button);
 }
 
 void mainSwitcherWindow::setCurrentWindow(QWidget *window) const

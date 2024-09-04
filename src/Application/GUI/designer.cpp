@@ -7,6 +7,20 @@ Designer::Designer()
 
 }
 
+void Designer::setStatusBar(QStatusBar* sb)
+{
+    sb->setStyleSheet("QStatusBar{"
+                      "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                      "                                     stop: 0    #E0E0E0,"
+                      "                                     stop: 0.35 rgb(251,252,254), "
+                      "                                     stop: 1    rgb(231,232,234));"
+                      "   border: 1px solid gray;"
+                      "   padding: 1px 0px;"
+                      "   border-radius: 2px;"
+                      "};)"
+                      );
+}
+
 void Designer::setProgressBar(QProgressBar* pb)
 {
     //pb->setAlignment(Qt::AlignCenter);
@@ -331,9 +345,8 @@ void Designer::setMainWindow(QMainWindow *mainWin, int style)
         "    border: 1px solid rgb(150,183,227);"
         "    color: rgb(34,69,157);}";*/
         "QMainWindow{"
-        "    background-color: white;"
-        "    border: 1px solid transparent;"
-        "    color: rgb(34,69,157);}";
+        "    background-color: rgb(240,240,245);"
+        "    border: 1px solid rgb(140,140,140);}";
         break;
     }
 
@@ -361,7 +374,7 @@ void Designer::setToolBar(QToolBar *toolBar, int style)
     case whiteToolBox:
         strStyle =
         "QToolBar {"
-        "    border: 1px solid rgb(34,69,157);"
+        "    border: 1px solid rgb(140,140,140);"
         "    background-color: rgb(255,255,255);"
         "}"
         "QToolButton{"

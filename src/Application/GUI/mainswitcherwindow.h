@@ -2,6 +2,7 @@
 #define MAINSWITCHERWINDOW_H
 
 #include <QMainWindow>
+#include <QStatusBar>
 
 #include <QToolBar>
 #include <QToolButton>

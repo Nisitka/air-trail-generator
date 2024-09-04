@@ -44,18 +44,11 @@ GUI::GUI(GISInformer* gis,
                      "Визуализатор", "Графическое представление");
 
     //
-    optRLSWin = new optRLSwindow(infoRLS);
+    optRLSWin = new manRLSWindow(infoRLS);
     QObject::connect(toolRLS,   SIGNAL(setCoordRLS(Coords)),
                      optRLSWin, SLOT(updateCoordRLS(Coords)));
     mainWin->addTask(optRLSWin, QIcon(":/resurs/rlsIcon"),
                      "РЛС", "Радиолокационная станция");
-
-    //
-    map3DWin = new map3DVisWindow();
-    mainWin->addTask(map3DWin, QPixmap(":/resurs/icon3D"),
-                     "3D", "Детальная визуализация рельефа");
-    QObject::connect(toolVisMap, SIGNAL(updateRect3D(int,int,int,int)),
-                     map3DWin,   SLOT(setVisRect(int,int,int,int)));
 
     // Окно по работе с функцией прогноза
     algPredWin = new setAlgPredictWindow;
@@ -68,7 +61,7 @@ GUI::GUI(GISInformer* gis,
         /*       */
     //
     switcherWindow->addWindow(helloWin,
-                              QIcon(":/resurs/genFiles"),
+                              QIcon(":/resurs/home"),
                               "Начало");
     //
     switcherWindow->addWindow(mainWin,

@@ -20,11 +20,14 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
             this,     SLOT(updateCoord(const Coords)));
 
     backWidget->setStyleSheet("QWidget{"
-                     "   background-color: transparent;" //black
+                     ///"   background-image: url(:/resurs/pattern4.jpg);"
+                     "   background-color: rgb(255,255,255);"
+                     "   border: 1px solid transparent;"
                      "};)");
 
     this->setStyleSheet("QScrollArea{"
-                        "   background-color:transparent;"
+                        "   background-color: rgb(230,230,230);"
+                        "   border: 1px solid gray;"
                         "};)");
 
     // Слайдер для изменения масштаба

@@ -12,6 +12,7 @@
 #include <QMenu>
 #include <QScrollArea>
 #include <QToolButton>
+#include <QStatusBar>
 
 class Designer
 {
@@ -34,6 +35,9 @@ public:
 
     // настроить визуал выпадающего списка
     static void setComboBox(QComboBox*);
+
+    //
+    static void setStatusBar(QStatusBar*);
 
     //
     static void setToolBar(QToolBar* toolBar, int style = tool);
