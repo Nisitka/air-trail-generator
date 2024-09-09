@@ -65,7 +65,7 @@ void ToolSquareTer::mouseMove(QMouseEvent *mouse)
     yMouse = mouse->y();
 
     // Обновляем показания координат карты
-    drawArea->updateInfoCoordMap(xMouse,
+    drawArea->setCurrentPixPoint(xMouse,
                                  yMouse);
 }
 

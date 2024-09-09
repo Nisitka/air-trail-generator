@@ -248,9 +248,6 @@ void manRLSWindow::setDesine()
 
     // Изначально кнопка в таком состоянии
     Designer::setButton(ui->on_off_RLS_Button, Designer::green);
-
-    //
-    Designer::setStatusBar(statusBar);
 }
 
 manRLSWindow::~manRLSWindow()

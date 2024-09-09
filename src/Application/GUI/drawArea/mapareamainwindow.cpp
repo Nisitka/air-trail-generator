@@ -6,7 +6,7 @@
 #include <QIcon>
 
 mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
-    gis(gis), QMainWindow(parent),
+    gis(gis)/*, QMainWindow(parent)*/,
     ui(new Ui::mapAreaMainWindow)
 {
     ui->setupUi(this);
@@ -28,8 +28,21 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
 
     setCentralWidget(nullptr);
 
+    ///*                                         *///
+    // Табличка с координатами
+    statusBar = new QStatusBar;
+    Designer::setStatusBar(statusBar);
+    statusBar->setFixedHeight(25);
+    setStatusBar(statusBar);
+
+    coordLabel = new CoordsInfoForm(statusBar);
+    statusBar->addWidget(coordLabel);
+    statusBar->show();
+    coordLabel->show();
+
     // Карта в 2D
     scrollArea = new ScrollMapWidget(area);
+
     QDockWidget* dock = new QDockWidget("Топографическая обстановка");
     this->addDockWidget(Qt::LeftDockWidgetArea, dock);
     dock->setFeatures(QDockWidget::DockWidgetMovable);
@@ -43,6 +56,10 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
     dock->setFeatures(QDockWidget::DockWidgetMovable);
     dock->setWidget(map3DWin);
     dock->show();
+
+    //
+    connect(scrollArea, SIGNAL(changedCurrentCoords(const Coords)),
+            this,       SLOT(updateCoord(const Coords)));
 
     //
     connect(scrollArea, SIGNAL(moveActionArea(int,int)),
@@ -76,6 +93,11 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
 
     // Убираем статус бар
     setStatusBar(nullptr);
+}
+
+void mapAreaMainWindow::updateCoord(const Coords coords)
+{
+    coordLabel->setData(coords);
 }
 
 void mapAreaMainWindow::setDefStatus()

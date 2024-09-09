@@ -21,9 +21,7 @@ MultipleWindow::MultipleWindow()
                 "}"
                 );
 
-    statusBar = new QStatusBar;
-    statusBar->setFixedHeight(25);
-    Designer::setStatusBar(statusBar);
+    statusBar = nullptr;
 }
 
 void MultipleWindow::addFunWindow(QWidget *window, const QIcon &iconButton, const QString &nameWin,

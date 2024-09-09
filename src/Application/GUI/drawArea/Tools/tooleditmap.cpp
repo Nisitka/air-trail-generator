@@ -104,7 +104,7 @@ void ToolEditMap::mouseMove(QMouseEvent *mouse)
     else
     {
         // Обновляем показания координат карты
-        drawArea->updateInfoCoordMap(xMouse,
+        drawArea->setCurrentPixPoint(xMouse,
                                      yMouse);
     }
 }

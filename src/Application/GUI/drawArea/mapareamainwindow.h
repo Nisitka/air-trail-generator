@@ -17,7 +17,7 @@ namespace Ui {
 class mapAreaMainWindow;
 }
 
-class mapAreaMainWindow : public QMainWindow
+class mapAreaMainWindow : public MultipleWindow/*public QMainWindow*/
 {
     Q_OBJECT
 
@@ -87,6 +87,9 @@ private slots:
 
     void updateStyleToolButtons(QToolButton* changeButton);
 
+    //
+    void updateCoord(const Coords coords);
+
 private:
 
     //
@@ -94,6 +97,9 @@ private:
 
     //
     ScrollMapWidget* scrollArea;
+
+    //
+    CoordsInfoForm* coordLabel;
 
     //
     areaDrawWidget* area;

@@ -350,11 +350,11 @@ void areaDrawWidget::mouseMoveEvent(QMouseEvent *mouseEvent)
     Tool->mouseMove(mouseEvent);
 }
 
-void areaDrawWidget::updateInfoCoordMap(int idX, int idY)
+void areaDrawWidget::setCurrentPixPoint(int idX, int idY)
 {
     toIdMapCoords(idX, idY);
 
-    updateCoord(gis->getCoords(idX, idY));
+    changedCurrentCoords(gis->getCoords(idX, idY));
 }
 
 void areaDrawWidget::zoom(double dK)

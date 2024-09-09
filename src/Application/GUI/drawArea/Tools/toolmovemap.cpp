@@ -28,7 +28,7 @@ void ToolMoveMap::mousePress(QMouseEvent *mouse)
     yPressMouse = mouse->y();
 
     //
-    drawArea->updateInfoCoordMap(xPressMouse,
+    drawArea->setCurrentPixPoint(xPressMouse,
                                  yPressMouse);
 
 }
@@ -79,7 +79,7 @@ void ToolMoveMap::mouseMove(QMouseEvent *mouse)
     }
     else
     {
-        drawArea->updateInfoCoordMap(xMouse,
+        drawArea->setCurrentPixPoint(xMouse,
                                      yMouse);
     }
 }

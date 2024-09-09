@@ -16,8 +16,10 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
 
     //
     horLayout->addWidget(drawArea);
-    connect(drawArea, SIGNAL(updateCoord(const Coords)),
-            this,     SLOT(updateCoord(const Coords)));
+//    connect(drawArea, SIGNAL(changedCurrentCoords(const Coords)),
+//            this,     SLOT(updateCoord(const Coords)));
+    connect(drawArea, SIGNAL(changedCurrentCoords(const Coords)),
+            this,     SIGNAL(changedCurrentCoords(const Coords)));
 
     backWidget->setStyleSheet("QWidget{"
                      ///"   background-image: url(:/resurs/pattern4.jpg);"
@@ -37,9 +39,6 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
             drawArea,   SLOT(setZoom(double)));
     connect(drawArea, SIGNAL(resized()),
             this,     SLOT(updateZoomContr()));
-
-    // Табличка с координатами
-    coordLabel = new CoordsInfoForm(this);
 
     // Миникарта
     miniMap = new miniMapWidget(this, 150, 120);
@@ -204,23 +203,6 @@ void ScrollMapWidget::checkShowNewActionArea()
     }
 }
 
-void ScrollMapWidget::updatePosCoordLabel()
-{
-    if (horizontalScrollBar()->isVisible())
-    {
-        coordLabel->move(0, this->size().height() - 55);
-    }
-    else
-    {
-        coordLabel->move(0, this->size().height() - 35);
-    }
-}
-
-void ScrollMapWidget::updateCoord(const Coords coords)
-{
-    coordLabel->setData(coords);
-}
-
 void ScrollMapWidget::updatePosMiniMap()
 {
     if (horizontalScrollBar()->isVisible() ||
@@ -248,7 +230,6 @@ void ScrollMapWidget::resizeEvent(QResizeEvent *event)
     QScrollArea::resizeEvent(event);
 
     // Чтоб QScrollBar не загараживал
-    updatePosCoordLabel();
     updatePosMiniMap();
 
     resized();

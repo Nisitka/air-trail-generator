@@ -42,8 +42,7 @@ signals:
     void updateSignals();
 
     // Обновить информацию об координатах курсора
-    //void updateCoord(const QString& textdataCoords);
-    void updateCoord(const Coords coords);
+    void changedCurrentCoords(const Coords coords);
 
     // Изменился размер
     void resized();
@@ -136,8 +135,8 @@ public:
                   const QColor textColor = Qt::black);                        //
     void drawPolygon(const QPolygon& polygon, unit uPoints = idMap);
 
-    // Обновить информацию об координатах
-    void updateInfoCoordMap(int idXpx, int idYpx); // в пикселях области
+    // Назначить выбранный пиксель в области
+    void setCurrentPixPoint(int idXpx, int idYpx); // в пикселях области
 
     //
     void setRenderHint(bool smoothing = true);

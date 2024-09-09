@@ -85,7 +85,7 @@ void ToolVisMap::mouseMove(QMouseEvent *mouse)
     }
 
     // Обновляем показания координат карты
-    drawArea->updateInfoCoordMap(xMouse,
+    drawArea->setCurrentPixPoint(xMouse,
                                  yMouse);
 }
 

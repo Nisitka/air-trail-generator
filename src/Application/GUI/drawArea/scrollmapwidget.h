@@ -23,6 +23,9 @@ class ScrollMapWidget: public QScrollArea, public ScrollDirector
 signals:
 
     //
+    void changedCurrentCoords(const Coords);
+
+    //
     void moveActionArea(int dX, int dY);
 
     //
@@ -32,9 +35,6 @@ signals:
     void resized();
 
 public slots:
-
-    // Обновляем значения координат
-    void updateCoord(const Coords coords);
 
     //
     void movePosLookMap(double dX, double dY); // в долях от макс.
@@ -64,9 +64,6 @@ protected:
 private slots:
 
     //
-    void updatePosCoordLabel();
-
-    //
     void updateMiniMap();
 
     //
@@ -90,9 +87,6 @@ private:
 
     //
     ZoomControllerWidget* zoomSlider;
-
-    //
-    CoordsInfoForm* coordLabel;
 
     //
     miniMapWidget* miniMap;

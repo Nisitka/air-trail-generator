@@ -24,7 +24,7 @@ void CoordsInfoForm::setData(const Coords &coords)
     QString dataCoords = "X:" + QString::number(coords.X()) + "м"
                         " Y:" + QString::number(coords.Y()) + "м"
                         " H:" + QString::number(coords.H()) + "м";
-    ui->LabelCoordsInfo->setText(dataCoords);
+    ///ui->LabelCoordsInfo->setText(dataCoords);
 }
 
 bool CoordsInfoForm::eventFilter(QObject *watched, QEvent *event)
