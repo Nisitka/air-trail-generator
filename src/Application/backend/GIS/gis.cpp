@@ -4,9 +4,9 @@
 
 GIS::GIS(): GISInformer(),
     // По умолчанию находимся в левом верхнем углу
-    idXpos(0), idYpos(0)
+    idXpos(0), idYpos(0),
+    Enabled(true)
 {
-
 
     // Отвечает за работу с рельефом карты
     geoBuilder = new geoGenerator(currentW, currentH);
@@ -71,7 +71,10 @@ int GIS::getH(int idX, int idY, Coords::units u) const
 
 Coords GIS::getCoords(int idX, int idY) const
 {
-    return geoBuilder->getCoords(idX, idY);
+    if (Enabled)
+        return geoBuilder->getCoords(idX, idY);
+    else
+        return Coords();
 }
 
 const QImage& GIS::getGeoImage() const
@@ -81,6 +84,7 @@ const QImage& GIS::getGeoImage() const
 
 void GIS::setPosActionArea(int idXmap, int idYmap)
 {
+    Enabled = false;
     int posX, posY;
 
     posX = idXmap - (currentW / 2);
@@ -92,6 +96,7 @@ void GIS::setPosActionArea(int idXmap, int idYmap)
 
 void GIS::movePosActionArea(int dX, int dY)
 {
+    Enabled = false;
     int posX, posY;
 
     posX = idXpos + dX;
@@ -122,6 +127,7 @@ void GIS::initActionArea(int posX, int posY)
     backPainter->updateFull();
 
     // Сигнализируем об готовности новой области
+    Enabled = true;
     this->changedActionArea(idXpos, idYpos);
 }
 

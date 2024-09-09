@@ -64,6 +64,9 @@ protected:
 private slots:
 
     //
+    void updateInfoCurCoords(const Coords);
+
+    //
     void updateMiniMap();
 
     //

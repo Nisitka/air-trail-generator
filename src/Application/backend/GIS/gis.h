@@ -90,6 +90,9 @@ private slots:
 private:
 
     //
+    bool Enabled;
+
+    //
     void initActionArea(int posX, int posY);
 
     // Точка, относительно которой формируется

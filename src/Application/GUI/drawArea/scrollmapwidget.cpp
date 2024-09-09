@@ -19,7 +19,7 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
 //    connect(drawArea, SIGNAL(changedCurrentCoords(const Coords)),
 //            this,     SLOT(updateCoord(const Coords)));
     connect(drawArea, SIGNAL(changedCurrentCoords(const Coords)),
-            this,     SIGNAL(changedCurrentCoords(const Coords)));
+            this,     SLOT(updateInfoCurCoords(const Coords)));
 
     backWidget->setStyleSheet("QWidget{"
                      ///"   background-image: url(:/resurs/pattern4.jpg);"
@@ -64,6 +64,14 @@ ScrollMapWidget::ScrollMapWidget(areaDrawWidget* drawArea_):
 
     // Гифка загрузки новой области
     loadingWidget = new processTmpWidget(this);
+}
+
+void ScrollMapWidget::updateInfoCurCoords(const Coords coords)
+{
+    if (readyActionArea)
+    {
+        changedCurrentCoords(coords);
+    }
 }
 
 void ScrollMapWidget::updateZoomContr()
