@@ -33,6 +33,9 @@ public:
 
     areaDrawWidget* getDrawArea();
 
+    //
+    void setDefStatus();
+
     // Добавить инструмент
     void appendTool(drawAreaTool* toolArea);
     // Добавить грппу инструментов

@@ -37,7 +37,7 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
     dock->show();
 
     // Карта в 3D
-    map3DWin = new map3DVisWindow();
+    map3DWin = new map3DVisWindow(gis);
     dock = new QDockWidget("Трехмерная визуализация");
     this->addDockWidget(Qt::RightDockWidgetArea, dock);
     dock->setFeatures(QDockWidget::DockWidgetMovable);
@@ -76,6 +76,12 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
 
     // Убираем статус бар
     setStatusBar(nullptr);
+}
+
+void mapAreaMainWindow::setDefStatus()
+{
+    //
+    map3DWin->setVisRectDef();
 }
 
 void mapAreaMainWindow::updateGeoMapImage()

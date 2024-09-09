@@ -19,7 +19,7 @@ signals:
 
 public slots:
 
-    /* ... */
+    void initOpenGLWindow();
 
 public:
     explicit visualInfoWidget(GISInformer* gis);
@@ -37,7 +37,7 @@ private:
     GISInformer* gis;
 
     //
-    mapAreaMainWindow* manDrawArea;
+    mapAreaMainWindow* mapDrawArea;
 };
 
 #endif // VISUALINFOWIDGET_H

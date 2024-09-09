@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-GIS::GIS():
+GIS::GIS(): GISInformer(),
     // По умолчанию находимся в левом верхнем углу
     idXpos(0), idYpos(0)
 {
@@ -122,7 +122,7 @@ void GIS::initActionArea(int posX, int posY)
     backPainter->updateFull();
 
     // Сигнализируем об готовности новой области
-    changedActionArea(idXpos, idYpos);
+    this->changedActionArea(idXpos, idYpos);
 }
 
 void GIS::openMap(const QString &dirNameFile)

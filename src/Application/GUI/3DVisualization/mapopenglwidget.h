@@ -12,6 +12,8 @@
 #include <QVector3D>
 #include <QMap>
 
+#include "backend/GIS/gisinformer.h"
+
 class mapOpenGLWidget: public QOpenGLWidget
 {
     Q_OBJECT
@@ -24,7 +26,7 @@ class mapOpenGLWidget: public QOpenGLWidget
 //    void finishPredictTrail();
 
 public:
-    explicit mapOpenGLWidget(QImage* imgTex,
+    explicit mapOpenGLWidget(GISInformer* mapInformer,
                              QWidget *parent = 0);
 
 //    void updatePosRLS(QList <QVector3D>* pRLS);
@@ -41,21 +43,20 @@ public:
 
     void wheelEvent(QWheelEvent* event);
 
-/*    // Какую часть карты отображать в 3D
+    // Какую часть карты отображать в 3D
     void initializeTerrain(int idXo, int idYo,  // id левой верхней дискреты
                            int numW, int numL); // ширина, высота
 
     // Актуализировать значения матрицы высот
     void updateTerrain(int idXo, int idYo, int W, int L); // в области
-    void updateTerrain();      */                           // везде
+    void updateTerrain();                                 // везде
 
 private:
 
     // Подготовлены ли данные
     bool readyRender;
 
-//    // Текстура
-    QImage* currentTexture; // Цвета вершин
+    GISInformer* mapInformer;
 
 //    // Точки траектории
 //    QVector <QVector3D> trail;
@@ -84,8 +85,8 @@ private:
 
 //    void drawRectZD(int idRLS, int idLayer, int idPointLeft);
 
-//    // Добавить точку подобно glVetex3f
-//    void addVertex(int idX, int idY, int idZ);
+    // Добавить точку подобно glVetex3f
+    void addVertex(int idX, int idY, int idZ);
 
 //    // Прозрачность ЗО
 //    float aZD;
@@ -95,53 +96,51 @@ private:
 //    QVector<QVector<QVector<QVector3D> > > pZDinBorder;
 //    QList <QVector3D>* posRLS;
 
-//    //
-//    int mouseLastX;
-//    int mouseLastY;
+    //
+    int mouseLastX;
+    int mouseLastY;
 
-//    //
-//    int mousePressX;
-//    int mousePressY;
+    //
+    int mousePressX;
+    int mousePressY;
 
-//    float lastAngle;
-//    float angle;
+    float lastAngle;
+    float angle;
 
-//    float lastAngleOZ;
-//    float angleOZ;
+    float lastAngleOZ;
+    float angleOZ;
 
-//    // Где стоит камера
-//    float camX;
-//    float camY;
-//    float camZ;
+    // Где стоит камера
+    float camX;
+    float camY;
+    float camZ;
 
-//    // Куда смотрит камера
-//    float lookX;
-//    float lookY;
-//    float lookZ;
+    // Куда смотрит камера
+    float lookX;
+    float lookY;
+    float lookZ;
 
-//    // Радиус вращения камеры
-//    float R;
-//    float kSCALE = 1.2;
+    // Радиус вращения камеры
+    float R;
+    float kSCALE = 1.2;
 
-//    int Hmap;
-
-//    //
-//    int idXo;
-//    int idYo;
-//    int countX = 15;
-//    int countY = 15;
-////    int idLastX;
-////    int idLastY;
+    //
+    int idXo;
+    int idYo;
+    int countX = 15;
+    int countY = 15;
+    int idLastX;
+    int idLastY;
 
 ////    // Границы зоны визуализации
 ////    enum vert{A, B, C};
 ////    QVector <QVector <QVector3D>> boards;
 ////    void updateVertBoards();
 
-//    // Матрица высот
-//    QVector <QVector <int>> heights;
-//    float MAP_SCALE = 0.3;
-//    float H_SCALE = 1.9;
+    // Матрица высот
+    QVector <QVector <int>> heights;
+    float MAP_SCALE = 0.3;
+    float H_SCALE = 0.3;
 };
 
 #endif // MAPOPENGLWIDGET_H

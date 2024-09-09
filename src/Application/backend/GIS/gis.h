@@ -32,8 +32,6 @@ signals:
     void changedProgressBuildMap(int countPercent); // в %
     void finishBuildMap(int W, int L, int H);       // Завершился
 
-    //
-
 public slots:
 
     // Изменить активную область

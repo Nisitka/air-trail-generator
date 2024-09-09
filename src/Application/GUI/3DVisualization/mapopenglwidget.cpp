@@ -15,23 +15,23 @@
 
 #include <QGLWidget>
 
-mapOpenGLWidget::mapOpenGLWidget(QImage* imgTex,
-                                 QWidget *parent):
-    QOpenGLWidget(parent)//,
-//    camX(0), camY(0), camZ(0),
-//    lookX(0), lookY(0), lookZ(0),
-//    angle(0), lastAngle(1.57),
-//    angleOZ(0), lastAngleOZ(1.0)
-{
-    //
-    currentTexture = imgTex;
+#include <QDebug>
 
+mapOpenGLWidget::mapOpenGLWidget(GISInformer* mapInformer,
+                                 QWidget *parent):
+    QOpenGLWidget(parent),
+    mapInformer(mapInformer),
+    camX(0), camY(0), camZ(0),
+    lookX(0), lookY(0), lookZ(0),
+    angle(0), lastAngle(1.57),
+    angleOZ(0), lastAngleOZ(1.0)
+{
     //
     this->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     this->setMinimumSize(300, 200);
     this->setMaximumSize(9999, 9999);
 
-//    readyRender = false;
+    readyRender = true;
 }
 
 //void mapOpenGLWidget::startPredictTrail()
@@ -233,13 +233,13 @@ void mapOpenGLWidget::resizeGL(int W, int H) // Сбрасывает разме�
 
 void mapOpenGLWidget::wheelEvent(QWheelEvent *event)
 {
-//    MAP_SCALE += (float) event->angleDelta().y() / 4000;
+    MAP_SCALE += (float) event->angleDelta().y() / 4000;
 
-//    if (MAP_SCALE < 0.016) MAP_SCALE = 0.016;
+    if (MAP_SCALE < 0.016) MAP_SCALE = 0.016;
 
-//    lookX = (float) ((float)countX * MAP_SCALE) / 2;
-//    lookY = (float) ((float)countY * MAP_SCALE) / 2;
-//    lookZ = 0.0;
+    lookX = (float) ((float)countX * MAP_SCALE) / 2;
+    lookY = (float) ((float)countY * MAP_SCALE) / 2;
+    lookZ = 0.0;
 
     update();
 }
@@ -249,27 +249,27 @@ void mapOpenGLWidget::mouseMoveEvent(QMouseEvent *event)
     int x = event->x();
     int y = event->y();
 
-//    int dX = mouseLastX - x;
-//    int dY = mouseLastY - y;
+    int dX = mouseLastX - x;
+    int dY = mouseLastY - y;
 
-//    mouseLastX = x;
-//    mouseLastY = y;
+    mouseLastX = x;
+    mouseLastY = y;
 
-//    angle = (float)dX / 500;
-//    angleOZ = (float)dY / 500;
+    angle = (float)dX / 500;
+    angleOZ = (float)dY / 500;
 
-//    update();
+    update();
 }
 
 void mapOpenGLWidget::mousePressEvent(QMouseEvent *event)
 {
     this->setCursor(Qt::ClosedHandCursor);
 
-//    mousePressX = event->x();
-//    mousePressY = event->y();
+    mousePressX = event->x();
+    mousePressY = event->y();
 
-//    mouseLastX = mousePressX;
-//    mouseLastY = mousePressY;
+    mouseLastX = mousePressX;
+    mouseLastY = mousePressY;
 }
 
 void mapOpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
@@ -317,57 +317,48 @@ void mapOpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
 //                      QVector3D(idXo,    idLastY, Hmap)});
 //}
 
-//void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL)
-//{
-//    readyRender = false;
+void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL)
+{
+    readyRender = false;
 
-//    // Дискреты углов
-//    idXo = idXo_;            // Левый верхний
-//    idYo = idYo_;
-//    idLastX = idXo + numW; // Правый нижний
-//    idLastY = idYo + numL;
+    // Дискреты углов
+    idXo = idXo_;            // Левый верхний
+    idYo = idYo_;
+    idLastX = idXo + numW; // Правый нижний
+    idLastY = idYo + numL;
 
-//    // Размер области
-//    countX = numW; // Ширина
-//    countY = numL; // Высота
+    // Размер области
+    countX = numW; // Ширина
+    countY = numL; // Высота
 
-//    // Кол-во дискрет высоты
-//    Hmap = map->getCountLayers();
+    MAP_SCALE = 0.3;
 
-//    // Обновляем данные по стенкам
-//    updateVertBoards();
+    // Расчет радиуса вращения камеры
+    if (countX > countY) R = countX * MAP_SCALE * kSCALE;
+    else                 R = countY * MAP_SCALE * kSCALE;
 
-//    // Корректировка точек ЗО
-//    processingPointsZD();
+    // Перерасчет матрицы высот
+    heights.clear();
+    for (int idX = idXo; idX < idLastX; idX++)
+    {
+        heights.append(QVector <int>(countY));
+        for (int idY = idYo; idY < idLastY; idY++)
+        {
+            heights.last()[idY] = mapInformer->getH(idX, idY, Coords::id);
+        }
+    }
 
-//    MAP_SCALE = 0.3;
+    // Обновляем взор камеры
+    lookX = (float) ((float)countX * MAP_SCALE) / 2;
+    lookY = (float) ((float)countY * MAP_SCALE) / 2;
+    lookZ = 0.0;
 
-//    // Расчет радиуса вращения камеры
-//    if (countX > countY) R = countX * MAP_SCALE * kSCALE;
-//    else                 R = countY * MAP_SCALE * kSCALE;
+    //
+    readyRender = true;
 
-//    // Перерасчет матрицы высот
-//    heights.clear();
-//    for (int idX = idXo; idX < idLastX; idX++)
-//    {
-//        heights.push_back(QVector<int>());
-//        for (int idY = idYo; idY < idLastY; idY++)
-//        {
-//            heights.last().push_back(map->getHeight(idX, idY));
-//        }
-//    }
-
-//    // Обновляем взор камеры
-//    lookX = (float) ((float)countX * MAP_SCALE) / 2;
-//    lookY = (float) ((float)countY * MAP_SCALE) / 2;
-//    lookZ = 0.0;
-
-//    //
-//    readyRender = true;
-
-//    // Рисуем обновленную картинку
-//    update();
-//}
+    // Рисуем обновленную картинку
+    update();
+}
 
 //void mapOpenGLWidget::updateTerrain(int idXo_, int idYo_, int W, int L)
 //{
@@ -419,51 +410,53 @@ void mapOpenGLWidget::paintGL()
 {
     if (readyRender)
     {
-//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Screen и глубина кэша
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Screen и глубина кэша
 
-//        lastAngle -= angle;
-//        lastAngleOZ -= angleOZ;
+        lastAngle -= angle;
+        lastAngleOZ -= angleOZ;
 
-//        camX = lookX + ((float)cos(lastAngle)*R);
-//        camY = lookY + ((float)sin(lastAngle)*R);
-//        camZ = lookZ + ((float)(lastAngleOZ)*R);
+        camX = lookX + ((float)cos(lastAngle)*R);
+        camY = lookY + ((float)sin(lastAngle)*R);
+        camZ = lookZ + ((float)(lastAngleOZ)*R);
 
-//        glLoadIdentity();
-//        gluLookAt(camX, camZ, camY,
-//                  lookX, lookZ, lookY,
-//                  0, 1.0, 0);
+        glLoadIdentity();
+        gluLookAt(camX, camZ, camY,
+                  lookX, lookZ, lookY,
+                  0, 1.0, 0);
 
-//        H_SCALE = MAP_SCALE * 5.1;
+        H_SCALE = MAP_SCALE * 0.7;
 
-//        QRgb color;
-//        int h;
-//        for (int idX = 0; idX < countX - 1; idX++)
-//        {
-//            glBegin(GL_TRIANGLE_STRIP);
-//            for (int idY = 0; idY < countY - 1; idY++)
-//            {
-//                h = heights[idX][idY];
-//                color = currentTexture->pixel(idXo + idX, idYo + idY);
-//                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
-//                addVertex(idXo + idX, idYo + idY, h);
+        const QImage& currentTexture = mapInformer->getGeoImage();
 
-//                h = heights[idX][idY+1];
-//                color = currentTexture->pixel(idXo + idX, idYo + idY + 1);
-//                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
-//                addVertex(idXo + idX, idYo + idY + 1, h);
+        QRgb color;
+        int h;
+        for (int idX = 0; idX < countX - 1; idX++)
+        {
+            glBegin(GL_TRIANGLE_STRIP);
+            for (int idY = 0; idY < countY - 1; idY++)
+            {
+                h = heights[idX][idY];
+                color = currentTexture.pixel(idXo + idX, idYo + idY);
+                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+                addVertex(idXo + idX, idYo + idY, h);
 
-//                h = heights[idX+1][idY];
-//                color = currentTexture->pixel(idXo + idX+1, idYo + idY);
-//                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
-//                addVertex(idXo + idX+1, idYo + idY, h);
+                h = heights[idX][idY+1];
+                color = currentTexture.pixel(idXo + idX, idYo + idY + 1);
+                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+                addVertex(idXo + idX, idYo + idY + 1, h);
 
-//                h = heights[idX+1][idY+1];
-//                color = currentTexture->pixel(idXo + idX+1, idYo + idY+1);
-//                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
-//                addVertex(idXo + idX+1, idYo + idY + 1, h);
-//            }
-//            glEnd();
-//        }
+                h = heights[idX+1][idY];
+                color = currentTexture.pixel(idXo + idX+1, idYo + idY);
+                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+                addVertex(idXo + idX+1, idYo + idY, h);
+
+                h = heights[idX+1][idY+1];
+                color = currentTexture.pixel(idXo + idX+1, idYo + idY+1);
+                glColor3ub(GLint(qRed(color)), GLint(qGreen(color)), GLint(qBlue(color)));
+                addVertex(idXo + idX+1, idYo + idY + 1, h);
+            }
+            glEnd();
+        }
 
 //        glBegin(GL_LINES);
 //        glColor3f(0.39, 0.05, 0.67); // цвет линий
@@ -586,7 +579,7 @@ void mapOpenGLWidget::paintGL()
 //    addVertex(x, y, z);
 //}
 
-//void mapOpenGLWidget::addVertex(int idX, int idY, int idZ)
-//{
-//     glVertex3f((idX - idXo) * MAP_SCALE, idZ * H_SCALE, (idY - idYo) * MAP_SCALE);
-//}
+void mapOpenGLWidget::addVertex(int idX, int idY, int idZ)
+{
+     glVertex3f((idX - idXo) * MAP_SCALE, (GLfloat)idZ * H_SCALE, (idY - idYo) * MAP_SCALE);
+}

@@ -100,6 +100,7 @@ void geoGenerator::openMap(const QString &dirMapFile)
     mapFile->open(dirMapFile);
 
     actionArea->resize(wArea, lArea);
+    setPosActionArea(0, 0); //
 
     int Wmap, Lmap;
     mapFile->getSize(Wmap, Lmap, Hmap);
@@ -136,6 +137,7 @@ int geoGenerator::absolute(int idX, int idY, Coords::units units) const
 {
     int h = -1;
 
+
     if (inActionArea(idX, idY))
         h = actionArea->getHeight(idX-idXo, idY-idYo);
     else
@@ -150,6 +152,7 @@ int geoGenerator::absolute(int idX, int idY, Coords::units units) const
         break;
     }
 
+    //qDebug() << h;
     return h;
 }
 

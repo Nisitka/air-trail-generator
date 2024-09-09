@@ -17,13 +17,18 @@ visualInfoWidget::visualInfoWidget(GISInformer* gis):
     addFunWindow(new QTabWidget, QIcon(":/resurs/b"),"B",Qt::RightDockWidgetArea,Qt::RightDockWidgetArea);
 
     //
-    manDrawArea = new mapAreaMainWindow(gis);
-    setCentralWidget(manDrawArea);
+    mapDrawArea = new mapAreaMainWindow(gis);
+    setCentralWidget(mapDrawArea);
+}
+
+void  visualInfoWidget::initOpenGLWindow()
+{
+    mapDrawArea->setDefStatus();
 }
 
 mapAreaMainWindow* visualInfoWidget::getManDrawArea()
 {
-    return manDrawArea;
+    return mapDrawArea;
 }
 
 visualInfoWidget::~visualInfoWidget()

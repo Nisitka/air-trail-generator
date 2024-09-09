@@ -37,7 +37,7 @@ public slots:
     void updatePointsInterZD(QVector <QVector <QVector <QVector3D>>>* pZD, QList <QVector3D>* posRLS);
 
 public:
-    explicit map3DVisWindow();
+    explicit map3DVisWindow(GISInformer* mapInformer);
     ~map3DVisWindow();
 
     mapOpenGLWidget* getGraphicsWidget();

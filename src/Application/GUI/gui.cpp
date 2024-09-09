@@ -104,11 +104,9 @@ void GUI::connectGIS(GIS *gis)
     QObject::connect(gis,                          SIGNAL(finishBuildMap(int,int,int)),
                      visInfoWin->getManDrawArea(), SLOT(updateGeoMapImage()));
 
-    // Отображение в 3D
-    QObject::connect(gis,      SIGNAL(finishBuildMap(int,int,int)),
-                     map3DWin, SLOT(setVisRectDef()));
-    QObject::connect(gis,      SIGNAL(changedMap(int,int,int,int)),
-                     map3DWin, SLOT(updateMap3D(int,int,int,int)));
+    //
+    QObject::connect(gis, SIGNAL(finishBuildMap(int,int,int)),
+                     visInfoWin, SLOT(initOpenGLWindow()));
 }
 
 void GUI::connectMRLS(managerRLS* mRLS)

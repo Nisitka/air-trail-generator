@@ -5,13 +5,13 @@
 
 #include <QDebug>
 
-map3DVisWindow::map3DVisWindow():
+map3DVisWindow::map3DVisWindow(GISInformer* mapInformer):
     ui(new Ui::map3DVisWindow)
 {
     ui->setupUi(this);
 
     //
-    visMap = new mapOpenGLWidget(new QImage);
+    visMap = new mapOpenGLWidget(mapInformer);
 
     // Функциональные окна
     addFunWindow(new QTabWidget, QIcon(":/resurs/a"),"A",Qt::LeftDockWidgetArea,Qt::LeftDockWidgetArea);
@@ -50,9 +50,9 @@ void map3DVisWindow::updatePointsInterZD(QVector<QVector<QVector<QVector3D> > >*
 
 void map3DVisWindow::setVisRectDef()
 {
-//    visMap->initializeTerrain(0, 0,
-//                              map->getWidth(),
-//                              map->getLength());
+    visMap->initializeTerrain(0, 0,
+                              300,
+                              300);
 }
 
 void map3DVisWindow::setVisRect(int idXo, int idYo, int W, int L)
