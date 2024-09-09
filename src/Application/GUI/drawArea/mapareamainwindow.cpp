@@ -30,15 +30,13 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
 
     ///*                                         *///
     // Табличка с координатами
-    statusBar = new QStatusBar;
-    Designer::setStatusBar(statusBar);
-    statusBar->setFixedHeight(25);
-    setStatusBar(statusBar);
+    coordLabel = new CoordsInfoForm();
 
-    coordLabel = new CoordsInfoForm(statusBar);
+    // Вспомогательная панель снизу
+    QStatusBar* statusBar = new QStatusBar;
     statusBar->addWidget(coordLabel);
-    statusBar->show();
-    coordLabel->show();
+    Designer::setStatusBar(statusBar);
+    setStatusBar(statusBar);
 
     // Карта в 2D
     scrollArea = new ScrollMapWidget(area);
@@ -90,9 +88,6 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
 
     // Настройка визуала
     Designer::setMainWindow(this);
-
-    // Убираем статус бар
-    setStatusBar(nullptr);
 }
 
 void mapAreaMainWindow::updateCoord(const Coords coords)

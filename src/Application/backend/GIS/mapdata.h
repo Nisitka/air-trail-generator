@@ -14,7 +14,6 @@ public:
     int W;
     int L;
     int H;
-
 };
 
 #endif // MAPDATA_H

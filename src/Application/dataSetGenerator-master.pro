@@ -184,7 +184,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/drawArea/zoomcontrollerwidget.ui \
     GUI/hellowindow.ui \
     GUI/mainswitcherwindow.ui \
-    GUI/manrlswindow.ui
+    GUI/manrlswindow.ui \
+    GUI/drawArea/DecktopItems/form.ui
 
 DISTFILES += \
     resurs/earchIcon.png \

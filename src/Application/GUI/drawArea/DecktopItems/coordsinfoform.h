@@ -1,7 +1,7 @@
 #ifndef COORDSINFOFORM_H
 #define COORDSINFOFORM_H
 
-#include <QLabel>
+#include <QWidget>
 
 #include "backend/GIS/coords.h"
 
@@ -9,7 +9,7 @@ namespace Ui {
 class CoordsInfoForm;
 }
 
-class CoordsInfoForm : public QLabel
+class CoordsInfoForm : public QWidget
 {
     Q_OBJECT
 
@@ -18,8 +18,6 @@ public:
     ~CoordsInfoForm();
 
     void setData(const Coords& coords);
-
-    bool eventFilter(QObject *watched, QEvent *event);
 
 private:
     Ui::CoordsInfoForm *ui;

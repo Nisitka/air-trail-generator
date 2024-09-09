@@ -8,7 +8,6 @@ manRLSWindow::manRLSWindow(InformerRLS* infoRLS):
     ui(new Ui::manRLSWindow)
 {
     ui->setupUi(this);
-    this->setStatusBar(statusBar);
 
     //
     connect(ui->setCoordRLSpushButton, SIGNAL(clicked()),

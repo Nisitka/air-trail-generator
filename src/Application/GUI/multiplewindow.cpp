@@ -4,7 +4,7 @@
 
 #include <QDebug>
 
-MultipleWindow::MultipleWindow()
+MultipleWindow::MultipleWindow(): QMainWindow()
 {
     toolBar = new QToolBar;
     addToolBar(Qt::TopToolBarArea, toolBar);
@@ -20,8 +20,9 @@ MultipleWindow::MultipleWindow()
                 "    border: 1px solid gray;"
                 "}"
                 );
+    toolBar->hide();
 
-    statusBar = nullptr;
+    setStatusBar(nullptr);
 }
 
 void MultipleWindow::addFunWindow(QWidget *window, const QIcon &iconButton, const QString &nameWin,
@@ -33,7 +34,9 @@ void MultipleWindow::addFunWindow(QWidget *window, const QIcon &iconButton, cons
     button->setToolTip(nameWin);
     setStyleToolButton(button, close);
 
+    //
     toolBar->addWidget(button);
+    toolBar->show();
 
     //
     QDockWidget* dock = new QDockWidget(nameWin);

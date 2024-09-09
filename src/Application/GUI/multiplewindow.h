@@ -33,9 +33,6 @@ protected:
     // Переопределяем метод, чтоб не вылазило меню при нажатии лев.клавиши мыши
     void contextMenuEvent(QContextMenuEvent* event) override;
 
-    //
-    QStatusBar* statusBar;
-
 private slots:
 
     //
