@@ -41,7 +41,7 @@
               <widget class="QPushButton" name="switchStartWorkPB">
                <property name="minimumSize">
                 <size>
-                 <width>130</width>
+                 <width>144</width>
                  <height>27</height>
                 </size>
                </property>

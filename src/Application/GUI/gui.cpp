@@ -104,9 +104,9 @@ void GUI::connectGIS(GIS *gis)
     QObject::connect(gis,                          SIGNAL(finishBuildMap(int,int,int)),
                      visInfoWin->getManDrawArea(), SLOT(updateGeoMapImage()));
 
-    //
-    QObject::connect(gis, SIGNAL(finishBuildMap(int,int,int)),
-                     visInfoWin, SLOT(initOpenGLWindow()));
+    // При завершении подготовки карты - инициализировать визуальную часть проекта
+    QObject::connect(gis,        SIGNAL(finishBuildMap(int,int,int)),
+                     visInfoWin, SLOT(initProject()));
 }
 
 void GUI::connectMRLS(managerRLS* mRLS)

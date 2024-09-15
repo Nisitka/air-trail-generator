@@ -31,7 +31,7 @@ mapOpenGLWidget::mapOpenGLWidget(GISInformer* mapInformer,
     this->setMinimumSize(300, 200);
     this->setMaximumSize(9999, 9999);
 
-    readyRender = true;
+    readyRender = false;
 }
 
 //void mapOpenGLWidget::startPredictTrail()
@@ -319,6 +319,9 @@ void mapOpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
 
 void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL)
 {
+    qDebug() << "Init terrain OpenGL";
+
+    // Запрещаем отрисовку
     readyRender = false;
 
     // Дискреты углов
@@ -353,8 +356,10 @@ void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL
     lookY = (float) ((float)countY * MAP_SCALE) / 2;
     lookZ = 0.0;
 
-    //
+    // Разрешаем отрисовку
     readyRender = true;
+
+    qDebug() << "Ready terrain OpenGL";
 
     // Рисуем обновленную картинку
     update();

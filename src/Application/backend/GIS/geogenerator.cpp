@@ -137,7 +137,6 @@ int geoGenerator::absolute(int idX, int idY, Coords::units units) const
 {
     int h = -1;
 
-
     if (inActionArea(idX, idY))
         h = actionArea->getHeight(idX-idXo, idY-idYo);
     else

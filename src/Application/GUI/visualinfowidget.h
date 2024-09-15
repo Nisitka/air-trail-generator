@@ -10,7 +10,9 @@
 
 #include "backend/GIS/gisinformer.h"
 
-class visualInfoWidget: public MultipleWindow
+// Окно по работе с визуальными данными
+class visualInfoWidget:
+        public MultipleWindow
 {
     Q_OBJECT
 signals:  
@@ -19,7 +21,8 @@ signals:
 
 public slots:
 
-    void initOpenGLWindow();
+    // Подготовиться к работе с проектом
+    void initProject();
 
 public:
     explicit visualInfoWidget(GISInformer* gis);
@@ -32,6 +35,9 @@ private slots:
     /* ... */
 
 private:
+
+    //
+    void initOpenGLWindow();
 
     //
     GISInformer* gis;
