@@ -19,6 +19,10 @@ helloWindow::helloWindow(QWidget *parent) :
 
     currentButton = ui->switchStartWorkPB;
     ui->switchStartWorkPB->clicked();
+
+    //
+    connect(ui->openFilePushButton, SIGNAL(clicked(bool)),
+            this,                   SIGNAL(choiceProjectFile()));
 }
 
 void helloWindow::switchWindow()

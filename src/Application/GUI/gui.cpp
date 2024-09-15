@@ -4,8 +4,10 @@
 
 #include "drawArea/mapareamainwindow.h"
 
+#include <QFileDialog>
+
 GUI::GUI(GISInformer* gis,
-         InformerRLS* infoRLS):
+         InformerRLS* infoRLS): QObject(nullptr),
     gisInformer(gis)
 {
     //
@@ -57,6 +59,8 @@ GUI::GUI(GISInformer* gis,
 
     //
     helloWin = new helloWindow;
+    connect(helloWin, SIGNAL(choiceProjectFile()),
+            this,     SLOT(showOpenProjectWindow()));
 
         /*       */
     //
@@ -67,6 +71,15 @@ GUI::GUI(GISInformer* gis,
     switcherWindow->addWindow(mainWin,
                               QIcon(":/resurs/earchIcon"),
                               "Редактор");
+}
+
+void GUI::showOpenProjectWindow()
+{
+    //
+    QString dirName = QFileDialog::getOpenFileName();
+
+    if (dirName.size() > 0)
+        openProject(dirName);
 }
 
 void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
@@ -103,6 +116,10 @@ void GUI::connectGIS(GIS *gis)
                      visInfoWin->getManDrawArea(), SLOT(repaintBackground()));
     QObject::connect(gis,                          SIGNAL(finishBuildMap(int,int,int)),
                      visInfoWin->getManDrawArea(), SLOT(updateGeoMapImage()));
+
+    // Открыть файл-проект
+    QObject::connect(this,  SIGNAL(openProject(QString)),
+                     gis,   SLOT(openMap(QString)));
 
     // При завершении подготовки карты - инициализировать визуальную часть проекта
     QObject::connect(gis,        SIGNAL(finishBuildMap(int,int,int)),

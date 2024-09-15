@@ -14,6 +14,11 @@ class helloWindow : public QWidget
 {
     Q_OBJECT
 
+signals:
+
+    //
+    void choiceProjectFile();
+
 public:
     explicit helloWindow(QWidget *parent = 0);
     ~helloWindow();

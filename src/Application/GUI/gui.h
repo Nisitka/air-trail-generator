@@ -20,8 +20,15 @@
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
 
 // Интерфейс всей программы
-class GUI
+class GUI: public QObject
 {
+    Q_OBJECT
+
+signals:
+
+    //
+    void openProject(const QString& dirName);
+
 public:
     GUI(GISInformer* gisInformer,
         InformerRLS* infoRLS);
@@ -37,6 +44,11 @@ public:
 
 
     void showMainWin();
+
+private slots:
+
+    //
+    void showOpenProjectWindow();
 
 private:
 
