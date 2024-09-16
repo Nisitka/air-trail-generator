@@ -34,6 +34,9 @@ public:
     areaDrawWidget* getDrawArea();
 
     //
+    void setLockStatus();
+
+    //
     void setDefStatus();
 
     // Добавить инструмент

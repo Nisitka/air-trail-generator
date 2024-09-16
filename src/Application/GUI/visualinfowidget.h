@@ -37,9 +37,6 @@ private slots:
 private:
 
     //
-    void initOpenGLWindow();
-
-    //
     GISInformer* gis;
 
     //

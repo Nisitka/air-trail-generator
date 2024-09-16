@@ -76,7 +76,9 @@ GUI::GUI(GISInformer* gis,
 void GUI::showOpenProjectWindow()
 {
     //
-    QString dirName = QFileDialog::getOpenFileName();
+    QString dirName = QFileDialog::getOpenFileName(nullptr, "Открыть файл проекта",
+                                                   QApplication::applicationDirPath(),
+                                                   "*.map");
 
     if (dirName.size() > 0)
         openProject(dirName);

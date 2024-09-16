@@ -18,12 +18,7 @@ visualInfoWidget::visualInfoWidget(GISInformer* gis):
     setCentralWidget(mapDrawArea);
 
     // Так как изначально никакой карты не открыто
-    mapDrawArea->setEnabled(false);
-}
-
-void  visualInfoWidget::initOpenGLWindow()
-{
-    mapDrawArea->setDefStatus();
+    mapDrawArea->setLockStatus();
 }
 
 mapAreaMainWindow* visualInfoWidget::getManDrawArea()
@@ -33,11 +28,7 @@ mapAreaMainWindow* visualInfoWidget::getManDrawArea()
 
 void visualInfoWidget::initProject()
 {
-    //
-    mapDrawArea->setEnabled(true);
-
-    //
-    initOpenGLWindow();
+    mapDrawArea->setDefStatus();
 }
 
 visualInfoWidget::~visualInfoWidget()

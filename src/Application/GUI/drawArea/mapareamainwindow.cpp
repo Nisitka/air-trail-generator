@@ -90,6 +90,12 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
     Designer::setMainWindow(this);
 }
 
+void mapAreaMainWindow::setLockStatus()
+{
+    this->setEnabled(false);
+    area->hide();
+}
+
 void mapAreaMainWindow::updateCoord(const Coords coords)
 {
     coordLabel->setData(coords);
@@ -97,6 +103,9 @@ void mapAreaMainWindow::updateCoord(const Coords coords)
 
 void mapAreaMainWindow::setDefStatus()
 {
+    this->setEnabled(true);
+    area->show();
+
     //
     map3DWin->setVisRectDef();
 }
