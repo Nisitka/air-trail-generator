@@ -16,6 +16,11 @@ class mainSwitcherWindow : public QMainWindow
 {
     Q_OBJECT
 
+public slots:
+
+    //
+    void showMainWindow();
+
 public:
     explicit mainSwitcherWindow(QWidget *parent = 0);
     ~mainSwitcherWindow();
@@ -23,7 +28,8 @@ public:
     //
     void addWindow(QWidget *window,
                    const QIcon& iconButton,
-                   const QString& nameButton);
+                   const QString& nameButton,
+                   bool isMain = false);
     //
     void setCurrentWindow(QWidget* window) const;
 
@@ -42,6 +48,9 @@ private:
 
     //
     QMap <QToolButton*, QWidget*> windows;
+
+    //
+    QWidget* mainWindow;
 
     Ui::mainSwitcherWindow *ui;
 };

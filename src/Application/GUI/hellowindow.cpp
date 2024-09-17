@@ -23,6 +23,32 @@ helloWindow::helloWindow(QWidget *parent) :
     //
     connect(ui->openFilePushButton, SIGNAL(clicked(bool)),
             this,                   SIGNAL(choiceProjectFile()));
+
+    //
+    ui->openFilePushButton->setStyleSheet("QPushButton{"
+                                          "   background-color: transparent; color: black;"
+                                          "   border-style: outset;"
+                                          "   border-width: 1px;"
+                                          "   border-color: rgb(115,115,120);"
+                                          "}"
+                                          "QPushButton:hover{"
+                                          "   background-color: rgb(230,230,230);"
+                                          "   border-color: black;"
+                                          "}");
+
+    //
+    ui->createFilePushButton->setStyleSheet("QPushButton{"
+                                            "   image: url(:/resurs/plusBlackEl);"
+                                            "   background-color: transparent; color: black;"
+                                            "   border-style: outset;"
+                                            "   border-width: 1px;"
+                                            "   border-color: rgb(115,115,120);"
+                                            "}"
+                                            "QPushButton:hover{"
+                                            "   image: url(:/resurs/plusBlueEl);"
+                                            "   background-color: rgb(230,230,250);"
+                                            "   border-color: black;"
+                                            "}");
 }
 
 void helloWindow::switchWindow()

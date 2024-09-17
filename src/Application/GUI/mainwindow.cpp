@@ -33,13 +33,9 @@ void mainWindow::showFunWindow()
 
     QDockWidget* dock = windows[button];
     if (dock->isVisible())
-    {
         dock->hide();
-    }
     else
-    {
         dock->show();
-    }
 }
 
 void mainWindow::addTask(QWidget *window,

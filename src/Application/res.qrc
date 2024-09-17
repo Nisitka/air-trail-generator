@@ -67,5 +67,9 @@
         <file>resurs/pngwing.com.png</file>
         <file>resurs/pattern4.jpg</file>
         <file>resurs/home.png</file>
+        <file>resurs/plusBlack.png</file>
+        <file>resurs/plusBlue.png</file>
+        <file>resurs/plusBlackEl.png</file>
+        <file>resurs/plusBlueEl.png</file>
     </qresource>
 </RCC>

@@ -45,9 +45,15 @@ mainSwitcherWindow::mainSwitcherWindow(QWidget *parent) :
 
 }
 
+void mainSwitcherWindow::showMainWindow()
+{
+    setCurrentWindow(mainWindow);
+}
+
 void mainSwitcherWindow::addWindow(QWidget *window,
                                    const QIcon &iconButton,
-                                   const QString &nameButton)
+                                   const QString &nameButton,
+                                   bool isMain)
 {
     ui->stackedWidget->addWidget(window);
 
@@ -59,6 +65,7 @@ void mainSwitcherWindow::addWindow(QWidget *window,
 
     //
     windows[button] = window;
+    if (isMain) mainWindow = window;
 
     /*
     QWidget* backWidget = new QWidget;

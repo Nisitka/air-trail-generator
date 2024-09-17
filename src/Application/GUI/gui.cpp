@@ -70,7 +70,7 @@ GUI::GUI(GISInformer* gis,
     //
     switcherWindow->addWindow(mainWin,
                               QIcon(":/resurs/earchIcon"),
-                              "Редактор");
+                              "Редактор", true); //  Главное окно
 }
 
 void GUI::showOpenProjectWindow()
@@ -118,6 +118,10 @@ void GUI::connectGIS(GIS *gis)
                      visInfoWin->getManDrawArea(), SLOT(repaintBackground()));
     QObject::connect(gis,                          SIGNAL(finishBuildMap(int,int,int)),
                      visInfoWin->getManDrawArea(), SLOT(updateGeoMapImage()));
+
+    //
+    QObject::connect(gis,            SIGNAL(finishBuildMap(int,int,int)),
+                     switcherWindow, SLOT(showMainWindow()));
 
     // Открыть файл-проект
     QObject::connect(this,  SIGNAL(openProject(QString)),
@@ -193,7 +197,7 @@ void GUI::connectMRLS(managerRLS* mRLS)
     QObject::connect(mRLS,       SIGNAL(changeStatProcessing(int)),
                      optRLSWin,  SLOT(updateStatProcessing(int)));
 
-    /// !!!!!!!!!!!!!!!!!!!!!!!!!!
+    /// !!!!!!!!!!!!!!!!!!!!!!!!!! полная херня
     QObject::connect(visInfoWin->getManDrawArea()->getDrawArea(), SIGNAL(updateSignals()),
                      mRLS, SLOT(updateSignals()));
 }
