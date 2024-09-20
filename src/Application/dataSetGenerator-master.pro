@@ -53,7 +53,6 @@ SOURCES += main.cpp\
     backend/GIS/paintermapimage.cpp \
     backend/GIS/gis.cpp \
     GUI/processtmpwidget.cpp \
-    backend/graphicengine.cpp \
     backend/GIS/coords.cpp \
     backend/GIS/mapdata.cpp \
     backend/tracerlight.cpp \
@@ -83,7 +82,8 @@ SOURCES += main.cpp\
     GUI/hellowindow.cpp \
     GUI/mainswitcherwindow.cpp \
     backend/MapFile/mapfile.cpp \
-    GUI/manrlswindow.cpp
+    GUI/manrlswindow.cpp \
+    GUI/createprojectwindow.cpp
 
 HEADERS  += \
     core.h \
@@ -131,7 +131,6 @@ HEADERS  += \
     backend/GIS/paintermapimage.h \
     backend/GIS/gis.h \
     GUI/processtmpwidget.h \
-    backend/graphicengine.h \
     backend/GIS/gisinformer.h \
     backend/GIS/coords.h \
     backend/GIS/heightmeter.h \
@@ -170,7 +169,8 @@ HEADERS  += \
     backend/MapFile/mapfile.h \
     backend/MapFile/datamapgis.h \
     backend/MapFile/datamaprls.h \
-    GUI/manrlswindow.h
+    GUI/manrlswindow.h \
+    GUI/createprojectwindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optqfunwindow.ui \
@@ -185,7 +185,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/hellowindow.ui \
     GUI/mainswitcherwindow.ui \
     GUI/manrlswindow.ui \
-    GUI/drawArea/DecktopItems/form.ui
+    GUI/drawArea/DecktopItems/form.ui \
+    GUI/createprojectwindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \

@@ -16,8 +16,11 @@ class helloWindow : public QWidget
 
 signals:
 
-    //
+    // Запросить выбор файла проекта
     void choiceProjectFile();
+
+    // Вызвать конструктор проекта
+    void showMasterBuildProject();
 
 public:
     explicit helloWindow(QWidget *parent = 0);

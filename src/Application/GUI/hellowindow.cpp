@@ -20,9 +20,13 @@ helloWindow::helloWindow(QWidget *parent) :
     currentButton = ui->switchStartWorkPB;
     ui->switchStartWorkPB->clicked();
 
-    //
+    // Открыть проект
     connect(ui->openFilePushButton, SIGNAL(clicked(bool)),
             this,                   SIGNAL(choiceProjectFile()));
+
+    // Создать проект
+    connect(ui->createFilePushButton, SIGNAL(clicked(bool)),
+            this,                     SIGNAL(showMasterBuildProject()));
 
     //
     ui->openFilePushButton->setStyleSheet("QPushButton{"

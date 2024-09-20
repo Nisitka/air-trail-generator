@@ -19,6 +19,8 @@
 #include "3DVisualization/map3dviswindow.h"
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
 
+#include "GUI/createprojectwindow.h"
+
 // Интерфейс всей программы
 class GUI: public QObject
 {
@@ -51,6 +53,9 @@ private slots:
     void showOpenProjectWindow();
 
 private:
+
+    // Окно инициализации проекта
+    createProjectWindow* createProjWin;
 
     // Самое главное окно
     mainSwitcherWindow* switcherWindow;

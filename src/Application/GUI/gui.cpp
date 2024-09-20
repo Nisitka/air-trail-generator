@@ -13,7 +13,7 @@ GUI::GUI(GISInformer* gis,
     //
     switcherWindow = new mainSwitcherWindow;
 
-
+    //
     mainWin = new mainWindow;
 
     // Задача для работы с графической информацией
@@ -61,6 +61,12 @@ GUI::GUI(GISInformer* gis,
     helloWin = new helloWindow;
     connect(helloWin, SIGNAL(choiceProjectFile()),
             this,     SLOT(showOpenProjectWindow()));
+
+    //
+    createProjWin = new createProjectWindow;
+    connect(helloWin,      SIGNAL(showMasterBuildProject()),
+            createProjWin, SLOT(exec()));
+
 
         /*       */
     //
