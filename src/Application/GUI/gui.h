@@ -36,6 +36,9 @@ public:
         InformerRLS* infoRLS);
 
     //
+    createProjectWindow* WindowCreateProject() const;
+
+    //
     void connectGIS(GIS* gis);
 
     // присоединить к интерфейсу РЛС

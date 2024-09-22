@@ -74,7 +74,11 @@ public:
     enum editH{up, down};
 
     //
-    void initMap(int W, int L, int H);
+    void initMap(const MapData DataMap,
+                 const QString& dirName);
+
+    //
+    void getSizeMap(int& W, int& L, int& H) const;
 
 private:
 

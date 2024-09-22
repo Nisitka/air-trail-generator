@@ -5,6 +5,8 @@
 
 #include <QApplication>
 
+#include <QDebug>
+
 createProjectWindow::createProjectWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::createProjectWindow)
@@ -16,7 +18,7 @@ createProjectWindow::createProjectWindow(QWidget *parent) :
     // Значения по умолчанию
     ui->dirProjectLineEdit->setText(
                 QApplication::applicationDirPath());
-    ui->nameProjectLineEdit->setText("Безымянный 1");
+    ui->nameProjectLineEdit->setText("Безымянный_1");
 
     //
     ui->progressBar->hide();
@@ -46,8 +48,10 @@ void createProjectWindow::buildProject()
 
     // Полный путь проекта
     QString dirNameProject;
-    dirNameProject  = ui->dirProjectLineEdit->text();
-    dirNameProject += ui->nameProjectLineEdit->text();
+    dirNameProject  = ui->dirProjectLineEdit->text() + "/";
+    dirNameProject += ui->nameProjectLineEdit->text() + ".map";
+
+    qDebug() << dirNameProject;
 
     // Данные для инициализации карты
     MapData mapData;

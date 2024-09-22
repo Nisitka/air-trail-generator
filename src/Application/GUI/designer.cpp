@@ -102,6 +102,28 @@ void Designer::setButton(QPushButton* button, int style)
                    "QPushButton:pressed{"
                    "    background-color : rgb(125,202,208); color: rgb(0,0,0);;"
                    "}";
+        /*
+        "QPushButton{"
+                           "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "
+                           "                                     stop: 0 rgb(255,252,254), "
+                           "                                     stop: 0.3 rgb(209,226,248), "
+                           "                                     stop: 1 rgb(251,252,254));"
+                           "   border: 1px solid rgb(150,183,227);"
+                           "   border-radius: 3px;"
+                           "   border-width: 1px;"
+                           "   color: rgb(34,69,157);"
+                           "}"
+                           "QPushButton:hover{"
+                           "   border: 1px solid rgb(255,165,0);"
+                           "   background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "
+                           "                                     stop: 0 rgb(255,252,254), "
+                           "                                     stop: 0.4 rgb(255,204,60), "
+                           "                                     stop: 1 rgb(255,251,230));"
+                           "   color: rgb(102,51,0);"
+                           "}"
+                           "QPushButton:pressed{"
+                           "    background-color : rgb(125,202,208); color: rgb(0,0,0);;"
+                           "}";*/
         break;
     case white:
         strStyle =

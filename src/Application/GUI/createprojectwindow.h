@@ -24,6 +24,11 @@ public:
     explicit createProjectWindow(QWidget *parent = 0);
     ~createProjectWindow();
 
+public slots:
+
+    //
+    ///void setStatCreateProject(int percent);
+
 private slots:
 
     //

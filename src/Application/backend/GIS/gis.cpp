@@ -11,7 +11,7 @@ GIS::GIS(): GISInformer(),
     // Отвечает за работу с рельефом карты
     geoBuilder = new geoGenerator(currentW, currentH);
     connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
-            this,       SLOT(setMapSize(int,int,int)));
+            this,       SLOT(setPosActionAreaDefult()));
     connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
             this,       SIGNAL(finishBuildMap(int,int,int)));
 
@@ -22,25 +22,22 @@ GIS::GIS(): GISInformer(),
     backPainter = new painterMapImage(heigtMeter, RZ, currentW, currentH);
     connect(geoBuilder,  SIGNAL(buildFinish(int,int,int)),
             backPainter, SLOT(run()));
-    connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
-            this,       SLOT(initMap(int,int,int)));
+//    connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
+//            this,       SLOT(initMap(int,int,int)));
 
     /// !!!!!!
     //geoBuilder->initMap(1000, 1000, 256);
 }
 
+void GIS::setPosActionAreaDefult()
+{
+    // Сдвигаем область активных действий в крайнее левое верхнее положение
+    setPosActionArea(0,0);
+}
+
 RZInformer* GIS::getRZInformer() const
 {
     return geoBuilder;
-}
-
-void GIS::setMapSize(int W, int L, int H)
-{
-    Wmap = W;
-    Lmap = L;
-    Hmap = H;
-
-    qDebug() << "setMapSize: " << Wmap << Lmap << Hmap;
 }
 
 HeightMeter* GIS::getHeightMeter() const
@@ -110,6 +107,9 @@ void GIS::initActionArea(int posX, int posY)
 {
     qDebug() << "Start set pos action area: " << posX << posY;
 
+    int Wmap, Lmap, Hmap;
+    geoBuilder->getSizeMap(Wmap, Lmap, Hmap);
+
     // Крайние положения
     if (posX < 0) posX = 0;
     if (posY < 0) posY = 0;
@@ -136,12 +136,11 @@ void GIS::openMap(const QString &dirNameFile)
     geoBuilder->openMap(dirNameFile);
 }
 
-void GIS::initMap(int W, int L, int H)
+void GIS::initMap(const MapData DataMap,
+                  const QString& dirName)
 {
-    setMapSize(W, L, H);
-
-    // Сдвигаем область активных действий в крайнее левое верхнее положение
-    setPosActionArea(0,0);
+    //
+    geoBuilder->initMap(DataMap, dirName);
 }
 
 void GIS::loadTerrain(const QString &dirNameFile)
@@ -150,11 +149,11 @@ void GIS::loadTerrain(const QString &dirNameFile)
     initActionArea(0, 0);
 }
 
-void GIS::setDefaultMap()
-{
-    geoBuilder->buildFlatMap(currentW, currentH);
-    initActionArea(0, 0);
-}
+//void GIS::setDefaultMap()
+//{
+//    geoBuilder->buildFlatMap(currentW, currentH);
+//    initActionArea(0, 0);
+//}
 
 void GIS::updateFromRect(const QRect &rect)
 {

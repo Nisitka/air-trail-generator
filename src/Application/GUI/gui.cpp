@@ -63,10 +63,9 @@ GUI::GUI(GISInformer* gis,
             this,     SLOT(showOpenProjectWindow()));
 
     //
-    createProjWin = new createProjectWindow;
+    createProjWin = new createProjectWindow(switcherWindow);
     connect(helloWin,      SIGNAL(showMasterBuildProject()),
             createProjWin, SLOT(exec()));
-
 
         /*       */
     //
@@ -77,6 +76,11 @@ GUI::GUI(GISInformer* gis,
     switcherWindow->addWindow(mainWin,
                               QIcon(":/resurs/earchIcon"),
                               "Редактор", true); //  Главное окно
+}
+
+createProjectWindow* GUI::WindowCreateProject() const
+{
+    return createProjWin;
 }
 
 void GUI::showOpenProjectWindow()

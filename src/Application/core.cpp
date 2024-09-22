@@ -58,6 +58,11 @@ void Core::init_allObj()
     //
     InformerRLS* infoRLS = mRLS;
     gui = new GUI(gis, infoRLS);
+    createProjectWindow* CreateProjWin = gui->WindowCreateProject();
+    connect(CreateProjWin, SIGNAL(sendDataNewProject(MapData,QString)),
+            gis,           SLOT(initMap(MapData,QString)));
+    connect(gis,           SIGNAL(finishBuildMap(int,int,int)),
+            CreateProjWin, SLOT(hide()));
 
     readyRunProgress(65, "Инициализация интерфейса...");
 }
@@ -107,13 +112,6 @@ void Core::run()
     init_GUI();
 
     init_buildThreads();
-    //gis->setDefaultMap();
-    //gis->loadTerrain(QApplication::applicationDirPath() + "\\maps\\img2.png");
-    /// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //gis->openMap(QApplication::applicationDirPath() + "\\blocks\\test3.map");
-
-//    gis->openMap(QApplication::applicationDirPath() +
-//                 "\\blocks\\tmpMap.map");
 
     ready();
 

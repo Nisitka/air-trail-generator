@@ -34,6 +34,10 @@ signals:
 
 public slots:
 
+    // Создать карту
+    void initMap(const MapData DataMap,
+                 const QString& dirName); //
+
     // Изменить активную область
     void setPosActionArea(int idXmap, int idYmap); // центр области
     void movePosActionArea(int dX, int dY); // в дискретах карты
@@ -77,15 +81,12 @@ public:
     GIS();
 
     //
-    void setDefaultMap();   
+    ///void setDefaultMap();
 
 private slots:
 
     //
-    void initMap(int W, int L, int H);
-
-    //
-    void setMapSize(int W, int L, int H);
+    void setPosActionAreaDefult();
 
 private:
 
@@ -100,11 +101,6 @@ private:
     int idXpos, idYpos;       // Левый верхний угол
     const int currentW = 300; // Размеры области
     const int currentH = 300; //  в дискретах
-
-    // Карта в виде блоков
-    int Wmap;
-    int Lmap;
-    int Hmap;
 
     //
     geoGenerator* geoBuilder;

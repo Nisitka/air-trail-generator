@@ -23,6 +23,11 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     mapFile = new MapFile;
 }
 
+void geoGenerator::getSizeMap(int &W, int &L, int &H) const
+{
+    mapFile->getSize(W, L, H);
+}
+
 int geoGenerator::lenghtBlock() const
 {
     return mapFile->lenghtUnit();
@@ -77,16 +82,21 @@ bool geoGenerator::inActionArea(int idX, int idY) const
     return true;
 }
 
-void geoGenerator::initMap(int W, int L, int H)
+void geoGenerator::initMap(const MapData DataMap,
+                           const QString& dirName)
 {
     buildStart();
 
     //
     actionArea->resize(wArea, lArea);
 
+
+    int W = DataMap.W;
+    int L = DataMap.L;
+
     //
-    mapFile->init(dirNameTmpMap,
-                  W, L, Hmap);
+    mapFile->init(dirName,
+                  W, L, Hmap); /// <------ !@#0
 
     // Сообщаем об завершении инициализации карты
     buildFinish(W, L, Hmap);
