@@ -104,15 +104,29 @@ void mainSwitcherWindow::createMenus()
 {
         /* Создаём меню Файл */
     QMenu* mnFile = new QMenu("Файл");
+    mnFile->setToolTip("Файл");
 
-    //
-    QAction* openFileAction = new QAction("Открыть...",mnFile);
-    //connect(openFileAction, SIGNAL(triggered()), this, SLOT(showMessage()));
-    mnFile->addAction(openFileAction);
+    // Создать проект
+    QAction* createProjectAction = new QAction(QIcon(":/resurs/new-file2"),
+                                               "Создать проект",
+                                               mnFile);
+    createProjectAction->setToolTip("Создать проект");
+    connect(createProjectAction, SIGNAL(triggered(bool)),
+            this,                SIGNAL(showMasterBuildProject()));
+    mnFile->addAction(createProjectAction);
+
+    // Открыть проект
+    QAction* openProjectAction = new QAction(QIcon(":/resurs/open-folder2"),
+                                             "Открыть проект",
+                                             mnFile);
+    openProjectAction->setToolTip("Открыть проект");
+    connect(openProjectAction, SIGNAL(triggered()),
+            this,              SIGNAL(choiceProjectFile()));
+    mnFile->addAction(openProjectAction);
 
     // Меню помощь
     QMenu* mnHelp = new QMenu("Справка");
-    QAction* programInfoAction = new QAction("О программе",mnHelp);
+    QAction* programInfoAction = new QAction("О программе", mnHelp);
     //connect(programInfoAction, SIGNAL(triggered()), this, SLOT(showMessage()));
     mnHelp->addAction(programInfoAction);
 

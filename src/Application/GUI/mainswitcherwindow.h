@@ -16,6 +16,14 @@ class mainSwitcherWindow : public QMainWindow
 {
     Q_OBJECT
 
+signals:
+
+    // Запросить окно выбора файла-проекта
+    void choiceProjectFile();
+
+    // Запросить окно создания проекта
+    void showMasterBuildProject();
+
 public slots:
 
     //

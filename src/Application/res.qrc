@@ -71,5 +71,11 @@
         <file>resurs/plusBlue.png</file>
         <file>resurs/plusBlackEl.png</file>
         <file>resurs/plusBlueEl.png</file>
+        <file>resurs/open-folder.png</file>
+        <file>resurs/new-file.png</file>
+        <file>resurs/new-file2.png</file>
+        <file>resurs/open-folder2.png</file>
+        <file>resurs/open-folder3.png</file>
+        <file>resurs/new-file3.png</file>
     </qresource>
 </RCC>
