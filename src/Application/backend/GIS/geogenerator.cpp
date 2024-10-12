@@ -14,10 +14,7 @@ geoGenerator::geoGenerator(int wArea_, int lArea_):
     isLocked = false;
 
     //
-    actionArea = new GeoArea(wArea, lArea); //Map;
-
-    dirNameTmpMap = QApplication::applicationDirPath() +
-            "\\blocks\\tmpMap.map";
+    actionArea = new GeoArea(wArea, lArea);
 
     //
     mapFile = new MapFile;
@@ -93,6 +90,7 @@ void geoGenerator::initMap(const MapData DataMap,
 
     int W = DataMap.W;
     int L = DataMap.L;
+    Hmap  = DataMap.H;
 
     //
     mapFile->init(dirName,
@@ -202,7 +200,7 @@ Coords geoGenerator::getCoords(int idX, int idY) const
     int Y = idY;
     int H = actionArea->getHeight(idX-idXo, idY-idYo);
 
-    /// !!!!
+    /// !!!!!!!!!!!
     int lUnit = mapFile->lenghtUnit();
 
     return Coords(X, Y, H, lUnit);

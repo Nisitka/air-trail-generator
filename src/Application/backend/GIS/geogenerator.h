@@ -113,22 +113,6 @@ private:
     MapFile* mapFile;
     int Hmap;
 
-//    //
-//    int Wmap, Lmap, Hmap;
-//    QFile* map;
-    QString dirNameTmpMap;
-
-//    // Размеры блоков в метрах
-//    int lenghtUnit;
-//    int heightUnit;
-
-//    // Кол-во байт в файле карты на:
-//    qint64 sizeColumn;  // Одну дискрету
-//    qint64 sizeOptData; // Другие данные
-
-    //
-//    MapData mapData;
-
     // Активная зона
     GeoArea* actionArea;
     int idXo;  // Угол

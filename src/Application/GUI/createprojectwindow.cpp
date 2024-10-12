@@ -51,8 +51,6 @@ void createProjectWindow::buildProject()
     dirNameProject  = ui->dirProjectLineEdit->text() + "/";
     dirNameProject += ui->nameProjectLineEdit->text() + ".map";
 
-    qDebug() << dirNameProject;
-
     // Данные для инициализации карты
     MapData mapData;
     mapData.H = ui->sizeZSpinBox->value();
