@@ -18,6 +18,7 @@ class MapFile:             // Инткрфейсы:
 {
 public:
     MapFile();
+    ~MapFile();
 
     // Узнать размеры карты
     void getSize(int& W, int& L, int& H) const override final;
@@ -47,6 +48,19 @@ public:
     int getHeight(int idX, int idY) const override final;
     void setHeight(int idX, int idY,
                    int height) override final;
+
+    // Отредакутировать рельеф
+    void editHeightMatrix(
+                   int idXo, int idYo,  // Левый верхний угол обл.
+                   int w, int l,        // Ширина, длина области
+                   int dH); // Дельта изм.
+
+    // Посыпать землей дискрету (id относительно Action Area)
+    void dropEarth(int idX, int idY, int countLayer);
+    // Убрать землю с дискреты
+    void removeEarth(int idX, int idY, int countLayer);
+
+    void changeHeight(int idX, int idY, int dH);
 
 private:
 

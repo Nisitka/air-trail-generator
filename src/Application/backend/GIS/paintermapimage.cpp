@@ -58,6 +58,8 @@ void painterMapImage::runToRect(const QRect &rect)
 
 void painterMapImage::runToRect(int idX, int idY, int w, int h)
 {
+    ///qDebug() << "Painter run to rect!";
+
     // Если не попадает в область, то ничего не делаем
     if (idX > idXlast || idY > idYlast) return;
 

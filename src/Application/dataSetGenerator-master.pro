@@ -77,7 +77,6 @@ SOURCES += main.cpp\
     backend/Trail/trail.cpp \
     GUI/drawArea/zoomcontrollerwidget.cpp \
     backend/GIS/geocolumn.cpp \
-    backend/GIS/geoarea.cpp \
     backend/RLS/labelrls.cpp \
     GUI/hellowindow.cpp \
     GUI/mainswitcherwindow.cpp \
@@ -161,7 +160,6 @@ HEADERS  += \
     GUI/drawArea/zoomcontrollerwidget.h \
     backend/RLS/informerrls.h \
     backend/GIS/geocolumn.h \
-    backend/GIS/geoarea.h \
     backend/RLS/labelrls.h \
     GUI/hellowindow.h \
     GUI/mainswitcherwindow.h \

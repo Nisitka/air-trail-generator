@@ -13,8 +13,6 @@
 #include "coords.h"
 #include "mapdata.h"
 
-#include "geoarea.h"
-
 //
 #include "../MapFile/mapfile.h"
 
@@ -32,7 +30,7 @@ signals:
     void buildFinish(int W, int L, int H);
 
 public:
-    geoGenerator(int wArea, int lArea);
+    geoGenerator();
 
     // Редактирование дискрет на наличие РЛ сигнала (RZCreator)
     void toZD(const QVector3D &idBlock) const override final;
@@ -51,17 +49,11 @@ public:
     // В индексах всей карты
     Coords getCoords(int idX, int idY) const;
 
-    // Создать плоский (пустой) рельеф
-    void buildFlatMap(int W = 400, int L = 400, int H = 256);
-
     // Открыть карту
     void openMap(const QString& dirMapFile);
 
     // Загрузить рельеф
     void loadTerrain(const QString& dirNameFile);
-
-    // Установить область активных действий
-    void setPosActionArea(int idXo, int idYo);
 
     // Обновить данные по высотам в области
     void updateHeights(int idX, int idY, // Левый верхний угол
@@ -82,14 +74,6 @@ public:
 
 private:
 
-    // Назначить высоту в Action Area
-    void setHeight(int idX, int idY, // относительно Action Area
-                   int height);
-
-    //
-    void setZD(int idX, int idY, int idH,
-               bool statZD) const;
-
     // Ширина/Длина блоков в столбцах
     void setLenBlock(int);
     int getLenBlock() const;
@@ -101,27 +85,11 @@ private:
     // mutex
      mutable  bool isLocked;
 
-    // Дискрета в зоне событий?
-    bool inActionArea(int idX, int idY) const;
-
-    // Посыпать землей дискрету (id относительно Action Area)
-    void dropEarth(int idX, int idY, int countLayer);
-    // Убрать землю с дискреты
-    void removeEarth(int idX, int idY, int countLayer);
-
     ///
     MapFile* mapFile;
     int Hmap;
-
-    // Активная зона
-    GeoArea* actionArea;
-    int idXo;  // Угол
-    int idYo;
-    int wArea; // Размеры
-    int lArea;
-    int lastX;
-    int lastY;
-
+    int Wmap;
+    int Lmap;
 };
 
 #endif // GEOGENERATOR_H

@@ -156,6 +156,8 @@ void MapFile::setZD(int idX, int idY, int idH, bool statZD)
     QDataStream ds(&data, QIODevice::WriteOnly);
     ds << statZD;
     file->write(data);
+
+    file->flush(); /// !!! ВРЕМЕННО !!!
 }
 
 int MapFile::getHeight(int idX, int idY) const
@@ -179,6 +181,45 @@ void MapFile::setHeight(int idX, int idY,
     file->write(data);
 }
 
+void MapFile::editHeightMatrix(int idXo, int idYo,
+                               int w, int l,
+                               int dH)
+{
+    //
+    int lastX = idXo + w;
+    int lastY = idYo + l;
+
+    //
+    if (idXo < 0) idXo = 0;
+    if (idYo < 0) idYo = 0;
+    if (lastX >= Wmap) lastX = Wmap - 1;
+    if (lastY >= Lmap) lastY = Lmap - 1;
+
+    // Изменяем высоту по дискретам-столбикам
+    for (int x = idXo; x < lastX; x++)
+    {
+        for (int y = idYo; y < lastY; y++)
+        {
+            changeHeight(x, y, dH);
+        }
+    }
+
+    //
+    file->flush();
+}
+
+void MapFile::changeHeight(int idX, int idY, int dH)
+{
+    int h = this->getHeight(idX, idY);
+
+    h += dH;
+
+    if (h < 0)      h = 0;
+    if (h > Hmap-1) h = Hmap-1;
+
+    setHeight(idX, idY, h);
+}
+
 int MapFile::idColumnToNumByte(int idX, int idY) const
 {
     return sizeOptData + (idColumn(idX, idY)*sizeColumn);
@@ -197,4 +238,10 @@ int MapFile::lenghtUnit() const
 int MapFile::heightUnit() const
 {
     return hUnit;
+}
+
+MapFile::~MapFile()
+{
+    if (file != nullptr) file->close();
+    delete file;
 }

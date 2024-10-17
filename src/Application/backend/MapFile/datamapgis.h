@@ -4,7 +4,7 @@
 #endif // DATAMAPGIS_H
 
 ///
-#include "../GIS/geoarea.h"
+#include "../GIS/geocolumn.h"
 
 class DataMapGIS
 {

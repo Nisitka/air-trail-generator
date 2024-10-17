@@ -9,7 +9,7 @@ GIS::GIS(): GISInformer(),
 {
 
     // Отвечает за работу с рельефом карты
-    geoBuilder = new geoGenerator(currentW, currentH);
+    geoBuilder = new geoGenerator();
     connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
             this,       SLOT(setPosActionAreaDefult()));
     connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
@@ -22,11 +22,6 @@ GIS::GIS(): GISInformer(),
     backPainter = new painterMapImage(heigtMeter, RZ, currentW, currentH);
     connect(geoBuilder,  SIGNAL(buildFinish(int,int,int)),
             backPainter, SLOT(run()));
-//    connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
-//            this,       SLOT(initMap(int,int,int)));
-
-    /// !!!!!!
-    //geoBuilder->initMap(1000, 1000, 256);
 }
 
 void GIS::setPosActionAreaDefult()
@@ -118,9 +113,6 @@ void GIS::initActionArea(int posX, int posY)
 
     idXpos = posX;
     idYpos = posY;
-
-    //
-    geoBuilder->setPosActionArea(idXpos, idYpos);
 
     //
     backPainter->setPosArea(idXpos, idYpos);

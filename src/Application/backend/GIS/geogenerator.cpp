@@ -8,13 +8,9 @@
 
 #include <QRgb>
 
-geoGenerator::geoGenerator(int wArea_, int lArea_):
-    wArea(wArea_), lArea(lArea_)
+geoGenerator::geoGenerator()
 {
     isLocked = false;
-
-    //
-    actionArea = new GeoArea(wArea, lArea);
 
     //
     mapFile = new MapFile;
@@ -41,13 +37,8 @@ void geoGenerator::toZD(const QVector3D &posBlock) const
     int idY = posBlock.y();
     int idH = posBlock.z();
 
-    //
-    if (inActionArea(idX, idY))
-    {
-        actionArea->getColumn(idX-idXo, idY-idYo)->toZD(idH);
-    }
     // Изменяется соответствующая ячейка данных
-    setZD(idX, idY, idH, true);
+    mapFile->setZD(idX, idY, idH, true);
 }
 
 void geoGenerator::clearZD(const QVector3D &posBlock) const
@@ -56,27 +47,8 @@ void geoGenerator::clearZD(const QVector3D &posBlock) const
     int idY = posBlock.y();
     int idH = posBlock.z();
 
-    //
-    if (inActionArea(idX, idY))
-    {
-        actionArea->getColumn(idX-idXo, idY-idYo)->removeZD(idH);
-    }
     // Изменяется соответствующая ячейка данных
-    setZD(idX, idY, idH, false);
-}
-
-void geoGenerator::setZD(int idX, int idY, int idH,
-                         bool statZD) const
-{
-    mapFile->setZD(idX, idY, idH, statZD);
-}
-
-bool geoGenerator::inActionArea(int idX, int idY) const
-{
-    if (idX < idXo  || idY < idYo)  return false;
-    if (idX > lastX || idY > lastY) return false;
-
-    return true;
+    mapFile->setZD(idX, idY, idH, false);
 }
 
 void geoGenerator::initMap(const MapData DataMap,
@@ -84,20 +56,16 @@ void geoGenerator::initMap(const MapData DataMap,
 {
     buildStart();
 
-    //
-    actionArea->resize(wArea, lArea);
-
-
-    int W = DataMap.W;
-    int L = DataMap.L;
-    Hmap  = DataMap.H;
+    Wmap = DataMap.W;
+    Lmap = DataMap.L;
+    Hmap = DataMap.H;
 
     //
     mapFile->init(dirName,
-                  W, L, Hmap); /// <------ !@#0
+                  Wmap, Lmap, Hmap);
 
     // Сообщаем об завершении инициализации карты
-    buildFinish(W, L, Hmap);
+    buildFinish(Wmap, Lmap, Hmap);
 }
 
 void geoGenerator::openMap(const QString &dirMapFile)
@@ -107,9 +75,6 @@ void geoGenerator::openMap(const QString &dirMapFile)
     //
     mapFile->open(dirMapFile);
 
-    actionArea->resize(wArea, lArea);
-    setPosActionArea(0, 0); //
-
     int Wmap, Lmap;
     mapFile->getSize(Wmap, Lmap, Hmap);
 
@@ -117,38 +82,12 @@ void geoGenerator::openMap(const QString &dirMapFile)
     buildFinish(Wmap, Lmap, Hmap);
 }
 
-void geoGenerator::setPosActionArea(int idXo_, int idYo_)
-{
-    qDebug() << "Set position actions area: " << idXo_ << idYo_;
-
-    //
-    idXo = idXo_;
-    idYo = idYo_;
-
-    //
-    lastX = idXo + wArea - 1;
-    lastY = idYo + lArea - 1;
-
-    for (int x=0; x<wArea; x++)
-    {
-        for (int y=0; y<lArea; y++)
-        {
-            mapFile->getColumn(actionArea->getColumn(x, y),
-                               idXo+x, idYo+y);
-        }
-    }
-
-    qDebug() << "Ready position action area!" << idXo << idYo;
-}
-
 int geoGenerator::absolute(int idX, int idY, Coords::units units) const
 {
     int h = -1;
 
-    if (inActionArea(idX, idY))
-        h = actionArea->getHeight(idX-idXo, idY-idYo);
-    else
-        h = mapFile->getHeight(idX, idY);
+    //
+    h = mapFile->getHeight(idX, idY);
 
     switch (units) {
     case Coords::m:
@@ -159,7 +98,6 @@ int geoGenerator::absolute(int idX, int idY, Coords::units units) const
         break;
     }
 
-    //qDebug() << h;
     return h;
 }
 
@@ -170,35 +108,21 @@ int geoGenerator::max(Coords::units u) const
 
 int geoGenerator::countVertZD(int idX, int idY) const
 {
-    if (inActionArea(idX, idY))
-    {
-        return actionArea->getColumn(idX-idXo, idY-idYo)->countUnitZD();
-    }
-    else
-    {
-        return 0; /// <-- Заглушка !!!!!!!!!!!!!!!!!!!
-    }
+    //return actionArea->getColumn(idX-idXo, idY-idYo)->countUnitZD();
 
+    return 0; /// <-- Заглушка !!!!!!!!!!!!!!!!!!!
 }
 
 bool geoGenerator::isZD(int idX, int idY, int idH) const
 {
-    bool statZD = false;
-
-    //
-    if (inActionArea(idX, idY))
-        statZD = actionArea->getColumn(idX-idXo, idY-idYo)->isZD(idH);
-    else
-        statZD = mapFile->isZD(idX, idY, idH);
-
-    return statZD;
+    return mapFile->isZD(idX, idY, idH);
 }
 
 Coords geoGenerator::getCoords(int idX, int idY) const
 {
     int X = idX;
     int Y = idY;
-    int H = actionArea->getHeight(idX-idXo, idY-idYo);
+    int H = mapFile->getHeight(idX, idY);
 
     /// !!!!!!!!!!!
     int lUnit = mapFile->lenghtUnit();
@@ -220,7 +144,6 @@ void geoGenerator::loadTerrain(const QString& dirNameFile)
 
     // Размер активной зоны
     GeoColumn::setCountUnit(Hmap);
-    actionArea->resize(wArea, lArea);
 
     int h;
     QColor color;
@@ -236,77 +159,21 @@ void geoGenerator::loadTerrain(const QString& dirNameFile)
         }
     }
 
-    setPosActionArea(0, 0);
-
     buildFinish(Wmap, Lmap, Hmap);
 }
 
 void geoGenerator::editEarth(int idX, int idY, int w, int l, int dH, int t)
 {
-    // Перевод в индексы активной зоны
-    int Xo = idX - idXo;
-    int Yo = idY - idYo;
-
-    //
-    int lastX = Xo + w;
-    int lastY = Yo + l;
-
-    //
-    if (Xo < 0) Xo = 0;
-    if (Yo < 0) Yo = 0;
-    if (lastX >= wArea) lastX = wArea - 1;
-    if (lastY >= lArea) lastY = lArea - 1;
-
-    //
-    void (geoGenerator::*f)(int, int, int);
     switch (t) {
     case up:
-        f = &geoGenerator::dropEarth;
+
         break;
     case down:
-        f = &geoGenerator::removeEarth;
+        dH *= -1;
         break;
     }
 
-    // Изменяем высоту по дискретам-столбикам
-    for (int x = Xo; x < lastX; x++)
-    {
-        for (int y = Yo; y < lastY; y++)
-        {
-            (this->*f)(x, y, dH);
-        }
-    }
-}
-
-void geoGenerator::dropEarth(int idX, int idY, int countLayer)
-{
-    int idHo = actionArea->getHeight(idX, idY);
-
-    int maxH = Hmap-1;
-
-    int height = idHo + countLayer;
-    if (height > maxH) height = maxH;
-
-     setHeight(idX, idY, height);
-}
-
-void geoGenerator::removeEarth(int idX, int idY, int countLayer)
-{
-    int idHo = actionArea->getHeight(idX, idY);
-
-    int height = idHo - countLayer;
-    if (height < 0) height = 0;
-
-    setHeight(idX, idY, height);
-}
-
-void geoGenerator::setHeight(int idX, int idY, int height)
-{
-    //
-    actionArea->getColumn(idX, idY)->setHeight(height);
-
-    //
-    mapFile->setHeight(idX, idY, height);
+    mapFile->editHeightMatrix(idX, idY, w, l, dH);
 }
 
 void geoGenerator::updateHeights(int idX, int idY, int W, int L)
@@ -324,14 +191,4 @@ void geoGenerator::updateHeights(int idX, int idY, int W, int L)
 
         }
     }
-}
-
-void geoGenerator::buildFlatMap(int W, int L, int H)
-{
-    buildStart();
-
-    GeoColumn::setCountUnit(H);
-    actionArea->resize(W, L);
-
-    buildFinish(W, L, H);
 }
