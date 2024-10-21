@@ -4,9 +4,8 @@
 
 MapFile::MapFile()
 {
-    //
-    GeoColumn::setCountUnit(200);
-    sizeColumn = GeoColumn::getDataSize();
+    // Размер дискреты в байт
+    sizeColumn = 4;
 
     // Размеры дискретпространства
     lUnit = 20;
@@ -55,11 +54,6 @@ void MapFile::init(const QString &dirNameFile,
     Wmap = W; Lmap = L; Hmap = H;
     int countColumns = Wmap * Lmap;
 
-    GeoColumn::setCountUnit(Hmap);
-
-    // Размер дискреты в байт
-    sizeColumn = GeoColumn::getDataSize();
-
     file = new QFile(dirNameFile);
 
     // Кол-во сегметов данных
@@ -91,7 +85,6 @@ void MapFile::init(const QString &dirNameFile,
     file->write(optData);
 
     // Записываем дискреты
-    GeoColumn column;
     int countParts = parts.size();
     for (int nP=0; nP<countParts; nP++)
     {
@@ -100,7 +93,7 @@ void MapFile::init(const QString &dirNameFile,
 
         for (int i=0; i<parts[nP]; i++)
         {
-            ds << column;
+            ds << 0;
         }
         file->write(data);
     }
@@ -121,43 +114,6 @@ void MapFile::open(const QString &dirMapFile)
     data >> mapData;
     Wmap = mapData.W; Lmap = mapData.L; Hmap = mapData.H;
     qDebug() << "MapData: " << Wmap << Lmap << Hmap;
-
-    //
-    GeoColumn::setCountUnit(Hmap);
-    sizeColumn = GeoColumn::getDataSize();
-}
-
-void MapFile::getColumn(GeoColumn* column,
-                        int idX, int idY) const
-{
-    //
-    QDataStream inData(file);
-
-    file->seek(idColumnToNumByte(idX, idY));
-
-    inData >> column;
-}
-
-bool MapFile::isZD(int idX, int idY, int idH) const
-{
-    bool statZD;
-
-    file->seek(idColumnToNumByte(idX, idY) + 4 + idH);
-    QDataStream data(file->read(sizeof(bool)));
-    data >> statZD;
-
-    return statZD;
-}
-
-void MapFile::setZD(int idX, int idY, int idH, bool statZD)
-{
-    file->seek(idColumnToNumByte(idX, idY) + 4 + idH);
-    QByteArray data;
-    QDataStream ds(&data, QIODevice::WriteOnly);
-    ds << statZD;
-    file->write(data);
-
-    file->flush(); /// !!! ВРЕМЕННО !!!
 }
 
 int MapFile::getHeight(int idX, int idY) const
@@ -165,7 +121,7 @@ int MapFile::getHeight(int idX, int idY) const
     int h;
 
     file->seek(idColumnToNumByte(idX, idY));
-    QDataStream data(file->read(4));
+    QDataStream data(file->read(sizeColumn));
     data >> h;
 
     return h;

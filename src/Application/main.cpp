@@ -3,15 +3,12 @@
 
 #include "GUI/runwindow.h"
 
-#include "backend/GIS/geocolumn.h"
-
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QApplication::setAttribute(Qt::AA_ForceRasterWidgets, false);
 
     //
-    qRegisterMetaTypeStreamOperators<GeoColumn>("GeoColumn");
     qRegisterMetaTypeStreamOperators<MapData>("MapData");
 
     runWindow startWin(&a, ":/resurs/backgDemo3");

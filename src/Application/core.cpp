@@ -31,33 +31,22 @@ void Core::init_allObj()
     readyRunProgress(36, "Загрузка менеджера РЛС...");
 
     //
-    RZInformer*  RZInfo    = gis->getRZInformer();
-    RZCreator*   RZEditor  = gis->getRZCreator();
     HeightMeter* HeightMap = gis->getHeightMeter();
 
 
     // Испускатель лучей
-    RayTracer = new TracerLight(HeightMap,
-                                RZInfo);
+    RayTracer = new TracerLight(HeightMap);
 
     // Инициализация менеджера РЛС
-    mRLS = new managerRLS(RayTracer, RZEditor, HeightMap);
-    // Отрисовка
-    QObject::connect(mRLS, SIGNAL(updateVisInfoMap(int,int,int,int)),
-                     gis,  SLOT(updateFromRect(int,int,int,int)));
-    QObject::connect(mRLS, SIGNAL(updateVisInfoMap(QRect*, int)),
-                     gis,  SLOT(updateFromRects(QRect*,int)));
+    mRLS = new managerRLS(HeightMap);
     objects.append(mRLS);
     readyRunProgress(46, "Загрузка строителя маршрутов...");
 
     //
-    trailBuilder = new builderTrailDrones(RayTracer); //
-    objects.append(trailBuilder);
-    readyRunProgress(54, "Инициализация интерфейса...");
-
-    //
     InformerRLS* infoRLS = mRLS;
     gui = new GUI(gis, infoRLS);
+    readyRunProgress(54, "Инициализация интерфейса...");
+
     createProjectWindow* CreateProjWin = gui->WindowCreateProject();
     connect(CreateProjWin, SIGNAL(sendDataNewProject(MapData,QString)),
             gis,           SLOT(initMap(MapData,QString)));
@@ -81,8 +70,6 @@ void Core::init_GUI()
     gui->connectMRLS(mRLS);
     readyRunProgress(83);
 
-    //
-    gui->connectBuilderTrail(trailBuilder);
 
     readyRunProgress(90);
 }

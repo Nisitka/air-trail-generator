@@ -62,12 +62,6 @@ public:
     //
     HeightMeter* getHeightMeter() const;
 
-    //
-    RZCreator* getRZCreator() const;
-
-    //
-    RZInformer* getRZInformer() const;
-
     // Получить интерфейс
     GISInformer* Informer() /* const */;
 

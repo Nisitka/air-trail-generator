@@ -36,15 +36,6 @@ public:
     int heightUnit() const override final; // В метрах
 
     //
-    void getColumn(GeoColumn* column,
-                   int idX, int idY) const override final;
-
-    //
-    bool isZD(int idX, int idY, int idH) const override final;
-    void setZD(int idX, int idY, int idH,
-               bool statZD) override final;
-
-    //
     int getHeight(int idX, int idY) const override final;
     void setHeight(int idX, int idY,
                    int height) override final;

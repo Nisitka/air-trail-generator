@@ -73,16 +73,16 @@ SOURCES += main.cpp\
     GUI/drawArea/DecktopItems/coordsinfoform.cpp \
     backend/RLS/managerrls.cpp \
     backend/RLS/rls.cpp \
-    backend/Trail/buildertraildrones.cpp \
     backend/Trail/trail.cpp \
     GUI/drawArea/zoomcontrollerwidget.cpp \
-    backend/GIS/geocolumn.cpp \
     backend/RLS/labelrls.cpp \
     GUI/hellowindow.cpp \
     GUI/mainswitcherwindow.cpp \
     backend/MapFile/mapfile.cpp \
     GUI/manrlswindow.cpp \
-    GUI/createprojectwindow.cpp
+    GUI/createprojectwindow.cpp \
+    backend/RLS/radar.cpp \
+    backend/Trail/buildertrail.cpp
 
 HEADERS  += \
     core.h \
@@ -134,9 +134,7 @@ HEADERS  += \
     backend/GIS/coords.h \
     backend/GIS/heightmeter.h \
     backend/GIS/mapdata.h \
-    backend/GIS/rzinformer.h \
     backend/tracerlight.h \
-    backend/GIS/rzcreator.h \
     GUI/drawArea/Tools/drawareatool.h \
     GUI/drawArea/Tools/tooldefault.h \
     GUI/drawArea/Tools/tooleditmap.h \
@@ -155,11 +153,9 @@ HEADERS  += \
     GUI/drawArea/DecktopItems/coordsinfoform.h \
     backend/RLS/managerrls.h \
     backend/RLS/rls.h \
-    backend/Trail/buildertraildrones.h \
     backend/Trail/trail.h \
     GUI/drawArea/zoomcontrollerwidget.h \
     backend/RLS/informerrls.h \
-    backend/GIS/geocolumn.h \
     backend/RLS/labelrls.h \
     GUI/hellowindow.h \
     GUI/mainswitcherwindow.h \
@@ -168,7 +164,9 @@ HEADERS  += \
     backend/MapFile/datamapgis.h \
     backend/MapFile/datamaprls.h \
     GUI/manrlswindow.h \
-    GUI/createprojectwindow.h
+    GUI/createprojectwindow.h \
+    backend/RLS/radar.h \
+    backend/Trail/buildertrail.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/UI/optqfunwindow.ui \

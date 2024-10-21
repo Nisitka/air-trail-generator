@@ -14,10 +14,11 @@
 
 #include "visualinfowidget.h"
 #include "manrlswindow.h"
-#include "backend/Trail/buildertraildrones.h"
 #include "backend/RLS/managerrls.h"
 #include "3DVisualization/map3dviswindow.h"
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
+
+#include "backend/Trail/buildertrail.h"
 
 #include "GUI/createprojectwindow.h"
 
@@ -45,8 +46,7 @@ public:
     void connectMRLS(managerRLS*);
 
     //
-    void connectBuilderTrail(builderTrailDrones*);
-
+    void connectBuilderTrail(BuilderTrail* builderTrail);
 
     void showMainWin();
 

@@ -16,10 +16,9 @@ GIS::GIS(): GISInformer(),
             this,       SIGNAL(finishBuildMap(int,int,int)));
 
     HeightMeter* heigtMeter = this->getHeightMeter();
-    RZInformer*  RZ         = geoBuilder;
 
     // Отвечает за отрисовку подложки
-    backPainter = new painterMapImage(heigtMeter, RZ, currentW, currentH);
+    backPainter = new painterMapImage(heigtMeter, currentW, currentH);
     connect(geoBuilder,  SIGNAL(buildFinish(int,int,int)),
             backPainter, SLOT(run()));
 }
@@ -30,17 +29,7 @@ void GIS::setPosActionAreaDefult()
     setPosActionArea(0,0);
 }
 
-RZInformer* GIS::getRZInformer() const
-{
-    return geoBuilder;
-}
-
 HeightMeter* GIS::getHeightMeter() const
-{
-    return geoBuilder;
-}
-
-RZCreator* GIS::getRZCreator() const
 {
     return geoBuilder;
 }

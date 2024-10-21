@@ -1,40 +1,27 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include <QVector>
+#include <QVector3D>
 
 const float Pi = 3.1415926;
 
 class Ray
 {
 public:
-    Ray(double D, double angleB, double angleE); // м, град, град
 
-    enum coords_{X, Y, Z};
+    // Через угол места и азимут
+    Ray(double angleB, double angleE); // рад, рад
 
-    const QVector <int*>& getWay();
+    // Через вектор направления
+    Ray(const QVector3D& tVector);
 
-    // множетель масштаба
-    static const int mSIZE = 20; // в одной клетке mSIZE метров
-    static const int mH = 20; // дисритезация высот
-
-    static double toGrad(double angleRad);
-    static double toRad(double angleGrad);
+    // Через две точки
+    Ray(const QVector3D& posPoint, const QVector3D& interPoint);
 
     ~Ray();
 
 private:
-    // испустить луч сигнала
-    void toEmit();
 
-    // частота дискритезации распрастронения
-    double deltaL; // (метры)
-
-    double D;  // max длина (метры)
-    double angleB; // угол места (радианы)
-    double angleE; // азимут
-
-    QVector <int*> Way;
 };
 
 #endif // RAY_H

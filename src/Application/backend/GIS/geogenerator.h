@@ -6,9 +6,6 @@
 #include <QFile>
 
 #include "heightmeter.h"
-#include "rzinformer.h"
-
-#include "rzcreator.h"
 
 #include "coords.h"
 #include "mapdata.h"
@@ -19,7 +16,7 @@
 class GeoArea;
 
 class geoGenerator: public QObject,
-        public HeightMeter, public RZInformer, public RZCreator
+        public HeightMeter
 {
     Q_OBJECT
 signals:
@@ -32,19 +29,11 @@ signals:
 public:
     geoGenerator();
 
-    // Редактирование дискрет на наличие РЛ сигнала (RZCreator)
-    void toZD(const QVector3D &idBlock) const override final;
-    void clearZD(const QVector3D &idBlock) const override final;
-
     // HeightMeter
     int absolute(int idX, int idY, Coords::units u) const override final;
     int max(Coords::units u) const override final;
     int heightBlock() const override final;
     int lenghtBlock() const override final;
-
-    // RZInformer
-    int countVertZD(int idX, int idY) const override final;
-    bool isZD(int idX, int idY, int idH) const override final;
 
     // В индексах всей карты
     Coords getCoords(int idX, int idY) const;

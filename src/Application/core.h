@@ -13,7 +13,6 @@
 
 #include "backend/GIS/gis.h"
 #include "backend/RLS/managerrls.h"
-#include "backend/Trail/buildertraildrones.h"
 
 #include "backend/GIS/gisinformer.h"
 #include "backend/tracerlight.h"
@@ -65,9 +64,6 @@ private:
 
     // Менеджер РЛС
     managerRLS* mRLS;
-
-    //
-    builderTrailDrones* trailBuilder;
 
 };
 

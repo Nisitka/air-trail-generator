@@ -10,7 +10,6 @@
 #include <QVector3D>
 
 #include "../ray.h"
-#include "../GIS/rzcreator.h"
 #include "../GIS/heightmeter.h"
 #include "../tracerlight.h"
 
@@ -26,17 +25,8 @@ signals:
     // Уведомление об статусе завершения внут. процесса
     void changeStatProcessing(int percent);
 
-    // Запущена очистка пространства РЛ сигнала
-    void startClearZD();
-
-    // Завершение очистки карты от ЗО
-    void readyClearZD();
-
     // Зона обнаружения начала расчитываться
     void startEmitSignal();
-
-    // Зона обнаружения сгенерирована
-    void finishGenerateZD();
 
     // Начата установка настроек РЛС
     void startSetOpt();
@@ -47,23 +37,19 @@ signals:
 public slots:
 
     // Установка точки стояния РЛС
-    void setPosition(int idX, int idY);
-    void setPosition(const QPoint& pos);
-
-    // Моделирование локации РЛС
-    void emitSignal(); // перемоделировать по предыдущим значениям (если РЛС вкл.)
+    void setPosition(int idX, int idY, int idH);
+    void setPosition(const QVector3D& position);
 
     // Установить пар-ры ЗО в вертикальной плоскости
-    void setOptZDvert(int Rmax,  // в метрах
-                      int countVertVectors, int countPointsDV);
+    void setOptZDvert(int Rmax);
 
     // включить/выключить РЛС
     void on();
     void off();
 
 public:
-    explicit RLS(TracerLight* RayTracer, RZCreator* RZEditor, HeightMeter* Height,
-                 QPoint* position, const QString& nameRLS = nullptr);
+    explicit RLS(const QVector3D& position,
+                 const QString& nameRLS = nullptr);
 
     // Получить данные об ДН антены
     void getGraphicData(QVector <double>& X,
@@ -72,56 +58,32 @@ public:
     // Максимальная дальность
     double Rmax() const; // В метрах
 
-    // Получить точки пересечения сигнала с рельефом
-    const QVector <QVector <QVector3D>>& getPointsInterZD();
-
     //
     void getRectPosition(int& idX, int& idY, int& W, int& H) const;
 
     double functionDV(double nL);
-
-    void getOpt(int& Rmax, int& Xpos, int& Ypos, int& Hzd, bool& working) const;
-
-    int getCountHorVectors() const;
-
-    // очистка карты от сигнала данной РЛС
-    void clearZD();
 
     ~RLS();
 
 private:
 
     //
-    TracerLight* RayTracer;
-    RZCreator* RZEditor;
-    HeightMeter* Height;
-
-    // Точки соприкосновения ЗО с рельефом
-    QVector <QVector <QVector3D>> interPointsZD;
-
-    // Дискретность ЗО
-    // по вертикали
-    int count_PointsDV = 120; //275
-    // по горизонали
-    int COUNT_VECTORS_vert = 1080;//2000;
-
-    const double Pi = 3.1415926;
-
-    void removeZD();
-
-    // Обновить значения ЗО в вертю плоскости
-    void updateDV();
-
-    double Hpos; // высота(координата Z) метры
+    QVector3D pos;
 
     const double hSender = 3.1; // высота антены
 
     // ДН антены
     // построение ДН
     void buildDV();
+    void updateDV();
 
     // Дальность луча антены
     double D = 2000; // метров
+
+    // здец :/
+    double Pi = 3.14159265;
+
+    int count_PointsDV = 800;
 
     double Emin = 0.01;
     double Eo = 0.3;
@@ -132,18 +94,6 @@ private:
     QVector <double*> l_DV; // приведенная ДН (0..1)
     QVector <double*> DV;
     void set_lDV(); //
-
-    // ЗО (по вертикальным долькам)
-    QVector <QVector <Ray*>*> ZD; // скелет из лучей
-
-    // Построение каркаса ЗО
-    void buildZD();
-
-    // id блоков, которые находятся в ЗО данной РЛС
-    QList <QVector3D> blocksZD;
-
-    // Для отображения прогресса
-    int sizeZD;
 };
 
 #endif // RLS_H

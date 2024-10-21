@@ -6,41 +6,20 @@
 
 #include <memory>
 
-managerRLS::managerRLS(TracerLight* RayTracer,
-                       RZCreator* RZEditor,
-                       HeightMeter* Height):
-    RayTracer(RayTracer), RZEditor(RZEditor), Height(Height)
+managerRLS::managerRLS(HeightMeter* heightInfo): InformerRLS(),
+    heightInfo(heightInfo)
 {
     idCurRLS = -1;
-
-    pointsInterZD = nullptr;
-    posRLS = nullptr;
 }
 
-void managerRLS::addRLS(QPoint* posRLS_, const QString& nameRLS)
+void managerRLS::addRLS(const QPoint& posRLS, const QString& nameRLS)
 {
-    RLS* rls = new RLS(RayTracer, RZEditor, Height,
-                       posRLS_, nameRLS);
+    int idX = posRLS.x();
+    int idY = posRLS.y();
+    int idH = heightInfo->absolute(idX, idY, Coords::id);
+
+    RLS* rls = new RLS(QVector3D(idX, idY, idH), nameRLS);
     listRLS.append(rls);
-
-    // Настройка пар-ов моделирования сигнала
-    connect(rls,  SIGNAL(startSetOpt()),
-            this, SIGNAL(startSetOpt()));
-    connect(rls,  SIGNAL(changeStatProcessing(int)),
-            this, SIGNAL(changeStatProcessing(int)));
-    connect(rls,  SIGNAL(readyOptZDvert()),
-            this, SIGNAL(readyOptZDvert()));
-    connect(rls,  SIGNAL(readyClearZD()),
-            this, SIGNAL(clearZD()));
-
-    connect(rls,  SIGNAL(startClearZD()),
-            this, SIGNAL(startClearZD()));
-
-    //
-    connect(rls,  SIGNAL(startEmitSignal()),
-            this, SIGNAL(startEmitSignal()));
-    connect(rls,  SIGNAL(finishGenerateZD()),
-            this, SIGNAL(finishGenerateZD()));
 
     createReadyRLS();
 
@@ -61,38 +40,17 @@ void managerRLS::delRLS(int id)
 {
     RLS* rls = listRLS.at(id);
 
-    int idX, idY, w, h;
-    rls->getRectPosition(idX, idY, w, h);
-
-    //
-    rls->clearZD();
-
     //
     delete rls;
     listRLS.removeAt(id);
-
-    emitSignalAllRLS();
-    updateVisInfoMap(idX, idY, w, h);
 
     deleteReadyRLS();
 }
 
 void managerRLS::setPositionRLS(int idX, int idY)
 {
-    RLS* rls = listRLS.at(idCurRLS);
-    rls->clearZD();
-
-    QRect* rects = new QRect[2]; // области, которые надо будет перерисовать
-    int idXo, idYo, w, h;
-    rls->getRectPosition(idXo, idYo, w, h);
-    rects[0].setRect(idXo, idYo, w, h);
-
-    rls->setPosition(idX, idY);
-    emitSignalAllRLS(); // перемодулируем сигнал всех РЛС
-
-    rls->getRectPosition(idXo, idYo, w, h);
-    rects[1].setRect(idXo, idYo, w, h);
-    updateVisInfoMap(rects, 2); // обновляем визуальную информацию на карте
+    listRLS[idCurRLS]->setPosition(idX, idY,
+                                   heightInfo->absolute(idX, idY, Coords::id));
 }
 
 int managerRLS::idCurrentRLS() const
@@ -125,107 +83,11 @@ void managerRLS::offRLS()
     RLS* rls = listRLS.at(idCurRLS);
 
     rls->off();
-    emitSignalAllRLS();
-
-    // обновляем визуальную информацию на карте
-    int idX, idY, w, h;
-    rls->getRectPosition(idX, idY, w, h);
-    updateVisInfoMap(idX, idY, w, h);
-}
-
-void managerRLS::updateSignals()
-{
-    qDebug() << "Run all RLS";
-
-    for (int i=0; i<listRLS.size(); i++)
-    {
-        RLS* rls = listRLS[i];
-        if (rls->isWorking())
-        {
-            rls->off();
-            rls->on();
-            rls->emitSignal();
-
-            // обновляем визуальную информацию на карте
-            int idX, idY, w, h;
-            rls->getRectPosition(idX, idY, w, h);
-            updateVisInfoMap(idX, idY, w, h);
-        }
-    }
-}
-
-void managerRLS::emitSignalAllRLS()
-{
-    int sizeLoading = 0;
-    RLS* rls;
-    for (int i=0; i<listRLS.size(); i++)
-    {
-        rls = listRLS.at(i);
-        if (rls->isWorking())
-        {
-            sizeLoading += rls->getCountHorVectors();
-        }
-
-    }
-
-    startEmitSignal();
-    curVecReady = 0;
-
-    finishGenerateZD();
-}
-
-void managerRLS::runRLS(int idX, int idY)
-{
-    qDebug() << "Run one RLS (coords)";
-
-    int sizeLoading = 0;
-    for (int i=0; i<listRLS.size(); i++)
-        sizeLoading += listRLS.at(i)->getCountHorVectors();
-
-    startEmitSignal();
-    curVecReady = 0;
-
-    listRLS.at(idCurRLS)->on();
-    listRLS.at(idCurRLS)->setPosition(idX, idY);
-    for (int i=0; i<listRLS.size(); i++)
-    {
-        listRLS.at(i)->emitSignal();
-    }
-
-    // обновляем визуальную информацию на карте
-    int idXo, idYo, w, h;
-    listRLS.at(idCurRLS)->getRectPosition(idXo, idYo, w, h);
-    updateVisInfoMap(idXo, idYo, w, h);
-    finishGenerateZD();
-
-    //updateVisInfoRLS();
 }
 
 void managerRLS::runRLS()
 {
     qDebug() << "Run one RLS";
 
-    int sizeLoading = 0;
-    for (int i=0; i<listRLS.size(); i++)
-        sizeLoading += listRLS.at(i)->getCountHorVectors();
-
-    startEmitSignal();
-    curVecReady = 0;
-
-    listRLS.at(idCurRLS)->on();
-    for (int i=0; i<listRLS.size(); i++)
-    {
-        listRLS.at(i)->emitSignal();
-    }
-
-    // обновляем визуальную информацию на карте
-    int idX, idY, w, h;
-    listRLS.at(idCurRLS)->getRectPosition(idX, idY, w, h);
-    updateVisInfoMap(idX, idY, w, h);
-    finishGenerateZD();
-}
-
-void managerRLS::setOptZDvert(int Rmax, int countVertVectors, int countPointsDV)
-{
-    listRLS.at(idCurRLS)->setOptZDvert(Rmax, countVertVectors, countPointsDV);
+    listRLS[idCurRLS]->on();
 }

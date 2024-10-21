@@ -5,7 +5,6 @@
 #include <QRect>
 
 #include "../GIS/heightmeter.h"
-#include "../GIS/rzcreator.h"
 
 #include "../tracerlight.h"
 #include "rls.h"
@@ -29,28 +28,13 @@ signals:
     // Выбрана другая РЛС
     void changeCurrentRLS();
 
-    /// Заменить на changeSignal() !!!!
-    void updateVisInfoMap(int idX, int idY, int w, int h);
-    void updateVisInfoMap(QRect*, int count);
-
     //
-    void startEmitSignal();
-    void finishGenerateZD();
     void exportGraphicData(double* X, double* Y, int countPoint);
-    void readyOptZDvert();
-    void clearZD();
-    void startSetOpt();
-    void startClearZD();
-
-    //
-    void changeStatProcessing(int percent); // В процентах
 
 public slots:
-    // перемоделировать сигналы всех РЛС
-    void updateSignals();
 
     // создать новую РЛС
-    void addRLS(QPoint* posRLS, const QString& nameRLS);
+    void addRLS(const QPoint& posRLS, const QString& nameRLS);
 
     // удалить РЛС
     void delRLS(int id); // индекс в листе, которую удаляем
@@ -65,17 +49,10 @@ public slots:
     void offRLS(); // выключется выбранная РЛС
 
     // смоделировать сигнал по уже уст. позиции
-    void runRLS(); // срез высоты
-    // установить поз. РЛС и смод-ть сигнал
-    void runRLS(int, int); // индексы дискрет гор. координат
-
-    //
-    void setOptZDvert(int,int,int);
+    void runRLS();
 
 public:
-    managerRLS(TracerLight* RayTracer, //
-               RZCreator* RZEditor,    //
-               HeightMeter* Height);   //
+    managerRLS(HeightMeter* heightInfo);   //
 
     // Узнать индекс выбранной РЛС
     int idCurrentRLS() const;
@@ -92,24 +69,11 @@ public:
 private:
 
     //
-    void emitSignalAllRLS();
-
-    // Для испускания сигнала
-    TracerLight* RayTracer;
-    RZCreator* RZEditor;
-    HeightMeter* Height;
-
-    // сколько вертикальных сегментов готово
-    int curVecReady;
+    HeightMeter* heightInfo;
 
     // все РЛС
     QList <RLS*> listRLS;
     int idCurRLS; // индекс выбранной РЛС
-
-    //
-    QVector<QVector<QVector<QVector3D>>>* pointsInterZD;
-    //
-    QList <QVector3D>* posRLS;
 };
 
 #endif // MANAGERRLS_H

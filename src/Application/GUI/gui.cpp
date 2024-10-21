@@ -98,7 +98,7 @@ void GUI::showOpenProjectWindow()
         openProject(dirName);
 }
 
-void GUI::connectBuilderTrail(builderTrailDrones* builderTrail)
+void GUI::connectBuilderTrail(BuilderTrail* builderTrail)
 {
     // Инструменты
     QObject::connect(toolPLine,    SIGNAL(setRpred(int)),

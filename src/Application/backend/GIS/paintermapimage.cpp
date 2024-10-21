@@ -3,9 +3,8 @@
 #include <QDebug>
 
 painterMapImage::painterMapImage(HeightMeter* Height,
-                                 RZInformer* RZ,
                                  int W, int H):
-    Height(Height), RZ(RZ),
+    Height(Height),
     numW(W), numL(H)
 {
     // Сразу инициализируем изображение
@@ -87,21 +86,7 @@ void painterMapImage::runToRect(int idX, int idY, int w, int h)
         for (int Y=idY; Y<H; Y++)
         {
             // Вычисляется цвет по данным
-            cZD = RZ->countVertZD(X, Y);
             color = colorHeight(Height->absolute(X, Y, Coords::id));
-            r = color.red();
-            g = color.green();
-            k = 1 - ((double)cZD / 50);
-            if (k < 0) k = 0;
-            r *= k;
-            g *= k;
-
-            b = color.blue();
-            b += 255 * ( (double) cZD / 50);
-            if (b > 255) b = 255;
-            color.setRed(r);
-            color.setGreen(g);
-            color.setBlue(b);
 
             //
             img->setPixelColor(X - idXo, Y - idYo,

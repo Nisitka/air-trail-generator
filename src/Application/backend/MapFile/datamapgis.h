@@ -3,9 +3,6 @@
 
 #endif // DATAMAPGIS_H
 
-///
-#include "../GIS/geocolumn.h"
-
 class DataMapGIS
 {
 public:
@@ -18,16 +15,7 @@ public:
     virtual int heightUnit() const = 0;
 
     //
-    virtual void getColumn(GeoColumn* column,
-                           int idX, int idY) const = 0;
-
-    //
     virtual int getHeight(int idX, int idY) const = 0;
     virtual void setHeight(int idX, int idY,
                            int height) = 0;
-
-    //
-    virtual bool isZD(int idX, int idY, int idH) const = 0;
-    virtual void setZD(int idX, int idY, int idH,
-                       bool statZD) = 0;
 };

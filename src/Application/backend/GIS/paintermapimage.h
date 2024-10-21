@@ -6,7 +6,6 @@
 #include <QColor>
 
 #include "heightmeter.h"
-#include "rzinformer.h"
 
 class painterMapImage: public QObject
 {
@@ -35,7 +34,6 @@ public:
 
     //
     painterMapImage(HeightMeter* Heigt, // Для расчета цвета
-                    RZInformer* RZ,
                     int W, int H);      // Размеры изображения
 
     //
@@ -55,7 +53,6 @@ private:
 
     QImage* img;
     HeightMeter* Height;
-    RZInformer*  RZ;
 
     //
     int Hmap;
