@@ -14,11 +14,6 @@ manRLSWindow::manRLSWindow(InformerRLS* infoRLS):
             this,                      SLOT(setNewPosRLS()));
 
     //
-    connect(ui->setOptZDvertButton, SIGNAL(clicked()),
-            this,                   SLOT(setOptZDvert()));
-    ui->RmaxSpinBox->setValue(2000);
-
-    //
     connect(ui->createRLSButton, SIGNAL(clicked()),
             this,                SLOT(addRLS()));
 
@@ -61,8 +56,18 @@ void manRLSWindow::showInfoCurRLS()
         // График ДН антены
         repaintGraphic();
 
-        //
+        // Статус кнопки вкл/выкл
         ui->on_off_RLS_Button->show();
+        if (infoRLS->currentRLS()->isWorking())
+        {
+            Designer::setButton(ui->on_off_RLS_Button, Designer::red);
+            ui->on_off_RLS_Button->setText("Выключить");
+        }
+        else
+        {
+            Designer::setButton(ui->on_off_RLS_Button, Designer::green);
+            ui->on_off_RLS_Button->setText("Включить");
+        }
     }
 }
 
@@ -77,27 +82,12 @@ void manRLSWindow::updateListRLS()
 
     if (countRLS > 0)
     {
-        QTableWidgetItem* item;
-        QColor stat;
-        QVector3D pos;
         for (int r=0; r<countRLS; r++)
         {
-            const LabelRLS* rls = infoRLS->getInfoRLS(r);
+            for (int p=0; p<3; p++)
+                ui->listRLSTableWidget->setItem(r, p, new QTableWidgetItem);
 
-            //
-            ui->listRLSTableWidget->setItem(r, 0, new QTableWidgetItem(rls->getName()));
-
-            //
-            if (rls->isWorking()) stat = Qt::green;
-            else stat = Qt::red;
-
-            item = new QTableWidgetItem;
-            item->setBackgroundColor(stat);
-            ui->listRLSTableWidget->setItem(r, 1, item);
-
-            rls->getPosition(pos);
-            QString coords = QString::number(pos.x()) + "; " + QString::number(pos.y());
-            ui->listRLSTableWidget->setItem(r, 2, new QTableWidgetItem(coords));
+            RLStoTable(r, infoRLS->getInfoRLS(r));
         }
     }
     else
@@ -106,6 +96,31 @@ void manRLSWindow::updateListRLS()
     }
 
     finishProcessing();
+}
+
+void manRLSWindow::updateDataRLS(int idRLS)
+{
+    RLStoTable(idRLS, infoRLS->getInfoRLS(idRLS));
+}
+
+void manRLSWindow::RLStoTable(int numStr, const LabelRLS *rls)
+{
+    QTableWidget* table = ui->listRLSTableWidget;
+
+    //
+    table->item(numStr, 0)->setText(rls->getName());
+
+    //
+    QColor stat;
+    if (rls->isWorking()) stat = Qt::green;
+    else stat = Qt::red;
+    table->item(numStr, 1)->setBackgroundColor(stat);
+
+    //
+    QVector3D pos;
+    rls->getPosition(pos);
+    QString coords = QString::number(pos.x()) + "; " + QString::number(pos.y());
+    table->item(numStr, 2)->setText(coords);
 }
 
 void manRLSWindow::startProcessing()
@@ -144,7 +159,7 @@ void manRLSWindow::addRLS()
     startProcessing();
 
     // Передаем исх. данные для создания РЛС в менеджер станций
-    createRLS(new QPoint(RLScoords.X(Coords::id), RLScoords.Y(Coords::id)),
+    createRLS(QPoint(RLScoords.X(Coords::id), RLScoords.Y(Coords::id)),
               ui->nameNewRLSLineEdit->text());
 
     //
@@ -161,13 +176,13 @@ void manRLSWindow::enablingRLS()
 {
     if (infoRLS->currentRLS()->isWorking())
     {
-        signalOffRLS();
+        offRLS();
         Designer::setButton(ui->on_off_RLS_Button, Designer::green);
         ui->on_off_RLS_Button->setText("Включить");
     }
     else
     {
-        signalRunRLS();
+        runRLS();
         Designer::setButton(ui->on_off_RLS_Button, Designer::red);
         ui->on_off_RLS_Button->setText("Выключить");
     }
@@ -193,16 +208,6 @@ void manRLSWindow::repaintGraphic()
     graphicWidget->setData(X, Y);
 }
 
-void manRLSWindow::setOptZDvert()
-{
-    //ui->setOptZDvertButton->setEnabled(false);
-    updateOptZDvert(ui->RmaxSpinBox->value(),
-                    ui->countHorVecZDSpinBox->value(),
-                    ui->countPointsDVSpinBox->value());
-
-    //ui->setCoordRLSpushButton->setEnabled(false);
-}
-
 void manRLSWindow::updateCoordRLS(Coords coords)
 {
     RLScoords = coords;
@@ -225,17 +230,14 @@ void manRLSWindow::setDesine()
     ui->setCoordRLSpushButton->hide();
 
     // Настройка визуала GroupBox-ов
-    Designer::setGroupBox(ui->RmaxGroupBox);
     Designer::setGroupBox(ui->ZDvertGroupBox);
     Designer::setGroupBox(ui->coordRLSgroupBox);
     Designer::setGroupBox(ui->nameNewRLSGroupBox);
     Designer::setGroupBox(ui->listRLSGroupBox);
-    Designer::setGroupBox(ui->optionsGroupBox);
     Designer::setGroupBox(ui->manRLSGroupBox);
 
     // Настройка визуала кнопок
     Designer::setButton(ui->setCoordRLSpushButton);
-    Designer::setButton(ui->setOptZDvertButton);
     Designer::setButton(ui->createRLSButton);
     Designer::setButton(ui->removeRLSButton, Designer::red);
 

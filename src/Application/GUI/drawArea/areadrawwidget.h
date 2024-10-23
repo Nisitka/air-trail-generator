@@ -38,8 +38,6 @@ class areaDrawWidget: public QWidget
 {
     Q_OBJECT
 signals:
-    // перемоделировать сигнал РЛС
-    void updateSignals();
 
     // Обновить информацию об координатах курсора
     void changedCurrentCoords(const Coords coords);

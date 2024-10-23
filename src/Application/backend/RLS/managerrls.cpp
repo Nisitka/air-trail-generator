@@ -22,8 +22,6 @@ void managerRLS::addRLS(const QPoint& posRLS, const QString& nameRLS)
     listRLS.append(rls);
 
     createReadyRLS();
-
-    qDebug() << "create RLS!";
 }
 
 int managerRLS::countRLS() const
@@ -80,14 +78,14 @@ void managerRLS::setCurrentRLS(int id)
 
 void managerRLS::offRLS()
 {
-    RLS* rls = listRLS.at(idCurRLS);
+    listRLS[idCurRLS]->off();
 
-    rls->off();
+    changeDataRLS(idCurRLS);
 }
 
 void managerRLS::runRLS()
 {
-    qDebug() << "Run one RLS";
-
     listRLS[idCurRLS]->on();
+
+    changeDataRLS(idCurRLS);
 }

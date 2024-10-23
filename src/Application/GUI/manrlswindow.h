@@ -21,7 +21,7 @@ class manRLSWindow: public MultipleWindow
 signals:
 
     // Создать новую РЛС
-    void createRLS(QPoint* posRLS, const QString& nameNewRLS);
+    void createRLS(QPoint posRLS, const QString& nameNewRLS);
 
     // Удалить РЛС
     void delRLS(int id);
@@ -32,15 +32,9 @@ signals:
     // Установить новую позицию РЛС
     void setPositionRLS(int idX, int idY);
 
-    // Запуск моделирования работы РЛС
-    void signalRunRLS();
-
-    // Выключить РЛС(т.е. очистить от РЛ поля)
-    void signalOffRLS();
-
-    // обновить пар-ры ЗО в вертикальной плоскости
-    void updateOptZDvert(int Rmax, // в метрах
-                         int countVertVectors, int countPointsDV); // кол-водискрет
+    // Включить/Выключить РЛС
+    void runRLS();
+    void offRLS();
 
 public slots:
 
@@ -49,6 +43,9 @@ public slots:
 
     //
     void updateListRLS();
+
+    // Обновить данные по конкретной РЛС в списке
+    void updateDataRLS(int idRLS);
 
     // Отображение выполнения процессов
     void startProcessing();
@@ -72,9 +69,6 @@ private slots:
 
     void enablingRLS();
 
-    // уcтановить пар-ры ЗО в вертикальной плоскости
-    void setOptZDvert();
-
     void addRLS();
 
     void removeRLS();
@@ -86,6 +80,10 @@ private:
 
     // Перерисовать график ДН
     void repaintGraphic();
+
+    //
+    void RLStoTable(int numStr,
+                    const LabelRLS* rls);
 
     //
     InformerRLS* infoRLS;

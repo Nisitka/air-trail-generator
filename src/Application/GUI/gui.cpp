@@ -153,8 +153,13 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      optRLSWin, SLOT(updateListRLS()));
     QObject::connect(mRLS,      SIGNAL(deleteReadyRLS()),
                      optRLSWin, SLOT(updateListRLS()));
+
     //
-    QObject::connect(optRLSWin, SIGNAL(signalOffRLS()),
+    QObject::connect(mRLS, SIGNAL(changeDataRLS(int)),
+                     optRLSWin, SLOT(updateDataRLS(int)));
+
+    //
+    QObject::connect(optRLSWin, SIGNAL(offRLS()),
                      mRLS,      SLOT(offRLS()));
     //
     QObject::connect(optRLSWin, SIGNAL(setPositionRLS(int,int)),
@@ -167,8 +172,8 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      toolRLS, SLOT(updateInfoRLS()));
 
     //
-    QObject::connect(optRLSWin, SIGNAL(createRLS(QPoint*,const QString&)),
-                     mRLS,      SLOT(addRLS(QPoint*,const QString&)));
+    QObject::connect(optRLSWin, SIGNAL(createRLS(QPoint,const QString&)),
+                     mRLS,      SLOT(addRLS(QPoint,const QString&)));
     //
     QObject::connect(optRLSWin, SIGNAL(delRLS(int)),
                      mRLS,      SLOT(delRLS(int)));
@@ -182,38 +187,8 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      optRLSWin, SLOT(showInfoCurRLS()));
 
     //
-    QObject::connect(optRLSWin,  SIGNAL(signalRunRLS()),
+    QObject::connect(optRLSWin,  SIGNAL(runRLS()),
                      mRLS,       SLOT(runRLS()));
-    //
-    QObject::connect(mRLS,       SIGNAL(startEmitSignal()),
-                     optRLSWin,  SLOT(startProcessing()));
-    //
-    QObject::connect(mRLS,       SIGNAL(finishGenerateZD()),
-                     optRLSWin,  SLOT(finishProcessing()));
-
-    // Установка пар-ов сигнала и его моделирования в пространстве
-    QObject::connect(optRLSWin,  SIGNAL(updateOptZDvert(int,int,int)),
-                     mRLS,       SLOT(setOptZDvert(int,int,int)));
-    //
-    QObject::connect(mRLS,       SIGNAL(readyOptZDvert()),
-                     optRLSWin,  SLOT(finishProcessing()));
-
-    //
-    QObject::connect(mRLS,      SIGNAL(startClearZD()),
-                     optRLSWin, SLOT(startProcessing()));
-    QObject::connect(mRLS,      SIGNAL(clearZD()),
-                     optRLSWin, SLOT(finishProcessing()));
-
-    //
-    QObject::connect(mRLS,       SIGNAL(startSetOpt()),
-                     optRLSWin,  SLOT(startProcessing()));
-    //
-    QObject::connect(mRLS,       SIGNAL(changeStatProcessing(int)),
-                     optRLSWin,  SLOT(updateStatProcessing(int)));
-
-    /// !!!!!!!!!!!!!!!!!!!!!!!!!! полная херня
-    QObject::connect(visInfoWin->getManDrawArea()->getDrawArea(), SIGNAL(updateSignals()),
-                     mRLS, SLOT(updateSignals()));
 }
 
 void GUI::showMainWin()

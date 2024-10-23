@@ -28,6 +28,9 @@ signals:
     // Выбрана другая РЛС
     void changeCurrentRLS();
 
+    // Изменение данных в РЛС завершено
+    void changeDataRLS(int id); // какой по номеру в списке
+
     //
     void exportGraphicData(double* X, double* Y, int countPoint);
 

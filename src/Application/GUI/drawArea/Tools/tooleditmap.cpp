@@ -84,8 +84,6 @@ void ToolEditMap::mouseRelease(QMouseEvent *mouse)
 
     cursor = QCursor(moveCurPixmap.scaled(R,R));
     setCursor();
-
-    drawArea->updateSignals();
 }
 
 void ToolEditMap::mouseMove(QMouseEvent *mouse)

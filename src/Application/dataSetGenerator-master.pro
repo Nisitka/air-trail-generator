@@ -169,13 +169,9 @@ HEADERS  += \
     backend/Trail/buildertrail.h
 
 FORMS    += GUI/UI/mainwindow.ui \
-    GUI/UI/optqfunwindow.ui \
-    GUI/UI/dataaccessobjectwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \
     GUI/algorithmPredict/setalgpredictwindow.ui \
     GUI/drawArea/mapareamainwindow.ui \
-    GUI/UI/airinfowindow.ui \
-    GUI/UI/airwindow.ui \
     GUI/drawArea/DecktopItems/coordsinfoform.ui \
     GUI/drawArea/zoomcontrollerwidget.ui \
     GUI/hellowindow.ui \

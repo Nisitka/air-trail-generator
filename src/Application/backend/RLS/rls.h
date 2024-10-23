@@ -55,9 +55,6 @@ public:
     void getGraphicData(QVector <double>& X,
                         QVector <double>& Y) const;
 
-    // Максимальная дальность
-    double Rmax() const; // В метрах
-
     //
     void getRectPosition(int& idX, int& idY, int& W, int& H) const;
 
@@ -67,10 +64,8 @@ public:
 
 private:
 
-    //
-    QVector3D pos;
-
-    const double hSender = 3.1; // высота антены
+    // Высота антенны
+    const double hSender = 3.1; // м
 
     // ДН антены
     // построение ДН

@@ -23,9 +23,6 @@ public:
     virtual void getGraphicData(QVector <double>& X,
                         QVector <double>& Y) const = 0;
 
-    // Максимальная дальность
-    virtual double Rmax() const = 0;
-
 protected:
 
     // Включена ли РЛС

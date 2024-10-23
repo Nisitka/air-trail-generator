@@ -21,11 +21,6 @@ RLS::RLS(const QVector3D& position,
     working = false;
 }
 
-double RLS::Rmax() const
-{
-    return D;
-}
-
 void RLS::getGraphicData(QVector<double> &X, QVector<double> &Y) const
 {
     // Защита от дурака
@@ -54,6 +49,7 @@ void RLS::setPosition(int idX, int idY, int idH)
 void RLS::setPosition(const QVector3D& pos_)
 {
     pos = pos_;
+    qDebug() << pos;
 }
 
 void RLS::on()
