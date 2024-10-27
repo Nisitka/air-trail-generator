@@ -18,6 +18,8 @@
 #include "3DVisualization/map3dviswindow.h"
 #include "GUI/algorithmPredict/setalgpredictwindow.h"
 
+#include "GUI/addrlswindow.h"
+
 #include "backend/Trail/buildertrail.h"
 
 #include "GUI/createprojectwindow.h"
@@ -76,7 +78,8 @@ private:
     visualInfoWidget* visInfoWin;
 
     //
-    manRLSWindow* optRLSWin;
+    manRLSWindow* manRLSWin;
+    addRLSWindow* addRLSWin;
 
     // Окно для 3D отображения рельефа
     map3DVisWindow* map3DWin;

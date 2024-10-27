@@ -2,13 +2,19 @@
 #define LABELRLS_H
 
 #include <QVector3D>
+#include <QVector>
+#include <QPointF>
 #include <QString>
 
 //
 class LabelRLS
 {
 public:
-    LabelRLS();
+    LabelRLS(const QVector3D& position,
+             const QString& nameRLS = nullptr,
+             bool run = false);
+
+    LabelRLS(const LabelRLS& dataRLS);
 
     // Позиция РЛС в пространстве
     void getPosition(QVector3D& Point3D) const;
@@ -20,8 +26,8 @@ public:
     QString getName() const;
 
     // Получить данные об ДН антены
-    virtual void getGraphicData(QVector <double>& X,
-                        QVector <double>& Y) const = 0;
+    void getGraphicData(QVector <double>& X,
+                        QVector <double>& Y) const;
 
 protected:
 
@@ -33,6 +39,9 @@ protected:
 
     // Позывной
     QString name;
+
+    // Диаграмма направленности
+    QVector <QPointF> DV;
 };
 
 #endif // LABELRLS_H

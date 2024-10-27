@@ -12,13 +12,11 @@ managerRLS::managerRLS(HeightMeter* heightInfo): InformerRLS(),
     idCurRLS = -1;
 }
 
-void managerRLS::addRLS(const QPoint& posRLS, const QString& nameRLS)
+void managerRLS::addRLS(LabelRLS dataRLS)
 {
-    int idX = posRLS.x();
-    int idY = posRLS.y();
-    int idH = heightInfo->absolute(idX, idY, Coords::id);
+    qDebug() << "add RLS!";
 
-    RLS* rls = new RLS(QVector3D(idX, idY, idH), nameRLS);
+    RLS* rls = new RLS(dataRLS);
     listRLS.append(rls);
 
     createReadyRLS();

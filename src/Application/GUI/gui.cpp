@@ -42,11 +42,9 @@ GUI::GUI(GISInformer* gis,
     mainWin->addTask(visInfoWin, QIcon(":/resurs/imgIcon"),
                      "Визуализатор", "Графическое представление");
 
-    //
-    optRLSWin = new manRLSWindow(infoRLS);
-    QObject::connect(toolRLS,   SIGNAL(setCoordRLS(Coords)),
-                     optRLSWin, SLOT(updateCoordRLS(Coords)));
-    mainWin->addTask(optRLSWin, QIcon(":/resurs/rlsIcon"),
+    // Окно управления РЛС
+    manRLSWin = new manRLSWindow(infoRLS);
+    mainWin->addTask(manRLSWin, QIcon(":/resurs/rlsIcon"),
                      "РЛС", "Радиолокационная станция");
 
     // Окно по работе с функцией прогноза
@@ -148,21 +146,26 @@ void GUI::connectGIS(GIS *gis)
 
 void GUI::connectMRLS(managerRLS* mRLS)
 {
+    // Окно добавления РЛС
+    addRLSWin = new addRLSWindow((CreatorRLS*)mRLS, gisInformer);
+    connect(manRLSWin, SIGNAL(addRLS()),
+            addRLSWin, SLOT(exec()));
+
     //
     QObject::connect(mRLS,      SIGNAL(createReadyRLS()),
-                     optRLSWin, SLOT(updateListRLS()));
+                     manRLSWin, SLOT(updateListRLS()));
     QObject::connect(mRLS,      SIGNAL(deleteReadyRLS()),
-                     optRLSWin, SLOT(updateListRLS()));
+                     manRLSWin, SLOT(updateListRLS()));
 
     //
     QObject::connect(mRLS, SIGNAL(changeDataRLS(int)),
-                     optRLSWin, SLOT(updateDataRLS(int)));
+                     manRLSWin, SLOT(updateDataRLS(int)));
 
     //
-    QObject::connect(optRLSWin, SIGNAL(offRLS()),
+    QObject::connect(manRLSWin, SIGNAL(offRLS()),
                      mRLS,      SLOT(offRLS()));
     //
-    QObject::connect(optRLSWin, SIGNAL(setPositionRLS(int,int)),
+    QObject::connect(manRLSWin, SIGNAL(setPositionRLS(int,int)),
                      mRLS,      SLOT(setPositionRLS(int,int)));
 
     // добавление/удаление РЛС
@@ -170,24 +173,20 @@ void GUI::connectMRLS(managerRLS* mRLS)
                      toolRLS, SLOT(updateInfoRLS()));
     QObject::connect(mRLS,    SIGNAL(deleteReadyRLS()),
                      toolRLS, SLOT(updateInfoRLS()));
-
     //
-    QObject::connect(optRLSWin, SIGNAL(createRLS(QPoint,const QString&)),
-                     mRLS,      SLOT(addRLS(QPoint,const QString&)));
-    //
-    QObject::connect(optRLSWin, SIGNAL(delRLS(int)),
+    QObject::connect(manRLSWin, SIGNAL(delRLS(int)),
                      mRLS,      SLOT(delRLS(int)));
 
     // установка выбранной РЛС
-    QObject::connect(optRLSWin, SIGNAL(setCurrentRLS(int)),
+    QObject::connect(manRLSWin, SIGNAL(setCurrentRLS(int)),
                      mRLS,      SLOT(setCurrentRLS(int)));
     QObject::connect(mRLS,    SIGNAL(changeCurrentRLS()),
                      toolRLS, SLOT(updateInfoRLS()));
     QObject::connect(mRLS, SIGNAL(changeCurrentRLS()),
-                     optRLSWin, SLOT(showInfoCurRLS()));
+                     manRLSWin, SLOT(showInfoCurRLS()));
 
     //
-    QObject::connect(optRLSWin,  SIGNAL(runRLS()),
+    QObject::connect(manRLSWin,  SIGNAL(runRLS()),
                      mRLS,       SLOT(runRLS()));
 }
 

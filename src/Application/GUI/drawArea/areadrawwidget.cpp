@@ -46,7 +46,6 @@ areaDrawWidget::areaDrawWidget(GISInformer* gis):
     // Задачи, которые всегда должны выполняться
     appendDrawTask(background, new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBackground));
     appendDrawTask(terImg,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawMap));
-    //appendDrawTask(iconRLS,    new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawRLS));
     appendDrawTask(border,     new drawTask<areaDrawWidget>(this, &areaDrawWidget::drawBorder));
 
     installEventFilter(this);

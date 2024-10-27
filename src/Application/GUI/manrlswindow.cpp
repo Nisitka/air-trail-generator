@@ -3,6 +3,8 @@
 
 #include "./designer.h"
 
+#include <QDockWidget>
+
 manRLSWindow::manRLSWindow(InformerRLS* infoRLS):
     infoRLS(infoRLS),
     ui(new Ui::manRLSWindow)
@@ -10,29 +12,25 @@ manRLSWindow::manRLSWindow(InformerRLS* infoRLS):
     ui->setupUi(this);
 
     //
-    connect(ui->setCoordRLSpushButton, SIGNAL(clicked()),
-            this,                      SLOT(setNewPosRLS()));
-
-    //
-    connect(ui->createRLSButton, SIGNAL(clicked()),
-            this,                SLOT(addRLS()));
-
-    //
     connect(ui->removeRLSButton, SIGNAL(clicked()),
             this,                SLOT(removeRLS()));
-
-    //
-    connect(ui->on_off_RLS_Button, SIGNAL(clicked()),
-            this,                  SLOT(enablingRLS()));
 
     //
     connect(ui->listRLSTableWidget, SIGNAL(cellClicked(int,int)),
             this,                   SLOT(setIdCurRLS()));
 
+    //
+    connect(ui->addRLSButton, SIGNAL(clicked(bool)),
+            this,             SIGNAL(addRLS()));
 
-    // Виджет для отрисорвки графика ЗО РЛС
-    graphicWidget = new plotWidget;
-    ui->plotZDLayout->addWidget(graphicWidget);
+    //
+    guiRLS = new InfoRLSWindow;
+    QDockWidget* dock = new QDockWidget("Управление РЛС");
+    this->addDockWidget(Qt::LeftDockWidgetArea, dock);
+    dock->setFeatures(QDockWidget::DockWidgetMovable);
+    dock->setWidget(guiRLS);
+    dock->setTitleBarWidget(new QWidget(dock)); //
+    dock->show();
 
     // Таблица-список РЛС, поставленных на карту
     ui->listRLSTableWidget->setColumnCount(columnNames.size());
@@ -55,19 +53,6 @@ void manRLSWindow::showInfoCurRLS()
     {
         // График ДН антены
         repaintGraphic();
-
-        // Статус кнопки вкл/выкл
-        ui->on_off_RLS_Button->show();
-        if (infoRLS->currentRLS()->isWorking())
-        {
-            Designer::setButton(ui->on_off_RLS_Button, Designer::red);
-            ui->on_off_RLS_Button->setText("Выключить");
-        }
-        else
-        {
-            Designer::setButton(ui->on_off_RLS_Button, Designer::green);
-            ui->on_off_RLS_Button->setText("Включить");
-        }
     }
 }
 
@@ -80,19 +65,13 @@ void manRLSWindow::updateListRLS()
     int countRLS = infoRLS->countRLS();
     ui->listRLSTableWidget->setRowCount(countRLS);
 
-    if (countRLS > 0)
+    //
+    for (int r=0; r<countRLS; r++)
     {
-        for (int r=0; r<countRLS; r++)
-        {
-            for (int p=0; p<3; p++)
-                ui->listRLSTableWidget->setItem(r, p, new QTableWidgetItem);
+        for (int p=0; p<3; p++)
+            ui->listRLSTableWidget->setItem(r, p, new QTableWidgetItem);
 
-            RLStoTable(r, infoRLS->getInfoRLS(r));
-        }
-    }
-    else
-    {
-        ui->on_off_RLS_Button->hide();
+        RLStoTable(r, infoRLS->getInfoRLS(r));
     }
 
     finishProcessing();
@@ -142,7 +121,7 @@ void manRLSWindow::finishProcessing()
     ui->setRLSprogressBar->hide();
 
     // Разблокируем кнопку добавления РЛС
-    ui->createRLSButton->setEnabled(true);
+    ui->addRLSButton->setEnabled(true);
 }
 
 void manRLSWindow::removeRLS()
@@ -150,72 +129,19 @@ void manRLSWindow::removeRLS()
     //
     delRLS(ui->listRLSTableWidget->currentRow());
 
-    // Очищаем виджет от графика удаленной РЛС
-    graphicWidget->clear();
-}
-
-void manRLSWindow::addRLS()
-{
-    startProcessing();
-
-    // Передаем исх. данные для создания РЛС в менеджер станций
-    createRLS(QPoint(RLScoords.X(Coords::id), RLScoords.Y(Coords::id)),
-              ui->nameNewRLSLineEdit->text());
-
     //
-    ui->nameNewRLSLineEdit->clear();
-
-    // разблокируем кнопку удаления РЛС
-    ui->removeRLSButton->setEnabled(true);
-
-    // блокируем кнопку добавления РЛС пока не пройдет инициализация этой
-    ui->createRLSButton->setEnabled(false);
-}
-
-void manRLSWindow::enablingRLS()
-{
-    if (infoRLS->currentRLS()->isWorking())
-    {
-        offRLS();
-        Designer::setButton(ui->on_off_RLS_Button, Designer::green);
-        ui->on_off_RLS_Button->setText("Включить");
-    }
-    else
-    {
-        runRLS();
-        Designer::setButton(ui->on_off_RLS_Button, Designer::red);
-        ui->on_off_RLS_Button->setText("Выключить");
-    }
-}
-
-void manRLSWindow::setNewPosRLS()
-{
-    // Значения с интерфейса
-    int l = RLScoords.longStep();
-    int idX = ui->xRLSspinBox->value() / l;
-    int idY = ui->yRLSspinBox->value() / l;
-
-    setPositionRLS(idX, idY);
+    guiRLS->clearData();
 }
 
 void manRLSWindow::repaintGraphic()
 {
+    // Получаем данные
     QVector <double> X;
     QVector <double> Y;
     infoRLS->currentRLS()->getGraphicData(X, Y);
 
-    //
-    graphicWidget->setData(X, Y);
-}
-
-void manRLSWindow::updateCoordRLS(Coords coords)
-{
-    RLScoords = coords;
-
-    //
-    ui->xRLSspinBox->setValue(RLScoords.X(Coords::m));
-    ui->yRLSspinBox->setValue(RLScoords.Y(Coords::m));
-    ui->zValueRLSLabel->setText(QString::number(RLScoords.Y(Coords::m)));
+    // Отдаем на отрисовку
+    guiRLS->setGraphicData(X, Y);
 }
 
 void manRLSWindow::setDesine()
@@ -226,29 +152,16 @@ void manRLSWindow::setDesine()
     ui->setRLSprogressBar->setValue(0);
     ui->setRLSprogressBar->hide(); // изначально прячем загрузку
 
-    ui->on_off_RLS_Button->hide();
-    ui->setCoordRLSpushButton->hide();
-
     // Настройка визуала GroupBox-ов
-    Designer::setGroupBox(ui->ZDvertGroupBox);
-    Designer::setGroupBox(ui->coordRLSgroupBox);
-    Designer::setGroupBox(ui->nameNewRLSGroupBox);
     Designer::setGroupBox(ui->listRLSGroupBox);
-    Designer::setGroupBox(ui->manRLSGroupBox);
 
     // Настройка визуала кнопок
-    Designer::setButton(ui->setCoordRLSpushButton);
-    Designer::setButton(ui->createRLSButton);
+    Designer::setButton(ui->addRLSButton);
     Designer::setButton(ui->removeRLSButton, Designer::red);
 
     // Настройка визуала полоски прогресса
     Designer::setProgressBar(ui->setRLSprogressBar);
 
-    //
-    Designer::setTabWidget(ui->generateDVOptTabWidget);
-
-    // Изначально кнопка в таком состоянии
-    Designer::setButton(ui->on_off_RLS_Button, Designer::green);
 }
 
 manRLSWindow::~manRLSWindow()

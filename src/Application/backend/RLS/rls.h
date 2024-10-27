@@ -3,12 +3,6 @@
 
 #include <QObject>
 
-#include <QPoint>
-#include <QPointF>
-
-#include <QVector>
-#include <QVector3D>
-
 #include "../ray.h"
 #include "../GIS/heightmeter.h"
 #include "../tracerlight.h"
@@ -40,20 +34,12 @@ public slots:
     void setPosition(int idX, int idY, int idH);
     void setPosition(const QVector3D& position);
 
-    // Установить пар-ры ЗО в вертикальной плоскости
-    void setOptZDvert(int Rmax);
-
     // включить/выключить РЛС
     void on();
     void off();
 
 public:
-    explicit RLS(const QVector3D& position,
-                 const QString& nameRLS = nullptr);
-
-    // Получить данные об ДН антены
-    void getGraphicData(QVector <double>& X,
-                        QVector <double>& Y) const;
+    explicit RLS(LabelRLS dataRLS);
 
     //
     void getRectPosition(int& idX, int& idY, int& W, int& H) const;
@@ -67,28 +53,25 @@ private:
     // Высота антенны
     const double hSender = 3.1; // м
 
-    // ДН антены
-    // построение ДН
+    // Построение ДН
     void buildDV();
-    void updateDV();
-
-    // Дальность луча антены
-    double D = 2000; // метров
 
     // здец :/
     double Pi = 3.14159265;
 
+    //
     int count_PointsDV = 800;
 
+    //
     double Emin = 0.01;
     double Eo = 0.3;
     double Emax = 0.69;
-    double* mE; // массив дискрет углов места
 
-    enum cDV{H, L};
-    QVector <double*> l_DV; // приведенная ДН (0..1)
-    QVector <double*> DV;
-    void set_lDV(); //
+    // Массив дискрет углов места
+    double* mE;
+
+    // Посчитать диаграмму направленности
+    void setDV(); //
 };
 
 #endif // RLS_H

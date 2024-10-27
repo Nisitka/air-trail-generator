@@ -7,14 +7,16 @@
 #include "../GIS/heightmeter.h"
 
 #include "../tracerlight.h"
-#include "rls.h"
 
 #include <memory>
 
 #include "informerrls.h"
+#include "creatorrls.h"
 
 // класс для управления всеми РЛС
-class managerRLS : public QObject, public InformerRLS
+class managerRLS : public QObject,
+        public InformerRLS,
+        public CreatorRLS
 {
     Q_OBJECT
 signals:
@@ -36,9 +38,6 @@ signals:
 
 public slots:
 
-    // создать новую РЛС
-    void addRLS(const QPoint& posRLS, const QString& nameRLS);
-
     // удалить РЛС
     void delRLS(int id); // индекс в листе, которую удаляем
 
@@ -55,6 +54,10 @@ public slots:
     void runRLS();
 
 public:
+
+    //
+    void addRLS(LabelRLS);
+
     managerRLS(HeightMeter* heightInfo);   //
 
     // Узнать индекс выбранной РЛС

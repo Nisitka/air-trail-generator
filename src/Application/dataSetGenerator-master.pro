@@ -82,7 +82,10 @@ SOURCES += main.cpp\
     GUI/manrlswindow.cpp \
     GUI/createprojectwindow.cpp \
     backend/RLS/radar.cpp \
-    backend/Trail/buildertrail.cpp
+    backend/Trail/buildertrail.cpp \
+    GUI/inforlswindow.cpp \
+    GUI/addrlswindow.cpp \
+    backend/RLS/creatorrls.cpp
 
 HEADERS  += \
     core.h \
@@ -166,7 +169,10 @@ HEADERS  += \
     GUI/manrlswindow.h \
     GUI/createprojectwindow.h \
     backend/RLS/radar.h \
-    backend/Trail/buildertrail.h
+    backend/Trail/buildertrail.h \
+    GUI/inforlswindow.h \
+    GUI/addrlswindow.h \
+    backend/RLS/creatorrls.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \
@@ -178,7 +184,10 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/mainswitcherwindow.ui \
     GUI/manrlswindow.ui \
     GUI/drawArea/DecktopItems/form.ui \
-    GUI/createprojectwindow.ui
+    GUI/createprojectwindow.ui \
+    GUI/drawArea/inforlswindow.ui \
+    GUI/inforlswindow.ui \
+    GUI/addrlswindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \
