@@ -85,7 +85,8 @@ SOURCES += main.cpp\
     backend/Trail/buildertrail.cpp \
     GUI/inforlswindow.cpp \
     GUI/addrlswindow.cpp \
-    backend/RLS/creatorrls.cpp
+    backend/RLS/creatorrls.cpp \
+    backend/projectmanager.cpp
 
 HEADERS  += \
     core.h \
@@ -165,14 +166,14 @@ HEADERS  += \
     backend/mapfile.h \
     backend/MapFile/mapfile.h \
     backend/MapFile/datamapgis.h \
-    backend/MapFile/datamaprls.h \
     GUI/manrlswindow.h \
     GUI/createprojectwindow.h \
     backend/RLS/radar.h \
     backend/Trail/buildertrail.h \
     GUI/inforlswindow.h \
     GUI/addrlswindow.h \
-    backend/RLS/creatorrls.h
+    backend/RLS/creatorrls.h \
+    backend/projectmanager.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \

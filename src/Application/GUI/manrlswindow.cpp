@@ -5,7 +5,8 @@
 
 #include <QDockWidget>
 
-manRLSWindow::manRLSWindow(InformerRLS* infoRLS):
+manRLSWindow::manRLSWindow(GISInformer* gis,
+                           InformerRLS* infoRLS):
     infoRLS(infoRLS),
     ui(new Ui::manRLSWindow)
 {
@@ -24,7 +25,7 @@ manRLSWindow::manRLSWindow(InformerRLS* infoRLS):
             this,             SIGNAL(addRLS()));
 
     //
-    guiRLS = new InfoRLSWindow;
+    guiRLS = new InfoRLSWindow(gis);
     QDockWidget* dock = new QDockWidget("Управление РЛС");
     this->addDockWidget(Qt::LeftDockWidgetArea, dock);
     dock->setFeatures(QDockWidget::DockWidgetMovable);
@@ -44,7 +45,14 @@ manRLSWindow::manRLSWindow(InformerRLS* infoRLS):
 
 void manRLSWindow::setIdCurRLS()
 {
-    setCurrentRLS(ui->listRLSTableWidget->currentRow());
+    // Индекс текущей РЛС
+    int id = ui->listRLSTableWidget->currentRow();
+
+    // Сообщить, что выбрана РЛС с индексом id
+    setCurrentRLS(id);
+
+    // Отобразить информацию по выбранной РЛС
+    updateDataRLS(id);
 }
 
 void manRLSWindow::showInfoCurRLS()
@@ -79,7 +87,15 @@ void manRLSWindow::updateListRLS()
 
 void manRLSWindow::updateDataRLS(int idRLS)
 {
-    RLStoTable(idRLS, infoRLS->getInfoRLS(idRLS));
+    // Информация об РЛС
+    const LabelRLS* rls = infoRLS->getInfoRLS(idRLS);
+
+    // Добавление(изменение) данных в таблице
+    RLStoTable(idRLS, rls);
+
+    // Расширенная информация
+    guiRLS->showRLS(rls);
+
 }
 
 void manRLSWindow::RLStoTable(int numStr, const LabelRLS *rls)

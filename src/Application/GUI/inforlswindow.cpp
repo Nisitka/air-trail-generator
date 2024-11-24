@@ -3,7 +3,9 @@
 
 #include "designer.h"
 
-InfoRLSWindow::InfoRLSWindow(QWidget *parent) :
+InfoRLSWindow::InfoRLSWindow(GISInformer* gis,
+                             QWidget *parent) :
+    gis(gis),
     QWidget(parent),
     ui(new Ui::InfoRLSWindow)
 {
@@ -13,6 +15,30 @@ InfoRLSWindow::InfoRLSWindow(QWidget *parent) :
     // Виджет для отрисорвки графика ЗО РЛС
     graphicWidget = new plotWidget;
     ui->plotZDLayout->addWidget(graphicWidget);
+
+    // Изменение значения высоты при изменении координат
+    connect(ui->xRLSspinBox, SIGNAL(valueChanged(int)),
+            this,            SLOT(updateHeightRLS()));
+    connect(ui->yRLSspinBox, SIGNAL(valueChanged(int)),
+            this,            SLOT(updateHeightRLS()));
+}
+
+void InfoRLSWindow::showRLS(const LabelRLS *infoRLS)
+{
+    QVector3D pos;
+    infoRLS->getPosition(pos);
+
+    ui->xRLSspinBox->setValue(pos.x());
+    ui->yRLSspinBox->setValue(pos.y());
+}
+
+void InfoRLSWindow::updateHeightRLS()
+{
+    int idX = ui->xRLSspinBox->value();
+    int idY = ui->yRLSspinBox->value();
+    ui->zValueRLSLabel->setText(
+                    QString::number(
+                        gis->getH(idX, idY, Coords::id)));
 }
 
 void InfoRLSWindow::clearData()

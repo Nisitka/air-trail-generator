@@ -1,9 +1,14 @@
 #ifndef INFORLSWINDOW_H
 #define INFORLSWINDOW_H
 
+#include "backend/GIS/gisinformer.h"
+#include "backend/RLS/labelrls.h"
+#include "backend/GIS/coords.h"
+
 #include <QWidget>
 
 #include <QVector>
+#include <QVector3D>
 
 //
 #include "plotwidget.h"
@@ -17,8 +22,12 @@ class InfoRLSWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit InfoRLSWindow(QWidget *parent = 0);
+    explicit InfoRLSWindow(GISInformer* gis,
+                           QWidget *parent = 0);
     ~InfoRLSWindow();
+
+    //
+    void showRLS(const LabelRLS *infoRLS);
 
     //
     void setGraphicData(const QVector <double>& X,
@@ -27,7 +36,15 @@ public:
     //
     void clearData();
 
+private slots:
+
+    // Обновить значение высоты РЛС
+    void updateHeightRLS();
+
 private:
+
+    //
+    GISInformer* gis;
 
     // Для графика ДН
     plotWidget* graphicWidget;

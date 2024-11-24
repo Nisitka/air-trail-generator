@@ -53,15 +53,16 @@ public slots:
     void finishProcessing();
 
 public:
-    explicit manRLSWindow(InformerRLS* infoRLS);
+    explicit manRLSWindow(GISInformer* gis,
+                          InformerRLS* infoRLS);
     ~manRLSWindow();
 
 private slots:
 
-    //
+    // Выбрать РЛС
     void setIdCurRLS();
 
-    //
+    // Удалить РЛС из проекта
     void removeRLS();
 
 private:

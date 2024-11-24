@@ -43,7 +43,7 @@ GUI::GUI(GISInformer* gis,
                      "Визуализатор", "Графическое представление");
 
     // Окно управления РЛС
-    manRLSWin = new manRLSWindow(infoRLS);
+    manRLSWin = new manRLSWindow(gisInformer, infoRLS);
     mainWin->addTask(manRLSWin, QIcon(":/resurs/rlsIcon"),
                      "РЛС", "Радиолокационная станция");
 

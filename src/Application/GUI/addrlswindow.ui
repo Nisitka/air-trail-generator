@@ -265,6 +265,12 @@
             </item>
             <item>
              <widget class="QPushButton" name="addRLSPushButton">
+              <property name="minimumSize">
+               <size>
+                <width>65</width>
+                <height>20</height>
+               </size>
+              </property>
               <property name="text">
                <string>Добавить</string>
               </property>

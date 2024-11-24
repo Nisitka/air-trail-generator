@@ -6,15 +6,13 @@
 
 /// Интерфейсы
 #include "./datamapgis.h"
-#include "./datamaprls.h"
 
 #include "../GIS/coords.h"
 #include "../GIS/mapdata.h"
 
 // Класс по работе с файлом-картой
 class MapFile:             // Инткрфейсы:
-        public DataMapGIS, //   Для работы с пространством
-        public DataMapRLS  //   Для работы с РЛС
+        public DataMapGIS  //   Для работы с пространством
 {
 public:
     MapFile();

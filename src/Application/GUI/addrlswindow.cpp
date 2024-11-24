@@ -17,7 +17,7 @@ addRLSWindow::addRLSWindow(CreatorRLS* creatorRLS,
     connect(ui->addRLSPushButton, SIGNAL(clicked(bool)),
             this,                 SLOT(addRLS()));
 
-    //
+    // Изменение значения высоты при изменении координат
     connect(ui->xRLSspinBox, SIGNAL(valueChanged(int)),
             this,            SLOT(updateHeightRLS()));
     connect(ui->yRLSspinBox, SIGNAL(valueChanged(int)),
@@ -62,6 +62,8 @@ void addRLSWindow::clearFields()
 
 void addRLSWindow::setDesine()
 {
+    this->setWindowTitle("Добавить РЛС");
+
     Designer::setButton(ui->addRLSPushButton);
 
     Designer::setGroupBox(ui->coordRLSgroupBox);
