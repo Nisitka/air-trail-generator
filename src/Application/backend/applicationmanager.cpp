@@ -1,6 +1,7 @@
 #include "applicationmanager.h"
 
 #include <QFileInfo>
+#include <QDataStream>
 #include <QApplication>
 
 ApplicationManager::ApplicationManager():
@@ -10,20 +11,20 @@ ApplicationManager::ApplicationManager():
 {
 
     // Файл настроек лежит там же, где и  исполняемый файл
-    const QString path = QApplication::applicationDirPath() + "options.app";
+    const QString path = QApplication::applicationDirPath() + "settings.app";
 
     // Если файл такой уже существует, то
     if (QFileInfo::exists(path) && QFileInfo(path).isFile())
         initSettings(path);
     else
-        setDefultSettings(path);
+        createDefultSettings(path);
 }
 
 void ApplicationManager::initSettings(const QString& pathSettings)
 {
     settingFile = new QFile(pathSettings);
 
-    if (settingFile->open(QIODevice::ReadWrite));
+    if (settingFile->open(QIODevice::ReadWrite))
     {
         // Записываем служебную информацию
         QByteArray data;
@@ -40,7 +41,7 @@ void ApplicationManager::createDefultSettings(const QString& pathSettings)
 {
     settingFile = new QFile(pathSettings);
 
-    if (settingFile->open(QIODevice::ReadWrite));
+    if (settingFile->open(QIODevice::ReadWrite))
     {
         // Считываем настройки
 

@@ -87,7 +87,8 @@ SOURCES += main.cpp\
     GUI/addrlswindow.cpp \
     backend/RLS/creatorrls.cpp \
     backend/projectmanager.cpp \
-    backend/applicationmanager.cpp
+    backend/applicationmanager.cpp \
+    backend/projectfile.cpp
 
 HEADERS  += \
     core.h \
@@ -175,7 +176,8 @@ HEADERS  += \
     GUI/addrlswindow.h \
     backend/RLS/creatorrls.h \
     backend/projectmanager.h \
-    backend/applicationmanager.h
+    backend/applicationmanager.h \
+    backend/projectfile.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \
