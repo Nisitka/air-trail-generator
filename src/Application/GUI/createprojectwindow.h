@@ -32,6 +32,9 @@ public slots:
 private slots:
 
     //
+    void showSelectFolderWin();
+
+    //
     void buildProject();
 
 private:

@@ -4,6 +4,7 @@
 #include "GUI/designer.h"
 
 #include <QApplication>
+#include <QFileDialog>
 
 #include <QDebug>
 
@@ -27,6 +28,10 @@ createProjectWindow::createProjectWindow(QWidget *parent) :
     connect(ui->createProjectButton, SIGNAL(clicked(bool)),
             this,                    SLOT(buildProject()));
 
+    // Вызвать окно выбора директории
+    connect(ui->setDirProjectPushButton, SIGNAL(clicked(bool)),
+            this,                        SLOT(showSelectFolderWin()));
+
     //
     Designer::setGroupBox(ui->groupBox);
     Designer::setGroupBox(ui->groupBox_2);
@@ -38,6 +43,12 @@ createProjectWindow::createProjectWindow(QWidget *parent) :
 
     //
     Designer::setProgressBar(ui->progressBar);
+}
+
+void createProjectWindow::showSelectFolderWin()
+{
+    QString dir = QFileDialog::getExistingDirectory();
+    ui->dirProjectLineEdit->setText(dir);
 }
 
 void createProjectWindow::buildProject()

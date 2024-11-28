@@ -10,6 +10,8 @@
 
 #include "backend/GIS/gisinformer.h"
 
+#include "./managermapswindow.h"
+
 // Окно по работе с визуальными данными
 class visualInfoWidget:
         public MultipleWindow
@@ -41,6 +43,9 @@ private:
 
     //
     mapAreaMainWindow* mapDrawArea;
+
+    //
+    ManagerMapsWindow* manMapsWin;
 };
 
 #endif // VISUALINFOWIDGET_H

@@ -88,7 +88,8 @@ SOURCES += main.cpp\
     backend/RLS/creatorrls.cpp \
     backend/projectmanager.cpp \
     backend/applicationmanager.cpp \
-    backend/projectfile.cpp
+    backend/projectfile.cpp \
+    GUI/managermapswindow.cpp
 
 HEADERS  += \
     core.h \
@@ -177,7 +178,8 @@ HEADERS  += \
     backend/RLS/creatorrls.h \
     backend/projectmanager.h \
     backend/applicationmanager.h \
-    backend/projectfile.h
+    backend/projectfile.h \
+    GUI/managermapswindow.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \
@@ -192,7 +194,8 @@ FORMS    += GUI/UI/mainwindow.ui \
     GUI/createprojectwindow.ui \
     GUI/drawArea/inforlswindow.ui \
     GUI/inforlswindow.ui \
-    GUI/addrlswindow.ui
+    GUI/addrlswindow.ui \
+    GUI/managermapswindow.ui
 
 DISTFILES += \
     resurs/earchIcon.png \
