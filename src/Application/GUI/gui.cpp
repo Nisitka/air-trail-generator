@@ -128,20 +128,30 @@ void GUI::connectGIS(GIS *gis)
                      visInfoWin->getManDrawArea(), SLOT(repaintBackground()));
     QObject::connect(gis,                          SIGNAL(changedMap(int,int,int,int)),
                      visInfoWin->getManDrawArea(), SLOT(repaintBackground()));
-    QObject::connect(gis,                          SIGNAL(finishBuildMap(int,int,int)),
+}
+
+void GUI::connectMapsManager(mapManager *mMaps)
+{
+    //
+    QObject::connect(mMaps,          SIGNAL(finishCreateMap()),
+                     switcherWindow, SLOT(showMainWindow()));
+    QObject::connect(mMaps,          SIGNAL(finishOpenMap()),
+                     switcherWindow, SLOT(showMainWindow()));
+
+    // При завершении подготовки карты - инициализировать визуальную часть проекта
+    QObject::connect(mMaps,      SIGNAL(finishCreateMap()),
+                     visInfoWin, SLOT(initProject()));
+    QObject::connect(mMaps,      SIGNAL(finishOpenMap()),
+                     visInfoWin, SLOT(initProject()));
+
+    QObject::connect(mMaps,                        SIGNAL(finishCreateMap()),
+                     visInfoWin->getManDrawArea(), SLOT(updateGeoMapImage()));
+    QObject::connect(mMaps,                        SIGNAL(finishOpenMap()),
                      visInfoWin->getManDrawArea(), SLOT(updateGeoMapImage()));
 
     //
-    QObject::connect(gis,            SIGNAL(finishBuildMap(int,int,int)),
-                     switcherWindow, SLOT(showMainWindow()));
-
-    // Открыть файл-проект
     QObject::connect(this,  SIGNAL(openProject(QString)),
-                     gis,   SLOT(openMap(QString)));
-
-    // При завершении подготовки карты - инициализировать визуальную часть проекта
-    QObject::connect(gis,        SIGNAL(finishBuildMap(int,int,int)),
-                     visInfoWin, SLOT(initProject()));
+                     mMaps, SLOT(openMap(QString)));
 }
 
 void GUI::connectMRLS(managerRLS* mRLS)

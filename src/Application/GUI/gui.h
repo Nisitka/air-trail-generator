@@ -24,6 +24,8 @@
 
 #include "GUI/createprojectwindow.h"
 
+#include "backend/MapFile/mapmanager.h"
+
 // Интерфейс всей программы
 class GUI: public QObject
 {
@@ -43,6 +45,9 @@ public:
 
     //
     void connectGIS(GIS* gis);
+
+    //
+    void connectMapsManager(mapManager* mMaps);
 
     // присоединить к интерфейсу РЛС
     void connectMRLS(managerRLS*);

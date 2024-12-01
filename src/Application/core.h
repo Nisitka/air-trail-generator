@@ -17,6 +17,8 @@
 #include "backend/GIS/gisinformer.h"
 #include "backend/tracerlight.h"
 
+#include "backend/MapFile/mapmanager.h"
+
 #include "backend/projectfile.h"
 
 // ядро приложения
@@ -69,6 +71,9 @@ private:
 
     // Менеджер РЛС
     managerRLS* mRLS;
+
+    //
+    mapManager* mapsManager;
 
 };
 

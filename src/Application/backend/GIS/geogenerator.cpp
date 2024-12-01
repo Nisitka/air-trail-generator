@@ -8,70 +8,39 @@
 
 #include <QRgb>
 
-geoGenerator::geoGenerator()
+geoGenerator::geoGenerator(mapManager* manMap):
+    manMap(manMap)
 {
     isLocked = false;
-
-    //
-    mapFile = new MapFile;
 }
 
 void geoGenerator::getSizeMap(int &W, int &L, int &H) const
 {
-    mapFile->getSize(W, L, H);
+    manMap->getCurrentMap()->getSize(W, L, H);
 }
 
 int geoGenerator::lenghtBlock() const
 {
-    return mapFile->lenghtUnit();
+    return manMap->getCurrentMap()->lenghtUnit();
 }
 
 int geoGenerator::heightBlock() const
 {
-    return mapFile->heightUnit();
-}
-
-void geoGenerator::initMap(const MapData DataMap,
-                           const QString& dirName)
-{
-    buildStart();
-
-    Wmap = DataMap.W;
-    Lmap = DataMap.L;
-    Hmap = DataMap.H;
-
-    //
-    mapFile->init(dirName,
-                  Wmap, Lmap, Hmap);
-
-    // Сообщаем об завершении инициализации карты
-    buildFinish(Wmap, Lmap, Hmap);
-}
-
-void geoGenerator::openMap(const QString &dirMapFile)
-{
-    buildStart();
-
-    //
-    mapFile->open(dirMapFile);
-
-    int Wmap, Lmap;
-    mapFile->getSize(Wmap, Lmap, Hmap);
-
-    //
-    buildFinish(Wmap, Lmap, Hmap);
+    return manMap->getCurrentMap()->heightUnit();
 }
 
 int geoGenerator::absolute(int idX, int idY, Coords::units units) const
 {
     int h = -1;
 
+    const MapFile* map = manMap->getCurrentMap();
+
     //
-    h = mapFile->getHeight(idX, idY);
+    h = map->getHeight(idX, idY);
 
     switch (units) {
     case Coords::m:
-        h *= mapFile->heightUnit();
+        h *= map->heightUnit();
         break;
     case Coords::id:
         /* ... */
@@ -83,28 +52,26 @@ int geoGenerator::absolute(int idX, int idY, Coords::units units) const
 
 int geoGenerator::max(Coords::units u) const
 {
-    return mapFile->getMaxHeight(u);
+    return manMap->getCurrentMap()->getMaxHeight(u);
 }
 
 Coords geoGenerator::getCoords(int idX, int idY) const
 {
+    const MapFile* map = manMap->getCurrentMap();
+
     int X = idX;
     int Y = idY;
-    int H = mapFile->getHeight(idX, idY);
+    int H = map->getHeight(idX, idY);
 
     /// !!!!!!!!!!!
-    int lUnit = mapFile->lenghtUnit();
+    int lUnit = map->lenghtUnit();
 
     return Coords(X, Y, H, lUnit);
 }
 
 void geoGenerator::loadTerrain(const QString& dirNameFile)
 {
-    buildStart();
-
     /* ... */
-
-    buildFinish(Wmap, Lmap, Hmap);
 }
 
 void geoGenerator::editEarth(int idX, int idY, int w, int l, int dH, int t)
@@ -118,22 +85,5 @@ void geoGenerator::editEarth(int idX, int idY, int w, int l, int dH, int t)
         break;
     }
 
-    mapFile->editHeightMatrix(idX, idY, w, l, dH);
-}
-
-void geoGenerator::updateHeights(int idX, int idY, int W, int L)
-{
-    int idLastX = idX + W;
-    int idLastY = idY + L;
-
-    qDebug() << "update heights!";
-
-    for (int X=idX; X<=idLastX; X++)
-    {
-        for (int Y=idY; Y<=idLastY; Y++)
-        {
-            // Присваеваем каждому(ой) столбцу(дискрете) новую высоту
-
-        }
-    }
+    manMap->getCurrentMap()->editHeightMatrix(idX, idY, w, l, dH);
 }

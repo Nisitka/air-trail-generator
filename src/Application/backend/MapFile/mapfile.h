@@ -13,8 +13,8 @@
 
 // Класс по работе с файлом-картой
 class MapFile:              // Инткрфейсы:
-        public DataMapGIS,  //  Для работы с пространством
-        public DataMapRLS   //  Для работы с РЛС
+        public DataMapGIS,  //  Информация об пространстве
+        public DataMapRLS   //  Информация об РЛС
 {
 public:
 
@@ -22,6 +22,9 @@ public:
     MapFile(const QString &dirNameFile, MapData data); // Создаем новый файл
     MapFile(const QString &dirNameFile); // Открываем существующий файл
     ~MapFile();
+
+    //
+    void getPathAllRLS(QStringList& listPath) const override final;
 
     // Узнать размеры карты
     void getSize(int& W, int& L, int& H) const override final;
@@ -32,6 +35,10 @@ public:
 
     //
     void open(const QString &dirMapFile);
+    void reopen();
+
+    //
+    void close();
 
     //
     int lenghtUnit() const override final; // В метрах
@@ -40,7 +47,7 @@ public:
     //
     int getHeight(int idX, int idY) const override final;
     void setHeight(int idX, int idY,
-                   int height) override final;
+                   int height);
 
     // Отредакутировать рельеф
     void editHeightMatrix(
@@ -71,10 +78,6 @@ private:
 
     //
     QFile* file;
-
-    // Размеры блоков в метрах
-    int lUnit;
-    int hUnit;
 
     // Кол-во байт в файле карты на:
     qint64 sizeColumn;  // Одну дискрету

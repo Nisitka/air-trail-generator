@@ -11,6 +11,8 @@
 
 #include "gisinformer.h"
 
+#include "../MapFile/mapmanager.h"
+
 // Геоинформационная система
 class GIS: public QObject, public GISInformer
 {
@@ -27,16 +29,10 @@ signals:
     //  полностью
     void changedMap();
 
-    // Процесс про инициализации рельефа
-    void startBuildMap();                           // Начался
-    void changedProgressBuildMap(int countPercent); // в %
-    void finishBuildMap(int W, int L, int H);       // Завершился
-
 public slots:
 
-    // Создать карту
-    void initMap(const MapData DataMap,
-                 const QString& dirName); //
+    // Полностью обновить систему
+    void updateFull();
 
     // Изменить активную область
     void setPosActionArea(int idXmap, int idYmap); // центр области
@@ -54,9 +50,6 @@ public slots:
     //
     void loadTerrain(const QString& dirNameFile);
 
-    //
-    void openMap(const QString& dirNameFile);
-
 public:
 
     //
@@ -72,7 +65,7 @@ public:
     void getIdActionArea(int& idXo, int& idYo) const override final;
 
     // При инициализации ГИС системы
-    GIS();
+    GIS(mapManager* mapsInfo);
 
     //
     ///void setDefaultMap();

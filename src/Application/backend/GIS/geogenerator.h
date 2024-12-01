@@ -7,6 +7,8 @@
 
 #include "heightmeter.h"
 
+#include "../MapFile/mapmanager.h"
+
 #include "coords.h"
 #include "mapdata.h"
 
@@ -21,13 +23,8 @@ class geoGenerator: public QObject,
     Q_OBJECT
 signals:
 
-    //
-    void buildStart();
-    void changedProcessBuild(int countPercent); // в %
-    void buildFinish(int W, int L, int H);
-
 public:
-    geoGenerator();
+    geoGenerator(mapManager* manMap);
 
     // HeightMeter
     int absolute(int idX, int idY, Coords::units u) const override final;
@@ -38,15 +35,8 @@ public:
     // В индексах всей карты
     Coords getCoords(int idX, int idY) const;
 
-    // Открыть карту
-    void openMap(const QString& dirMapFile);
-
     // Загрузить рельеф
     void loadTerrain(const QString& dirNameFile);
-
-    // Обновить данные по высотам в области
-    void updateHeights(int idX, int idY, // Левый верхний угол
-                       int W, int L);    // Ширина, длина
 
     // Отредакутировать рельеф
     void editEarth(int idXo, int idYo,  // Левый верхний угол обл.
@@ -74,11 +64,8 @@ private:
     // mutex
      mutable  bool isLocked;
 
-    ///
-    MapFile* mapFile;
-    int Hmap;
-    int Wmap;
-    int Lmap;
+    //
+    mapManager* manMap;
 };
 
 #endif // GEOGENERATOR_H

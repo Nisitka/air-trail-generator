@@ -37,21 +37,27 @@ void MapFile::setSizeByteData()
     data.clear();
 }
 
+void MapFile::getPathAllRLS(QStringList &listPath) const
+{
+    listPath.clear();
+
+}
+
 void MapFile::getSize(int &W, int &L, int &H) const
 {
-    W = Wmap;
-    L = Lmap;
-    H = Hmap;
+    W = mapData.W;
+    L = mapData.L;
+    H = mapData.H;
 }
 
 int MapFile::getMaxHeight(Coords::units u) const
 {
     int h = -1;
 
-    h = Hmap;
+    h = mapData.H;
     switch (u) {
     case Coords::m:
-        h *= hUnit;
+        h *= mapData.hUnit;
         break;
     case Coords::id:
         /* ... */
@@ -63,12 +69,14 @@ int MapFile::getMaxHeight(Coords::units u) const
 
 void MapFile::init(const QString &dirNameFile, MapData data)
 {
+    if (file != nullptr) file->close();
     delete file;
+
     QFile::remove(dirNameFile);
     mapData.W = data.W;
     mapData.L = data.L;
     mapData.H = data.H;
-    int countColumns = Wmap * Lmap;
+    int countColumns = mapData.W * mapData.L;
 
     // Размер дискрет
     mapData.lUnit = data.lUnit;
@@ -115,7 +123,21 @@ void MapFile::init(const QString &dirNameFile, MapData data)
             ds << 0;
         }
         file->write(data);
+        file->flush();
     }
+}
+
+void MapFile::close()
+{
+    file->flush();
+    file->close();
+}
+
+void MapFile::reopen()
+{
+    //
+    if (!file->open(QIODevice::ReadWrite))
+        qDebug() << "ERROR!!!!!!!!!!!!";
 }
 
 void MapFile::open(const QString &dirMapFile)
@@ -125,14 +147,17 @@ void MapFile::open(const QString &dirMapFile)
 
     //
     file = new QFile(dirMapFile);
-    file->open(QIODevice::ReadWrite);
+    if (!file->open(QIODevice::ReadWrite))
+        qDebug() << "ERROR!!!!!!!!!!!!";
 
     //
     file->seek(0); // Служеб. инф-я находится вначале
     QDataStream data(file->read(sizeOptData));
     data >> mapData;
-    Wmap = mapData.W; Lmap = mapData.L; Hmap = mapData.H;
-    qDebug() << "MapData: " << Wmap << Lmap << Hmap;
+    qDebug() << "MapData: "
+             << mapData.W
+             << mapData.L
+             << mapData.H;
 }
 
 int MapFile::getHeight(int idX, int idY) const
@@ -160,6 +185,9 @@ void MapFile::editHeightMatrix(int idXo, int idYo,
                                int w, int l,
                                int dH)
 {
+    int Wmap = mapData.W;
+    int Lmap = mapData.L;
+
     //
     int lastX = idXo + w;
     int lastY = idYo + l;
@@ -190,7 +218,7 @@ void MapFile::changeHeight(int idX, int idY, int dH)
     h += dH;
 
     if (h < 0)      h = 0;
-    if (h > Hmap-1) h = Hmap-1;
+    if (h > mapData.H - 1) h = mapData.H-1;
 
     setHeight(idX, idY, h);
 }
@@ -202,17 +230,17 @@ int MapFile::idColumnToNumByte(int idX, int idY) const
 
 int MapFile::idColumn(int idX, int idY) const
 {
-    return Lmap*idX + idY;
+    return (mapData.L*idX) + idY;
 }
 
 int MapFile::lenghtUnit() const
 {
-    return lUnit;
+    return mapData.lUnit;
 }
 
 int MapFile::heightUnit() const
 {
-    return hUnit;
+    return mapData.hUnit;
 }
 
 MapFile::~MapFile()

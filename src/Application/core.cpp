@@ -13,7 +13,10 @@ void Core::init_GIS()
 {
     readyRunProgress(3);
 
-    gis = new GIS;
+    mapsManager = new mapManager;
+    //objects.append(mapsManager);
+
+    gis = new GIS(mapsManager);
     objects.append(gis);
     gisInformer = gis->Informer();
 
@@ -52,8 +55,8 @@ void Core::init_allObj()
 
     createProjectWindow* CreateProjWin = gui->WindowCreateProject();
     connect(CreateProjWin, SIGNAL(sendDataNewProject(MapData,QString)),
-            gis,           SLOT(initMap(MapData,QString)));
-    connect(gis,           SIGNAL(finishBuildMap(int,int,int)),
+            mapsManager,   SLOT(createMap(MapData,QString)));
+    connect(mapsManager,   SIGNAL(finishCreateMap()),
             CreateProjWin, SLOT(hide()));
 
     readyRunProgress(65, "Инициализация интерфейса...");
@@ -66,7 +69,7 @@ void Core::init_GUI()
     readyRunProgress(72);
 
     //
-
+    gui->connectMapsManager(mapsManager);
     readyRunProgress(79);
 
     //

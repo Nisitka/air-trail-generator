@@ -16,6 +16,4 @@ public:
 
     //
     virtual int getHeight(int idX, int idY) const = 0;
-    virtual void setHeight(int idX, int idY,
-                           int height) = 0;
 };

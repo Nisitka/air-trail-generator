@@ -2,25 +2,26 @@
 
 #include <QDebug>
 
-GIS::GIS(): GISInformer(),
+GIS::GIS(mapManager* mapsInfo): GISInformer(),
     // По умолчанию находимся в левом верхнем углу
     idXpos(0), idYpos(0),
     Enabled(true)
 {
 
     // Отвечает за работу с рельефом карты
-    geoBuilder = new geoGenerator();
-    connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
-            this,       SLOT(setPosActionAreaDefult()));
-    connect(geoBuilder, SIGNAL(buildFinish(int,int,int)),
-            this,       SIGNAL(finishBuildMap(int,int,int)));
+    geoBuilder = new geoGenerator(mapsInfo);
+    connect(mapsInfo, SIGNAL(changedCurrentMap()),
+            this,     SLOT(updateFull()));
 
+    //
     HeightMeter* heigtMeter = this->getHeightMeter();
-
     // Отвечает за отрисовку подложки
     backPainter = new painterMapImage(heigtMeter, currentW, currentH);
-    connect(geoBuilder,  SIGNAL(buildFinish(int,int,int)),
-            backPainter, SLOT(run()));
+}
+
+void GIS::updateFull()
+{
+    setPosActionAreaDefult();
 }
 
 void GIS::setPosActionAreaDefult()
@@ -110,18 +111,6 @@ void GIS::initActionArea(int posX, int posY)
     // Сигнализируем об готовности новой области
     Enabled = true;
     this->changedActionArea(idXpos, idYpos);
-}
-
-void GIS::openMap(const QString &dirNameFile)
-{
-    geoBuilder->openMap(dirNameFile);
-}
-
-void GIS::initMap(const MapData DataMap,
-                  const QString& dirName)
-{
-    //
-    geoBuilder->initMap(DataMap, dirName);
 }
 
 void GIS::loadTerrain(const QString &dirNameFile)
