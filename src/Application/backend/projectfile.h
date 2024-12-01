@@ -24,11 +24,17 @@ public:
     void create(const QString& path);
 
     //
-    void dateFile();
+    void findingPoint();
+
+    void unloading();
+
+    void addDate(const QString& path);
+
+    void deleteDate(const QString& path);
 
     bool frontWith(const QString& s, const QString& suffix);
-    bool endsWith(const QString& s, const QString& suffix);
 
+    bool findString(const QString& s, const QString& suffix);
 
 private:
 
@@ -43,7 +49,7 @@ private:
     int countMap;
 
     //
-    int first, last;
+    int first, last, dfirst, dlast;
 
     // Карта, которая была открыта последней
     QString lastOpenMap; // путь карты на ФС
