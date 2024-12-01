@@ -2,6 +2,7 @@
 #define PROJECTFILE_H
 
 #include <QFile>
+#include <QMap>
 
 // Класс по работе с файлом проекта
 class ProjectFile
@@ -24,13 +25,17 @@ public:
     void create(const QString& path);
 
     //
-    void findingPoint();
+    enum typeObjects {RLS, plane};
 
-    void unloading();
+    QMap<int,QString> headObj;
 
-    void addDate(const QString& path);
+    void findingPoint(int& first, int& last, const QString& obj);
 
-    void deleteDate(const QString& path);
+    void unloading(QVector<QString> &stringsVector, typeObjects obj);
+
+    void addData(const QString& path);
+
+    void deleteData(const QString& path);
 
     bool frontWith(const QString& s, const QString& suffix);
 
@@ -49,7 +54,7 @@ private:
     int countMap;
 
     //
-    int first, last, dfirst, dlast;
+    int /*first*//*, last,*/ dfirst, dlast;
 
     // Карта, которая была открыта последней
     QString lastOpenMap; // путь карты на ФС
