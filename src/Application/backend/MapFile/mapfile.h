@@ -4,6 +4,8 @@
 #include <QStringList>
 #include <QFile>
 
+#include <QMutexLocker>
+
 /// Интерфейсы
 #include "./datamapgis.h"
 #include "./datamaprls.h"
@@ -63,6 +65,8 @@ public:
     void changeHeight(int idX, int idY, int dH);
 
 private:
+
+    mutable QMutex mutex;
 
     // Расчет размеров полей файла
     void setSizeByteData();

@@ -162,6 +162,8 @@ void MapFile::open(const QString &dirMapFile)
 
 int MapFile::getHeight(int idX, int idY) const
 {
+    QMutexLocker ml(&mutex);
+
     int h;
 
     file->seek(idColumnToNumByte(idX, idY));
@@ -174,6 +176,8 @@ int MapFile::getHeight(int idX, int idY) const
 void MapFile::setHeight(int idX, int idY,
                         int height)
 {
+    //QMutexLocker ml(&mutex);
+
     file->seek(idColumnToNumByte(idX, idY));
     QByteArray data;
     QDataStream ds(&data, QIODevice::WriteOnly);
@@ -185,6 +189,8 @@ void MapFile::editHeightMatrix(int idXo, int idYo,
                                int w, int l,
                                int dH)
 {
+    //QMutexLocker ml(&mutex);
+
     int Wmap = mapData.W;
     int Lmap = mapData.L;
 
@@ -217,7 +223,7 @@ void MapFile::changeHeight(int idX, int idY, int dH)
 
     h += dH;
 
-    if (h < 0)      h = 0;
+    if (h < 0)             h = 0;
     if (h > mapData.H - 1) h = mapData.H-1;
 
     setHeight(idX, idY, h);

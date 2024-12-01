@@ -48,11 +48,12 @@ void map3DVisWindow::updatePointsInterZD(QVector<QVector<QVector<QVector3D> > >*
     //visMap->updateZD(points);
 }
 
+/// ************************************
 void map3DVisWindow::setVisRectDef()
 {
-//    visMap->initializeTerrain(0, 0,
-//                              300,
-//                              300);
+    visMap->initializeTerrain(0, 0,
+                              300,
+                              300);
 }
 
 void map3DVisWindow::setVisRect(int idXo, int idYo, int W, int L)
