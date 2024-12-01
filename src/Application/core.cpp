@@ -37,6 +37,9 @@ void Core::init_allObj()
     // Испускатель лучей
     RayTracer = new TracerLight(HeightMap);
 
+    //
+    projectFils = new ProjectFile();
+
     // Инициализация менеджера РЛС
     mRLS = new managerRLS(HeightMap);
     objects.append(mRLS);

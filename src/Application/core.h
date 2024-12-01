@@ -17,6 +17,8 @@
 #include "backend/GIS/gisinformer.h"
 #include "backend/tracerlight.h"
 
+#include "backend/projectfile.h"
+
 // ядро приложения
 class Core : public QObject
 {
@@ -61,6 +63,9 @@ private:
 
     //
     TracerLight* RayTracer;
+
+    //
+    ProjectFile* projectFils;
 
     // Менеджер РЛС
     managerRLS* mRLS;

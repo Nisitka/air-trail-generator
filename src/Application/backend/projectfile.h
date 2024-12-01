@@ -23,6 +23,13 @@ public:
     //
     void create(const QString& path);
 
+    //
+    void dateFile();
+
+    bool frontWith(const QString& s, const QString& suffix);
+    bool endsWith(const QString& s, const QString& suffix);
+
+
 private:
 
     // Ошибка
@@ -34,6 +41,9 @@ private:
 
     //
     int countMap;
+
+    //
+    int first, last;
 
     // Карта, которая была открыта последней
     QString lastOpenMap; // путь карты на ФС
