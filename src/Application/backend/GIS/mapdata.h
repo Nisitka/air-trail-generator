@@ -14,6 +14,10 @@ public:
     int W;
     int L;
     int H;
+
+    // Размеры дискретпространства
+    int lUnit = 20;
+    int hUnit = 20;
 };
 
 #endif // MAPDATA_H

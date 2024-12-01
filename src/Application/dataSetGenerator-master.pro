@@ -89,7 +89,8 @@ SOURCES += main.cpp\
     backend/projectmanager.cpp \
     backend/applicationmanager.cpp \
     backend/projectfile.cpp \
-    GUI/managermapswindow.cpp
+    GUI/managermapswindow.cpp \
+    backend/MapFile/mapmanager.cpp
 
 HEADERS  += \
     core.h \
@@ -179,7 +180,10 @@ HEADERS  += \
     backend/projectmanager.h \
     backend/applicationmanager.h \
     backend/projectfile.h \
-    GUI/managermapswindow.h
+    GUI/managermapswindow.h \
+    backend/MapFile/mapmanager.h \
+    backend/MapFile/datamaprls.h \
+    backend/MapFile/mapcreator.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \

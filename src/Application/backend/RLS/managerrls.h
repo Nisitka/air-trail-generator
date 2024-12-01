@@ -74,7 +74,7 @@ public:
 
 private:
 
-    //
+    // Матрица высот
     HeightMeter* heightInfo;
 
     // все РЛС

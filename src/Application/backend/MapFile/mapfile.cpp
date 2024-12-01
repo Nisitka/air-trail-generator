@@ -2,19 +2,34 @@
 
 #include <QDebug>
 
-MapFile::MapFile()
+MapFile::MapFile():
+    file(nullptr)
+{
+    setSizeByteData();
+}
+
+MapFile::MapFile(const QString &dirNameFile, MapData data):
+    file(nullptr)
+{
+    setSizeByteData();
+
+    init(dirNameFile, data);
+}
+
+MapFile::MapFile(const QString &dirNameFile):
+    file(nullptr)
+{
+    setSizeByteData();
+
+    open(dirNameFile);
+}
+
+void MapFile::setSizeByteData()
 {
     // Размер дискреты в байт
     sizeColumn = 4;
 
-    // Размеры дискретпространства
-    lUnit = 20;
-    hUnit = 20;
-
-    //
-    file = nullptr;
-
-    // Сразу узнаем размер служебной информации карты в байт
+    // Узнаем размер служебной информации карты в байт
     QByteArray data;
     QDataStream ds(&data, QIODevice::ReadWrite);
     ds << mapData;
@@ -46,13 +61,18 @@ int MapFile::getMaxHeight(Coords::units u) const
     return h;
 }
 
-void MapFile::init(const QString &dirNameFile,
-                   int W, int L, int H)
+void MapFile::init(const QString &dirNameFile, MapData data)
 {
     delete file;
     QFile::remove(dirNameFile);
-    Wmap = W; Lmap = L; Hmap = H;
+    mapData.W = data.W;
+    mapData.L = data.L;
+    mapData.H = data.H;
     int countColumns = Wmap * Lmap;
+
+    // Размер дискрет
+    mapData.lUnit = data.lUnit;
+    mapData.hUnit = data.hUnit;
 
     file = new QFile(dirNameFile);
 
@@ -79,7 +99,6 @@ void MapFile::init(const QString &dirNameFile,
     // Записываем служебную информацию
     QByteArray optData;
     QDataStream dStream(&optData, QIODevice::ReadWrite);
-    mapData.W = Wmap; mapData.H = Hmap; mapData.L = Lmap;
     dStream << mapData;
     //qDebug() << optData.size();
     file->write(optData);

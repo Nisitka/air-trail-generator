@@ -1,21 +1,26 @@
 #ifndef MAPFILE_H
 #define MAPFILE_H
 
-#include <QString>
+#include <QStringList>
 #include <QFile>
 
 /// Интерфейсы
 #include "./datamapgis.h"
+#include "./datamaprls.h"
 
 #include "../GIS/coords.h"
 #include "../GIS/mapdata.h"
 
 // Класс по работе с файлом-картой
-class MapFile:             // Инткрфейсы:
-        public DataMapGIS  //   Для работы с пространством
+class MapFile:              // Инткрфейсы:
+        public DataMapGIS,  //  Для работы с пространством
+        public DataMapRLS   //  Для работы с РЛС
 {
 public:
+
     MapFile();
+    MapFile(const QString &dirNameFile, MapData data); // Создаем новый файл
+    MapFile(const QString &dirNameFile); // Открываем существующий файл
     ~MapFile();
 
     // Узнать размеры карты
@@ -23,8 +28,7 @@ public:
     int getMaxHeight(Coords::units u) const;
 
     //
-    void init(const QString& dirNameFile,
-              int W, int L, int H);
+    void init(const QString &dirNameFile, MapData data);
 
     //
     void open(const QString &dirMapFile);
@@ -53,6 +57,12 @@ public:
 
 private:
 
+    // Расчет размеров полей файла
+    void setSizeByteData();
+
+    // Список РЛС, поставленных на карту
+    QStringList namesRLS;
+
     // Кол-во байтов до столбца
     int idColumnToNumByte(int idX, int idY) const;
 
@@ -60,7 +70,6 @@ private:
     int idColumn(int idX, int idY) const;
 
     //
-    int Wmap, Lmap, Hmap;
     QFile* file;
 
     // Размеры блоков в метрах
