@@ -9,9 +9,11 @@ ProjectFile::ProjectFile():
     proFile(nullptr),
     codeError(none)
 {
-    proFile = new QFile("bd.txt");
-    proFile->open(QIODevice::ReadOnly);
-    findingPoint();
+
+    headObj[RLS] = "RLS";
+    headObj[plane] = "BPLA";
+
+    open("bd.txt");
 }
 
 int ProjectFile::lastError(QString &infoError_) const
@@ -37,8 +39,10 @@ bool ProjectFile::open(const QString &path)
         {
             proFile = new QFile(path);
             if (proFile->open(QIODevice::ReadWrite)){
+                QVector<QString> stringsVector;
+                unloading(stringsVector, plane);
                 isOpen = true;
-                findingPoint();
+                //findingPoint();
             }
             else
                 infoError = "Не удалось открыть файл!";
@@ -60,7 +64,7 @@ void ProjectFile::create(const QString &path)
 
 }
 
-void ProjectFile::findingPoint()
+void ProjectFile::findingPoint(int &first, int &last, const QString &obj)
 {
     //----!Для подсчёта общего кол-ва строк!-----
     //    int line_count = 0;
@@ -76,8 +80,8 @@ void ProjectFile::findingPoint()
     //    qDebug() << line_count;
     //----------------------------------------
 
-    first = 0;
-    last = 0;
+    //first = 0;
+    //last = 0;
     int line_count = 0;
     QTextStream in(proFile);
     QString line[1000];
@@ -90,36 +94,37 @@ void ProjectFile::findingPoint()
         line_count++;
 
         if(!(str.size() == 0)){
-            if (frontWith(str, "BPLA"))
+            if (frontWith(str, obj))
             {
                 first = line_count;
-                //qDebug() << first;
+                qDebug() << first;
             }
             if (frontWith(str, "!"))
             {
                 last = line_count;
-                //qDebug() << last;
+                qDebug() << last;
                 break;
             }
         }
     }
-    unloading();
+    //unloading();
 }
 
-void ProjectFile::unloading()
+void ProjectFile::unloading(QVector<QString>& stringsVector, typeObjects obj)
 {
-
+    int f,l;
+    findingPoint(f,l,headObj.value(obj));
     QTextStream in(proFile);
-    QVector<QString> stringsVector;
+    //QVector<QString> stringsVector;
     in.seek(0);
     QString str;
-    for(int n = 1; n <= last;){
+    for(int n = 1; n <= l;){
 
         while(!in.atEnd())
         {
             str = in.readLine();
             if(!(str.size() == 0)){
-                if (n > first && n < last)
+                if (n > f && n < l)
                 {
                     stringsVector.push_back(str);
                 }
@@ -129,37 +134,37 @@ void ProjectFile::unloading()
     }
     for (const QString& answer : stringsVector)
     {
-        //qDebug() << answer << endl;
+        qDebug() << answer << endl;
     }
     proFile->close();
 
     //qDebug() << last - first - 2;
 }
 
-void ProjectFile::addDate(const QString &path)
+void ProjectFile::addData(const QString &path)
 {
-    QStringList strList;
-    if ((proFile->exists()) && (proFile->open(QIODevice::ReadOnly)))
-    {
-        while (!proFile->atEnd())
-        {
-            strList << proFile->readLine();
-        }
-        proFile->close();
-    }
-    if ((proFile->exists()) && (proFile->open(QIODevice::WriteOnly)))
-    {
-        strList.insert(last - 2, ""+ path +"\n");
-        QTextStream stream(proFile);
-        foreach (QString s, strList)
-        {
-            stream << s;
-        }
-        proFile->close();
-    }
+//    QStringList strList;
+//    if ((proFile->exists()) && (proFile->open(QIODevice::ReadOnly)))
+//    {
+//        while (!proFile->atEnd())
+//        {
+//            strList << proFile->readLine();
+//        }
+//        proFile->close();
+//    }
+//    if ((proFile->exists()) && (proFile->open(QIODevice::WriteOnly)))
+//    {
+//        strList.insert(last - 2, ""+ path +"\n");
+//        QTextStream stream(proFile);
+//        foreach (QString s, strList)
+//        {
+//            stream << s;
+//        }
+//        proFile->close();
+//    }
 }
 
-void ProjectFile::deleteDate(const QString &path)
+void ProjectFile::deleteData(const QString &path)
 {
     proFile->open(QIODevice::ReadOnly);
     QTextStream in(proFile);
