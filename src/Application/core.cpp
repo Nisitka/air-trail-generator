@@ -33,15 +33,22 @@ void Core::init_allObj()
 
     readyRunProgress(36, "Загрузка менеджера РЛС...");
 
-    //
+    // Информатор высоты
     HeightMeter* HeightMap = gis->getHeightMeter();
-
 
     // Испускатель лучей
     RayTracer = new TracerLight(HeightMap);
 
-    //
-    projectFils = new ProjectFile();
+    // Класс по работе с файлом проекта
+    projectFils = new ProjectFile;
+    /// Для теста
+    if (!projectFils->open("bd.txt"))
+    {
+        QString error;
+        projectFils->lastError(error);
+        qDebug() << error;
+    }
+
 
     // Инициализация менеджера РЛС
     mRLS = new managerRLS(HeightMap);

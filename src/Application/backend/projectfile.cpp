@@ -10,10 +10,9 @@ ProjectFile::ProjectFile():
     codeError(none)
 {
 
+    // Назначаем теги для сущностей
     headObj[RLS] = "RLS";
     headObj[plane] = "BPLA";
-
-    open("bd.txt");
 }
 
 int ProjectFile::lastError(QString &infoError_) const
@@ -64,7 +63,8 @@ void ProjectFile::create(const QString &path)
 
 }
 
-void ProjectFile::findingPoint(int &first, int &last, const QString &obj)
+void ProjectFile::findingPoint(int &first, int &last,
+                               const QString &obj)
 {
     //----!Для подсчёта общего кол-ва строк!-----
     //    int line_count = 0;
@@ -215,15 +215,6 @@ void ProjectFile::deleteData(const QString &path)
     proFile->close();
 }
 
-ProjectFile::~ProjectFile()
-{
-    if (proFile != nullptr)
-    {
-        proFile->close();
-        delete proFile;
-    }
-}
-
 bool ProjectFile::frontWith(const QString &s, const QString &suffix)
 {
     return s.at(0) == suffix.at(0);
@@ -232,4 +223,13 @@ bool ProjectFile::frontWith(const QString &s, const QString &suffix)
 bool ProjectFile::findString(const QString &s, const QString &suffix)
 {
     return s == suffix;
+}
+
+ProjectFile::~ProjectFile()
+{
+    if (proFile != nullptr)
+    {
+        proFile->close();
+        delete proFile;
+    }
 }
