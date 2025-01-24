@@ -31,20 +31,31 @@ bool ProjectFile::open(const QString &path)
 {
     bool isOpen = false;
 
-    //
+    // Если существует такой путь
     if (QFileInfo::exists(path))
-    {
+    {   // и он ведет к файлу
         if (QFileInfo(path).isFile())
-        {
-            proFile = new QFile(path);
-            if (proFile->open(QIODevice::ReadWrite)){
-                QVector<QString> stringsVector;
-                unloading(stringsVector, plane);
-                isOpen = true;
-                //findingPoint();
+        {   // и удалось закрыть предыдущий файл проекта
+            if (this->close())
+            {   // то пытаемся открыть файл
+                proFile = new QFile(path);
+                if (proFile->open(QIODevice::ReadWrite)){
+
+                    /// --- Test --------------------
+                    QVector<QString> stringsVector;
+                    unloading(stringsVector, plane);
+                    /// -----------------------------
+
+                    isOpen = true;
+                }
+                else
+                {
+                    delete proFile;
+                    infoError = "Не удалось открыть файл!";
+                }
             }
             else
-                infoError = "Не удалось открыть файл!";
+                infoError = "Не удалось закрыть предыдущий файл!";
         }
         else
             infoError = "Выбранный вами путь не является файлом!";
@@ -53,14 +64,53 @@ bool ProjectFile::open(const QString &path)
         infoError = "Выбранный вами путь несуществует!";
 
     // Если файл не удалось открыть, то сообщаем почему
-    if (!isOpen) codeError = openFile;
+    if (!isOpen) codeError = openFile; // код ошибки
 
     return isOpen;
 }
 
-void ProjectFile::create(const QString &path)
+bool ProjectFile::close()
 {
+    bool isClose = false;
 
+    if (proFile != nullptr)
+    {
+        proFile->close();
+        delete proFile;
+    }
+    isClose = true;
+
+    return isClose;
+}
+
+bool ProjectFile::create(const QString &path)
+{
+    bool isCreated = false;
+
+    //
+    if (this->close())
+    {
+        proFile = new QFile(path);
+        if (proFile->open(QIODevice::ReadWrite))
+        {
+            // Приводим файл к стандартному виду
+
+
+            isCreated = true;
+        }
+        else
+        {
+            delete proFile;
+            infoError = "Не удалось создать файл!";
+        }
+    }
+    else
+        infoError = "Не удалось закрыть предыдущий файл!";
+
+    // Если файл не удалось создать файл, то сообщаем почему
+    if (!isCreated) codeError = buildFile; // код ошибки
+
+    return isCreated;
 }
 
 void ProjectFile::findingPoint(int &first, int &last,
@@ -80,65 +130,75 @@ void ProjectFile::findingPoint(int &first, int &last,
     //    qDebug() << line_count;
     //----------------------------------------
 
-    //first = 0;
-    //last = 0;
-    int line_count = 0;
+    first = -1;
+    last  = -1;
+    int idLine = 0;
     QTextStream in(proFile);
-    QString line[1000];
     QString str;
 
-    //in.seek(0);
+    // Считываем все строки из файла
     while(!in.atEnd())
     {
+        // Текущая строка
         str = in.readLine();
-        line_count++;
 
+        // Только для не пустых строк
         if(!(str.size() == 0)){
+
+            // Ищем заголовок блока
             if (frontWith(str, obj))
             {
-                first = line_count;
+                first = idLine + 1;
                 qDebug() << first;
             }
+
+            // Ищем конец блока
             if (frontWith(str, "!"))
             {
-                last = line_count;
+                last = idLine - 1;
                 qDebug() << last;
                 break;
             }
         }
+
+        //
+        idLine++;
     }
-    //unloading();
 }
 
-void ProjectFile::unloading(QVector<QString>& stringsVector, typeObjects obj)
+void ProjectFile::unloading(QVector<QString>& stringsVector,
+                            typeObjects obj)
 {
+    // Узнаем с какой и по какую строку содержится информация об сущности
     int f,l;
-    findingPoint(f,l,headObj.value(obj));
-    QTextStream in(proFile);
-    //QVector<QString> stringsVector;
-    in.seek(0);
-    QString str;
-    for(int n = 1; n <= l;){
+    findingPoint(f,l,
+                 headObj.value(obj));
 
-        while(!in.atEnd())
-        {
-            str = in.readLine();
-            if(!(str.size() == 0)){
-                if (n > f && n < l)
-                {
-                    stringsVector.push_back(str);
-                }
-            }
-            n++;
-        }
+    //
+    QTextStream in(proFile);
+    QString str;
+
+    // Доходим до нужной строки
+    for (int i=0; i<(f-1); i++)
+        in.readLine();
+
+    // Считываем нужные (не пустые) строки
+    for (int id=f; id<=l; id++)
+    {
+        // Очередная строка
+        str = in.readLine();
+
+        // Если строка не пустая, то добавляем её
+        if (str.size() > 0)
+            stringsVector.append(str);
     }
+
+    /// --- Тестовый вывод нужных строк ---------
     for (const QString& answer : stringsVector)
     {
         qDebug() << answer << endl;
     }
-    proFile->close();
-
-    //qDebug() << last - first - 2;
+    /// -----------------------------------------
 }
 
 void ProjectFile::addData(const QString &path)

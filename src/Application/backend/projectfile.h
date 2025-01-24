@@ -21,8 +21,11 @@ public:
     // Открыть файл проекта
     bool open(const QString& path);
 
+    // Закрыть файл проекта
+    bool close();
+
     // Создать файл проекта
-    void create(const QString& path);
+    bool create(const QString& path);
 
     //
     enum typeObjects {RLS, plane};
