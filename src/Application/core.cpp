@@ -42,13 +42,36 @@ void Core::init_allObj()
     // Класс по работе с файлом проекта
     projectFils = new ProjectFile;
     /// Для теста
-    if (!projectFils->open("bd.txt"))
+    if (!projectFils->create(QApplication::applicationDirPath() + "//bd.txt"))
     {
         QString error;
         projectFils->lastError(error);
         qDebug() << error;
     }
+    else
+    {
+        if(!projectFils->addData(ProjectFile::plane, "drone1"))
+        {
+            QString error;
+            projectFils->lastError(error);
+            qDebug() << error;
+        }
 
+        if(!projectFils->addData(ProjectFile::RLS,  "rls1"))
+        {
+            QString error;
+            projectFils->lastError(error);
+            qDebug() << error;
+        }
+
+        if(!projectFils->addData(ProjectFile::plane, "drone2"))
+        {
+            QString error;
+            projectFils->lastError(error);
+            qDebug() << error;
+        }
+    }
+    /// -------------------------------------------------------------------------
 
     // Инициализация менеджера РЛС
     mRLS = new managerRLS(HeightMap);

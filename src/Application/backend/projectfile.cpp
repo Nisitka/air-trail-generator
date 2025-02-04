@@ -11,8 +11,8 @@ ProjectFile::ProjectFile():
 {
 
     // Назначаем теги для сущностей
-    headObj[RLS] = "RLS";
-    headObj[plane] = "BPLA";
+    headObj[RLS]   = "RLS";
+    headObj[plane] = "PLANES";
 }
 
 int ProjectFile::lastError(QString &infoError_) const
@@ -65,6 +65,7 @@ bool ProjectFile::open(const QString &path)
 
     // Если файл не удалось открыть, то сообщаем почему
     if (!isOpen) codeError = openFile; // код ошибки
+    else dirNameFile = path;
 
     return isOpen;
 }
@@ -90,11 +91,21 @@ bool ProjectFile::create(const QString &path)
     //
     if (this->close())
     {
+        // Если такой файл уже существует
+        if (QFileInfo::exists(path))
+            QFile::remove(path);
+
+        // Создаем новый файл проекта
         proFile = new QFile(path);
         if (proFile->open(QIODevice::ReadWrite))
         {
             // Приводим файл к стандартному виду
-
+            QTextStream stream(proFile);
+            QStringList strList = headObj.values();
+            foreach (QString str, strList)
+            {
+                stream << str + "\n" << "!\n" << "  \n";
+            }
 
             isCreated = true;
         }
@@ -109,6 +120,7 @@ bool ProjectFile::create(const QString &path)
 
     // Если файл не удалось создать файл, то сообщаем почему
     if (!isCreated) codeError = buildFile; // код ошибки
+    else dirNameFile = path;
 
     return isCreated;
 }
@@ -116,20 +128,6 @@ bool ProjectFile::create(const QString &path)
 void ProjectFile::findingPoint(int &first, int &last,
                                const QString &obj)
 {
-    //----!Для подсчёта общего кол-ва строк!-----
-    //    int line_count = 0;
-
-    //    QString line[1000]; //???
-    //    QTextStream in(proFile);
-    //    while(!in.atEnd())
-    //    {
-    //        line[line_count]=in.readLine();
-    //        line_count++;
-    //    }
-
-    //    qDebug() << line_count;
-    //----------------------------------------
-
     first = -1;
     last  = -1;
     int idLine = 0;
@@ -137,6 +135,8 @@ void ProjectFile::findingPoint(int &first, int &last,
     QString str;
 
     // Считываем все строки из файла
+    in.seek(0);
+    bool headIsFound = false;
     while(!in.atEnd())
     {
         // Текущая строка
@@ -146,18 +146,20 @@ void ProjectFile::findingPoint(int &first, int &last,
         if(!(str.size() == 0)){
 
             // Ищем заголовок блока
-            if (frontWith(str, obj))
+            if (containsTag(str, obj))
             {
-                first = idLine + 1;
-                qDebug() << first;
+                first = idLine;
+                headIsFound = true;
             }
 
             // Ищем конец блока
-            if (frontWith(str, "!"))
+            if (headIsFound) // если заголовок блока найден
             {
-                last = idLine - 1;
-                qDebug() << last;
-                break;
+                if (containsTag(str, "!"))
+                {
+                    last = idLine;
+                    break;
+                }
             }
         }
 
@@ -201,88 +203,93 @@ void ProjectFile::unloading(QVector<QString>& stringsVector,
     /// -----------------------------------------
 }
 
-void ProjectFile::addData(const QString &path)
+bool ProjectFile::addData(typeObjects t, const QString &data)
 {
-//    QStringList strList;
-//    if ((proFile->exists()) && (proFile->open(QIODevice::ReadOnly)))
-//    {
-//        while (!proFile->atEnd())
-//        {
-//            strList << proFile->readLine();
-//        }
-//        proFile->close();
-//    }
-//    if ((proFile->exists()) && (proFile->open(QIODevice::WriteOnly)))
-//    {
-//        strList.insert(last - 2, ""+ path +"\n");
-//        QTextStream stream(proFile);
-//        foreach (QString s, strList)
-//        {
-//            stream << s;
-//        }
-//        proFile->close();
-//    }
+    bool isAppend = false;
+    QFile* newFile = nullptr;
+
+    //
+    if (proFile->isOpen())
+    {
+        // Считываем текущую информацию
+        QStringList currentData;
+        proFile->seek(0); // Перемещаемся обязательно в начало
+        while (!proFile->atEnd())
+            currentData.append(QString(proFile->readLine()));
+
+        // Узнаем в каком промежутке находится нужная нам сущность
+        int f; int l;
+        findingPoint(f, l, headObj.value(t));
+
+        // Добавляем данные во временный буфер
+        currentData.insert(l, data + "\n"); // Строку добавляем в конец
+
+        // Создаем копию файла проекта, который в случае удачной записи станет основным
+        newFile = new QFile(tmpNameFile);
+        if (newFile->open(QIODevice::ReadWrite))
+        {
+            // Пишем всю информацию уже с добавленной
+            QTextStream stream(newFile);
+            foreach (QString s, currentData)
+                stream << s; // Не добаляем переход на новую строку, т.к. он уже есть
+
+            // Если удалось записать всю информацию в новый файл,
+            //      то делаем его основным
+            if (newFile->flush()) // Записываем данные на диск
+            {
+                if (proFile->remove())
+                {
+                    delete proFile;
+
+                    // Даем ему название исходного файла проекта
+                    if (newFile->rename(dirNameFile))
+                    {   // повторно открываем для работы с ним
+                        if (newFile->open(QIODevice::ReadWrite))
+                        {
+                            // и только тогда можно считать его файлом проекта
+                            proFile = (QFile*)newFile;
+                            isAppend = true;
+                        }
+                        else
+                            setError(openFile, "Не удалось открыть измененный файл проекта");
+                    }
+                    else
+                        setError(renameFile, "Не удалось переименовать обновленный файл проекта, \
+                                              файл проекта остался по следующему пути:" + newFile->fileName());
+                }
+                else
+                {   // Если не удалось удалить старый файл с целью замены, то оставляем как было
+                    setError(delFile, "не удалось удалить старый файл проекта");
+                    newFile->remove();
+                    delete newFile;
+                }
+            }
+            else
+                setError(writeData, "Не удалось записать данные во временный файл");
+        }
+        else
+            setError(buildFile, "Не удалось создать временный файл проекта");
+    }
+    else // Если файл не удалось открыть
+        setError(openFile, "Файл проекта закрыт");
+
+    return isAppend;
+}
+
+void ProjectFile::setError(typeError t, const QString &info)
+{
+    codeError = t;
+    infoError = info;
 }
 
 void ProjectFile::deleteData(const QString &path)
 {
-    proFile->open(QIODevice::ReadOnly);
-    QTextStream in(proFile);
-    QString line[1000];
-    QString str;
-    QStringList strList;
-    in.seek(0);
-    int line_count = 0;
-    dfirst = 0;
-    dlast = 0;
 
-    while(!in.atEnd())
-    {
-        str = in.readLine();
-        line_count++;
-
-        if(!(str.size() == 0)){
-            if (findString(str, "BPLA"))
-            {
-                dfirst = line_count;
-                //qDebug() << dfirst;
-            }
-            if (findString(str, ""+ path +""))
-            {
-                dlast = line_count;
-                //qDebug() << dlast;
-                break;
-            }
-        }
-    }
-
-    proFile->close();
-
-    if (proFile->open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QTextStream edit(proFile);
-        while (!edit.atEnd()) strList.push_back(edit.readLine());
-    }
-    proFile->close();
-
-    strList.removeAt(dlast - 1);
-
-    if (proFile->open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        QTextStream edit(proFile);
-        for (int i=0; i<strList.size(); i++) edit << strList[i] << endl;
-    }
-    proFile->close();
 }
 
-bool ProjectFile::frontWith(const QString &s, const QString &suffix)
+bool ProjectFile::containsTag(const QString &s, const QString &tag)
 {
-    return s.at(0) == suffix.at(0);
-}
-
-bool ProjectFile::findString(const QString &s, const QString &suffix)
-{
-    return s == suffix;
+    return s == tag;
 }
 
 ProjectFile::~ProjectFile()

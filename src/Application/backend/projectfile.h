@@ -12,7 +12,10 @@ public:
     ~ProjectFile();
 
     // Коды ошибок
-    enum typeError{none, openFile, buildFile}; // и т.д.
+    enum typeError{none, openFile, delFile, buildFile, renameFile, writeData}; // и т.д.
+
+    //
+    enum typeObjects {RLS, plane};
 
     // Узнать последнию ошибку
     int lastError(QString& infoError) const;
@@ -24,13 +27,23 @@ public:
     // Закрыть файл проекта
     bool close();
 
-    // Создать файл проекта
+    // Создать файл проекта (с заменой)
     bool create(const QString& path);
 
-    //
-    enum typeObjects {RLS, plane};
+    // Добавить записть
+    bool addData(typeObjects t,        // В какой заголовок
+                 const QString& data); // Какую строчку
 
 private:
+
+    //
+    const QString tmpNameFile = "tmpPro.txt";
+
+    //
+    void setError(typeError t, const QString& info);
+
+    //
+    QString dirNameFile;
 
     // Теги-заголовки для сущностей, необходимых для проекта
     QMap<int,QString> headObj;
@@ -43,13 +56,10 @@ private:
     void unloading(QVector<QString>& stringsData, // куда выгружаем
                    typeObjects obj);              // что (по тегу)
 
-    void addData(const QString& path);
-
     void deleteData(const QString& path);
 
     //
-    bool frontWith(const QString& s, const QString& suffix);
-    bool findString(const QString& s, const QString& suffix);
+    bool containsTag(const QString& s, const QString& tag);
 
     // Ошибка
     int codeError;
