@@ -12,7 +12,8 @@ public:
     ~ProjectFile();
 
     // Коды ошибок
-    enum typeError{none, openFile, delFile, buildFile, renameFile, writeData}; // и т.д.
+    enum typeError{none, openFile, delFile, buildFile, renameFile,
+                   writeData, readFile}; // и т.д.
 
     //
     enum typeObjects {RLS, plane};
@@ -33,6 +34,10 @@ public:
     // Добавить записть
     bool addData(typeObjects t,        // В какой заголовок
                  const QString& data); // Какую строчку
+
+    // Удалить данные
+    bool deleteData(typeObjects t,        // Категория данных
+                    const QString& data); // Данные
 
 private:
 
@@ -55,8 +60,6 @@ private:
     // Выгрузить строковые данные из файла проекта
     void unloading(QVector<QString>& stringsData, // куда выгружаем
                    typeObjects obj);              // что (по тегу)
-
-    void deleteData(const QString& path);
 
     //
     bool containsTag(const QString& s, const QString& tag);

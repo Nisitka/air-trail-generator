@@ -175,17 +175,19 @@ void ProjectFile::unloading(QVector<QString>& stringsVector,
     int f,l;
     findingPoint(f,l,
                  headObj.value(obj));
+    qDebug() << f << l;
 
     //
     QTextStream in(proFile);
+    in.seek(0);
     QString str;
 
     // Доходим до нужной строки
-    for (int i=0; i<(f-1); i++)
+    for (int i=0; i<(f+1); i++)
         in.readLine();
 
     // Считываем нужные (не пустые) строки
-    for (int id=f; id<=l; id++)
+    for (int id=(f+1); id<l; id++)
     {
         // Очередная строка
         str = in.readLine();
@@ -196,10 +198,7 @@ void ProjectFile::unloading(QVector<QString>& stringsVector,
     }
 
     /// --- Тестовый вывод нужных строк ---------
-    for (const QString& answer : stringsVector)
-    {
-        qDebug() << answer << endl;
-    }
+    qDebug() << stringsVector;
     /// -----------------------------------------
 }
 
@@ -282,9 +281,102 @@ void ProjectFile::setError(typeError t, const QString &info)
     infoError = info;
 }
 
-void ProjectFile::deleteData(const QString &path)
+bool ProjectFile::deleteData(typeObjects t, const QString &data)
 {
+    bool isDeleted = false;
+    QFile* newFile = nullptr;
 
+    //
+    if (proFile->isOpen())
+    {
+        // Узнаем в каком промежутке находится нужная нам сущность
+        int f; int l;
+        findingPoint(f, l, headObj.value(t));
+
+        // Считываем текущую информацию
+        QStringList currentData;
+        proFile->seek(0); // Перемещаемся обязательно в начало
+
+        // И ищем информацию для удаления
+        int idLine = 0;
+        int idDelLine = -1;
+        bool isFound = false;
+        while (!proFile->atEnd())
+        {
+            QString str = QString(proFile->readLine());
+            currentData.append(str);
+            if (!isFound && idLine >= f && idLine <= l)
+            {
+                if (data + "\n" == str)
+                {
+                    idDelLine = idLine;
+                    isFound = true;
+                    break;
+                }
+            }
+
+            idLine++;
+        }
+
+        // Только если нужную нам информацию нашли в файле
+        if (isFound)
+        {
+            // Удаляем данные
+            currentData.removeAt(idDelLine);
+
+            // Создаем копию файла проекта, который в случае удачной записи станет основным
+            newFile = new QFile(tmpNameFile);
+            if (newFile->open(QIODevice::ReadWrite))
+            {
+                // Пишем всю информацию уже с добавленной
+                QTextStream stream(newFile);
+                foreach (QString s, currentData)
+                    stream << s; // Не добаляем переход на новую строку, т.к. он уже есть
+
+                // Если удалось записать всю информацию в новый файл,
+                //      то делаем его основным
+                if (newFile->flush()) // Записываем данные на диск
+                {
+                    if (proFile->remove())
+                    {
+                        delete proFile;
+
+                        // Даем ему название исходного файла проекта
+                        if (newFile->rename(dirNameFile))
+                        {   // повторно открываем для работы с ним
+                            if (newFile->open(QIODevice::ReadWrite))
+                            {
+                                // и только тогда можно считать его файлом проекта
+                                proFile = (QFile*)newFile;
+                                isDeleted = true;
+                            }
+                            else
+                                setError(openFile, "Не удалось открыть измененный файл проекта");
+                        }
+                        else
+                            setError(renameFile, "Не удалось переименовать обновленный файл проекта, \
+                                                  файл проекта остался по следующему пути:" + newFile->fileName());
+                    }
+                    else
+                    {   // Если не удалось удалить старый файл с целью замены, то оставляем как было
+                        setError(delFile, "не удалось удалить старый файл проекта");
+                        newFile->remove();
+                        delete newFile;
+                    }
+                }
+                else
+                    setError(writeData, "Не удалось записать данные во временный файл");
+            }
+            else
+                setError(buildFile, "Не удалось создать временный файл проекта");
+        }
+        else
+            setError(readFile, "Не удалось найти нужную информацию");
+    }
+    else // Если файл не удалось открыть
+        setError(openFile, "Файл проекта закрыт");
+
+    return isDeleted;
 }
 
 bool ProjectFile::containsTag(const QString &s, const QString &tag)

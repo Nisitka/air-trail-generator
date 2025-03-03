@@ -41,8 +41,37 @@ void Core::init_allObj()
 
     // Класс по работе с файлом проекта
     projectFils = new ProjectFile;
-    /// Для теста
-    if (!projectFils->create(QApplication::applicationDirPath() + "//bd.txt"))
+    /// ----------------- Для теста --------------------------------------------
+//    if (!projectFils->create(QApplication::applicationDirPath() + "//bd.txt"))
+//    {
+//        QString error;
+//        projectFils->lastError(error);
+//        qDebug() << error;
+//    }
+//    else
+//    {
+//        if(!projectFils->addData(ProjectFile::plane, "drone1"))
+//        {
+//            QString error;
+//            projectFils->lastError(error);
+//            qDebug() << error;
+//        }
+
+//        if(!projectFils->addData(ProjectFile::RLS,  "rls1"))
+//        {
+//            QString error;
+//            projectFils->lastError(error);
+//            qDebug() << error;
+//        }
+
+//        if(!projectFils->addData(ProjectFile::plane, "drone2"))
+//        {
+//            QString error;
+//            projectFils->lastError(error);
+//            qDebug() << error;
+//        }
+//    }
+    if (!projectFils->open(QApplication::applicationDirPath() + "//bd.txt"))
     {
         QString error;
         projectFils->lastError(error);
@@ -50,26 +79,33 @@ void Core::init_allObj()
     }
     else
     {
-        if(!projectFils->addData(ProjectFile::plane, "drone1"))
-        {
-            QString error;
-            projectFils->lastError(error);
-            qDebug() << error;
-        }
+//        if (!projectFils->deleteData(ProjectFile::plane, "drone1"))
+//        {
+//            QString error;
+//            projectFils->lastError(error);
+//            qDebug() << error;
+//        }
 
-        if(!projectFils->addData(ProjectFile::RLS,  "rls1"))
-        {
-            QString error;
-            projectFils->lastError(error);
-            qDebug() << error;
-        }
+//        if(!projectFils->addData(ProjectFile::plane, "drone1"))
+//        {
+//            QString error;
+//            projectFils->lastError(error);
+//            qDebug() << error;
+//        }
 
-        if(!projectFils->addData(ProjectFile::plane, "drone2"))
-        {
-            QString error;
-            projectFils->lastError(error);
-            qDebug() << error;
-        }
+//        if(!projectFils->addData(ProjectFile::RLS,  "rls1"))
+//        {
+//            QString error;
+//            projectFils->lastError(error);
+//            qDebug() << error;
+//        }
+
+//        if(!projectFils->addData(ProjectFile::plane, "drone2"))
+//        {
+//            QString error;
+//            projectFils->lastError(error);
+//            qDebug() << error;
+//        }
     }
     /// -------------------------------------------------------------------------
 
