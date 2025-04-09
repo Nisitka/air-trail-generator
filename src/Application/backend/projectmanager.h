@@ -1,13 +1,35 @@
 #ifndef PROJECTMANAGER_H
 #define PROJECTMANAGER_H
 
-#include <QFile>
 #include <QObject>
+
+#include "./projectfile.h"
+
+#include "./mapcreator.h"
+#include "eventsmapmanager.h"
+
+#include "./mapinformer.h"
+
+#include "./MapFile/mapmanager.h"
 
 // Класс управляющий проектом
 class ProjectManager: public QObject
 {
     Q_OBJECT
+
+signals:
+
+    //
+    void createdProjectFile();
+    void openedProjectFile();
+    void closedProjectFile();
+
+    //
+    void appendObject(int typeObj);
+    void removedObject(int typeObj);
+
+    //
+    void error(int codeError);
 
 public slots:
 
@@ -18,6 +40,7 @@ public slots:
     // Открыть сущесвующий проект
     void openProject(const QString& dirNameProject);
 
+private slots:
 
     /// Карты
     // Добавить карту в проект
@@ -25,6 +48,9 @@ public slots:
 
     // Удалить карту из проекта
     void removeMap(const QString& nameMap);
+
+    // Создать карту с нуля
+    void createMap(MapData data, const QString& pathNewFile);
 
 
     /// РЛС
@@ -37,13 +63,34 @@ public slots:
 public:
     ProjectManager();
 
+    enum errors{openFile, closeFile, createFile,
+                addObj, removeObj,
+                readFile, writeFile};
+
+    //
+    MapCreator* CreatorMaps();
+
+    //
+    MapInformer* InfoMaps();
+
+    //
+    EventsMapManager* EventsMaps();
+
 private:
+
+    // Интерфейс по работе с картами
+    MapCreator* mapCreator;
+    // Отображает все события связанные с картами
+    EventsMapManager* mapEvents;
+
+    // Тот, кто непосредственно управляет ими
+    mapManager* managerMaps;
 
     // Закрыть текущий проект
     void closeProject();
 
     // pro файл проекта
-    QFile* proFile;
+    ProjectFile* proFile;
 };
 
 #endif // PROJECTMANAGER_H

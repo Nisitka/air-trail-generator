@@ -7,30 +7,60 @@ mapManager::mapManager()
 
 }
 
-void mapManager::createMap(MapData data, const QString &path)
+int mapManager::count() const
 {
-    startCreateMap();
-    maps[path] = new MapFile(path, data);
-
-    //
-    setCurrentMap(path);
-
-    finishCreateMap();
+    return maps.count();
 }
 
-void mapManager::openMap(const QString &path)
+/// НУЖЕН РЕФАКТОРИНГ MapFile
+bool mapManager::createMap(MapData data, const QString &path)
 {
-    startOpenMap();
-    maps[path] = new MapFile(path);
+    bool result = false;
 
-    //
-    setCurrentMap(path);
+    if (!maps.contains(path))
+    {
+        maps[path] = new MapFile(path, data);
+        result = true;
+    }
 
-    finishOpenMap();
+    return result;
 }
 
-void mapManager::setCurrentMap(const QString &pathMap)
+/// НУЖЕН РЕФАКТОРИНГ MapFile
+bool mapManager::openMap(const QString &path)
 {
+    bool result = false;
+
+    if (!maps.contains(path))
+    {
+        maps[path] = new MapFile(path);
+        result = true;
+    }
+
+    return result;
+}
+
+bool mapManager::removeMap(const QString &path)
+{
+    bool result = false;
+
+    if (maps.contains(path))
+    {
+        // Удаляем файл по его адрессу
+        delete maps[path];
+
+        // Удаляем из списков
+        maps.remove(path);
+        result = true;
+    }
+
+    return result;
+}
+
+bool mapManager::setCurrentMap(const QString &pathMap)
+{
+    bool result = false;
+
     if (maps.size() > 1)
         maps[currentMap]->close();
 
@@ -38,7 +68,8 @@ void mapManager::setCurrentMap(const QString &pathMap)
     maps[currentMap]->reopen();
 
     qDebug() << "current map: " + currentMap;
-    changedCurrentMap();
+
+    return result;
 }
 
 MapFile* mapManager::getCurrentMap() const

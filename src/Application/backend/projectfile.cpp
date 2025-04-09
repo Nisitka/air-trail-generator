@@ -7,12 +7,12 @@
 
 ProjectFile::ProjectFile():
     proFile(nullptr),
+    isOpen(false),
     codeError(none)
 {
-
     // Назначаем теги для сущностей
-    headObj[RLS]   = "RLS";
-    headObj[plane] = "PLANES";
+    for(int i=0; i<tegsObject.size(); i++)
+        headObj[i] = tegsObject.at(i);
 }
 
 int ProjectFile::lastError(QString &infoError_) const
@@ -29,66 +29,71 @@ int ProjectFile::lastError() const
 
 bool ProjectFile::open(const QString &path)
 {
-    bool isOpen = false;
+    bool result = false;
 
-    // Если существует такой путь
-    if (QFileInfo::exists(path))
-    {   // и он ведет к файлу
-        if (QFileInfo(path).isFile())
-        {   // и удалось закрыть предыдущий файл проекта
-            if (this->close())
-            {   // то пытаемся открыть файл
-                proFile = new QFile(path);
-                if (proFile->open(QIODevice::ReadWrite)){
+    //
+    if (this->close())
+    {
+        // Если существует такой путь
+        if (QFileInfo::exists(path))
+        {   // и он ведет к файлу
+            if (QFileInfo(path).isFile())
+            {   // и удалось закрыть предыдущий файл проекта
+                if (this->close())
+                {   // то пытаемся открыть файл
+                    proFile = new QFile(path);
+                    if (proFile->open(QIODevice::ReadWrite)){
 
-                    /// --- Test --------------------
-                    QVector<QString> stringsVector;
-                    unloading(stringsVector, plane);
-                    /// -----------------------------
+                        /// --- Test --------------------
+                        QVector<QString> stringsVector;
+                        unloading(stringsVector, plane);
+                        /// -----------------------------
 
-                    isOpen = true;
+                        isOpen = true;
+                    }
+                    else
+                    {
+                        delete proFile;
+                        infoError = "Не удалось открыть файл!";
+                    }
                 }
                 else
-                {
-                    delete proFile;
-                    infoError = "Не удалось открыть файл!";
-                }
+                    infoError = "Не удалось закрыть предыдущий файл!";
             }
             else
-                infoError = "Не удалось закрыть предыдущий файл!";
+                infoError = "Выбранный вами путь не является файлом!";
         }
         else
-            infoError = "Выбранный вами путь не является файлом!";
+            infoError = "Выбранный вами путь несуществует!";
     }
     else
-        infoError = "Выбранный вами путь несуществует!";
+        infoError = "Не удалось закрыть предыдущий файл!";
 
     // Если файл не удалось открыть, то сообщаем почему
-    if (!isOpen) codeError = openFile; // код ошибки
+    if (!result) codeError = openFile; // код ошибки
     else dirNameFile = path;
 
-    return isOpen;
+    return result;
 }
 
 bool ProjectFile::close()
 {
-    bool isClose = false;
-
-    if (proFile != nullptr)
+    if (isOpen)
     {
         proFile->close();
         delete proFile;
-    }
-    isClose = true;
 
-    return isClose;
+        isOpen = false;
+    }
+
+    return !isOpen;
 }
 
 bool ProjectFile::create(const QString &path)
 {
     bool isCreated = false;
 
-    //
+    // Только если удалось корректно закрыть текущий файл
     if (this->close())
     {
         // Если такой файл уже существует
@@ -108,6 +113,7 @@ bool ProjectFile::create(const QString &path)
             }
 
             isCreated = true;
+            isOpen = true;
         }
         else
         {

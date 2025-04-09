@@ -182,7 +182,10 @@ HEADERS  += \
     backend/projectfile.h \
     GUI/managermapswindow.h \
     backend/MapFile/mapmanager.h \
-    backend/MapFile/datamaprls.h
+    backend/MapFile/datamaprls.h \
+    backend/mapcreator.h \
+    backend/mapinformer.h \
+    backend/eventsmapmanager.h
 
 FORMS    += GUI/UI/mainwindow.ui \
     GUI/3DVisualization/map3dviswindow.ui \

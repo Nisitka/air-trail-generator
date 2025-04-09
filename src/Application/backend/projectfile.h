@@ -15,8 +15,9 @@ public:
     enum typeError{none, openFile, delFile, buildFile, renameFile,
                    writeData, readFile}; // и т.д.
 
-    //
-    enum typeObjects {RLS, plane};
+    // Типы объектов в файле проекта (должен соответсвовать их порядок)
+    enum typeObjects {RLS, plane, map};
+    QStringList tegsObject{"RLS", "PLANES", "MAPS"};
 
     // Узнать последнию ошибку
     int lastError(QString& infoError) const;
@@ -40,6 +41,9 @@ public:
                     const QString& data); // Данные
 
 private:
+
+    //
+    bool isOpen;
 
     //
     const QString tmpNameFile = "tmpPro.txt";
