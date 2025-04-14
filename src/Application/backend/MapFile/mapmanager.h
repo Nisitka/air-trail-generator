@@ -16,6 +16,7 @@ class mapManager: public QObject,
 
 public:
     mapManager();
+    ~mapManager();
 
     /// Интерфес общих сведений
     // Кол-во карт

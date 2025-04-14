@@ -6,7 +6,7 @@
 
 #include "designer.h"
 
-visualInfoWidget::visualInfoWidget(GISInformer* gis):
+visualInfoWidget::visualInfoWidget(GISInformer* gis, painterMapImage* mapImgGenerator):
     gis(gis)
 {
     /// Для теста!
@@ -15,7 +15,7 @@ visualInfoWidget::visualInfoWidget(GISInformer* gis):
     addFunWindow(new QTabWidget, QIcon(":/resurs/b"),"B",Qt::RightDockWidgetArea,Qt::RightDockWidgetArea);
 
     //
-    mapDrawArea = new mapAreaMainWindow(gis);
+    mapDrawArea = new mapAreaMainWindow(gis, mapImgGenerator);
     setCentralWidget(mapDrawArea);
 
     // Так как изначально никакой карты не открыто

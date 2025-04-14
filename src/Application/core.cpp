@@ -25,7 +25,9 @@ void Core::init_GIS()
 
 void Core::init_allObj()
 {
-    readyRunProgress(3, "Инициализация менеджера ЛА...");
+    // Класс по работе с файлом проекта
+    readyRunProgress(3, "Инициализация менеджера проектов");
+    proManager = new ProjectManager(mapsManager, gis);
 
     readyRunProgress(19, "Загрузка модуля по работе с рельефом...");
 
@@ -36,78 +38,11 @@ void Core::init_allObj()
     // Информатор высоты
     HeightMeter* HeightMap = gis->getHeightMeter();
 
+    //
+    mapImgGenerator = new painterMapImage(HeightMap);
+
     // Испускатель лучей
     RayTracer = new TracerLight(HeightMap);
-
-    // Класс по работе с файлом проекта
-    projectFils = new ProjectFile;
-    /// ----------------- Для теста --------------------------------------------
-//    if (!projectFils->create(QApplication::applicationDirPath() + "//bd.txt"))
-//    {
-//        QString error;
-//        projectFils->lastError(error);
-//        qDebug() << error;
-//    }
-//    else
-//    {
-//        if(!projectFils->addData(ProjectFile::plane, "drone1"))
-//        {
-//            QString error;
-//            projectFils->lastError(error);
-//            qDebug() << error;
-//        }
-
-//        if(!projectFils->addData(ProjectFile::RLS,  "rls1"))
-//        {
-//            QString error;
-//            projectFils->lastError(error);
-//            qDebug() << error;
-//        }
-
-//        if(!projectFils->addData(ProjectFile::plane, "drone2"))
-//        {
-//            QString error;
-//            projectFils->lastError(error);
-//            qDebug() << error;
-//        }
-//    }
-    if (!projectFils->open(QApplication::applicationDirPath() + "//bd.txt"))
-    {
-        QString error;
-        projectFils->lastError(error);
-        qDebug() << error;
-    }
-    else
-    {
-//        if (!projectFils->deleteData(ProjectFile::plane, "drone1"))
-//        {
-//            QString error;
-//            projectFils->lastError(error);
-//            qDebug() << error;
-//        }
-
-//        if(!projectFils->addData(ProjectFile::plane, "drone1"))
-//        {
-//            QString error;
-//            projectFils->lastError(error);
-//            qDebug() << error;
-//        }
-
-//        if(!projectFils->addData(ProjectFile::RLS,  "rls1"))
-//        {
-//            QString error;
-//            projectFils->lastError(error);
-//            qDebug() << error;
-//        }
-
-//        if(!projectFils->addData(ProjectFile::plane, "drone2"))
-//        {
-//            QString error;
-//            projectFils->lastError(error);
-//            qDebug() << error;
-//        }
-    }
-    /// -------------------------------------------------------------------------
 
     // Инициализация менеджера РЛС
     mRLS = new managerRLS(HeightMap);
@@ -116,14 +51,9 @@ void Core::init_allObj()
 
     //
     InformerRLS* infoRLS = mRLS;
-    gui = new GUI(gis, infoRLS);
+    gui = new GUI(gis, mapImgGenerator, infoRLS);
     readyRunProgress(54, "Инициализация интерфейса...");
 
-    createProjectWindow* CreateProjWin = gui->WindowCreateProject();
-    connect(CreateProjWin, SIGNAL(sendDataNewProject(MapData,QString)),
-            mapsManager,   SLOT(createMap(MapData,QString)));
-    connect(mapsManager,   SIGNAL(finishCreateMap()),
-            CreateProjWin, SLOT(hide()));
 
     readyRunProgress(65, "Инициализация интерфейса...");
 }
@@ -135,8 +65,13 @@ void Core::init_GUI()
     readyRunProgress(72);
 
     //
-    gui->connectMapsManager(mapsManager);
+    gui->connectProjectManager(proManager);
     readyRunProgress(79);
+
+    //
+    gui->connectMapsManager(proManager->EventsMaps(),
+                            proManager->InfoMaps(),
+                            proManager->CreatorMaps());
 
     //
     gui->connectMRLS(mRLS);

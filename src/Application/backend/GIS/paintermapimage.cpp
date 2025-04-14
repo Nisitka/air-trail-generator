@@ -2,105 +2,36 @@
 
 #include <QDebug>
 
-painterMapImage::painterMapImage(HeightMeter* Height,
-                                 int W, int H):
-    Height(Height),
-    numW(W), numL(H)
+painterMapImage::painterMapImage(HeightMeter* Height):
+    Height(Height)
 {
-    // Сразу инициализируем изображение
-    img = new QImage(numW, numL, QImage::Format_RGB32);
-
-    // По умолчанию
-    idXo = 0;
-    idYo = 0;
+    dHeight = 200 / colors.size(); /// !!!!! Максимальное кол-во дискрет высоты
+                                   /// делится на кол-во цветов
 }
 
-void painterMapImage::setPosArea(int idXo_, int idYo_)
+void painterMapImage::getMapImage(const QRect &area, QImage &img)
 {
-    // id левого верхнего угла
-    idXo = idXo_;
-    idYo = idYo_;
-
-    // id нижнего правого угла
-    idXlast = idXo + numW;
-    idYlast = idYo + numL;
+    getMapImage(area.x(), area.y(), area.width(), area.height(), img);
 }
 
-QImage* painterMapImage::getImage()
+void painterMapImage::getMapImage(int idXo, int idYo, int W, int H, QImage &img)
 {
-    return img;
-}
-
-void painterMapImage::updateFull()
-{
-    Hmap = Height->max(Coords::id);
-    dHeight = Hmap / colors.size();
-
-    run();
-}
-
-void painterMapImage::runToRects(QRect* rects, int count)
-{
-    for (int i=0; i<count; i++)
-    {
-        runToRect(rects[i]);
-
-    }
-
-    delete [] rects;  // сразу же очищаем память от QRect
-}
-
-void painterMapImage::runToRect(const QRect &rect)
-{
-    runToRect(rect.x(), rect.y(), rect.width(), rect.height());
-}
-
-void painterMapImage::runToRect(int idX, int idY, int w, int h)
-{
-    ///qDebug() << "Painter run to rect!";
-
-    // Если не попадает в область, то ничего не делаем
-    if (idX > idXlast || idY > idYlast) return;
-
-    QColor color;
-    int cZD;
-
-    int r;
-    int g;
-    int b;
-    double k;
-
-    // Вычисляем начальные и конечные индексы области расчета
-    int W, H;
-    W = idX + w;
-    if (W > idXlast) W = idXlast;
-    H = idY + h;
-    if (H > idYlast) H = idYlast;
-
-    if (idX < idXo) idX = idXo;
-    if (idY < idYo) idY = idYo;
+    img = QImage(W, H, QImage::Format_RGB32);
 
     // Вычисление rgb каждого пикселя
-    for (int X=idX; X<W; X++)
+    QColor color;
+    for (int X=0; X<W; X++)
     {
-        for (int Y=idY; Y<H; Y++)
+        for (int Y=0; Y<H; Y++)
         {
             // Вычисляется цвет по данным
-            color = colorHeight(Height->absolute(X, Y, Coords::id));
+            color = colorHeight(Height->absolute(idXo+X, idYo+Y, Coords::id));
 
             //
-            img->setPixelColor(X - idXo, Y - idYo,
-                               color);
+            img.setPixelColor(X, Y, color);
+            //qDebug() << img;
         }
     }
-}
-
-void painterMapImage::run()
-{
-    qDebug() << "RUN map-Painter ";
-
-    //
-    runToRect(idXo, idYo, numW, numL);
 }
 
 QColor painterMapImage::colorHeight(int value)

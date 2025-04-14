@@ -5,7 +5,8 @@
 
 #include <QIcon>
 
-mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
+mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, painterMapImage* mapImgGenerator,
+                                     QWidget *parent) :
     gis(gis)/*, QMainWindow(parent)*/,
     ui(new Ui::mapAreaMainWindow)
 {
@@ -24,7 +25,7 @@ mapAreaMainWindow::mapAreaMainWindow(GISInformer* gis, QWidget *parent) :
                            "};");
     addToolBar(Qt::TopToolBarArea, toolBar); // добавляем в панель инструментов
 
-    area = new areaDrawWidget(gis);
+    area = new areaDrawWidget(gis, mapImgGenerator);
 
     setCentralWidget(nullptr);
 
@@ -112,7 +113,7 @@ void mapAreaMainWindow::setDefStatus()
 
 void mapAreaMainWindow::updateGeoMapImage()
 {
-    area->updateSize();
+    area->updateMapImage();
     repaintBackground();
 }
 

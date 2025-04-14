@@ -413,7 +413,7 @@ void mapOpenGLWidget::initializeTerrain(int idXo_, int idYo_, int numW, int numL
 
 void mapOpenGLWidget::paintGL()
 {
-    if (readyRender)
+    if (false) //readyRender
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear Screen и глубина кэша
 
@@ -431,7 +431,8 @@ void mapOpenGLWidget::paintGL()
 
         H_SCALE = MAP_SCALE * 0.7;
 
-        const QImage& currentTexture = mapInformer->getGeoImage();
+        QImage currentTexture;
+        ///mapInformer->getGeoImage(); /// !!!!!!!!
 
         QRgb color;
         int h;

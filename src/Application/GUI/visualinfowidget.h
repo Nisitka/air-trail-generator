@@ -27,7 +27,8 @@ public slots:
     void initProject();
 
 public:
-    explicit visualInfoWidget(GISInformer* gis);
+    explicit visualInfoWidget(GISInformer* gis,
+                              painterMapImage* mapImgGenerator);
     ~visualInfoWidget();
 
     mapAreaMainWindow* getManDrawArea();

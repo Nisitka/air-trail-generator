@@ -10,52 +10,23 @@
 class painterMapImage: public QObject
 {
     Q_OBJECT
-
-signals:
-
-    /* ... */
-
-public slots:
-
-    // Пересчитать все изображение
-    void updateFull();
-
-    // Перерасчет всех пикселей
-    void run();
-
-    // Расчет выбранной области
-    void runToRect(int idX, int idY, int w, int h);
-    void runToRect(const QRect& rect);
-
-    // Расчет выбранных областей
-    void runToRects(QRect* rects, int count);
-
 public:
 
     //
-    painterMapImage(HeightMeter* Heigt, // Для расчета цвета
-                    int W, int H);      // Размеры изображения
+    painterMapImage(HeightMeter* Heigt); // Для расчета цвета
 
     //
-    void setPosArea(int idXo, int idYo); // Левый верхний угол
+    void getMapImage(int idXo, int idYo, // Левый верхний угол
+                     int W, int H,       // Размеры
+                     QImage& img);       // Куда поместить результат
+    void getMapImage(const QRect& area,  // Область карты
+                     QImage& img);       // Куда поместить результат
 
-    //
-    QImage* getImage();
 
 private:
-    // Область для создания текстуры
-    int idXo;
-    int idYo;
-    int numW;
-    int numL;
-    int idXlast;
-    int idYlast;
 
-    QImage* img;
+    // Высота точек на карте известна ему
     HeightMeter* Height;
-
-    //
-    int Hmap;
 
     // вычислить цвет по высоте (т.е. номеру слоя)
     QColor colorHeight(int numLayer);

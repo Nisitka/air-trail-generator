@@ -28,6 +28,7 @@ signals:
 
 public:
     explicit mapAreaMainWindow(GISInformer* gis,
+                               painterMapImage* mapImgGenerator,
                                QWidget *parent = 0);
     ~mapAreaMainWindow();
 

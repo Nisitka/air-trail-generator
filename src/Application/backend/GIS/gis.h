@@ -19,9 +19,6 @@ class GIS: public QObject, public GISInformer
     Q_OBJECT
 signals:
 
-    // Сигнализируем об готовности новой области
-    void changedActionArea(int idXo, int idYo); // Левый верхний уг. об.
-
     // Земля отредактирована:
     //  в области
     void changedMap(int idXo, int idYo, // Левый верхний угол области
@@ -30,18 +27,6 @@ signals:
     void changedMap();
 
 public slots:
-
-    // Полностью обновить систему
-    void updateFull();
-
-    // Изменить активную область
-    void setPosActionArea(int idXmap, int idYmap); // центр области
-    void movePosActionArea(int dX, int dY); // в дискретах карты
-
-    // Актуализировать данные в
-    void updateFromRect(int idX, int idY, int w, int h); // Прямоугольнике
-    void updateFromRect(const QRect& rect);
-    void updateFromRects(QRect* rects, int countS);      // Прямоугольниках
 
     // Редактирование рельефа
     void upEarth(int idX, int idY, int R);   // Поднять землю
@@ -61,19 +46,9 @@ public:
     // Методы-интерфейс по работе с ГИС:
     int getH(int idX, int idY, Coords::units = Coords::m) const override final;
     Coords getCoords(int idX, int idY) const override final;
-    const QImage& getGeoImage() const override final;
-    void getIdActionArea(int& idXo, int& idYo) const override final;
 
     // При инициализации ГИС системы
     GIS(mapManager* mapsInfo);
-
-    //
-    ///void setDefaultMap();
-
-private slots:
-
-    //
-    void setPosActionAreaDefult();
 
 private:
 
@@ -81,19 +56,7 @@ private:
     bool Enabled;
 
     //
-    void initActionArea(int posX, int posY);
-
-    // Точка, относительно которой формируется
-    //  область, не требующая загрузки
-    int idXpos, idYpos;       // Левый верхний угол
-    const int currentW = 300; // Размеры области
-    const int currentH = 300; //  в дискретах
-
-    //
     geoGenerator* geoBuilder;
-
-    //
-    painterMapImage* backPainter;
 };
 
 #endif // GIS_H

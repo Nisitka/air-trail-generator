@@ -1,8 +1,11 @@
 #include "projectmanager.h"
 
-ProjectManager::ProjectManager()
+#include <QDebug>
+
+ProjectManager::ProjectManager(mapManager* mapsManager, GIS* gis):
+    managerMaps(mapsManager), gis(gis)
 {
-    proFile = nullptr;
+    proFile = new ProjectFile;
 
     //
     mapCreator = new MapCreator;
@@ -13,9 +16,6 @@ ProjectManager::ProjectManager()
 
     //
     mapEvents = new EventsMapManager;
-
-    //
-    managerMaps = new mapManager;
 }
 
 void ProjectManager::createMap(MapData data, const QString &pathNewFile)
@@ -100,8 +100,29 @@ void ProjectManager::createProject(const QString &dirNameNewProject)
 
 void ProjectManager::openProject(const QString &dirNameProject)
 {
+    qDebug() << "Open project...";
     if (proFile->open(dirNameProject))
+    {
+        // Добавляем все карты, которые находятся в файле
+        QStringList paths;
+        proFile->unloading(paths, ProjectFile::map);
+        qDebug() << paths << "!!!!!!!!!!!!!!!!";
+
+        // Открываем все карты, которые есть в проекте
+        for (const auto &path: paths)
+            managerMaps->openMap(path);
+
+        // Сообщаем интерфейсу о том, что открыли проект
         openedProjectFile();
+
+        //
+        if (managerMaps->count() > 0)
+        {
+            managerMaps->setCurrentMap(paths.at(0)); /// !!! потом надо открывать тот, что был открыт в пред. сессии
+            mapEvents->finishOpenMap();
+        }
+
+    }
     else
         error(openFile);
 }

@@ -64,10 +64,13 @@ private:
     GISInformer* gisInformer;
 
     //
+    painterMapImage* mapImgGenerator;
+
+    //
     TracerLight* RayTracer;
 
     //
-    ProjectFile* projectFils;
+    ProjectManager* proManager;
 
     // Менеджер РЛС
     managerRLS* mRLS;

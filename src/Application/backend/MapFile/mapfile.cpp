@@ -136,8 +136,9 @@ void MapFile::close()
 void MapFile::reopen()
 {
     //
-    if (!file->open(QIODevice::ReadWrite))
-        qDebug() << "ERROR!!!!!!!!!!!!";
+    if (!file->isOpen())
+        if (!file->open(QIODevice::ReadWrite))
+            qDebug() << "ERROR open mapFile";
 }
 
 void MapFile::open(const QString &dirMapFile)
@@ -253,4 +254,6 @@ MapFile::~MapFile()
 {
     if (file != nullptr) file->close();
     delete file;
+
+    qDebug() << "MAP DELETED!!!!!";
 }

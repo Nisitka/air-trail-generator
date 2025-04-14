@@ -33,6 +33,7 @@
 #include "drawtask.h"
 
 #include "backend/GIS/gisinformer.h"
+#include "backend/GIS/paintermapimage.h"
 
 class areaDrawWidget: public QWidget
 {
@@ -51,7 +52,12 @@ public slots:
     void setZoom(double k);
 
 public:
-    areaDrawWidget(GISInformer* gis);
+    //
+    areaDrawWidget(GISInformer* gis,
+                   painterMapImage* mapImageGenerator);
+
+    //
+    void updateMapImage();
 
     //
     void setAngleRotate(qreal Angle);
@@ -157,6 +163,10 @@ private:
 
     //
     GISInformer* gis;
+    painterMapImage* mapImage;
+
+    // Требуется обновить картинку картографической подложки
+    bool updatedImageMap;
 
     //
     bool drawEnable;

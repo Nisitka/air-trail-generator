@@ -45,11 +45,12 @@ bool ProjectFile::open(const QString &path)
                     if (proFile->open(QIODevice::ReadWrite)){
 
                         /// --- Test --------------------
-                        QVector<QString> stringsVector;
-                        unloading(stringsVector, plane);
+                        QStringList strings;
+                        unloading(strings, plane);
                         /// -----------------------------
 
                         isOpen = true;
+                        result = true;
                     }
                     else
                     {
@@ -174,7 +175,7 @@ void ProjectFile::findingPoint(int &first, int &last,
     }
 }
 
-void ProjectFile::unloading(QVector<QString>& stringsVector,
+void ProjectFile::unloading(QStringList& listData,
                             typeObjects obj)
 {
     // Узнаем с какой и по какую строку содержится информация об сущности
@@ -200,11 +201,11 @@ void ProjectFile::unloading(QVector<QString>& stringsVector,
 
         // Если строка не пустая, то добавляем её
         if (str.size() > 0)
-            stringsVector.append(str);
+            listData.append(str);
     }
 
     /// --- Тестовый вывод нужных строк ---------
-    qDebug() << stringsVector;
+    qDebug() << listData;
     /// -----------------------------------------
 }
 

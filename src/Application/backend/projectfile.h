@@ -15,9 +15,17 @@ public:
     enum typeError{none, openFile, delFile, buildFile, renameFile,
                    writeData, readFile}; // и т.д.
 
+    // Формат файла проекта
+    static void format(QString& strFormat)
+    {strFormat = ".txt";} // .proj
+
     // Типы объектов в файле проекта (должен соответсвовать их порядок)
     enum typeObjects {RLS, plane, map};
     QStringList tegsObject{"RLS", "PLANES", "MAPS"};
+
+    // Выгрузить строковые данные из файла проекта
+    void unloading(QStringList& stringsData, // куда выгружаем
+                   typeObjects obj);         // что (по тегу)
 
     // Узнать последнию ошибку
     int lastError(QString& infoError) const;
@@ -60,10 +68,6 @@ private:
     // Узнать промежуток содержащий информацию об сущности
     void findingPoint(int& first, int& last, // номера строк промежутка
                       const QString& obj);   // тег сущност
-
-    // Выгрузить строковые данные из файла проекта
-    void unloading(QVector<QString>& stringsData, // куда выгружаем
-                   typeObjects obj);              // что (по тегу)
 
     //
     bool containsTag(const QString& s, const QString& tag);

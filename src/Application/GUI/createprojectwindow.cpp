@@ -8,6 +8,8 @@
 
 #include <QDebug>
 
+#include "../backend/projectfile.h"
+
 createProjectWindow::createProjectWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::createProjectWindow)
@@ -33,7 +35,6 @@ createProjectWindow::createProjectWindow(QWidget *parent) :
             this,                        SLOT(showSelectFolderWin()));
 
     //
-    Designer::setGroupBox(ui->groupBox);
     Designer::setGroupBox(ui->groupBox_2);
     Designer::setGroupBox(ui->groupBox_3);
 
@@ -59,17 +60,12 @@ void createProjectWindow::buildProject()
 
     // Полный путь проекта
     QString dirNameProject;
+    QString format; ProjectFile::format(format);
     dirNameProject  = ui->dirProjectLineEdit->text() + "/";
-    dirNameProject += ui->nameProjectLineEdit->text() + ".map";
-
-    // Данные для инициализации карты
-    MapData mapData;
-    mapData.H = ui->sizeZSpinBox->value();
-    mapData.W = ui->sizeXSpinBox->value();
-    mapData.L = ui->sizeYSpinBox->value();
+    dirNameProject += ui->nameProjectLineEdit->text() + format;
 
     //
-    sendDataNewProject(mapData, dirNameProject);
+    sendDataNewProject(dirNameProject);
 }
 
 createProjectWindow::~createProjectWindow()

@@ -6,7 +6,7 @@
 
 #include <QFileDialog>
 
-GUI::GUI(GISInformer* gis,
+GUI::GUI(GISInformer* gis, painterMapImage* mapImgGenerator,
          InformerRLS* infoRLS): QObject(nullptr),
     gisInformer(gis)
 {
@@ -14,7 +14,7 @@ GUI::GUI(GISInformer* gis,
     mainWin = new mainWindow;
 
     // Задача для работы с графической информацией
-    visInfoWin = new visualInfoWidget(gisInformer);
+    visInfoWin = new visualInfoWidget(gisInformer, mapImgGenerator);
 
     //
     mapAreaMainWindow* manDrawArea = visInfoWin->getManDrawArea();
@@ -88,9 +88,10 @@ createProjectWindow* GUI::WindowCreateProject() const
 void GUI::showOpenProjectWindow()
 {
     //
+    QString formatFile; ProjectFile::format(formatFile);
     QString dirName = QFileDialog::getOpenFileName(nullptr, "Открыть файл проекта",
                                                    QApplication::applicationDirPath(),
-                                                   "*.map");
+                                                   "*" + formatFile);
 
     if (dirName.size() > 0)
         openProject(dirName);
@@ -111,12 +112,6 @@ void GUI::connectBuilderTrail(BuilderTrail* builderTrail)
 
 void GUI::connectGIS(GIS *gis)
 {
-    // Изменяем подгруженную область
-    QObject::connect(visInfoWin->getManDrawArea(), SIGNAL(moveActionArea(int,int)),
-                     gis,                          SLOT(movePosActionArea(int,int)));
-    QObject::connect(gis,                          SIGNAL(changedActionArea(int,int)),
-                     visInfoWin->getManDrawArea(), SLOT(setNewActionArea(int,int)));
-
     // Ручное редактирование рельефа
     QObject::connect(toolEditTer, SIGNAL(upEarth(int,int,int)),
                      gis,         SLOT(upEarth(int,int,int)));
@@ -130,28 +125,33 @@ void GUI::connectGIS(GIS *gis)
                      visInfoWin->getManDrawArea(), SLOT(repaintBackground()));
 }
 
-void GUI::connectMapsManager(mapManager *mMaps)
+void GUI::connectMapsManager(EventsMapManager* mapEvents,
+                             MapInformer* mapInfo,
+                             MapCreator*  mapCreator)
 {
     //
-    QObject::connect(mMaps,          SIGNAL(finishCreateMap()),
+    QObject::connect(mapEvents,      SIGNAL(finishCreateMap()),
                      switcherWindow, SLOT(showMainWindow()));
-    QObject::connect(mMaps,          SIGNAL(finishOpenMap()),
+    QObject::connect(mapEvents,      SIGNAL(finishOpenMap()),
                      switcherWindow, SLOT(showMainWindow()));
 
     // При завершении подготовки карты - инициализировать визуальную часть проекта
-    QObject::connect(mMaps,      SIGNAL(finishCreateMap()),
+    QObject::connect(mapEvents,  SIGNAL(finishCreateMap()),
                      visInfoWin, SLOT(initProject()));
-    QObject::connect(mMaps,      SIGNAL(finishOpenMap()),
+    QObject::connect(mapEvents,  SIGNAL(finishOpenMap()),
                      visInfoWin, SLOT(initProject()));
 
-    QObject::connect(mMaps,                        SIGNAL(finishCreateMap()),
+    QObject::connect(mapEvents,                    SIGNAL(finishCreateMap()),
                      visInfoWin->getManDrawArea(), SLOT(updateGeoMapImage()));
-    QObject::connect(mMaps,                        SIGNAL(finishOpenMap()),
+    QObject::connect(mapEvents,                    SIGNAL(finishOpenMap()),
                      visInfoWin->getManDrawArea(), SLOT(updateGeoMapImage()));
+}
 
-    //
-    QObject::connect(this,  SIGNAL(openProject(QString)),
-                     mMaps, SLOT(openMap(QString)));
+void GUI::connectProjectManager(ProjectManager *proManager)
+{
+    // Открытие проекта
+    QObject::connect(this,       SIGNAL(openProject(QString)),
+                     proManager, SLOT(openProject(QString)));
 }
 
 void GUI::connectMRLS(managerRLS* mRLS)

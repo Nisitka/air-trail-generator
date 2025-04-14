@@ -61,11 +61,14 @@ bool mapManager::setCurrentMap(const QString &pathMap)
 {
     bool result = false;
 
-    if (maps.size() > 1)
-        maps[currentMap]->close();
+    if (currentMap != pathMap)
+    {
+        if (maps.contains(currentMap))
+                maps[currentMap]->close();
 
-    currentMap = pathMap;
-    maps[currentMap]->reopen();
+        currentMap = pathMap;
+        maps[currentMap]->reopen();
+    }
 
     qDebug() << "current map: " + currentMap;
 
@@ -75,4 +78,11 @@ bool mapManager::setCurrentMap(const QString &pathMap)
 MapFile* mapManager::getCurrentMap() const
 {
     return maps.value(currentMap);
+}
+
+mapManager::~mapManager()
+{
+    QList <MapFile*> ptrMapFile = maps.values();
+    for (const auto map: ptrMapFile)
+        delete map;
 }

@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include "./projectfile.h"
+#include "./GIS/gis.h"
 
 #include "./mapcreator.h"
 #include "eventsmapmanager.h"
@@ -61,7 +62,8 @@ private slots:
     void removeRLS(const QString& nameRLS);
 
 public:
-    ProjectManager();
+    ProjectManager(mapManager* mapsManager,
+                   GIS* gis);
 
     enum errors{openFile, closeFile, createFile,
                 addObj, removeObj,
@@ -77,6 +79,9 @@ public:
     EventsMapManager* EventsMaps();
 
 private:
+
+    //
+    GIS* gis;
 
     // Интерфейс по работе с картами
     MapCreator* mapCreator;

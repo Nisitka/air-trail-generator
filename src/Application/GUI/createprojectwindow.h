@@ -17,8 +17,7 @@ class createProjectWindow : public QDialog
 signals:
 
     //
-    void sendDataNewProject(const MapData DataMap,
-                            const QString& dirName);
+    void sendDataNewProject(const QString& path);
 
 public:
     explicit createProjectWindow(QWidget *parent = 0);

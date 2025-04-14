@@ -19,16 +19,18 @@
 
 #include "../designer.h"
 
-areaDrawWidget::areaDrawWidget(GISInformer* gis):
-    gis(gis), kZoom(1.0)
+areaDrawWidget::areaDrawWidget(GISInformer* gis,
+                               painterMapImage* mapImageGenerator):
+    gis(gis), mapImage(mapImageGenerator),
+    drawImg(QImage()),
+    updatedImageMap(false),
+    kZoom(1.0)
 {
     isCustomCursor = true;
 
     // инициализация контейнера для изображений
     images = QVector <QImage*> (3);
     //images[geoMap] = mapImg;
-    drawImg = gis->getGeoImage();
-    updateSize();
 
     // отправляем данные об координатах курсора
     isExportCoord = true;
@@ -95,11 +97,25 @@ void areaDrawWidget::drawBorder()
 
 void areaDrawWidget::drawMap()
 {
-    // Берем текущую подложку
-    drawImg = gis->getGeoImage();
+    //
+    if (updatedImageMap)
+    {
+        // Обновляем текущую подложку
+        mapImage->getMapImage(0, 0, 200, 200, drawImg);
+        updatedImageMap = false;
+    }
 
     //
     pPainter->drawImage(0, 0, drawImg.scaled(W, H));
+}
+
+void areaDrawWidget::updateMapImage()
+{
+    // Обновляем текущую подложку
+    mapImage->getMapImage(0, 0, 300, 300, drawImg);
+    updatedImageMap = false;
+
+    this->updateSize();
 }
 
 void areaDrawWidget::setAngleRotate(qreal angle_)
@@ -125,6 +141,8 @@ void areaDrawWidget::updateSize()
     //
     W = drawImg.width()  * kZoom;
     H = drawImg.height() * kZoom;
+
+    qDebug() << "UPDATE SIZE!" << W << H;
 
     setFixedSize(W, H);
 
